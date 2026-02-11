@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, date, mood, weather, tags } = post.data;
+
+const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  weekday: 'short'
+});
+---
+
+<article class="card-hover bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+  <a href={`/posts/${post.slug}`} class="block group">
+    <div class="flex items-center gap-3 mb-3 text-sm text-gray-500 dark:text-gray-400">
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+      {mood && <span class="text-lg">{mood}</span>}
+      {weather && <span class="text-lg">{weather}</span>}
+    </div>
+    
+    <h2 class="text-2xl font-serif-jp font-bold mb-3 text-charcoal dark:text-warm-white group-hover:text-gentle-green transition-colors">
+      {title}
+    </h2>
+    
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-4">
+        {tags.map(tag => (
+          <span class="px-3 py-1 text-xs rounded-full bg-soft-beige dark:bg-gray-700 text-charcoal dark:text-warm-white">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </a>
+</article>

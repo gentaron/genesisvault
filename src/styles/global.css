@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-warm-white: #FAF9F6;
+    --color-soft-beige: #F5F1E8;
+    --color-gentle-green: #A8C5A3;
+    --color-lavender-mist: #C8B8DB;
+    --color-charcoal: #2D2D2D;
+  }
+
+  .dark {
+    --color-warm-white: #1A1A1A;
+    --color-soft-beige: #252525;
+    --color-gentle-green: #7A9F76;
+    --color-lavender-mist: #9B8AAD;
+    --color-charcoal: #E8E8E8;
+  }
+
+  body {
+    @apply font-sans-jp bg-warm-white text-charcoal transition-colors duration-300;
+    font-feature-settings: "palt";
+    letter-spacing: 0.02em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif-jp;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-3xl mx-auto px-6 sm:px-8;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .prose-custom {
+    @apply prose prose-lg max-w-none;
+    @apply prose-headings:font-serif-jp prose-headings:text-charcoal;
+    @apply prose-p:leading-relaxed prose-p:text-charcoal;
+    @apply prose-a:text-gentle-green prose-a:no-underline hover:prose-a:text-lavender-mist;
+    @apply dark:prose-invert dark:prose-headings:text-charcoal dark:prose-p:text-charcoal;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

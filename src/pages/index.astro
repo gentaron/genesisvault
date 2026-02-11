@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts', ({ data }) => {
+  return data.draft !== true;
+});
+
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="静かな日記 - ホーム">
+  <div class="mb-16 text-center">
+    <h1 class="text-5xl font-serif-jp font-bold mb-4 text-charcoal dark:text-warm-white">
+      静かな日記
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400">
+      朝の柔らかい光のような、優しい日々の記録
+    </p>
+  </div>
+
+  <div class="grid gap-8">
+    {sortedPosts.map(post => (
+      <PostCard post={post} />
+    ))}
+  </div>
+
+  {sortedPosts.length === 0 && (
+    <div class="text-center py-20">
+      <p class="text-gray-500 dark:text-gray-400">まだ記事がありません</p>
+    </div>
+  )}
+</BaseLayout>
