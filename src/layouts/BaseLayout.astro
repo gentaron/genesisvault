@@ -5,6 +5,7 @@ interface Props {
 }
 
 const { title, description = '静かな日々の記録' } = Astro.props;
+import '../styles/global.css';
 ---
 
 <!doctype html>
@@ -70,9 +71,5 @@ const { title, description = '静かな日々の記録' } = Astro.props;
         }
       });
     </script>
-
-    <style>
-      @import '../styles/global.css';
-    </style>
   </body>
 </html>
