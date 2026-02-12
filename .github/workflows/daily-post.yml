@@ -2,8 +2,8 @@ name: 🤖 Daily AI Blog Post
 
 on:
   schedule:
-    # 毎日午後4時30分(MYT/UTC+8)に実行 = UTC 8:30
-    - cron: '30 8 * * *'
+    # 毎日午後5時15分(MYT/UTC+8)に実行 = UTC 9:15
+    - cron: '15 9 * * *'
   workflow_dispatch: # 手動実行も可能
 
 permissions:
