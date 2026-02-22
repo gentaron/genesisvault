@@ -1,4 +1,4 @@
-name: 🤖 Daily AI Blog Post
+name: Genesis Vault — Multi-Agent Daily Post
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate new blog post with AI
+      - name: Run Multi-Agent Pipeline (VE-001 → VE-003 → VE-002 → VE-006)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/auto-post.mjs
@@ -30,6 +30,6 @@ jobs:
       - name: Commit and push new post
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "Genesis Vault Bot 🤖"
+          git config --local user.name "Mina Eureka Ernst [Bot]"
           git add src/content/posts/*.md
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 自動投稿: $(date +'%Y-%m-%d') — AI生成ブログ" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)

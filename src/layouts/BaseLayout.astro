@@ -2,9 +2,14 @@
 interface Props {
   title: string;
   description?: string;
+  keywords?: string[];
 }
 
-const { title, description = '静かな日々の記録' } = Astro.props;
+const {
+  title,
+  description = 'Genesis Vault — ミナ・エウレカ・エルンストの思考と日常を綴るデジタル日記',
+  keywords = [],
+} = Astro.props;
 import '../styles/global.css';
 ---
 
@@ -13,21 +18,23 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
+    {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
     <meta name="viewport" content="width=device-width" />
+    <meta name="author" content="Mina Eureka Ernst" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen">
-    <header class="border-b border-gray-200 dark:border-gray-700 py-6 mb-12">
-      <nav class="container-custom flex justify-between items-center">
-        <a href="/" class="text-2xl font-serif-jp font-bold text-charcoal dark:text-warm-white hover:text-gentle-green transition-colors">
-          静かな日記
+  <body>
+    <header>
+      <nav class="container-custom">
+        <a href="/" class="site-name">
+          Genesis Vault
         </a>
-        <div class="flex gap-6 items-center">
-          <a href="/" class="text-charcoal dark:text-warm-white hover:text-gentle-green transition-colors">ホーム</a>
-          <a href="/about" class="text-charcoal dark:text-warm-white hover:text-gentle-green transition-colors">About</a>
-          <button id="theme-toggle" class="p-2 rounded-lg hover:bg-soft-beige dark:hover:bg-gray-700 transition-colors" aria-label="ダークモード切替">
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <button id="theme-toggle" aria-label="ダークモード切替">
             <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
             <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
           </button>
@@ -35,13 +42,13 @@ import '../styles/global.css';
       </nav>
     </header>
 
-    <main class="container-custom pb-20">
+    <main class="container-custom" style="padding-bottom: 5rem;">
       <slot />
     </main>
 
-    <footer class="border-t border-gray-200 dark:border-gray-700 py-8 mt-20">
-      <div class="container-custom text-center text-sm text-gray-600 dark:text-gray-400">
-        <p>© 2026 静かな日記 - 朝の光のような、優しい記録</p>
+    <footer>
+      <div class="container-custom" style="text-align: center;">
+        <p>&copy; 2026 Genesis Vault — Mina Eureka Ernst</p>
       </div>
     </footer>
 
@@ -50,7 +57,6 @@ import '../styles/global.css';
       const darkIcon = document.getElementById('theme-toggle-dark-icon');
       const lightIcon = document.getElementById('theme-toggle-light-icon');
 
-      // 初期テーマ設定
       if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
         lightIcon.classList.remove('hidden');
