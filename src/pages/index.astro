@@ -10,13 +10,16 @@ const allPosts = await getCollection('posts', ({ data }) => {
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title="静かな日記 - ホーム">
+<BaseLayout title="Genesis Vault with Mina Eureka Ernst">
   <div class="mb-16 text-center">
-    <h1 class="text-5xl font-serif-jp font-bold mb-4 text-charcoal dark:text-warm-white">
-      静かな日記
+    <h1 class="page-title">
+      Genesis Vault
     </h1>
-    <p class="text-lg text-gray-600 dark:text-gray-400">
-      朝の柔らかい光のような、優しい日々の記録
+    <p class="subtitle">
+      with Mina Eureka Ernst
+    </p>
+    <p class="text-lg" style="color: var(--color-gray-dark); margin-top: 0.75rem;">
+      思考の種を保管する、静かなデジタル日記
     </p>
   </div>
 
@@ -28,7 +31,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 
   {sortedPosts.length === 0 && (
     <div class="text-center py-20">
-      <p class="text-gray-500 dark:text-gray-400">まだ記事がありません</p>
+      <p style="color: var(--color-gray-dark);">まだ記事がありません</p>
     </div>
   )}
 </BaseLayout>
