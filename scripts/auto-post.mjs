@@ -21,12 +21,12 @@ const ROOT_DIR = path.join(__dirname, '..');
 // ─── Config ──────────────────────────────────────────────────────
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODELS = [
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-8b',
+  'gemini-2.5-flash-lite',   // 15 RPM, 1000 RPD (free tier, best limits)
+  'gemini-2.5-flash',        // 10 RPM, 250 RPD  (free tier, higher quality)
+  'gemini-2.0-flash',        //  5 RPM            (free tier, retiring 2026-03-31)
 ];
-const MAX_RETRIES = 2;
-const RETRY_BASE_DELAY_MS = 5000;
+const MAX_RETRIES = 3;
+const RETRY_BASE_DELAY_MS = 10000;
 const POSTS_DIR = path.join(ROOT_DIR, 'src', 'content', 'posts');
 
 const MOODS = ['🌿', '💭', '📖', '✨', '🌸', '🍃', '🔥', '🌊', '🌙', '☕'];
