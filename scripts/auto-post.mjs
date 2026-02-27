@@ -78,6 +78,20 @@ function slugify() {
   return 'post-' + Math.random().toString(36).substring(2, 8);
 }
 
+// ─── Theme keywords for categorization ──────────────────────────
+// Each theme maps to Japanese keywords used to classify article titles/tags.
+const THEME_KEYWORDS = {
+  '貯金・節約':           ['貯金', '節約', '家計', '生活費', 'お金', '財布', '支出', '収入', '固定費', 'コスト'],
+  '投資・資産形成':       ['投資', 'ETF', '株', '資産', 'ポートフォリオ', '積立', 'NISA', '配当', '運用', 'インデックス'],
+  'ひとり旅':             ['旅', '旅行', 'ひとり旅', '観光', '宿', '街歩き', '温泉', '列車', '旅先', '電車'],
+  '読書':                 ['読書', '本', '書籍', '文庫', 'ビジネス書', '読んだ', '図書'],
+  '瞑想・マインドフルネス': ['瞑想', 'マインドフルネス', '呼吸', 'メンタル', 'ストレス', 'セルフケア', '心'],
+  'ジャーナリング':       ['ジャーナリング', '日記', 'ノート', '書く習慣', '手帳', '振り返り'],
+  '散歩・日常':           ['散歩', '日常', '朝', '夜', '習慣', '暮らし', '季節', '天気'],
+  '暗号資産':             ['暗号', 'ビットコイン', 'BTC', 'ETH', 'NFT', 'Web3', '仮想通貨', 'ブロックチェーン'],
+  '自己成長':             ['成長', '自己啓発', 'スキル', '目標', '学び', 'キャリア', '継続', 'チャレンジ'],
+};
+
 // ─── Reference Data Extraction ──────────────────────────────────
 async function extractArticleSummaries() {
   const summaries = [];
@@ -152,6 +166,79 @@ async function extractArticles() {
   return articles;
 }
 
+// ─── Theme Balance Analysis ──────────────────────────────────────
+
+/**
+ * Classify an array of text strings (titles / tags) into THEME_KEYWORDS buckets.
+ * Each string is counted at most once (first matching theme wins).
+ */
+function categorizeByTheme(texts) {
+  const counts = Object.fromEntries(Object.keys(THEME_KEYWORDS).map(k => [k, 0]));
+  for (const text of texts) {
+    for (const [theme, keywords] of Object.entries(THEME_KEYWORDS)) {
+      if (keywords.some(kw => text.includes(kw))) {
+        counts[theme]++;
+        break;
+      }
+    }
+  }
+  return counts;
+}
+
+/**
+ * Analyze theme usage across:
+ *   1. gensnotes_1.md / gensnotes_2.md  (legacy articles — topic landscape)
+ *   2. Most recent `recentPostsLimit` local posts (recent auto-post history)
+ *
+ * Returns { gensnotesCount, recentCount } where each is { [theme]: number }.
+ */
+async function analyzeThemeBalance(recentPostsLimit = 20) {
+  // ── gensnotes: what topics already exist in the source material ──
+  const gensnotesTitles = await extractArticleSummaries();
+  const gensnotesCount = categorizeByTheme(gensnotesTitles);
+
+  // ── Recent local posts: what themes were used lately ─────────────
+  const recentCount = Object.fromEntries(Object.keys(THEME_KEYWORDS).map(k => [k, 0]));
+  try {
+    const files = await fs.readdir(POSTS_DIR);
+    const mdFiles = files.filter(f => f.endsWith('.md')).sort().slice(-recentPostsLimit);
+    for (const file of mdFiles) {
+      const raw = await fs.readFile(path.join(POSTS_DIR, file), 'utf-8');
+      // Pull title + tags from frontmatter for classification
+      const titleMatch = raw.match(/^title:\s*"?(.+?)"?\s*$/m);
+      const tagsMatch  = raw.match(/^tags:\s*\[([^\]]+)\]/m);
+      const searchable = [
+        titleMatch?.[1] ?? '',
+        tagsMatch?.[1]  ?? '',
+      ].join(' ');
+
+      for (const [theme, keywords] of Object.entries(THEME_KEYWORDS)) {
+        if (keywords.some(kw => searchable.includes(kw))) {
+          recentCount[theme]++;
+          break; // count each post once
+        }
+      }
+    }
+  } catch { /* POSTS_DIR may not exist yet */ }
+
+  return { gensnotesCount, recentCount };
+}
+
+/**
+ * Sort themes by a combined score (least-used = highest priority).
+ *   score = recentCount × 3  +  gensnotesCount × 1
+ * Weight recent posts 3× more than gensnotes to prioritize variety in auto-posts.
+ */
+function buildThemePriorityList(themeBalance) {
+  const { recentCount, gensnotesCount } = themeBalance;
+  return Object.keys(THEME_KEYWORDS)
+    .map(theme => ({
+      theme,
+      score: (recentCount[theme] || 0) * 3 + (gensnotesCount[theme] || 0),
+    }))
+    .sort((a, b) => a.score - b.score);
+}
+
 // ─── Gemini API Caller (multi-model + retry) ────────────────────
 async function callGeminiWithModel(model, prompt) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
@@ -211,29 +298,63 @@ async function callGemini(prompt) {
 /**
  * VE-001 Lena Strauss (CEO Agent) — テーマ・トピック・切り口の決定
  * 戦略眼を持つプランナー。ミナの興味・関心を俯瞰し、最も響くテーマを選ぶ。
+ * themeBalance を受け取り、最近使っていないテーマを優先的に選択する。
  */
-async function agentCEO(titles, styleSamples) {
+async function agentCEO(titles, styleSamples, themeBalance) {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): テーマ決定中…');
 
   const sampleTitles = pickN(titles, 10).join('\n- ');
   const sampleTexts = styleSamples.map((s, i) => `【サンプル${i + 1}】\n${s}`).join('\n\n');
+
+  // Build priority list: least-used themes first
+  const priorityList = buildThemePriorityList(themeBalance);
+  const priorityText = priorityList
+    .map((p, i) => `  ${i + 1}. ${p.theme}（優先度スコア: ${p.score}）`)
+    .join('\n');
+
+  // Summarize recent theme usage for transparency
+  const { recentCount, gensnotesCount } = themeBalance;
+  const recentSummary = Object.entries(recentCount)
+    .filter(([, c]) => c > 0)
+    .map(([theme, c]) => `  - ${theme}: 直近${c}記事で使用`)
+    .join('\n') || '  （まだ記事がありません）';
+
+  const gensnotesSummary = Object.entries(gensnotesCount)
+    .filter(([, c]) => c > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([theme, c]) => `  - ${theme}: ${c}記事`)
+    .join('\n') || '  （データなし）';
 
   const prompt = `${PERSONA}
 
 あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
 Genesis Vault ブログの次の日記エントリーのテーマ・トピック・切り口を決めてください。
 
-以下は過去の記事タイトルです：
+## テーマバランス分析（重要）
+
+### 直近の自動投稿で使ったテーマ:
+${recentSummary}
+
+### gensnotes（旧ブログ）のテーマ分布:
+${gensnotesSummary}
+
+### テーマ優先順位リスト（スコアが低いほど最近使われていない→優先）:
+${priorityText}
+
+**選択ルール**: 優先順位1〜3位のテーマの中から今日のテーマを選んでください。
+同じテーマが連続・偏らないよう、バランスを最優先にしてください。
+
+## 参考：過去の記事タイトル（gensnotes より）
 - ${sampleTitles}
 
-以下は過去の記事の文体サンプルです：
+## 参考：文体サンプル
 ${sampleTexts}
 
 今日は ${todayISO()} です。
 
 以下の JSON 形式で出力してください（他の文は書かないで）:
 {
-  "theme": "大テーマ（貯金・節約、投資・資産形成、ひとり旅、読書、瞑想・マインドフルネス、ジャーナリング、散歩・日常、暗号資産、自己成長 のいずれか）",
+  "theme": "大テーマ（優先順位リスト上位から選択）",
   "topic": "具体的なトピック（例：ETF積立3ヶ月目の気づき、週末ひとり旅で見つけたカフェ）",
   "angle": "切り口・ユニークな視点の説明（1〜2文）",
   "title": "日記のタイトル（魅力的で短く）",
@@ -248,9 +369,11 @@ ${sampleTexts}
     } catch { /* fallback below */ }
   }
 
+  // Fallback: pick the highest-priority (least-used) theme
   console.log('  ⚠️  CEO Agent fallback');
+  const topTheme = priorityList[0]?.theme ?? '散歩・日常';
   return {
-    theme: pick(['貯金・節約', '投資・資産形成', 'ひとり旅', '読書', '瞑想・マインドフルネス', 'ジャーナリング', '散歩・日常', '暗号資産', '自己成長']),
+    theme: topTheme,
     topic: '独身ライフの中で見つけた小さな幸せ',
     angle: 'ひとりの時間だからこそ見えてくるものを掘り下げる',
     title: '静かな午後、ノートを広げて',
@@ -500,10 +623,21 @@ ETFの積立投資も同じだなと思った。毎月コツコツ買い足し�
   },
 ];
 
-function generateFallbackPost(articles, titles) {
+function generateFallbackPost(articles, titles, themeBalance) {
   console.log('📋 テンプレートフォールバックを使用…');
 
-  const chosen = pick(FALLBACK_BODIES);
+  // Prefer the least-recently-used theme that has a fallback body
+  const priorityList = buildThemePriorityList(themeBalance);
+  const priorityThemes = priorityList.map(p => p.theme);
+
+  // Try to find a FALLBACK_BODIES entry matching a high-priority theme
+  let chosen = null;
+  for (const theme of priorityThemes) {
+    chosen = FALLBACK_BODIES.find(fb => fb.theme === theme);
+    if (chosen) break;
+  }
+  chosen = chosen ?? pick(FALLBACK_BODIES); // final fallback: random
+
   const theme = THEMES.find(t => t.category === chosen.theme) || THEMES[0];
 
   return {
@@ -541,6 +675,17 @@ async function main() {
   const articles = await extractArticles();
   console.log(`  ✅ ${titles.length} titles, ${styleSamples.length} style samples, ${articles.length} articles loaded`);
 
+  // Analyze theme balance (gensnotes + recent local posts)
+  console.log('⚖️  Analyzing theme balance...');
+  const themeBalance = await analyzeThemeBalance(20);
+  const priorityList = buildThemePriorityList(themeBalance);
+  console.log('  Theme priority (least-used first):');
+  priorityList.forEach((p, i) => {
+    const bar = '█'.repeat(Math.min(p.score, 20));
+    console.log(`    ${i + 1}. ${p.theme.padEnd(18)} score=${p.score} ${bar}`);
+  });
+  console.log('');
+
   const mood = pick(MOODS);
   const weather = pick(WEATHERS);
   const slug = slugify();
@@ -550,7 +695,7 @@ async function main() {
 
   try {
     // ── Agent 1: CEO ────────────────────────────────────────
-    ceoPlan = await agentCEO(titles, styleSamples);
+    ceoPlan = await agentCEO(titles, styleSamples, themeBalance);
     console.log(`  ✅ テーマ: ${ceoPlan.theme}`);
     console.log(`  ✅ トピック: ${ceoPlan.topic}`);
     console.log(`  ✅ タイトル: ${ceoPlan.title}`);
@@ -578,7 +723,7 @@ async function main() {
   } catch (err) {
     console.error(`❌ Agent Pipeline Error: ${err.message}`);
     console.log('📋 Falling back to template...');
-    const fallback = generateFallbackPost(articles, titles);
+    const fallback = generateFallbackPost(articles, titles, themeBalance);
     ceoPlan = fallback.ceoPlan;
     seoData = fallback.seoData;
     finalBody = fallback.body;
