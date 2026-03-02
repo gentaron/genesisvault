@@ -36,20 +36,21 @@ const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄�
 const PERSONA = `
 あなたは「ミナ・エウレカ・エルンスト（Mina Eureka Ernst）」です。
 Genesis Vault というパーソナルブログの著者で、20代後半の独身女性。
-デジタルノマド的な暮らしを送りながら、堅実な資産形成にも取り組んでいます。
+デジタルノマド的な暮らしを送りながら、多趣味な日常を楽しんでいます。
 
-【ミナの特徴】
+【ミナの特徴（すべて同じくらい大切な趣味・習慣）】
+- 散歩が好き。歩きながら考えをまとめる
+- 瞑想を習慣にしている。心の整理に役立てている
+- プチ旅行が好き。週末や連休にふらっと出かける
+- ジャーナリング（日記・内省）が日課
+- 本をたまに読んで、ブログで紹介することもある
+- 自分なりのペースで自己成長を大切にしている
 - 貯金が好きで、コツコツ資産を積み上げることに喜びを感じる
 - 投資も好き（暗号通貨、株式ETF）。長期目線でポートフォリオを育てている
 - 独身ライフを楽しんでいる。自由な時間の使い方が上手
-- プチ旅行が好き。週末や連休にふらっと出かける
-- 本をたまに読んで、ブログで紹介することもある
-- 瞑想を習慣にしている。心の整理に役立てている
-- ジャーナリング（日記・内省）が日課
-- 散歩が好き。歩きながら考えをまとめる
 
 【ターゲット読者】
-独身で、貯金・投資・自己成長・ひとり旅・読書・マインドフルネスに興味がある人。
+独身で、散歩・瞑想・ひとり旅・読書・ジャーナリング・自己成長・貯金・投資・マインドフルネスに興味がある人。
 同じような価値観を持つ読者に「わかる」「共感する」と感じてもらえる記事を書く。
 
 文体は柔らかい日記調で、読者に語りかけるような親しみやすさがあります。
@@ -296,53 +297,50 @@ async function callGemini(prompt) {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * VE-001 Lena Strauss (CEO Agent) — テーマ・トピック・切り口の決定
- * 戦略眼を持つプランナー。ミナの興味・関心を俯瞰し、最も響くテーマを選ぶ。
- * themeBalance を受け取り、最近使っていないテーマを優先的に選択する。
+ * Select today's theme deterministically from the priority list.
+ * Picks randomly from the top N least-used themes (never lets AI choose).
+ */
+function selectTodayTheme(themeBalance) {
+  const priorityList = buildThemePriorityList(themeBalance);
+  // Group themes with the same (lowest) score
+  const lowestScore = priorityList[0].score;
+  const topTier = priorityList.filter(p => p.score === lowestScore);
+  // If only 1 top-tier, also include 2nd tier for variety
+  if (topTier.length === 1 && priorityList.length > 1) {
+    const secondScore = priorityList[1].score;
+    const secondTier = priorityList.filter(p => p.score === secondScore);
+    return pick([...topTier, ...secondTier]).theme;
+  }
+  return pick(topTier).theme;
+}
+
+/**
+ * VE-001 Lena Strauss (CEO Agent) — トピック・切り口の決定
+ * 戦略眼を持つプランナー。指定されたテーマの中で最も響くトピックを考案する。
+ *
+ * テーマはプログラム側で確定済み（assignedTheme）。
+ * AIにはそのテーマ内でのトピック・切り口・タイトルだけを考えさせる。
  */
 async function agentCEO(titles, styleSamples, themeBalance) {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): テーマ決定中…');
 
+  // ── Theme is decided by code, not by AI ────────────────────
+  const assignedTheme = selectTodayTheme(themeBalance);
+  console.log(`  🎲 今日のテーマ（プログラム選択）: ${assignedTheme}`);
+
   const sampleTitles = pickN(titles, 10).join('\n- ');
   const sampleTexts = styleSamples.map((s, i) => `【サンプル${i + 1}】\n${s}`).join('\n\n');
-
-  // Build priority list: least-used themes first
-  const priorityList = buildThemePriorityList(themeBalance);
-  const priorityText = priorityList
-    .map((p, i) => `  ${i + 1}. ${p.theme}（優先度スコア: ${p.score}）`)
-    .join('\n');
-
-  // Summarize recent theme usage for transparency
-  const { recentCount, gensnotesCount } = themeBalance;
-  const recentSummary = Object.entries(recentCount)
-    .filter(([, c]) => c > 0)
-    .map(([theme, c]) => `  - ${theme}: 直近${c}記事で使用`)
-    .join('\n') || '  （まだ記事がありません）';
-
-  const gensnotesSummary = Object.entries(gensnotesCount)
-    .filter(([, c]) => c > 0)
-    .sort((a, b) => b[1] - a[1])
-    .map(([theme, c]) => `  - ${theme}: ${c}記事`)
-    .join('\n') || '  （データなし）';
 
   const prompt = `${PERSONA}
 
 あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
-Genesis Vault ブログの次の日記エントリーのテーマ・トピック・切り口を決めてください。
+Genesis Vault ブログの次の日記エントリーのトピック・切り口・タイトルを決めてください。
 
-## テーマバランス分析（重要）
+## 今日のテーマ（決定済み・変更不可）
+「${assignedTheme}」
 
-### 直近の自動投稿で使ったテーマ:
-${recentSummary}
-
-### gensnotes（旧ブログ）のテーマ分布:
-${gensnotesSummary}
-
-### テーマ優先順位リスト（スコアが低いほど最近使われていない→優先）:
-${priorityText}
-
-**選択ルール**: 優先順位1〜3位のテーマの中から今日のテーマを選んでください。
-同じテーマが連続・偏らないよう、バランスを最優先にしてください。
+上記テーマに沿った内容にしてください。他のテーマに変えてはいけません。
+たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。
 
 ## 参考：過去の記事タイトル（gensnotes より）
 - ${sampleTitles}
@@ -354,8 +352,7 @@ ${sampleTexts}
 
 以下の JSON 形式で出力してください（他の文は書かないで）:
 {
-  "theme": "大テーマ（優先順位リスト上位から選択）",
-  "topic": "具体的なトピック（例：ETF積立3ヶ月目の気づき、週末ひとり旅で見つけたカフェ）",
+  "topic": "具体的なトピック（「${assignedTheme}」に直接関連する内容）",
   "angle": "切り口・ユニークな視点の説明（1〜2文）",
   "title": "日記のタイトル（魅力的で短く）",
   "mood_hint": "この記事の雰囲気（静寂、思索、平和、発見、情熱、充実、自由 のいずれか）"
@@ -365,16 +362,19 @@ ${sampleTexts}
   if (raw) {
     try {
       const match = raw.match(/\{[\s\S]*\}/);
-      if (match) return JSON.parse(match[0]);
+      if (match) {
+        const parsed = JSON.parse(match[0]);
+        // Force theme to the programmatically chosen one (AI cannot override)
+        return { theme: assignedTheme, ...parsed };
+      }
     } catch { /* fallback below */ }
   }
 
-  // Fallback: pick the highest-priority (least-used) theme
+  // Fallback
   console.log('  ⚠️  CEO Agent fallback');
-  const topTheme = priorityList[0]?.theme ?? '散歩・日常';
   return {
-    theme: topTheme,
-    topic: '独身ライフの中で見つけた小さな幸せ',
+    theme: assignedTheme,
+    topic: `${assignedTheme}のなかで見つけた小さな気づき`,
     angle: 'ひとりの時間だからこそ見えてくるものを掘り下げる',
     title: '静かな午後、ノートを広げて',
     mood_hint: '思索',
@@ -458,8 +458,8 @@ ${sampleTexts}
 6. 具体的なエピソードや比喩を交える
 7. 読者に語りかけるような温かみを持たせる
 8. 本文のみ出力する（タイトルやfrontmatterは不要）
-9. ターゲット読者は独身で、貯金・投資・ひとり旅・読書・瞑想・ジャーナリングに興味がある人。「わかる」「共感する」と思ってもらえる内容にする
-10. ミナの日常（貯金のこと、投資ポートフォリオ、週末のプチ旅行、読んだ本、瞑想や散歩の習慣）を自然に盛り込む`;
+9. ターゲット読者は独身で、ミナと似た多趣味な暮らしに共感する人。「わかる」と思ってもらえる内容にする
+10. **重要**: 今回のテーマ「${ceoPlan.theme}」に集中すること。他のテーマ（貯金・投資など）を無理に盛り込まないこと。テーマに直接関係するミナの日常だけを自然に描写する`;
 
   const result = await callGemini(prompt);
   return result;
