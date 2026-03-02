@@ -1,11 +1,12 @@
 /**
  * Genesis Vault — Multi-Agent AI Blog Post Generator
  *
- * 4-Agent Pipeline:
- *   VE-001  Lena Strauss      (CEO)    … テーマ・トピック・切り口の決定
- *   VE-003  Chloe Verdant     (SEO)    … タグ・キーワード・メタディスクリプション生成
- *   VE-002  Sophia Nightingale(Writer) … 本文執筆（1,000〜2,000字、日記体）
- *   VE-006  Iris Koenig       (Editor) … 校正・品質チェック・ペルソナ一貫性確認
+ * 5-Agent Pipeline:
+ *   VE-005  Nova Harmon       (Balancer) … テーマバランス分析・ジャンル選定
+ *   VE-001  Lena Strauss      (CEO)      … トピック・切り口・タイトルの決定
+ *   VE-003  Chloe Verdant     (SEO)      … タグ・キーワード・メタディスクリプション生成
+ *   VE-002  Sophia Nightingale(Writer)   … 本文執筆（1,000〜2,000字、日記体）
+ *   VE-006  Iris Koenig       (Editor)   … 校正・品質チェック・ペルソナ一貫性確認
  *
  * Persona: Mina Eureka Ernst — Genesis Vault の著者
  */
@@ -191,7 +192,7 @@ function categorizeByTheme(texts) {
  *   1. gensnotes_1.md / gensnotes_2.md  (legacy articles — topic landscape)
  *   2. Most recent `recentPostsLimit` local posts (recent auto-post history)
  *
- * Returns { gensnotesCount, recentCount } where each is { [theme]: number }.
+ * Returns { gensnotesCount, recentCount, recentPostTitles }.
  */
 async function analyzeThemeBalance(recentPostsLimit = 20) {
   // ── gensnotes: what topics already exist in the source material ──
@@ -200,6 +201,7 @@ async function analyzeThemeBalance(recentPostsLimit = 20) {
 
   // ── Recent local posts: what themes were used lately ─────────────
   const recentCount = Object.fromEntries(Object.keys(THEME_KEYWORDS).map(k => [k, 0]));
+  const recentPostTitles = [];
   try {
     const files = await fs.readdir(POSTS_DIR);
     const mdFiles = files.filter(f => f.endsWith('.md')).sort().slice(-recentPostsLimit);
@@ -213,6 +215,8 @@ async function analyzeThemeBalance(recentPostsLimit = 20) {
         tagsMatch?.[1]  ?? '',
       ].join(' ');
 
+      if (titleMatch?.[1]) recentPostTitles.push(titleMatch[1]);
+
       for (const [theme, keywords] of Object.entries(THEME_KEYWORDS)) {
         if (keywords.some(kw => searchable.includes(kw))) {
           recentCount[theme]++;
@@ -222,7 +226,7 @@ async function analyzeThemeBalance(recentPostsLimit = 20) {
     }
   } catch { /* POSTS_DIR may not exist yet */ }
 
-  return { gensnotesCount, recentCount };
+  return { gensnotesCount, recentCount, recentPostTitles: recentPostTitles.reverse() };
 }
 
 /**
@@ -297,36 +301,100 @@ async function callGemini(prompt) {
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Select today's theme deterministically from the priority list.
- * Picks randomly from the top N least-used themes (never lets AI choose).
+ * VE-005 Nova Harmon (Balancer Agent) — テーマバランス分析・ジャンル選定
+ * データ分析が得意な戦略家。ブログ全体の話題多様性を俯瞰し、
+ * 直近記事とgensnotes の偏りを考慮して次に書くべきテーマを1つ選ぶ。
+ *
+ * ミナのペルソナではなく、編集部の分析官として振る舞う。
  */
-function selectTodayTheme(themeBalance) {
+async function agentBalancer(themeBalance, recentPostTitles) {
+  console.log('\n⚖️  [VE-005] Nova Harmon (Balancer): ジャンル選定中…');
+
+  const ALL_THEMES = Object.keys(THEME_KEYWORDS);
   const priorityList = buildThemePriorityList(themeBalance);
-  // Group themes with the same (lowest) score
+  const { recentCount, gensnotesCount } = themeBalance;
+
+  // Format data for the prompt
+  const balanceTable = priorityList
+    .map(p => {
+      const recent = recentCount[p.theme] || 0;
+      const gensnotes = gensnotesCount[p.theme] || 0;
+      return `  - ${p.theme}：直近${recent}回 / gensnotes${gensnotes}件 / スコア${p.score}`;
+    })
+    .join('\n');
+
+  const recentTitlesList = recentPostTitles.length > 0
+    ? recentPostTitles.map(t => `  - ${t}`).join('\n')
+    : '  （まだ記事がありません）';
+
+  const themeListText = ALL_THEMES.map(t => `「${t}」`).join('、');
+
+  const prompt = `あなたは Nova Harmon（ノヴァ・ハーモン）、Balancer Agent（VE-005）です。
+Genesis Vault ブログの編集部で、話題の多様性とバランスを管理する分析官です。
+
+## あなたの役割
+直近の投稿履歴と旧ブログ（gensnotes）のデータを分析し、
+次に書くべきテーマを **1つだけ** 選んでください。
+
+## 選択可能なテーマ一覧
+${themeListText}
+
+## テーマ別の使用データ（スコアが低いほど最近使われていない）
+${balanceTable}
+
+## 直近の記事タイトル（時系列順、新しい順）
+${recentTitlesList}
+
+## 選定基準（優先度順）
+1. **偏り解消**: スコアが低い（= 最近使われていない）テーマを優先する
+2. **連続回避**: 直近の記事タイトルを見て、同じジャンルが2回以上続かないようにする
+3. **gensnotes との補完**: gensnotes で少ないテーマは新鮮味があるので加点する
+4. **季節感**: 今日は ${todayISO()} です。季節に合うテーマがあれば考慮する
+5. **読者の飽き防止**: 似たようなテーマが短期間に集中しないようにする
+
+## 出力形式
+以下の JSON を出力してください（他の文は書かないで）:
+{
+  "selected_theme": "選んだテーマ名（上記一覧から正確にコピー）",
+  "reason": "なぜこのテーマを選んだか（1〜2文で簡潔に）"
+}`;
+
+  const raw = await callGemini(prompt);
+  if (raw) {
+    try {
+      const match = raw.match(/\{[\s\S]*\}/);
+      if (match) {
+        const parsed = JSON.parse(match[0]);
+        const selectedTheme = parsed.selected_theme;
+        // Validate: must be an exact match from THEME_KEYWORDS
+        if (selectedTheme && ALL_THEMES.includes(selectedTheme)) {
+          console.log(`  ✅ 選定テーマ: ${selectedTheme}`);
+          console.log(`  💬 理由: ${parsed.reason || '(なし)'}`);
+          return selectedTheme;
+        }
+        console.warn(`  ⚠️  無効なテーマ「${selectedTheme}」が返却されました`);
+      }
+    } catch { /* fallback below */ }
+  }
+
+  // Fallback: deterministic — pick from least-used tier
+  console.log('  ⚠️  Balancer Agent fallback（プログラムで選択）');
   const lowestScore = priorityList[0].score;
   const topTier = priorityList.filter(p => p.score === lowestScore);
-  // If only 1 top-tier, also include 2nd tier for variety
-  if (topTier.length === 1 && priorityList.length > 1) {
-    const secondScore = priorityList[1].score;
-    const secondTier = priorityList.filter(p => p.score === secondScore);
-    return pick([...topTier, ...secondTier]).theme;
-  }
-  return pick(topTier).theme;
+  const fallbackTheme = pick(topTier).theme;
+  console.log(`  🎲 Fallback テーマ: ${fallbackTheme}`);
+  return fallbackTheme;
 }
 
 /**
- * VE-001 Lena Strauss (CEO Agent) — トピック・切り口の決定
+ * VE-001 Lena Strauss (CEO Agent) — トピック・切り口・タイトルの決定
  * 戦略眼を持つプランナー。指定されたテーマの中で最も響くトピックを考案する。
  *
- * テーマはプログラム側で確定済み（assignedTheme）。
- * AIにはそのテーマ内でのトピック・切り口・タイトルだけを考えさせる。
+ * テーマは Balancer Agent (VE-005) が選定済み（assignedTheme）。
+ * CEO はそのテーマ内でのトピック・切り口・タイトルだけを考える。
  */
-async function agentCEO(titles, styleSamples, themeBalance) {
-  console.log('\n🎯 [VE-001] Lena Strauss (CEO): テーマ決定中…');
-
-  // ── Theme is decided by code, not by AI ────────────────────
-  const assignedTheme = selectTodayTheme(themeBalance);
-  console.log(`  🎲 今日のテーマ（プログラム選択）: ${assignedTheme}`);
+async function agentCEO(titles, styleSamples, assignedTheme) {
+  console.log('\n🎯 [VE-001] Lena Strauss (CEO): トピック決定中…');
 
   const sampleTitles = pickN(titles, 10).join('\n- ');
   const sampleTexts = styleSamples.map((s, i) => `【サンプル${i + 1}】\n${s}`).join('\n\n');
@@ -336,7 +404,7 @@ async function agentCEO(titles, styleSamples, themeBalance) {
 あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
 Genesis Vault ブログの次の日記エントリーのトピック・切り口・タイトルを決めてください。
 
-## 今日のテーマ（決定済み・変更不可）
+## 今日のテーマ（Balancer Agent が選定済み・変更不可）
 「${assignedTheme}」
 
 上記テーマに沿った内容にしてください。他のテーマに変えてはいけません。
@@ -364,7 +432,6 @@ ${sampleTexts}
       const match = raw.match(/\{[\s\S]*\}/);
       if (match) {
         const parsed = JSON.parse(match[0]);
-        // Force theme to the programmatically chosen one (AI cannot override)
         return { theme: assignedTheme, ...parsed };
       }
     } catch { /* fallback below */ }
@@ -694,8 +761,12 @@ async function main() {
   let ceoPlan, seoData, finalBody;
 
   try {
+    // ── Agent 0: Balancer ───────────────────────────────────
+    const assignedTheme = await agentBalancer(themeBalance, themeBalance.recentPostTitles);
+    console.log('');
+
     // ── Agent 1: CEO ────────────────────────────────────────
-    ceoPlan = await agentCEO(titles, styleSamples, themeBalance);
+    ceoPlan = await agentCEO(titles, styleSamples, assignedTheme);
     console.log(`  ✅ テーマ: ${ceoPlan.theme}`);
     console.log(`  ✅ トピック: ${ceoPlan.topic}`);
     console.log(`  ✅ タイトル: ${ceoPlan.title}`);
@@ -758,6 +829,7 @@ tags: [${seoData.tags.map(t => `"${t}"`).join(', ')}]
 description: "${escapedDesc}"
 keywords: [${seoData.keywords.map(k => `"${k}"`).join(', ')}]
 agents:
+  balancer: "VE-005 Nova Harmon"
   ceo: "VE-001 Lena Strauss"
   seo: "VE-003 Chloe Verdant"
   writer: "VE-002 Sophia Nightingale"
@@ -779,10 +851,11 @@ ${cleanBody}
   console.log(`🔑 Keywords: ${seoData.keywords.join(', ')}`);
   console.log('');
   console.log('Agent Pipeline:');
-  console.log('  VE-001 Lena Strauss     (CEO)    → テーマ決定   ✅');
-  console.log('  VE-003 Chloe Verdant    (SEO)    → SEO最適化    ✅');
-  console.log('  VE-002 Sophia Nightingale(Writer) → 本文執筆     ✅');
-  console.log('  VE-006 Iris Koenig      (Editor) → 校正・品質   ✅');
+  console.log('  VE-005 Nova Harmon      (Balancer) → ジャンル選定 ✅');
+  console.log('  VE-001 Lena Strauss     (CEO)      → トピック決定 ✅');
+  console.log('  VE-003 Chloe Verdant    (SEO)      → SEO最適化   ✅');
+  console.log('  VE-002 Sophia Nightingale(Writer)  → 本文執筆    ✅');
+  console.log('  VE-006 Iris Koenig      (Editor)   → 校正・品質  ✅');
   console.log('═══════════════════════════════════════════════════');
 }
 
