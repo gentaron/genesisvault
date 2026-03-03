@@ -805,7 +805,7 @@ async function main() {
   const moodEmoji = moodMap[ceoPlan.mood_hint] || mood;
   const moodLabel = ceoPlan.mood_hint || '思索';
 
-  // Clean finalBody: remove any accidental frontmatter or code fences
+  // Clean finalBody: remove any accidental frontmatter, code fences, or title
   let cleanBody = finalBody
     .replace(/^```(?:markdown|md)?\n?/i, '')
     .replace(/\n?```$/i, '')
@@ -816,6 +816,9 @@ async function main() {
       cleanBody = cleanBody.slice(endFm + 3).trim();
     }
   }
+  // Strip leading title line (# or ##) if it matches the planned title
+  const titlePattern = ceoPlan.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  cleanBody = cleanBody.replace(new RegExp(`^#{1,2}\\s*${titlePattern}\\s*\n+`), '').trim();
 
   const escapedTitle = ceoPlan.title.replace(/"/g, '\\"');
   const escapedDesc = (seoData.description || '').replace(/"/g, '\\"');
