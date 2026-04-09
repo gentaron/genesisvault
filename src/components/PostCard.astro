@@ -34,7 +34,7 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
 
     {tags.length > 0 && (
       <div class="tags">
-        {tags.map(tag => (
+        {tags.map((tag: string) => (
           <span class="tag">
             {tag}
           </span>

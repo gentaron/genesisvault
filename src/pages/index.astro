@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
+import PaywalledContent from '../components/PaywalledContent';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('posts', ({ data }) => {
@@ -8,6 +8,17 @@ const allPosts = await getCollection('posts', ({ data }) => {
 });
 
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Serialize post data for the React component
+const postsData = sortedPosts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  date: post.data.date.toISOString(),
+  mood: post.data.mood || '',
+  weather: post.data.weather || '',
+  tags: post.data.tags || [],
+  description: post.data.description || '',
+}));
 ---
 
 <BaseLayout title="Genesis Vault with Mina Eureka Ernst">
@@ -23,15 +34,5 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </p>
   </div>
 
-  <div class="grid gap-8">
-    {sortedPosts.map(post => (
-      <PostCard post={post} />
-    ))}
-  </div>
-
-  {sortedPosts.length === 0 && (
-    <div class="text-center py-20">
-      <p style="color: var(--color-gray-dark);">まだ記事がありません</p>
-    </div>
-  )}
+  <PaywalledContent client:only="react" posts={postsData} />
 </BaseLayout>
