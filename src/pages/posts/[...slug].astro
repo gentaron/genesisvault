@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostPaywall from '../../components/PostPaywall';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -55,7 +54,7 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
       )}
     </header>
 
-    <PostPaywall client:only="react" postIndex={postIndex}>
+    <div id="post-content" data-post-index={postIndex}>
       <div class="prose-custom">
         <Content />
       </div>
@@ -69,7 +68,24 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
           <span>Editor: {agents.editor}</span>
         </div>
       )}
-    </PostPaywall>
+    </div>
+
+    <!-- Paywall gate (shown by JS if locked) -->
+    <div id="post-gate" style="display:none;">
+      <div class="gv-post-paywall-gate">
+        <div class="gv-locked-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+        <h3 class="gv-gate-title">この記事はプレミアムコンテンツです</h3>
+        <p class="gv-gate-description">3 USDC で全ての記事にアクセスできます</p>
+        <a href="/" class="gv-btn-connect" style="display:inline-flex; text-decoration:none;">
+          ホームから購入する
+        </a>
+      </div>
+    </div>
 
     <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-gray-light);">
       <a href="/" style="color: var(--color-gentle-green);">
@@ -77,4 +93,28 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
       </a>
     </footer>
   </article>
+
+  <script is:inline>
+    (function() {
+      var STORAGE_KEY = 'gv_paid_status';
+      var FREE_LIMIT = 2;
+
+      function isPaid() {
+        try {
+          var d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          return d.paid === true;
+        } catch(e) { return false; }
+      }
+
+      var content = document.getElementById('post-content');
+      var gate = document.getElementById('post-gate');
+      if (content && gate) {
+        var idx = parseInt(content.getAttribute('data-post-index'), 10);
+        if (!isPaid() && idx >= FREE_LIMIT) {
+          content.classList.add('gv-post-paywall-blur');
+          gate.style.display = '';
+        }
+      }
+    })();
+  </script>
 </BaseLayout>

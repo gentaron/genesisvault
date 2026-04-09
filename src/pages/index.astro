@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PaywalledContent from '../components/PaywalledContent';
+import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('posts', ({ data }) => {
@@ -8,17 +8,6 @@ const allPosts = await getCollection('posts', ({ data }) => {
 });
 
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-// Serialize post data for the React component
-const postsData = sortedPosts.map(post => ({
-  slug: post.slug,
-  title: post.data.title,
-  date: post.data.date.toISOString(),
-  mood: post.data.mood || '',
-  weather: post.data.weather || '',
-  tags: post.data.tags || [],
-  description: post.data.description || '',
-}));
 ---
 
 <BaseLayout title="Genesis Vault with Mina Eureka Ernst">
@@ -34,5 +23,177 @@ const postsData = sortedPosts.map(post => ({
     </p>
   </div>
 
-  <PaywalledContent client:only="react" posts={postsData} />
+  <!-- Wallet Connect -->
+  <div class="gv-paywall-header">
+    <div id="wallet-area">
+      <button id="btn-connect" class="gv-btn-connect">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+          <path d="M22 10H18C16.9 10 16 10.9 16 12C16 13.1 16.9 14 18 14H22" />
+        </svg>
+        Wallet Connect
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-8" id="post-list">
+    {sortedPosts.map((post, index) => (
+      <div class="gv-post-item" data-index={index}>
+        <PostCard post={post} />
+      </div>
+    ))}
+  </div>
+
+  <!-- Locked overlay (hidden by default, shown by JS) -->
+  <div id="locked-section" class="gv-locked-section" style="display:none;">
+    <div class="gv-locked-overlay">
+      <div class="gv-locked-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      </div>
+      <p class="gv-locked-text">
+        残り <strong id="locked-count">0</strong>件 の記事がロックされています
+      </p>
+      <p class="gv-locked-subtext">
+        3 USDC で全コンテンツをアンロック
+      </p>
+    </div>
+  </div>
+
+  {sortedPosts.length === 0 && (
+    <div class="text-center py-20">
+      <p style="color: var(--color-gray-dark);">まだ記事がありません</p>
+    </div>
+  )}
+
+  <script is:inline>
+    (function() {
+      var STORAGE_KEY = 'gv_paid_status';
+      var FREE_LIMIT = 2;
+      var ETH_RECEIVE = '0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c';
+      var USDC_CONTRACT = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
+      var USDC_AMOUNT = 3;
+
+      function isPaid() {
+        try {
+          var d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          return d.paid === true;
+        } catch(e) { return false; }
+      }
+
+      function markPaid(wallet, txHash) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          paid: true, wallet: wallet, chain: 'ethereum', txHash: txHash, timestamp: Date.now()
+        }));
+      }
+
+      function applyPaywall() {
+        var paid = isPaid();
+        var items = document.querySelectorAll('.gv-post-item');
+        var lockedCount = 0;
+
+        items.forEach(function(item, i) {
+          if (!paid && i >= FREE_LIMIT) {
+            item.style.display = 'none';
+            lockedCount++;
+          } else {
+            item.style.display = '';
+          }
+        });
+
+        var lockedSection = document.getElementById('locked-section');
+        var lockedCountEl = document.getElementById('locked-count');
+        if (!paid && lockedCount > 0) {
+          lockedCountEl.textContent = lockedCount;
+          lockedSection.style.display = '';
+        } else {
+          lockedSection.style.display = 'none';
+        }
+
+        // Update wallet button area
+        var walletArea = document.getElementById('wallet-area');
+        if (paid) {
+          walletArea.innerHTML = '<div class="gv-wallet-status gv-wallet-paid"><span>✓ 全コンテンツアクセス済み</span></div>';
+        }
+      }
+
+      // --- Wallet Connect via EIP-1193 (MetaMask etc.) ---
+      var btnConnect = document.getElementById('btn-connect');
+      if (btnConnect) {
+        btnConnect.addEventListener('click', async function() {
+          if (!window.ethereum) {
+            alert('MetaMaskなどのウォレットをインストールしてください。');
+            return;
+          }
+          try {
+            var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            var addr = accounts[0];
+            var walletArea = document.getElementById('wallet-area');
+            var short = addr.slice(0,6) + '...' + addr.slice(-4);
+
+            walletArea.innerHTML =
+              '<div class="gv-wallet-panel">' +
+                '<div class="gv-wallet-info">' +
+                  '<span class="gv-wallet-addr">' + short + '</span>' +
+                  '<button id="btn-disconnect" class="gv-btn-small">Disconnect</button>' +
+                '</div>' +
+                '<button id="btn-pay" class="gv-btn-pay">3 USDC で全コンテンツをアンロック</button>' +
+                '<p id="pay-error" class="gv-error" style="display:none;"></p>' +
+              '</div>';
+
+            document.getElementById('btn-disconnect').addEventListener('click', function() {
+              walletArea.innerHTML =
+                '<button id="btn-connect-2" class="gv-btn-connect">' +
+                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                    '<rect x="2" y="6" width="20" height="12" rx="2" />' +
+                    '<path d="M22 10H18C16.9 10 16 10.9 16 12C16 13.1 16.9 14 18 14H22" />' +
+                  '</svg>' +
+                  'Wallet Connect' +
+                '</button>';
+              document.getElementById('btn-connect-2').addEventListener('click', btnConnect.onclick);
+            });
+
+            document.getElementById('btn-pay').addEventListener('click', async function() {
+              var payBtn = this;
+              var errEl = document.getElementById('pay-error');
+              errEl.style.display = 'none';
+              payBtn.textContent = '処理中...';
+              payBtn.disabled = true;
+
+              try {
+                // ERC-20 transfer(address,uint256) = 0xa9059cbb
+                var amount = USDC_AMOUNT * 1000000; // 6 decimals
+                var toHex = ETH_RECEIVE.slice(2).toLowerCase().padStart(64, '0');
+                var amountHex = amount.toString(16).padStart(64, '0');
+                var data = '0xa9059cbb' + toHex + amountHex;
+
+                var txHash = await window.ethereum.request({
+                  method: 'eth_sendTransaction',
+                  params: [{
+                    from: addr,
+                    to: USDC_CONTRACT,
+                    data: data,
+                  }],
+                });
+
+                markPaid(addr, txHash);
+                applyPaywall();
+              } catch(err) {
+                errEl.textContent = err.message || '送金に失敗しました';
+                errEl.style.display = '';
+                payBtn.textContent = '3 USDC で全コンテンツをアンロック';
+                payBtn.disabled = false;
+              }
+            });
+          } catch(err) {
+            alert('ウォレット接続に失敗: ' + (err.message || err));
+          }
+        });
+      }
+
+      applyPaywall();
+    })();
+  </script>
 </BaseLayout>
