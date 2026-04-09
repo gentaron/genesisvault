@@ -1,5 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="#A8C5A3" opacity="0.3"/>
-  <path d="M30 50 Q40 30, 50 50 T70 50" stroke="#A8C5A3" stroke-width="3" fill="none"/>
-  <circle cx="50" cy="50" r="3" fill="#2D2D2D"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A90C4"/>
+      <stop offset="100%" stop-color="#6ECFCF"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B7DD8"/>
+      <stop offset="50%" stop-color="#5BA8E0"/>
+      <stop offset="100%" stop-color="#7EECD6"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="62" fill="url(#bg)" opacity="0.85"/>
+  <!-- Hair silhouette -->
+  <ellipse cx="64" cy="48" rx="32" ry="30" fill="url(#hair)"/>
+  <path d="M32 48 Q28 70 36 80 Q40 68 44 62 Z" fill="url(#hair)"/>
+  <path d="M96 48 Q100 70 92 80 Q88 68 84 62 Z" fill="url(#hair)"/>
+  <!-- Face -->
+  <ellipse cx="64" cy="60" rx="22" ry="24" fill="#F5DEB3"/>
+  <!-- Eyes -->
+  <ellipse cx="54" cy="58" rx="4" ry="4.5" fill="#3B7DD8"/>
+  <ellipse cx="74" cy="58" rx="4" ry="4.5" fill="#3B7DD8"/>
+  <circle cx="55.5" cy="56.5" r="1.5" fill="white"/>
+  <circle cx="75.5" cy="56.5" r="1.5" fill="white"/>
+  <!-- Mouth -->
+  <path d="M58 70 Q64 74 70 70" stroke="#C4937A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Collar/top -->
+  <path d="M42 82 Q54 90 64 86 Q74 90 86 82 L90 100 L38 100 Z" fill="#4A6FA5"/>
 </svg>

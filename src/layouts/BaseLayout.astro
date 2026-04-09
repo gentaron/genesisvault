@@ -42,6 +42,17 @@ import '../styles/global.css';
       </nav>
     </header>
 
+    <!-- Web3 Browser Recommendation Banner -->
+    <div class="gv-web3-banner" id="web3-banner">
+      <div class="container-custom gv-web3-banner-inner">
+        <span class="gv-web3-banner-icon">&#x1F6E1;</span>
+        <p class="gv-web3-banner-text">
+          このサイトはウォレット接続機能を利用します。<strong>Brave</strong> などの Web3 対応ブラウザでのご利用を推奨します。
+        </p>
+        <button class="gv-web3-banner-close" id="web3-banner-close" aria-label="閉じる">&times;</button>
+      </div>
+    </div>
+
     <main class="container-custom" style="padding-bottom: 5rem;">
       <slot />
     </main>
@@ -76,6 +87,20 @@ import '../styles/global.css';
           localStorage.setItem('color-theme', 'dark');
         }
       });
+    </script>
+
+    <script is:inline>
+      (function() {
+        var banner = document.getElementById('web3-banner');
+        var closeBtn = document.getElementById('web3-banner-close');
+        if (localStorage.getItem('gv_web3_banner_dismissed') === '1') {
+          banner.style.display = 'none';
+        }
+        closeBtn.addEventListener('click', function() {
+          banner.style.display = 'none';
+          localStorage.setItem('gv_web3_banner_dismissed', '1');
+        });
+      })();
     </script>
   </body>
 </html>
