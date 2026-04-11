@@ -33,10 +33,22 @@ const POSTS_DIR = path.join(ROOT_DIR, 'src', 'content', 'posts');
 const MOODS = ['🌿', '💭', '📖', '✨', '🌸', '🍃', '🔥', '🌊', '🌙', '☕'];
 const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄️', '🌬️'];
 
+// ─── Mina's birthday / auto-calculated age ──────────────────────
+// 2026年8月16日に30歳になる → 誕生日: 1996-08-16
+function calculateMinaAge() {
+  const birth = new Date('1996-08-16');
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age;
+}
+const MINA_AGE = calculateMinaAge();
+
 // ─── Persona definition (shared across all agents) ──────────────
 const PERSONA = `
 あなたは「ミナ・エウレカ・エルンスト（Mina Eureka Ernst）」です。
-Genesis Vault というパーソナルブログの著者で、20代後半の独身女性。
+Genesis Vault というパーソナルブログの著者で、${MINA_AGE}歳の独身女性（誕生日: 8月16日）。
 デジタルノマド的な暮らしを送りながら、多趣味な日常を楽しんでいます。
 
 【ミナの特徴（すべて同じくらい大切な趣味・習慣）】
