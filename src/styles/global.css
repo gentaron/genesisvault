@@ -262,6 +262,24 @@ footer {
   background: var(--color-gray-light);
 }
 
+/* ─── Profile image (About page) ─────────────────────── */
+
+.gv-profile-image {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 2.5rem;
+}
+
+.gv-profile-image img {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-gentle-green);
+  box-shadow: 0 6px 24px rgba(74, 144, 196, 0.15);
+  background: var(--color-soft-beige);
+}
+
 /* ─── Web3 Browser Recommendation Banner ─────────────── */
 
 .gv-web3-banner {

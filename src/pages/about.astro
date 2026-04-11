@@ -1,5 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// ── Mina Eureka Ernst's birthday ─────────────────────
+// 2026年8月16日に30歳になる → 誕生日: 1996-08-16
+const BIRTH_DATE = new Date('1996-08-16');
+
+function calculateAge(birthDate: Date): number {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+const age = calculateAge(BIRTH_DATE);
 ---
 
 <BaseLayout title="About — Genesis Vault" description="ミナ・エウレカ・エルンストと5人のAIエージェントについて。Genesis Vaultの著者プロフィール。">
@@ -8,14 +24,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       About Me
     </h1>
 
+    <!-- Profile image: place your image file at public/mina-profile.png -->
+    <div class="gv-profile-image">
+      <img src="/mina-profile.png" alt="Mina Eureka Ernst" width="220" height="220" />
+    </div>
+
     <div class="prose-custom">
       <p>
         はじめまして。ミナ・エウレカ・エルンスト（Mina Eureka Ernst）です。
       </p>
 
       <p>
-        わたしは20代後半の独身女性。デジタルノマド的な暮らしを楽しみながら、
+        わたしは{age}歳の独身女性。デジタルノマド的な暮らしを楽しみながら、
         この Genesis Vault に日々の思考や気づきを綴っています。
+        誕生日は8月16日。
       </p>
 
       <h2>わたしのこと</h2>
