@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// ── Mina Eureka Ernst's birthday ─────────────────────
-// 2026年8月16日に30歳になる → 誕生日: 1996-08-16
-const BIRTH_DATE = new Date('1996-08-16');
-
+// ── Birthday calculator ─────────────────────────────
 function calculateAge(birthDate: Date): number {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -15,7 +12,15 @@ function calculateAge(birthDate: Date): number {
   return age;
 }
 
-const age = calculateAge(BIRTH_DATE);
+// ── Mina Eureka Ernst — 2026-08-16 に30歳 → 1996-08-16 生まれ
+const age = calculateAge(new Date('1996-08-16'));
+
+// ── AI Agents — 全員ミナと同い年（1996年生まれ）、誕生日は別々
+const agentNova    = calculateAge(new Date('1996-03-12'));  // Nova Harmon
+const agentLena    = calculateAge(new Date('1996-01-24'));  // Lena Strauss
+const agentChloe   = calculateAge(new Date('1996-05-07'));  // Chloe Verdant
+const agentSophia  = calculateAge(new Date('1996-10-30'));  // Sophia Nightingale
+const agentIris    = calculateAge(new Date('1996-12-15'));  // Iris Koenig
 ---
 
 <BaseLayout title="About — Genesis Vault" description="ミナ・エウレカ・エルンストと5人のAIエージェントについて。Genesis Vaultの著者プロフィール。">
@@ -74,7 +79,7 @@ const age = calculateAge(BIRTH_DATE);
 
       <h3>Nova Harmon（ノヴァ・ハーモン）</h3>
       <p>
-        <strong>VE-005 / Balancer Agent</strong><br />
+        <strong>VE-005 / Balancer Agent</strong> — {agentNova}歳（3月12日生まれ）<br />
         データ分析が得意な戦略家。ブログ全体の話題バランスを俯瞰して、
         直近の投稿履歴と過去記事の偏りから、次に書くべきジャンルを選んでくれる。
         同じテーマが続かないように、読者が飽きないように——全体最適を考える司令塔。
@@ -82,7 +87,7 @@ const age = calculateAge(BIRTH_DATE);
 
       <h3>Lena Strauss（レナ・シュトラウス）</h3>
       <p>
-        <strong>VE-001 / CEO Agent</strong><br />
+        <strong>VE-001 / CEO Agent</strong> — {agentLena}歳（1月24日生まれ）<br />
         戦略眼を持つプランナー。ノヴァが選んだテーマの中で、
         今日はどんなトピックで書くべきか、どんな切り口が読者に響くかを決めてくれる。
         冷静で論理的だけど、トレンドへの嗅覚も鋭い頼れるリーダー。
@@ -90,7 +95,7 @@ const age = calculateAge(BIRTH_DATE);
 
       <h3>Chloe Verdant（クロエ・ヴェルダント）</h3>
       <p>
-        <strong>VE-003 / SEO Agent</strong><br />
+        <strong>VE-003 / SEO Agent</strong> — {agentChloe}歳（5月7日生まれ）<br />
         検索とトレンドの達人。レナが決めたテーマに最適なタグ、キーワード、
         メタディスクリプションを生成して、記事が必要な人にちゃんと届くようにしてくれる。
         データに強いけど、言葉のセンスも抜群。
@@ -98,7 +103,7 @@ const age = calculateAge(BIRTH_DATE);
 
       <h3>Sophia Nightingale（ソフィア・ナイチンゲール）</h3>
       <p>
-        <strong>VE-002 / Writer Agent</strong><br />
+        <strong>VE-002 / Writer Agent</strong> — {agentSophia}歳（10月30日生まれ）<br />
         わたしの声を紡ぐライター。柔らかく温かい日記調の文章で、
         日常の中の気づきや感動を1,000〜2,000字の記事に仕上げてくれる。
         わたしの一人称「わたし」も、語尾の癖も、ちゃんと再現してくれる最高のパートナー。
@@ -106,7 +111,7 @@ const age = calculateAge(BIRTH_DATE);
 
       <h3>Iris Koenig（イリス・ケーニヒ）</h3>
       <p>
-        <strong>VE-006 / Editor Agent</strong><br />
+        <strong>VE-006 / Editor Agent</strong> — {agentIris}歳（12月15日生まれ）<br />
         厳格だけど愛のある編集者。ソフィアが書いた原稿を校正し、
         ペルソナの一貫性、文字数、SEOキーワードの自然な含有、
         AI っぽくない自然な文体かどうかをチェックしてくれる。わたしらしさを最後まで守る番人。
