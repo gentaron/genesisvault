@@ -87,18 +87,88 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       var ETH_RECEIVE = '0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c';
       var USDC_CONTRACT = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
       var USDC_AMOUNT = 3;
+      var USDC_DECIMALS = 1000000;
+      var MAINNET_CHAIN_ID = '0x1';
+      var REQUIRED_CONFIRMATIONS = 2;
+      var POLL_INTERVAL_MS = 3000;
+      var POLL_MAX_ATTEMPTS = 40;
+
+      // Prevent concurrent payment attempts
+      var paymentInProgress = false;
+
+      function isValidAddress(addr) {
+        return typeof addr === 'string' && /^0x[0-9a-fA-F]{40}$/.test(addr);
+      }
+
+      function isValidTxHash(hash) {
+        return typeof hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(hash);
+      }
 
       function isPaid() {
         try {
-          var d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-          return d.paid === true;
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          var d = JSON.parse(raw);
+          // Require all fields to be present with valid formats to prevent trivial tampering
+          return d.paid === true &&
+                 isValidTxHash(d.txHash) &&
+                 isValidAddress(d.wallet) &&
+                 typeof d.timestamp === 'number' &&
+                 d.chain === 'ethereum';
         } catch(e) { return false; }
       }
 
       function markPaid(wallet, txHash) {
+        if (!isValidTxHash(txHash) || !isValidAddress(wallet)) return;
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          paid: true, wallet: wallet, chain: 'ethereum', txHash: txHash, timestamp: Date.now()
+          paid: true,
+          wallet: wallet.toLowerCase(),
+          chain: 'ethereum',
+          txHash: txHash,
+          timestamp: Date.now()
         }));
+      }
+
+      // Poll eth_getTransactionReceipt until confirmed or timeout
+      function waitForReceipt(txHash, onSuccess, onError) {
+        var attempts = 0;
+        function poll() {
+          if (attempts >= POLL_MAX_ATTEMPTS) {
+            onError('タイムアウト: トランザクションを手動でご確認ください。(TX: ' + txHash.slice(0, 10) + '...)');
+            return;
+          }
+          attempts++;
+          window.ethereum.request({ method: 'eth_getTransactionReceipt', params: [txHash] })
+            .then(function(receipt) {
+              if (!receipt) { setTimeout(poll, POLL_INTERVAL_MS); return; }
+
+              // Transaction reverted on-chain
+              if (receipt.status === '0x0' || receipt.status === 0) {
+                onError('トランザクションが失敗しました。USDC残高とガス代をご確認ください。');
+                return;
+              }
+
+              // Verify the transaction was sent to USDC contract
+              if (!receipt.to || receipt.to.toLowerCase() !== USDC_CONTRACT.toLowerCase()) {
+                onError('不正なトランザクションが検出されました。');
+                return;
+              }
+
+              window.ethereum.request({ method: 'eth_blockNumber', params: [] })
+                .then(function(blockHex) {
+                  var txBlock = parseInt(receipt.blockNumber, 16);
+                  var currentBlock = parseInt(blockHex, 16);
+                  if (currentBlock - txBlock + 1 >= REQUIRED_CONFIRMATIONS) {
+                    onSuccess();
+                  } else {
+                    setTimeout(poll, POLL_INTERVAL_MS);
+                  }
+                })
+                .catch(function() { setTimeout(poll, POLL_INTERVAL_MS); });
+            })
+            .catch(function() { setTimeout(poll, POLL_INTERVAL_MS); });
+        }
+        setTimeout(poll, POLL_INTERVAL_MS);
       }
 
       function applyPaywall() {
@@ -124,90 +194,145 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
           lockedSection.style.display = 'none';
         }
 
-        // Update wallet button area
         var walletArea = document.getElementById('wallet-area');
-        if (paid) {
+        if (paid && walletArea) {
           walletArea.innerHTML = '<div class="gv-wallet-paid"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 全コンテンツアクセス済み</div>';
         }
       }
 
-      // --- Wallet Connect via EIP-1193 (MetaMask etc.) ---
-      var btnConnect = document.getElementById('btn-connect');
-      if (btnConnect) {
-        btnConnect.addEventListener('click', async function() {
-          if (!window.ethereum) {
-            alert('MetaMaskなどのウォレットをインストールしてください。');
-            return;
-          }
-          try {
-            var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            var addr = accounts[0];
-            var walletArea = document.getElementById('wallet-area');
-            var short = addr.slice(0,6) + '...' + addr.slice(-4);
+      function showPayError(payBtn, errEl, msg) {
+        paymentInProgress = false;
+        errEl.textContent = msg;
+        errEl.style.display = '';
+        payBtn.textContent = '3 USDC で全コンテンツをアンロック';
+        payBtn.disabled = false;
+      }
 
-            walletArea.innerHTML =
-              '<div class="gv-wallet-panel">' +
-                '<div class="gv-wallet-info">' +
-                  '<span class="gv-wallet-dot"></span>' +
-                  '<span class="gv-wallet-addr">' + short + '</span>' +
-                  '<button id="btn-disconnect" class="gv-btn-small">Disconnect</button>' +
-                '</div>' +
-                '<div class="gv-wallet-card-divider"></div>' +
-                '<button id="btn-pay" class="gv-btn-pay">' +
-                  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
-                  '3 USDC で全コンテンツをアンロック' +
-                '</button>' +
-                '<p id="pay-error" class="gv-error" style="display:none;"></p>' +
-              '</div>';
+      function handlePayment(addr) {
+        if (paymentInProgress) return;
 
-            document.getElementById('btn-disconnect').addEventListener('click', function() {
-              walletArea.innerHTML =
-                '<button id="btn-connect-2" class="gv-btn-connect">' +
-                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-                    '<rect x="2" y="6" width="20" height="12" rx="2" />' +
-                    '<path d="M22 10H18C16.9 10 16 10.9 16 12C16 13.1 16.9 14 18 14H22" />' +
-                  '</svg>' +
-                  'ウォレットを接続' +
-                '</button>';
-              document.getElementById('btn-connect-2').addEventListener('click', btnConnect.onclick);
-            });
+        var payBtn = document.getElementById('btn-pay');
+        var errEl = document.getElementById('pay-error');
+        if (!payBtn || !errEl) return;
 
-            document.getElementById('btn-pay').addEventListener('click', async function() {
-              var payBtn = this;
-              var errEl = document.getElementById('pay-error');
-              errEl.style.display = 'none';
-              payBtn.textContent = '処理中...';
-              payBtn.disabled = true;
+        paymentInProgress = true;
+        errEl.style.display = 'none';
+        payBtn.textContent = 'ネットワーク確認中...';
+        payBtn.disabled = true;
 
-              try {
-                // ERC-20 transfer(address,uint256) = 0xa9059cbb
-                var amount = USDC_AMOUNT * 1000000; // 6 decimals
-                var toHex = ETH_RECEIVE.slice(2).toLowerCase().padStart(64, '0');
-                var amountHex = amount.toString(16).padStart(64, '0');
-                var data = '0xa9059cbb' + toHex + amountHex;
+        // Verify user is on Ethereum mainnet before proceeding
+        window.ethereum.request({ method: 'eth_chainId' })
+          .then(function(chainId) {
+            if (chainId !== MAINNET_CHAIN_ID) {
+              showPayError(payBtn, errEl, 'Ethereumメインネット (Chain ID: 1) に切り替えてください。');
+              return;
+            }
 
-                var txHash = await window.ethereum.request({
-                  method: 'eth_sendTransaction',
-                  params: [{
-                    from: addr,
-                    to: USDC_CONTRACT,
-                    data: data,
-                  }],
-                });
+            payBtn.textContent = '処理中...';
 
-                markPaid(addr, txHash);
-                applyPaywall();
-              } catch(err) {
-                errEl.textContent = err.message || '送金に失敗しました';
-                errEl.style.display = '';
-                payBtn.textContent = '3 USDC で全コンテンツをアンロック';
-                payBtn.disabled = false;
+            var rawAmount = USDC_AMOUNT * USDC_DECIMALS;
+            var toHex = ETH_RECEIVE.slice(2).toLowerCase().padStart(64, '0');
+            var amountHex = rawAmount.toString(16).padStart(64, '0');
+            var data = '0xa9059cbb' + toHex + amountHex;
+
+            window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: addr, to: USDC_CONTRACT, data: data }]
+            })
+            .then(function(txHash) {
+              if (!isValidTxHash(txHash)) {
+                showPayError(payBtn, errEl, 'ウォレットから無効な応答を受け取りました。再試行してください。');
+                return;
+              }
+
+              payBtn.textContent = 'ブロック確認中... (数分かかる場合があります)';
+
+              waitForReceipt(
+                txHash,
+                function() {
+                  markPaid(addr, txHash);
+                  paymentInProgress = false;
+                  applyPaywall();
+                },
+                function(errMsg) {
+                  showPayError(payBtn, errEl, errMsg);
+                }
+              );
+            })
+            .catch(function(err) {
+              if (err && err.code === 4001) {
+                showPayError(payBtn, errEl, 'キャンセルされました。');
+              } else {
+                showPayError(payBtn, errEl, '送金処理中にエラーが発生しました。再試行してください。');
               }
             });
-          } catch(err) {
-            alert('ウォレット接続に失敗: ' + (err.message || err));
-          }
+          })
+          .catch(function() {
+            showPayError(payBtn, errEl, 'ネットワーク情報の取得に失敗しました。再試行してください。');
+          });
+      }
+
+      function renderWalletPanel(addr) {
+        var walletArea = document.getElementById('wallet-area');
+        var short = addr.slice(0, 6) + '...' + addr.slice(-4);
+
+        walletArea.innerHTML =
+          '<div class="gv-wallet-panel">' +
+            '<div class="gv-wallet-info">' +
+              '<span class="gv-wallet-dot"></span>' +
+              '<span class="gv-wallet-addr">' + short + '</span>' +
+              '<button id="btn-disconnect" class="gv-btn-small">Disconnect</button>' +
+            '</div>' +
+            '<div class="gv-wallet-card-divider"></div>' +
+            '<button id="btn-pay" class="gv-btn-pay">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' +
+              '3 USDC で全コンテンツをアンロック' +
+            '</button>' +
+            '<p id="pay-error" class="gv-error" style="display:none;"></p>' +
+          '</div>';
+
+        document.getElementById('btn-disconnect').addEventListener('click', function() {
+          var wa = document.getElementById('wallet-area');
+          wa.innerHTML =
+            '<button id="btn-connect-2" class="gv-btn-connect">' +
+              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<rect x="2" y="6" width="20" height="12" rx="2" />' +
+                '<path d="M22 10H18C16.9 10 16 10.9 16 12C16 13.1 16.9 14 18 14H22" />' +
+              '</svg>' +
+              'ウォレットを接続' +
+            '</button>';
+          document.getElementById('btn-connect-2').addEventListener('click', handleConnectClick);
         });
+
+        document.getElementById('btn-pay').addEventListener('click', function() {
+          handlePayment(addr);
+        });
+      }
+
+      function handleConnectClick() {
+        if (!window.ethereum) {
+          alert('MetaMaskなどのEthereum対応ウォレットをインストールしてください。');
+          return;
+        }
+        window.ethereum.request({ method: 'eth_requestAccounts' })
+          .then(function(accounts) {
+            var addr = accounts[0];
+            if (!isValidAddress(addr)) {
+              alert('ウォレットから無効なアドレスを受け取りました。');
+              return;
+            }
+            renderWalletPanel(addr);
+          })
+          .catch(function(err) {
+            if (err && err.code !== 4001) {
+              alert('ウォレット接続に失敗しました。再試行してください。');
+            }
+          });
+      }
+
+      var btnConnect = document.getElementById('btn-connect');
+      if (btnConnect) {
+        btnConnect.addEventListener('click', handleConnectClick);
       }
 
       applyPaywall();

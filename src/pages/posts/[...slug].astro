@@ -99,10 +99,24 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
       var STORAGE_KEY = 'gv_paid_status';
       var FREE_LIMIT = 2;
 
+      function isValidAddress(addr) {
+        return typeof addr === 'string' && /^0x[0-9a-fA-F]{40}$/.test(addr);
+      }
+
+      function isValidTxHash(hash) {
+        return typeof hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(hash);
+      }
+
       function isPaid() {
         try {
-          var d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-          return d.paid === true;
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          var d = JSON.parse(raw);
+          return d.paid === true &&
+                 isValidTxHash(d.txHash) &&
+                 isValidAddress(d.wallet) &&
+                 typeof d.timestamp === 'number' &&
+                 d.chain === 'ethereum';
         } catch(e) { return false; }
       }
 
