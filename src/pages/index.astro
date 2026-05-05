@@ -104,12 +104,17 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         return typeof hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(hash);
       }
 
-      function isPaid() {
+      // Server-side payment status: check via cookie (set by /api/verify-payment)
+      function isServerPaid() {
+        return document.cookie.indexOf('gv_token=') !== -1;
+      }
+
+      // Local cache (secondary, for instant page loads)
+      function isLocalPaid() {
         try {
           var raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return false;
           var d = JSON.parse(raw);
-          // Require all fields to be present with valid formats to prevent trivial tampering
           return d.paid === true &&
                  isValidTxHash(d.txHash) &&
                  isValidAddress(d.wallet) &&
@@ -118,15 +123,50 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         } catch(e) { return false; }
       }
 
+      function isPaid() {
+        // Server cookie is source of truth; localStorage is secondary cache
+        return isServerPaid() || isLocalPaid();
+      }
+
       function markPaid(wallet, txHash) {
         if (!isValidTxHash(txHash) || !isValidAddress(wallet)) return;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          paid: true,
-          wallet: wallet.toLowerCase(),
-          chain: 'ethereum',
-          txHash: txHash,
-          timestamp: Date.now()
-        }));
+
+        // Server-side verification: call /api/verify-payment
+        fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ txHash: txHash, wallet: wallet })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.verified) {
+            // Server set the gv_token cookie; update localStorage cache
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+              paid: true,
+              wallet: wallet.toLowerCase(),
+              chain: 'ethereum',
+              txHash: txHash,
+              timestamp: Date.now()
+            }));
+            applyPaywall();
+          } else {
+            var payBtn = document.getElementById('btn-pay');
+            var errEl = document.getElementById('pay-error');
+            showPayError(payBtn, errEl, 'サーバー検証に失敗しました: ' + (data.error || '不明なエラー'));
+          }
+        })
+        .catch(function(err) {
+          // Fallback to localStorage-only if server unreachable
+          console.warn('Server verification failed, falling back to localStorage:', err);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            paid: true,
+            wallet: wallet.toLowerCase(),
+            chain: 'ethereum',
+            txHash: txHash,
+            timestamp: Date.now()
+          }));
+          applyPaywall();
+        });
       }
 
       // Poll eth_getTransactionReceipt until confirmed or timeout
@@ -333,6 +373,19 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       var btnConnect = document.getElementById('btn-connect');
       if (btnConnect) {
         btnConnect.addEventListener('click', handleConnectClick);
+      }
+
+      // On page load: verify payment via server-side cookie
+      // If server cookie exists, ensure localStorage cache is in sync
+      if (isServerPaid() && !isLocalPaid()) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          paid: true,
+          wallet: '',
+          chain: 'ethereum',
+          txHash: '',
+          timestamp: Date.now(),
+          serverVerified: true
+        }));
       }
 
       applyPaywall();

@@ -17,15 +17,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
+          bun-version: '1'
 
-      - name: Run Multi-Agent Pipeline (VE-001 → VE-003 → VE-002 → VE-006)
+      - name: Run Multi-Agent Pipeline (VE-005 → VE-001 → VE-003 → VE-002 → VE-006)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node scripts/auto-post.mjs
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          PAYWALL_SECRET: ${{ secrets.PAYWALL_SECRET }}
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+          RECEIVE_WALLET: ${{ secrets.RECEIVE_WALLET }}
+        run: bun scripts/auto-post.mjs
 
       - name: Commit and push new post
         run: |

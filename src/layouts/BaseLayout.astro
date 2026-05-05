@@ -10,7 +10,8 @@ const {
   description = 'Genesis Vault — ミナ・エウレカ・エルンストの思考と日常を綴るデジタル日記',
   keywords = [],
 } = Astro.props;
-import '../styles/global.css';
+import '../styles/app.css';
+import '../styles/global-legacy.css';
 ---
 
 <!doctype html>
@@ -24,6 +25,9 @@ import '../styles/global.css';
     <link rel="icon" type="image/png" href="/mina-profile.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <!-- Plausible Analytics (privacy-friendly, self-hosted) -->
+    <!-- TODO: Replace /js/analytics.js with actual self-hosted Plausible endpoint -->
+    <script defer data-domain="genesisvault.vercel.app" src="/js/analytics.js"></script>
   </head>
   <body>
     <header>

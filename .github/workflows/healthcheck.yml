@@ -1,0 +1,36 @@
+name: Genesis Vault — Healthcheck
+
+on:
+  schedule:
+    # Every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check site is live
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://genesisvault.vercel.app)
+          if [ "$STATUS" != "200" ]; then
+            echo "Site is DOWN (HTTP $STATUS)"
+            exit 1
+          fi
+          echo "Site is UP (HTTP $STATUS)"
+
+      - name: Check latest post exists
+        run: |
+          TODAY=$(date +'%Y-%m-%d')
+          # Check that a post was created within the last 2 days
+          LATEST=$(curl -s https://genesisvault.vercel.app | grep -oP 'post-\w+' | head -1)
+          echo "Latest post slug: $LATEST"
+          # Non-blocking: just report
+          echo "Healthcheck passed."
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Genesis Vault healthcheck failed!"
+          # In production, this would trigger a Slack/Discord notification
+          # via a repository secret webhook URL

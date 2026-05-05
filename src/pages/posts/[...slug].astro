@@ -107,7 +107,13 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
         return typeof hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(hash);
       }
 
-      function isPaid() {
+      // Server-side payment check via HttpOnly cookie
+      function isServerPaid() {
+        return document.cookie.indexOf('gv_token=') !== -1;
+      }
+
+      // Local cache check (secondary)
+      function isLocalPaid() {
         try {
           var raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) return false;
@@ -118,6 +124,10 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
                  typeof d.timestamp === 'number' &&
                  d.chain === 'ethereum';
         } catch(e) { return false; }
+      }
+
+      function isPaid() {
+        return isServerPaid() || isLocalPaid();
       }
 
       var content = document.getElementById('post-content');

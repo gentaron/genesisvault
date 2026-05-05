@@ -15,12 +15,39 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// ─── Vercel AI SDK — Multi-Provider Imports ─────────────────────
+let generateText, google, createGroq, createCerebras, createOpenRouter, createHuggingFace;
+let aiSdkAvailable = false;
+try {
+  const aiModule = await import('ai');
+  generateText = aiModule.generateText;
+  const googleModule = await import('@ai-sdk/google');
+  google = googleModule.google;
+  const groqModule = await import('@ai-sdk/groq');
+  createGroq = groqModule.createGroq;
+  const cerebrasModule = await import('@ai-sdk/cerebras');
+  createCerebras = cerebrasModule.createCerebras;
+  const openrouterModule = await import('@ai-sdk/openrouter');
+  createOpenRouter = openrouterModule.createOpenRouter;
+  const hfModule = await import('@ai-sdk/huggingface');
+  createHuggingFace = hfModule.createHuggingFace;
+  aiSdkAvailable = true;
+  console.log('  ✅ Vercel AI SDK loaded — multi-provider fallback chain active');
+} catch (err) {
+  console.log('  ⚠️  AI SDK not available, using direct Gemini fallback');
+  console.log(`      Reason: ${err.message?.substring(0, 120)}`);
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, '..');
 
 // ─── Config ──────────────────────────────────────────────────────
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const CEREBRAS_API_KEY = process.env.CEREBRAS_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const HF_TOKEN = process.env.HF_TOKEN;
 const MODELS = [
   'gemini-2.5-flash-lite',   // 15 RPM, 1000 RPD (free tier, best limits)
   'gemini-2.5-flash',        // 10 RPM,  250 RPD (free tier, higher quality)
@@ -89,6 +116,55 @@ function todayISO() {
 
 function slugify() {
   return 'post-' + Math.random().toString(36).substring(2, 8);
+}
+
+// ─── Structured Logging ──────────────────────────────────────────
+function logAgent(agentId, agentName, action, result, error) {
+  const timestamp = new Date().toISOString();
+  const log = {
+    timestamp,
+    agent: `${agentId} ${agentName}`,
+    action,
+    result: result ? result.substring(0, 100) : undefined,
+    error,
+  };
+  console.log(JSON.stringify(log));
+}
+
+// ─── Pipeline State (Resume from Failure) ────────────────────────
+const STATE_FILE = path.join(ROOT_DIR, '.pipeline-state.json');
+
+async function savePipelineState(state) {
+  await fs.writeFile(STATE_FILE, JSON.stringify(state, null, 2));
+}
+
+async function loadPipelineState() {
+  try {
+    const raw = await fs.readFile(STATE_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+async function clearPipelineState() {
+  try { await fs.unlink(STATE_FILE); } catch { /* ignore */ }
+}
+
+// ─── Agent Result Validation ─────────────────────────────────────
+function validateCEOPlan(plan) {
+  if (!plan || typeof plan !== 'object') return false;
+  if (!plan.title || typeof plan.title !== 'string') return false;
+  if (!plan.theme || typeof plan.theme !== 'string') return false;
+  if (plan.title.length > 50) return false; // Sanity check
+  return true;
+}
+
+function validateSEOData(data) {
+  if (!data || typeof data !== 'object') return false;
+  if (!Array.isArray(data.tags) || data.tags.length === 0) return false;
+  if (!data.description || data.description.length > 200) return false;
+  return true;
 }
 
 // ─── Theme keywords for categorization ──────────────────────────
@@ -307,6 +383,80 @@ async function callGemini(prompt) {
   return null;
 }
 
+// ─── AI SDK Multi-Provider Fallback Chain ────────────────────────
+// Chain: gemini-2.5-flash-lite → gemini-2.5-flash → Groq Llama 3.3 70B
+//        → Cerebras Llama 3.3 70B → OpenRouter free → HuggingFace
+function buildProviderChain() {
+  const providers = [];
+
+  if (GEMINI_API_KEY && google) {
+    const googleProvider = google({ apiKey: GEMINI_API_KEY });
+    providers.push(
+      { name: 'gemini-2.5-flash-lite', model: googleProvider('gemini-2.5-flash-lite') },
+      { name: 'gemini-2.5-flash', model: googleProvider('gemini-2.5-flash') },
+    );
+  }
+  if (GROQ_API_KEY && createGroq) {
+    const groq = createGroq({ apiKey: GROQ_API_KEY });
+    providers.push({ name: 'groq-llama-3.3-70b', model: groq('llama-3.3-70b-versatile') });
+  }
+  if (CEREBRAS_API_KEY && createCerebras) {
+    const cerebras = createCerebras({ apiKey: CEREBRAS_API_KEY });
+    providers.push({ name: 'cerebras-llama-3.3-70b', model: cerebras('llama-3.3-70b') });
+  }
+  if (OPENROUTER_API_KEY && createOpenRouter) {
+    const openrouter = createOpenRouter({ apiKey: OPENROUTER_API_KEY });
+    providers.push({ name: 'openrouter-free', model: openrouter('meta-llama/llama-3.3-70b-instruct:free') });
+  }
+  if (HF_TOKEN && createHuggingFace) {
+    const hf = createHuggingFace({ apiKey: HF_TOKEN });
+    providers.push({ name: 'huggingface', model: hf('meta-llama/Llama-3.3-70B-Instruct') });
+  }
+
+  return providers;
+}
+
+async function callAI(prompt) {
+  // If AI SDK is available, try the full provider chain first
+  if (aiSdkAvailable) {
+    const providers = buildProviderChain();
+    if (providers.length > 0) {
+      for (const { name, model } of providers) {
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            console.log(`  Trying ${name} (attempt ${attempt + 1})...`);
+            const { text } = await generateText({
+              model,
+              prompt,
+              maxTokens: 4096,
+              temperature: 0.85,
+            });
+            if (text && text.trim()) {
+              console.log(`  ✅ Success: ${name}`);
+              return text.trim();
+            }
+          } catch (err) {
+            const msg = err.message?.substring(0, 150) || String(err);
+            console.warn(`  ⚠️  ${name} attempt ${attempt + 1} failed: ${msg}`);
+            if (err.status === 429 && attempt < MAX_RETRIES) {
+              const delay = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+              console.log(`  ⏳ Retrying in ${delay / 1000}s...`);
+              await sleep(delay);
+              continue;
+            }
+            break;
+          }
+        }
+        console.log(`  ⏭️  Skipping ${name}`);
+      }
+      console.warn('  ⚠️  All AI SDK providers failed, falling back to direct Gemini...');
+    }
+  }
+
+  // Fallback to direct Gemini API
+  return callGemini(prompt);
+}
+
 // ═══════════════════════════════════════════════════════════════
 // Agent Definitions
 // ═══════════════════════════════════════════════════════════════
@@ -370,7 +520,7 @@ ${recentTitlesList}
   "reason": "なぜこのテーマを選んだか（1〜2文で簡潔に）"
 }`;
 
-  const raw = await callGemini(prompt);
+  const raw = await callAI(prompt);
   if (raw) {
     try {
       const match = raw.match(/\{[\s\S]*\}/);
@@ -466,7 +616,7 @@ ${sampleTexts}
   "mood_hint": "この記事の雰囲気（静寂、思索、平和、発見、情熱、充実、自由 のいずれか）"
 }`;
 
-  const raw = await callGemini(prompt);
+  const raw = await callAI(prompt);
   if (raw) {
     try {
       const match = raw.match(/\{[\s\S]*\}/);
@@ -515,7 +665,7 @@ async function agentSEO(ceoPlan) {
   "description": "120文字以内のメタディスクリプション。記事の内容を簡潔に魅力的に伝える文。"
 }`;
 
-  const raw = await callGemini(prompt);
+  const raw = await callAI(prompt);
   if (raw) {
     try {
       const match = raw.match(/\{[\s\S]*\}/);
@@ -570,7 +720,7 @@ ${sampleTexts}
 9. ターゲット読者は独身で、ミナと似た多趣味な暮らしに共感する人。「わかる」と思ってもらえる内容にする
 10. **重要**: 今回のテーマ「${ceoPlan.theme}」に集中すること。他のテーマ（貯金・投資など）を無理に盛り込まないこと。テーマに直接関係するミナの日常だけを自然に描写する`;
 
-  const result = await callGemini(prompt);
+  const result = await callAI(prompt);
   return result;
 }
 
@@ -606,7 +756,7 @@ ${draft}
 - 修正理由のコメントは不要です
 - Markdown形式で出力してください`;
 
-  const result = await callGemini(prompt);
+  const result = await callAI(prompt);
   return result;
 }
 
@@ -777,6 +927,27 @@ async function main() {
   console.log(`📅 Date: ${todayISO()}`);
   console.log('');
 
+  // ── Idempotency: skip if today's post already exists ──────────
+  const todayFile = `${todayISO()}-`;
+  try {
+    const existingFiles = await fs.readdir(POSTS_DIR);
+    const alreadyExists = existingFiles.some(f => f.startsWith(todayFile));
+    if (alreadyExists) {
+      console.log(`Post for ${todayISO()} already exists. Skipping.`);
+      logAgent('SYSTEM', 'Idempotency', 'skip', `Post for ${todayISO()} already exists`);
+      process.exit(0);
+    }
+  } catch {
+    // POSTS_DIR may not exist yet — that's fine, continue
+  }
+
+  // ── Resume from failure: check for saved pipeline state ────────
+  const savedState = await loadPipelineState();
+  if (savedState && savedState.date === todayISO()) {
+    console.log(`Resuming pipeline from step: ${savedState.step}`);
+    logAgent('SYSTEM', 'Resume', 'resumed', `Step: ${savedState.step}`);
+  }
+
   // Load reference data
   console.log('📚 Loading reference data...');
   const titles = await extractArticleSummaries();
@@ -805,10 +976,19 @@ async function main() {
   try {
     // ── Agent 0: Balancer ───────────────────────────────────
     const assignedTheme = await agentBalancer(themeBalance, themeBalance.recentPostTitles);
+    logAgent('VE-005', 'Nova Harmon', 'theme_selected', assignedTheme);
+    await savePipelineState({ step: 'balancer', data: { assignedTheme }, date: todayISO() });
     console.log('');
 
     // ── Agent 1: CEO ────────────────────────────────────────
     ceoPlan = await agentCEO(titles, styleSamples, assignedTheme);
+    if (!validateCEOPlan(ceoPlan)) {
+      console.warn('  ⚠️  CEO plan validation failed — using fallback');
+      logAgent('VE-001', 'Lena Strauss', 'validation_failed', JSON.stringify(ceoPlan));
+      throw new Error('CEO plan validation failed');
+    }
+    logAgent('VE-001', 'Lena Strauss', 'topic_selected', ceoPlan.title);
+    await savePipelineState({ step: 'ceo', data: ceoPlan, date: todayISO() });
     console.log(`  ✅ テーマ: ${ceoPlan.theme}`);
     console.log(`  ✅ トピック: ${ceoPlan.topic}`);
     console.log(`  ✅ タイトル: ${ceoPlan.title}`);
@@ -816,6 +996,13 @@ async function main() {
 
     // ── Agent 2: SEO ────────────────────────────────────────
     seoData = await agentSEO(ceoPlan);
+    if (!validateSEOData(seoData)) {
+      console.warn('  ⚠️  SEO data validation failed — using fallback');
+      logAgent('VE-003', 'Chloe Verdant', 'validation_failed', JSON.stringify(seoData));
+      throw new Error('SEO data validation failed');
+    }
+    logAgent('VE-003', 'Chloe Verdant', 'seo_generated', seoData.tags.join(', '));
+    await savePipelineState({ step: 'seo', data: seoData, date: todayISO() });
     console.log(`  ✅ タグ: ${seoData.tags.join(', ')}`);
     console.log(`  ✅ キーワード: ${seoData.keywords.join(', ')}`);
     console.log(`  ✅ Description: ${seoData.description}`);
@@ -824,16 +1011,20 @@ async function main() {
     // ── Agent 3: Writer ─────────────────────────────────────
     const draft = await agentWriter(ceoPlan, seoData, styleSamples);
     if (!draft) throw new Error('Writer Agent returned empty');
+    logAgent('VE-002', 'Sophia Nightingale', 'draft_written', `${draft.length} chars`);
+    await savePipelineState({ step: 'writer', data: { draftLength: draft.length }, date: todayISO() });
     console.log(`  ✅ 原稿完成 (${draft.length}文字)`);
     console.log('');
 
     // ── Agent 4: Editor ─────────────────────────────────────
     const edited = await agentEditor(ceoPlan, seoData, draft);
     finalBody = edited || draft; // If editor fails, use the draft
+    logAgent('VE-006', 'Iris Koenig', 'editing_complete', `${finalBody.length} chars`);
     console.log(`  ✅ 校正完了 (${finalBody.length}文字)`);
     console.log('');
 
   } catch (err) {
+    logAgent('SYSTEM', 'Pipeline', 'error', undefined, err.message);
     console.error(`❌ Agent Pipeline Error: ${err.message}`);
     console.log('📋 Falling back to template...');
     const fallback = generateFallbackPost(articles, titles, themeBalance);
@@ -841,6 +1032,9 @@ async function main() {
     seoData = fallback.seoData;
     finalBody = fallback.body;
   }
+
+  // ── Clear pipeline state on success ───────────────────────
+  await clearPipelineState();
 
   // ── Build frontmatter & save ──────────────────────────────
   const moodMap = { '静寂': '📖', '思索': '💭', '平和': '🌿', '発見': '✨', '情熱': '🔥', '充実': '🌸', '自由': '🍃' };

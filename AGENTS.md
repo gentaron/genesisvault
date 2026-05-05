@@ -205,3 +205,26 @@ Use conventional commit format:
 
 **This ruleset applies to all repositories under the gentaron GitHub account.**
 **Do not override these rules with general AI behavior.**
+
+---
+
+## 10. Pipeline Observability
+
+### 10.1 Structured Logging
+Each agent emits JSON-formatted logs:
+```json
+{"timestamp":"2026-05-05T19:30:00Z","agent":"VE-001 Lena Strauss","action":"topic_selected","result":"貯金・節約"}
+```
+
+### 10.2 Idempotency
+The pipeline checks for existing posts for today's date before generating.
+If a post already exists, the pipeline exits cleanly with code 0.
+
+### 10.3 Resume from Failure
+Intermediate state is saved to `.pipeline-state.json`.
+On restart, the pipeline resumes from the last successful step.
+State file is deleted on successful completion.
+
+### 10.4 Error Escalation
+If all AI providers fail (Phase γ), the pipeline falls back to template-based posts.
+Template posts are marked with `fallback: true` in the agents metadata.
