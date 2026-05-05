@@ -9,6 +9,21 @@ const USDC_AMOUNT = 3n; // 3 USDC
 const USDC_DECIMALS = 6n;
 const REQUIRED_CONFIRMATIONS = 2;
 
+// ERC-20 Transfer event topic (used in server-side paywall verification)
+export const ERC20_TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' as const;
+
+/**
+ * Parse an ERC-20 Transfer event log to extract from, to, and value.
+ * Used by the server-side paywall to verify USDC transfers on-chain.
+ */
+export function parseTransferLog(log: { topics: string[]; data: string }): { from: Address; to: Address; value: bigint } | null {
+  if (log.topics[0] !== ERC20_TRANSFER_TOPIC) return null;
+  const from = ('0x' + log.topics[1].slice(26)) as Address;
+  const to = ('0x' + log.topics[2].slice(26)) as Address;
+  const value = BigInt(log.data);
+  return { from, to, value };
+}
+
 export const USDC_ABI = parseAbi([
   'function transfer(address to, uint256 amount) returns (bool)',
   'function balanceOf(address account) view returns (uint256)',

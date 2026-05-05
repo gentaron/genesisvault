@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="プライバシーポリシー — Genesis Vault" description="Genesis Vaultのプライバシーポリシー">
+  <article class="max-w-2xl mx-auto" style="max-width: 42rem; margin: 0 auto;">
+    <h1 class="page-title">プライバシーポリシー</h1>
+    <div class="prose-custom">
+      <h2>ウォレットアドレスの取り扱い</h2>
+      <p>
+        Genesis Vault では、ペイウォール解除のために Ethereum ウォレットアドレスを記録します。
+        ウォレットアドレスは支払い検証のみに使用され、個人識別情報とは紐付けされません。
+      </p>
+      <p>
+        トランザクションハッシュは支払いの証明としてサーバー側で検証され、
+        HMAC 署名付き Cookie としてブラウザに保存されます。
+        この Cookie は HttpOnly および Secure 属性により保護されています。
+      </p>
+
+      <h2>Cookie</h2>
+      <p>
+        当サイトでは以下の Cookie を使用します：
+      </p>
+      <ul>
+        <li><code>gv_unlock</code> — ペイウォール解除状態。30日間有効。HttpOnly / Secure / SameSite=Strict。</li>
+        <li><code>color-theme</code> — ダークモード設定の保存。localStorage に保存されます。</li>
+      </ul>
+
+      <h2>第三者サービス</h2>
+      <ul>
+        <li>Plausible Analytics — Cookie を使用しないプライバシー重視のアクセス解析</li>
+        <li>Ethereum ブロックチェーン — トランザクションはパブリックレジャーに記録されます</li>
+        <li>Vercel — サイト配信インフラストラクチャ</li>
+      </ul>
+
+      <h2>データの保存場所</h2>
+      <p>
+        当サイトはデータベースを使用していません。すべての状態は Cookie および
+        ブロックチェーン上のトランザクション記録によって管理されています。
+      </p>
+
+      <h2>お問い合わせ</h2>
+      <p>
+        プライバシーに関するご質問は、Nostr または GitHub Issues までお願いします。
+      </p>
+    </div>
+  </article>
+</BaseLayout>

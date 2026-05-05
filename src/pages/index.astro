@@ -104,9 +104,9 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         return typeof hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(hash);
       }
 
-      // Server-side payment status: check via cookie (set by /api/verify-payment)
+      // Server-side payment status: check via cookie (set by /api/unlock)
       function isServerPaid() {
-        return document.cookie.indexOf('gv_token=') !== -1;
+        return document.cookie.indexOf('gv_unlock=') !== -1;
       }
 
       // Local cache (secondary, for instant page loads)
@@ -131,16 +131,16 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       function markPaid(wallet, txHash) {
         if (!isValidTxHash(txHash) || !isValidAddress(wallet)) return;
 
-        // Server-side verification: call /api/verify-payment
-        fetch('/api/verify-payment', {
+        // Server-side verification: call /api/unlock
+        fetch('/api/unlock', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ txHash: txHash, wallet: wallet })
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          if (data.verified) {
-            // Server set the gv_token cookie; update localStorage cache
+          if (data.ok) {
+            // Server set the gv_unlock cookie; update localStorage cache
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
               paid: true,
               wallet: wallet.toLowerCase(),
@@ -156,16 +156,10 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
           }
         })
         .catch(function(err) {
-          // Fallback to localStorage-only if server unreachable
-          console.warn('Server verification failed, falling back to localStorage:', err);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({
-            paid: true,
-            wallet: wallet.toLowerCase(),
-            chain: 'ethereum',
-            txHash: txHash,
-            timestamp: Date.now()
-          }));
-          applyPaywall();
+          // Do NOT fallback to localStorage-only — server verification is mandatory
+          var payBtn = document.getElementById('btn-pay');
+          var errEl = document.getElementById('pay-error');
+          showPayError(payBtn, errEl, 'サーバーに接続できません。ネットワークを確認して再試行してください。');
         });
       }
 
@@ -386,6 +380,24 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
           timestamp: Date.now(),
           serverVerified: true
         }));
+      }
+
+      // Legacy migration: if user has old localStorage token, migrate to cookie
+      if (!isServerPaid() && isLocalPaid()) {
+        var stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (stored && stored.txHash && stored.wallet) {
+          fetch('/api/unlock-legacy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ txHash: stored.txHash, wallet: stored.wallet })
+          }).then(function(r) { return r.json(); }).then(function(data) {
+            if (data.migrated) {
+              // Successfully migrated; clear localStorage
+              localStorage.removeItem(STORAGE_KEY);
+              applyPaywall();
+            }
+          }).catch(function() { /* silently fail */ });
+        }
       }
 
       applyPaywall();

@@ -29,9 +29,6 @@ jobs:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          PAYWALL_SECRET: ${{ secrets.PAYWALL_SECRET }}
-          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
-          RECEIVE_WALLET: ${{ secrets.RECEIVE_WALLET }}
         run: bun scripts/auto-post.mjs
 
       - name: Commit and push new post

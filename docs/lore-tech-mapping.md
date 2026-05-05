@@ -28,6 +28,10 @@ The Nova Harmon agent's theme-balance scoring system prevents "narrative collaps
 — the tendency for content to converge on a single topic. Nine theme categories
 ensure maximum diversity.
 
+## gv_unlock Cookie → Soul-Bond
+
+The `gv_unlock` cookie represents a "soul-bond" between the reader's wallet and the Vault's dimensional barrier. It is signed with a key that exists only on the server side (the "Apolonium frequency") — tamper with it and the gate denies you. The bond expires after 30 days, at which point the dimensional resonance fades and the reader must re-establish the connection.
+
 ## Dark Mode → Temporal Phase Shift
 The light/dark mode toggle represents the user's ability to shift between
 "waking consciousness" (light) and "contemplative depth" (dark) viewing modes.

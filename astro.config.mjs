@@ -6,6 +6,11 @@ import tailwindcss from '@tailwindcss/vite';
 // import sentry from '@sentry/astro';
 // integrations: [mdx(), sentry()],
 
+// NOTE: API routes (unlock, article, unlock-legacy) are deployed as Vercel
+// serverless functions in the `api/` directory. They use `@vercel/node`.
+// The Astro build remains static (SSG) — gated article bodies are NOT rendered
+// in the static output and are fetched client-side from the Vercel API.
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://genesisvault.vercel.app',

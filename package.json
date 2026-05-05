@@ -22,8 +22,6 @@
     "@ai-sdk/google": "^2.0.0",
     "@ai-sdk/groq": "^2.0.0",
     "@ai-sdk/cerebras": "^2.0.0",
-    "@ai-sdk/openrouter": "^2.0.0",
-    "@ai-sdk/huggingface": "^2.0.0",
     "@sentry/astro": "^10.0.0",
     "@vercel/node": "^3.0.0",
     "ai": "^5.0.0",

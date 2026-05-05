@@ -11,6 +11,7 @@ const postsCollection = defineCollection({
         description: z.string().optional(),
         keywords: z.array(z.string()).default([]),
         draft: z.boolean().default(false),
+        gated: z.boolean().default(true),
         // Multi-agent metadata
         agents: z.object({
             ceo: z.string().optional(),
