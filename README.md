@@ -103,15 +103,17 @@ GEMINI_API_KEY=your_key bun run auto-post
 
 | 技術 | 詳細 |
 |------|------|
-| [Vercel AI SDK](https://sdk.vercel.ai/) | v5。統合プロバイダーインターフェース。ストリーミング・構造化出力対応 |
-| [Google Gemini API](https://ai.google.dev/) | `@ai-sdk/google`。メイン + サブモデル |
-| [Groq](https://groq.com/) | `@ai-sdk/groq`。Llama 3.3 70B。無料ティア |
-| [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。Llama 3.3 70B。無料ティア |
-| [OpenRouter](https://openrouter.ai/) | `@ai-sdk/openrouter`。無料モデル動的選択 |
-| [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。Inference API。無料ティア |
-| Multi-Agent Pipeline | 5エージェントが順次実行（Nova → Lena → Chloe → Sophia → Iris）。構造化ログ出力 |
-| Multi-Provider Fallback | 6プロバイダのチェーン。単一 Gemini の ~99.0% → 6フェールバックで ~99.99% 稼働率 |
-| Exponential Backoff | `RETRY_BASE_DELAY_MS = 10s`、最大3回リトライ。HTTP 429（Rate Limit）に自動対応 |
+| [Vercel AI SDK](https://sdk.vercel.ai/) | v5。統合プロバイダーインターフェース。`generateObject`（構造化出力）+ `generateText`（自由テキスト）|
+| [Google Gemini API](https://ai.google.dev/) | `@ai-sdk/google`。`gemini-2.5-flash-lite`（メイン）+ `gemini-2.5-flash`（サブ）|
+| [Groq](https://groq.com/) | `@ai-sdk/groq`。`llama-3.3-70b-versatile`。30 RPM / 14400 RPD 無料ティア |
+| [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
+| [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。`meta-llama/llama-3.3-70b-instruct:free`。20 RPM 無料 |
+| [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
+| Multi-Agent Pipeline | 5エージェント順次実行（Nova → Lena → Chloe → Sophia → Iris）。`src/lib/agents/runners.ts` に分離 |
+| Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
+| Multi-Provider Fallback | 6プロバイダチェーン + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
+| Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |
+| Dry Run Mode | `bun run gen:dry` でファイル書き込みなしのパイプラインテスト |
 | Idempotency | 同日の重複ポスト生成を防止。`.pipeline-state.json` でステート管理 |
 | Resume from Failure | パイプライン中断時に最後の成功ステップから再開可能 |
 | テーマバランス分析 | 9カテゴリのキーワードマッチング＋スコアリング。直近20記事の傾向を考慮 |

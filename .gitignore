@@ -2,6 +2,8 @@ node_modules/
 dist/
 .astro/
 .env
+.env.local
 .DS_Store
 *.log
 .pipeline-state.json
+logs/agent-runs.jsonl
