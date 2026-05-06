@@ -1,36 +1,27 @@
-# Genesis Vault — Work Log
-
 ---
-Task ID: gamma-ai-fallback-chain
-Agent: Super Z (main)
-Task: Execute Phase γ — AI Fallback Chain (free-tier only)
+Task ID: 1
+Agent: main
+Task: Phase η — Observability: Sentry + Umami + Pagefind + Healthcheck + /status + scheduled-post-verify
 
 Work Log:
-- Pulled latest main (commit 8410d62)
-- Created branch `upgrade/gamma-ai-fallback-chain`
-- Installed missing provider packages: `@openrouter/ai-sdk-provider@2.9.0`, `@ai-sdk/huggingface@1.0.48`
-  - Note: `@ai-sdk/openrouter` does NOT exist on npm; correct package is `@openrouter/ai-sdk-provider`
-- Created `src/lib/ai/providers.ts` — 6-provider chain builder with typed `ProviderEntry` interface
-- Created `src/lib/ai/generate.ts` — `generateWithFallback` (structured via `generateObject` + Zod) and `generateTextWithFallback` (text via `generateText`) with telemetry and direct Gemini REST fallback
-- Created `src/lib/ai/telemetry.ts` — JSONL telemetry logging to `logs/agent-runs.jsonl`
-- Created `src/lib/agents/schemas.ts` — Zod schemas for Nova, Lena, Chloe + ALL_THEMES constant
-- Created `src/lib/agents/shared.ts` — PERSONA, THEME_KEYWORDS, fallback data, utility functions, theme balance analysis
-- Created `src/lib/agents/runners.ts` — 5 agent runner functions (runNova, runLena, runChloe use generateObject; runSophia, runIris use generateTextWithFallback)
-- Refactored `scripts/auto-post.mjs` from ~1104 lines to ~403 lines (removed inline AI logic, imported from new modules)
-- Added `.env.example` with all required/optional API keys documented
-- Added `gen:dry` script to package.json for dry-run pipeline testing
-- Added `DRY_RUN` support to auto-post.mjs (skips file write, prints preview)
-- Updated `.gitignore` to include `logs/agent-runs.jsonl` and `.env.local`
-- Created `tests/ai-fallback-chain.test.ts` — 28 tests covering schemas, fallback chain, telemetry, theme balance, fallback post generation, utilities
-- Updated `docs/adr/0003-ai-fallback-chain.md` — comprehensive rewrite with architecture, provider matrix, structured vs text agent rationale, failure modes
-- Updated `docs/runbooks/agent-pipeline.md` — added new provider chain docs, how to add a provider, dry run, key rotation
-- Updated `docs/lore-tech-mapping.md` — added Multi-Provider Fallback Chain entry, updated Five Agents with schema details
-- Updated `README.md` — AI pipeline table now reflects Phase γ changes (generateObject, structured outputs, telemetry, dry run, provider package names)
-- All 53 tests pass, build succeeds (83 pages)
+- Cloned genesisvault, merged cloudflare/workers-autoconfig branch (already contained in main)
+- Deleted merged remote branch
+- Installed all dependencies (bun install)
+- η.1: Fixed sentry.client.config.ts (import.meta.env, ignoreErrors for 402), created sentry.server.config.ts, created src/lib/sentry-script.ts (Node.js), enabled @sentry/astro in astro.config.mjs with source maps
+- Created scheduled-post-verify.yml workflow (12:00/13:00 UTC verification of 11:30 UTC daily post)
+- η.3: Replaced broken Plausible placeholder with Umami analytics proxy (public/js/analytics.js), updated BaseLayout.astro with conditional loading
+- η.4: Added Pagefind search dialog to BaseLayout (Cmd+K shortcut + nav button), added data-pagefind-ignore on gated bodies, data-pagefind-body on free content
+- η.5: Upgraded healthcheck.yml (HTTP 200, article freshness <36h, 402 verification, auto-issue on failure, step summary)
+- η.6: Added telemetry summary writer to auto-post.mjs (appends to docs/agent-runs/YYYY-MM.md), integrated Sentry error capture in pipeline
+- η.8: Created /status page (build-time generated, shows latest article, agent runs, monitoring stack)
+- Updated daily-post.yml to commit telemetry + pass Sentry env vars
+- Documentation: ADR-0007 (full comparisons), incident-response.md runbook, observability.md updated, lore-tech-mapping.md (4 new entries), README.md (observability section)
+- All 192 unit tests passing
+- Committed as bc4ae34 and pushed to main
 
 Stage Summary:
-- Phase γ complete: modular AI pipeline with structured outputs, 6-provider fallback chain, Zod validation, telemetry
-- Refactored monolithic 1104-line script into 6 focused modules
-- `@openrouter/ai-sdk-provider` is the correct package name (not `@ai-sdk/openrouter`)
-- `generateObject` used for Nova/Lena/Chloe (compact JSON); `generateText` used for Sophia/Iris (long-form text)
-- Total monthly AI cost: 0 yen (free-tier only)
+- Phase η fully implemented and pushed to main
+- 19 files changed, 1291 insertions, 112 deletions
+- Zero-cost observability stack: Sentry (errors) + Umami (analytics) + Pagefind (search) + Healthcheck (monitoring) + /status
+- Scheduled post verification workflow operational
+- cloudflare/workers-autoconfig branch merged and deleted
