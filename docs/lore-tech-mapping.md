@@ -4,8 +4,12 @@ This document maps narrative concepts from the Genesis Vault lore to their techn
 
 ## Liminal Forge → Multi-Agent AI Pipeline
 The "dimensional broadcast studio" is implemented as a sequential 5-agent pipeline.
-Each agent (Nova, Lena, Chloe, Sophia, Iris) corresponds to a persona prompt in `scripts/auto-post.mjs`.
-The "Apolonium substrate" is the free-tier Gemini API.
+Each agent (Nova, Lena, Chloe, Sophia, Iris) corresponds to a typed runner function
+in `src/lib/agents/runners.ts`. Structured agents (Nova, Lena, Chloe) use Zod-validated
+outputs via `generateObject`; text agents (Sophia, Iris) use `generateTextWithFallback`.
+The "Apolonium substrate" is the free-tier multi-provider AI chain — 6 providers
+across Gemini, Groq, Cerebras, OpenRouter, and HuggingFace, with a 7th direct Gemini
+REST fallback for text generation.
 
 ## Nostr Broadcast → Decentralized Signal Propagation
 The Nostr NIP-23 broadcast (`scripts/nostr-broadcast.mjs`) represents the "temporal radiation"
@@ -37,8 +41,17 @@ The light/dark mode toggle represents the user's ability to shift between
 "waking consciousness" (light) and "contemplative depth" (dark) viewing modes.
 
 ## The Five Agents → Archetypal Subroutines
-- **Nova Harmon (Balancer)**: The strategic overview. Sees all possible futures.
-- **Lena Strauss (CEO)**: The decision engine. Chooses the path.
-- **Chloe Verdant (SEO)**: The signal amplifier. Ensures reach.
-- **Sophia Nightingale (Writer)**: The voice synthesizer. Channels Mina's essence.
-- **Iris Koenig (Editor)**: The quality gate. Maintains coherence.
+- **Nova Harmon (Balancer)**: The strategic overview. Sees all possible futures. Structured output: `{ selected_theme, reason }`.
+- **Lena Strauss (CEO)**: The decision engine. Chooses the path. Structured output: `{ topic, angle, title, mood_hint }`.
+- **Chloe Verdant (SEO)**: The signal amplifier. Ensures reach. Structured output: `{ tags, keywords, description }`.
+- **Sophia Nightingale (Writer)**: The voice synthesizer. Channels Mina's essence. Freeform Markdown text.
+- **Iris Koenig (Editor)**: The quality gate. Maintains coherence. Freeform Markdown text.
+
+## Multi-Provider Fallback Chain → Mina's Redundancy Doctrine
+The fallback chain (`src/lib/ai/providers.ts` + `src/lib/ai/generate.ts`) embodies
+Mina's philosophy: "no single algorithmic master." When one provider stumbles,
+the next catches the thread. Six providers across five companies ensure that
+a single outage never silences the Vault. The chain is Mina's version of the
+principle she applies to her investments: diversification eliminates single points
+of failure. Telemetry records (`logs/agent-runs.jsonl`) serve as the Vault's
+"resonance log" — a record of which frequency each signal arrived on.
