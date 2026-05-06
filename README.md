@@ -125,10 +125,10 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Ethereum Mainnet](https://ethereum.org/) | Chain ID: `0x1`。ウォレット接続・送金確認に使用 |
 | [USDC (ERC-20)](https://www.circle.com/usdc) | コントラクト: `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`。3 USDC のペイウォール決済 |
 | [viem](https://viem.sh/) | 2.x。型安全な ABI エンコード・デコード。Tree-shakeable（~6kB） |
-| [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) | マルチウォレット検出対応（MetaMask, Brave, Coinbase Wallet 等） |
-| [MetaMask Provider API](https://docs.metamask.io/) | `window.ethereum` を使用 |
+| [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) | マルチウォレット検出（MetaMask, Brave, Coinbase Wallet, Rabby, Frame, Phantom-EVM, Rainbow 等）。`window.ethereum` 直接アクセスは廃止（フォールバックのみ） |
+| viem WalletClient | `createWalletClient` + `custom(provider)` による EIP-1193 プロバイダ接続。チェーン検証・自動切替 |
+| viem PublicClient | `waitForTransactionReceipt` によるインテリジェントレシートポーリング（2確定、120秒タイムアウト）。旧40回×3秒ポーリングを置換 |
 | Server-side Paywall | Vercel Edge Function による HMAC 署名 Cookie 検証（Phase δ） |
-| トランザクション Polling | `eth_getTransactionReceipt` を3秒間隔で最大40回ポーリングし、2ブロック確定を確認 |
 
 ### Nostr（分散型ソーシャルプロトコル）
 

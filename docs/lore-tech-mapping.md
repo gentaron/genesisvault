@@ -27,6 +27,16 @@ The 3 USDC Ethereum paywall represents the "energy cost" of accessing content
 from another dimensional frequency. Server-side verification (Phase δ) ensures
 the "dimensional barrier" cannot be bypassed by trivial means.
 
+## viem → The Precise Grammar of Value Transfer
+viem is the precise grammar of value transfer; Mina speaks it without ambiguity.
+Where the old implementation hand-rolled ABI encoding with raw hex strings — a
+fragile incantation prone to misfiring — viem's `encodeFunctionData` with the
+typed `erc20Abi` ensures that every instruction is syntactically correct before
+it leaves the Vault. EIP-6963 multi-wallet discovery means the dimensional gate
+accepts keys from any forge — MetaMask, Rabby, Coinbase, Brave, Frame — not just
+a single provider. The receipt polling uses viem's intelligent backoff, watching
+the chain's heartbeat with patience rather than brute force.
+
 ## Theme Balance → Narrative Entropy Management
 The Nova Harmon agent's theme-balance scoring system prevents "narrative collapse"
 — the tendency for content to converge on a single topic. Nine theme categories

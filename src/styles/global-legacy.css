@@ -663,6 +663,130 @@ footer {
   color: var(--color-gray-dark);
 }
 
+/* ─── Wallet Picker Modal (EIP-6963 Multi-Wallet) ─── */
+
+.gv-wallet-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: gv-picker-fade-in 0.2s ease-out;
+}
+
+@keyframes gv-picker-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.gv-wallet-picker-modal {
+  background: var(--color-warm-white);
+  border: 1px solid var(--color-gray-light);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: gv-picker-slide-in 0.25s ease-out;
+}
+
+.dark .gv-wallet-picker-modal {
+  background: var(--color-soft-beige);
+  border-color: var(--color-gray-light);
+}
+
+@keyframes gv-picker-slide-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.gv-wallet-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.gv-wallet-picker-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  margin: 0;
+}
+
+.gv-wallet-picker-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-gray-dark);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.gv-wallet-picker-close:hover {
+  background: var(--color-soft-beige);
+  color: var(--color-charcoal);
+}
+
+.gv-wallet-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gv-wallet-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-gray-light);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.9rem;
+  color: var(--color-charcoal);
+  text-align: left;
+}
+
+.gv-wallet-picker-item:hover {
+  background: var(--color-soft-beige);
+  border-color: var(--color-gentle-green);
+  transform: translateX(4px);
+}
+
+.dark .gv-wallet-picker-item:hover {
+  background: var(--color-gray-light);
+}
+
+.gv-wallet-picker-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.gv-wallet-picker-icon-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #4A90C4, #6ECFCF);
+  flex-shrink: 0;
+}
+
+.gv-wallet-picker-name {
+  font-weight: 500;
+}
+
 @media (max-width: 640px) {
   h1 {
     font-size: 2rem;
@@ -676,4 +800,8 @@ footer {
     padding: 0 1rem;
   }
 
+  .gv-wallet-picker-modal {
+    width: 95%;
+    max-width: none;
+  }
 }
