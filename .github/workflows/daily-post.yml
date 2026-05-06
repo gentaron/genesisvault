@@ -29,11 +29,15 @@ jobs:
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          PUBLIC_SENTRY_DSN: ${{ secrets.PUBLIC_SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          PUBLIC_GIT_SHA: ${{ github.sha }}
+          NODE_ENV: production
         run: bun scripts/auto-post.mjs
 
-      - name: Commit and push new post
+      - name: Commit and push new post + telemetry
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Mina Eureka Ernst [Bot]"
-          git add src/content/posts/*.md
+          git add src/content/posts/*.md docs/agent-runs/
           git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)

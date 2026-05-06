@@ -1,0 +1,157 @@
+---
+/**
+ * Phase η — Status Page
+ *
+ * Build-time generated status page showing:
+ * - Last article timestamp
+ * - Total article count
+ * - Agent pipeline health (from docs/agent-runs/)
+ * - System configuration overview
+ *
+ * No client-side fetching. Updates on each build.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT_DIR = path.join(__dirname, '..', '..');
+
+// Fetch all published posts
+const allPosts = await getCollection('posts', ({ data }) => data.draft !== true);
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const latestPost = sortedPosts[0];
+const totalPosts = sortedPosts.length;
+const gatedPosts = sortedPosts.filter(p => p.data.gated !== false && sortedPosts.indexOf(p) >= 2).length;
+const freePosts = totalPosts - gatedPosts;
+
+// Read latest agent run telemetry
+let latestAgentRun = null;
+let agentRunCount = 0;
+try {
+  const runsDir = path.join(ROOT_DIR, 'docs', 'agent-runs');
+  const files = await fs.readdir(runsDir);
+  const mdFiles = files.filter(f => f.endsWith('.md')).sort().reverse();
+  if (mdFiles.length > 0) {
+    const latestFile = await fs.readFile(path.join(runsDir, mdFiles[0]), 'utf-8');
+    const lines = latestFile.trim().split('\n').filter(l => l.trim());
+    // Find the last run entry (last timestamp line + following agent lines)
+    const timestampLines = lines.map((l, i) => ({ line: l, index: i })).filter(x => x.line.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/));
+    if (timestampLines.length > 0) {
+      const lastTs = timestampLines[timestampLines.length - 1];
+      latestAgentRun = lines.slice(lastTs.index).join('\n');
+    }
+    // Count total runs
+    agentRunCount = timestampLines.length;
+  }
+} catch {
+  // Agent runs may not exist yet
+}
+
+// Build timestamp
+const buildTime = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+
+// Git SHA (from env if available in CI)
+const gitSha = process.env.PUBLIC_GIT_SHA || process.env.GITHUB_SHA || 'local';
+
+const statusItems = [
+  {
+    label: 'Site Status',
+    value: 'Operational',
+    status: 'ok',
+  },
+  {
+    label: 'Latest Article',
+    value: latestPost ? `${latestPost.data.date.toISOString().substring(0, 10)} — ${latestPost.data.title}` : 'None',
+    status: latestPost ? 'ok' : 'error',
+  },
+  {
+    label: 'Total Articles',
+    value: `${totalPosts} (${freePosts} free, ${gatedPosts} gated)`,
+    status: 'ok',
+  },
+  {
+    label: 'Agent Pipeline Runs',
+    value: `${agentRunCount} recorded`,
+    status: agentRunCount > 0 ? 'ok' : 'warn',
+  },
+  {
+    label: 'Last Build',
+    value: buildTime,
+    status: 'ok',
+  },
+  {
+    label: 'Version',
+    value: gitSha.substring(0, 7),
+    status: 'ok',
+  },
+];
+---
+
+<BaseLayout title="System Status — Genesis Vault">
+  <div style="max-width: 48rem; margin: 0 auto; padding: 2rem 1rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1 class="page-title" style="margin-bottom: 0.5rem;">
+        System Status
+      </h1>
+      <p style="color: var(--color-gray-dark);">
+        Genesis Vault operational overview
+      </p>
+    </div>
+
+    <!-- Status Grid -->
+    <div style="display: grid; gap: 1rem;">
+      {statusItems.map((item) => (
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: var(--color-soft-beige); border-radius: 0.5rem; border: 1px solid var(--color-gray-light);">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: {item.status === 'ok' ? '#22c55e' : item.status === 'warn' ? '#eab308' : '#ef4444'}; flex-shrink: 0;" />
+            <span style="font-weight: 600; font-size: 0.9rem;">{item.label}</span>
+          </div>
+          <span style="font-size: 0.85rem; color: var(--color-gray-dark); text-align: right; max-width: 60%;">{item.value}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Latest Agent Run -->
+    {latestAgentRun && (
+      <div style="margin-top: 2rem;">
+        <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Latest Agent Pipeline Run</h2>
+        <pre style="background: var(--color-soft-beige); padding: 1rem; border-radius: 0.5rem; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; border: 1px solid var(--color-gray-light);">{latestAgentRun}</pre>
+      </div>
+    )}
+
+    <!-- Monitoring Stack -->
+    <div style="margin-top: 2rem; padding: 1.5rem; background: var(--color-soft-beige); border-radius: 0.5rem; border: 1px solid var(--color-gray-light);">
+      <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Monitoring Stack (Phase η)</h2>
+      <div style="display: grid; gap: 0.75rem; font-size: 0.9rem;">
+        <div style="display: flex; justify-content: space-between;">
+          <span><strong>Error Tracking</strong></span>
+          <span style="color: var(--color-gray-dark);">Sentry (free tier)</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span><strong>Analytics</strong></span>
+          <span style="color: var(--color-gray-dark);">Umami (self-hosted, cookie-free)</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span><strong>Search</strong></span>
+          <span style="color: var(--color-gray-dark);">Pagefind (static, client-side)</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span><strong>Healthcheck</strong></span>
+          <span style="color: var(--color-gray-dark);">GitHub Actions (every 6h)</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span><strong>Agent Telemetry</strong></span>
+          <span style="color: var(--color-gray-dark);">docs/agent-runs/YYYY-MM.md</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem; text-align: center;">
+      <a href="/" style="color: var(--color-gentle-green);">&larr; Home</a>
+    </div>
+  </div>
+</BaseLayout>

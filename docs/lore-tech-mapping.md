@@ -78,3 +78,45 @@ CI gates enforce this vigilance automatically — if a regression slips in, the 
 fails before it reaches production. CodeQL adds a deeper scan, probing for
 vulnerabilities that even careful eyes might miss. Renovate ensures the Vault's
 dependencies never age past their usefulness.
+
+## Sentry → The Watchful Eye That Never Sleeps
+
+Sentry sees what Mina cannot. When the Vault sleeps — and it sleeps every night,
+relying on the daily auto-post pipeline to awaken it with fresh content — Sentry
+watches. It captures the client-side tremors that visitors feel when a script
+fails silently. It records the server-side gasps when an API endpoint chokes on
+an unexpected input. The healthcheck is the heartbeat she trusts to wake her;
+Sentry is the nervous system that tells her where it hurts. Together they form
+the Vault's immune response: the healthcheck detects the symptom, Sentry diagnoses
+the cause, and an issue is auto-created before Mina finishes her morning coffee.
+
+## Pagefind → The Whispering Index
+
+Pagefind is the Vault's internal monologue made searchable. Build-time indexed,
+zero-runtime cost — it crystallizes every free article into a queryable lattice
+at the moment of creation. Gated content remains invisible to the index, its
+secrets protected by `data-pagefind-ignore`. Cmd+K summons the search dialog
+like a whispered question to the Vault's collective memory, answered in under
+100 milliseconds. No external API, no server round-trip, no data leaving the
+visitor's browser — just the text and the reader, as it should be.
+
+## Umami → The Invisible Observer
+
+Umami watches without remembering faces. Cookie-free, GDPR-compliant, self-hosted —
+it knows how many visitors arrived, which articles they read, and where they came
+from, but it cannot identify them. This is observation without surveillance,
+analytics without exploitation. Mina chose Umami over Google Analytics for the
+same reason she chose Ethereum over centralized finance: the architecture of
+trust is built into the protocol itself, not imposed by a terms-of-service page
+that nobody reads.
+
+## docs/agent-runs/ → The Public Ledger
+
+Every day, when the five agents complete their dance — Nova selecting the theme,
+Lena deciding the angle, Chloe optimizing for discovery, Sophia writing the words,
+Iris polishing the final draft — a summary is inscribed in `docs/agent-runs/YYYY-MM.md`.
+This is the public observability log. Anyone can read it and see the system working:
+which provider each agent used, how many attempts were needed, how long the whole
+process took. It is the Vault's equivalent of a ship's log, a daily record that
+says: "the system ran, the article was created, here is the proof." Transparency
+is Mina's brand promise made tangible.

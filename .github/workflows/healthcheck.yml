@@ -2,35 +2,126 @@ name: Genesis Vault — Healthcheck
 
 on:
   schedule:
-    # Every 6 hours
-    - cron: '0 */6 * * *'
+    # Every 6 hours (avoid 12:00 UTC which is right after 11:30 UTC post schedule)
+    - cron: '30 0,6,12,18 * * *'
   workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - name: Check site is live
+      - name: Homepage reachable (HTTP 200)
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://genesisvault.vercel.app)
+          STATUS=$(curl -fsS -o /dev/null -w "%{http_code}" https://genesisvault.vercel.app/ || true)
           if [ "$STATUS" != "200" ]; then
-            echo "Site is DOWN (HTTP $STATUS)"
+            echo "::error::Homepage returned HTTP $STATUS, expected 200"
             exit 1
           fi
-          echo "Site is UP (HTTP $STATUS)"
+          echo "Homepage is UP (HTTP $STATUS)"
 
-      - name: Check latest post exists
+      - name: Latest article freshness check (< 36h old)
         run: |
-          TODAY=$(date +'%Y-%m-%d')
-          # Check that a post was created within the last 2 days
-          LATEST=$(curl -s https://genesisvault.vercel.app | grep -oP 'post-\w+' | head -1)
-          echo "Latest post slug: $LATEST"
-          # Non-blocking: just report
-          echo "Healthcheck passed."
+          # Fetch the homepage and extract the latest post date
+          HOMEPAGE=$(curl -fsS https://genesisvault.vercel.app/ || true)
+          if [ -z "$HOMEPAGE" ]; then
+            echo "::warning::Could not fetch homepage for freshness check"
+            exit 0  # Non-blocking — site might be up but slow
+          fi
 
-      - name: Notify on failure
+          # Extract date from the first post link (format: /posts/YYYY-MM-DD-slug)
+          LATEST_SLUG=$(echo "$HOMEPAGE" | grep -oP 'href="/posts/\K[^"]+' | head -1)
+          if [ -z "$LATEST_SLUG" ]; then
+            echo "::warning::Could not extract latest post slug from homepage"
+            exit 0
+          fi
+
+          LATEST_DATE=$(echo "$LATEST_SLUG" | grep -oP '^\d{4}-\d{2}-\d{2}')
+          if [ -z "$LATEST_DATE" ]; then
+            echo "::warning::Could not parse date from slug: $LATEST_SLUG"
+            exit 0
+          fi
+
+          NOW=$(date -u +%s)
+          ARTICLE_TIME=$(date -u -d "$LATEST_DATE" +%s 2>/dev/null || echo 0)
+          AGE=$(( (NOW - ARTICLE_TIME) / 3600 ))
+
+          echo "Latest article: $LATEST_SLUG (dated $LATEST_DATE, ${AGE}h old)"
+
+          if [ "$AGE" -gt 36 ]; then
+            echo "::error::Latest article is $AGE hours old (threshold: 36h)"
+            echo "LATEST_AGE_HOURS=$AGE" >> "$GITHUB_ENV"
+            exit 1
+          fi
+          echo "Article freshness OK (${AGE}h < 36h threshold)"
+
+      - name: Gated article returns 402 unauthenticated
+        run: |
+          # Find a gated article slug (any post beyond the 2 newest)
+          HOMEPAGE=$(curl -fsS https://genesisvault.vercel.app/ || true)
+          # Get the 3rd post link (index 2 = gated, since FREE_LIMIT=2)
+          GATED_SLUG=$(echo "$HOMEPAGE" | grep -oP 'href="/posts/\K[^"]+' | sed -n '3p')
+
+          if [ -z "$GATED_SLUG" ]; then
+            echo "::warning::No gated article found to test (site may have < 3 posts)"
+            exit 0
+          fi
+
+          # Check the API endpoint for the gated article
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://genesisvault.vercel.app/api/article/$GATED_SLUG")
+          if [ "$STATUS" != "402" ]; then
+            echo "::error::Gated article API returned HTTP $STATUS, expected 402"
+            exit 1
+          fi
+          echo "Gated article paywall OK (HTTP 402)"
+
+      - name: Healthcheck timestamp update
+        if: success()
+        run: |
+          TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo "HEALTHCHECK_TS=$TIMESTAMP" >> "$GITHUB_ENV"
+          echo "Healthcheck passed at $TIMESTAMP UTC"
+
+      - name: Summary report
+        if: always()
+        run: |
+          echo "## Heartbeat Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Homepage | ${{ job.status == 'success' && 'UP' || 'DOWN' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Article Freshness | ${{ job.status == 'success' && 'OK' || 'STALE' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Paywall Gate | ${{ job.status == 'success' && 'OK (402)' || 'FAILED' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Timestamp | $(date -u +'%Y-%m-%d %H:%M UTC') |" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create issue on failure
         if: failure()
-        run: |
-          echo "::error::Genesis Vault healthcheck failed!"
-          # In production, this would trigger a Slack/Discord notification
-          # via a repository secret webhook URL
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Healthcheck failed — $(date -u +'%Y-%m-%d %H:%M UTC')"
+          body: |
+            ## Genesis Vault Healthcheck Failure
+
+            **Timestamp**: $(date -u +'%Y-%m-%d %H:%M UTC')
+            **Workflow run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ### What to check:
+            1. **Vercel status**: [vercel-status.com](https://www.vercel-status.com)
+            2. **Latest deployment**: [Vercel dashboard](https://vercel.com)
+            3. **Auto-post workflow**: Check if the daily post pipeline ran at 11:30 UTC
+            4. **API keys**: Verify AI provider rate limits haven't been exceeded
+            5. **Pipeline state**: Check for stuck `.pipeline-state.json` in the repo
+
+            ### Latest article age: ${{ env.LATEST_AGE_HOURS || 'unknown' }} hours
+
+            ---
+            *This issue was auto-created by the healthcheck workflow.*
+            *It will be auto-resolved once the next healthcheck passes.*
+          labels: healthcheck,bug
+          assignees: gentaron

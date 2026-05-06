@@ -38,15 +38,81 @@ import {
   runSophia,
   runIris,
 } from '../src/lib/agents/runners.ts';
+import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
+
+// ─── Phase η: Sentry for script errors (optional) ────────────
+let captureException = (e) => console.error('[Sentry unavailable]', e);
+try {
+  const { initSentryNode } = await import('../src/lib/sentry-script.ts');
+  initSentryNode();
+  const sentryMod = await import('@sentry/node');
+  captureException = sentryMod.captureException;
+} catch {
+  // Sentry optional — pipeline works without it
+}
 
 // ─── Paths ────────────────────────────────────────────────────
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, '..');
 const POSTS_DIR = path.join(ROOT_DIR, 'src', 'content', 'posts');
+const AGENT_RUNS_DIR = path.join(ROOT_DIR, 'docs', 'agent-runs');
 
 const MOODS = ['🌿', '💭', '📖', '✨', '🌸', '🍃', '🔥', '🌊', '🌙', '☕'];
 const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄️', '🌬️'];
+
+// ─── Phase η: Agent Telemetry Summary ─────────────────────────
+const AGENT_NAMES = {
+  'VE-005': 'Nova',
+  'VE-001': 'Lena',
+  'VE-003': 'Chloe',
+  'VE-002': 'Sophia',
+  'VE-006': 'Iris',
+};
+
+async function appendTelemetrySummary(articleSlug) {
+  try {
+    const telemetry = await readRecentTelemetry(10);
+    if (telemetry.length === 0) return;
+
+    const today = todayISO().substring(0, 7); // YYYY-MM
+    const runsFile = path.join(AGENT_RUNS_DIR, `${today}.md`);
+    const now = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+
+    // Aggregate per-agent stats
+    const agentStats = {};
+    let totalLatency = 0;
+
+    for (const entry of telemetry) {
+      const key = entry.agentId;
+      if (!agentStats[key]) {
+        agentStats[key] = {
+          agentName: AGENT_NAMES[entry.agentId] || entry.agentName || 'Unknown',
+          provider: entry.provider,
+          attempts: entry.attempts,
+          latencyMs: entry.latencyMs,
+          success: entry.success,
+          errors: entry.errors || [],
+        };
+      }
+      totalLatency += entry.latencyMs;
+    }
+
+    let summary = `\n${now}\n`;
+    for (const [agentId, stats] of Object.entries(agentStats)) {
+      const errorNote = !stats.success ? ` (FAILED: ${stats.errors.map(e => e.message).join(', ')})` : '';
+      const fallbackNote = stats.provider !== 'gemini-flash-lite' ? ` (${stats.provider})` : '';
+      summary += `- ${agentId} ${stats.agentName}: ${stats.provider}, ${stats.attempts} attempt${stats.attempts > 1 ? 's' : ''}, ${(stats.latencyMs / 1000).toFixed(1)}s${fallbackNote}${errorNote}\n`;
+    }
+    summary += `Total: ${(totalLatency / 1000).toFixed(1)}s | Article: src/content/posts/${articleSlug}.md\n`;
+
+    await fs.mkdir(AGENT_RUNS_DIR, { recursive: true });
+    await fs.appendFile(runsFile, summary, 'utf-8');
+    console.log(`📋 Telemetry summary appended to docs/agent-runs/${today}.md`);
+  } catch {
+    // Telemetry summary is non-critical
+  }
+}
 
 // ─── Structured Logging ───────────────────────────────────────
 function logAgent(agentId, agentName, action, result, error) {
@@ -320,6 +386,8 @@ async function main() {
     ceoPlan = fallback.ceoPlan;
     seoData = fallback.seoData;
     finalBody = fallback.body;
+    // Phase η: Report to Sentry
+    try { captureException(err); } catch { /* best effort */ }
   }
 
   // ── Clear pipeline state on success ───────────────────────
@@ -382,6 +450,9 @@ ${cleanBody}
   await fs.mkdir(POSTS_DIR, { recursive: true });
   const filePath = path.join(POSTS_DIR, filename);
   await fs.writeFile(filePath, content, 'utf-8');
+
+  // Phase η: Append agent telemetry summary to public log
+  await appendTelemetrySummary(`${todayISO()}-${slug}`);
 
   console.log('═══════════════════════════════════════════════════');
   console.log('✅ 記事生成完了！');

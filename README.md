@@ -167,13 +167,17 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Vercel](https://vercel.com/) | 自動デプロイ + Edge Functions（ペイウォール検証 API） |
 | Conventional Commits | `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:` の形式を採用（AGENTS.md で規定） |
 
-### オブザーバビリティ
+### オブザーバビリティ（Phase η）
 
 | 技術 | 詳細 |
 |------|------|
-| [Sentry](https://sentry.io/) | Free Tier: 5K errors/month。クライアントサイドエラー追跡 |
-| [Plausible](https://plausible.io/) | プライバシー重視のアナリティクス（Cookie-free） |
-| Pagefind | 静的サイト内全文検索インデックス |
+| [Sentry](https://sentry.io/) | エラー追跡 + パフォーマンス監視。Free Tier: 5K errors/month, 10% trace sampling。`@sentry/astro` v10 で統合 |
+| [Umami](https://umami.is/) | プライバシー重視のアナリティクス（Cookie-free, self-hosted）。Plausible CE から移行（Postgres-onlyでデプロイ簡易化） |
+| [Pagefind](https://pagefind.app/) | 静的サイト内全文検索。Cmd+K で検索ダイアログ。ゲート記事の本文は `data-pagefind-ignore` でインデックス除外 |
+| Healthcheck | GitHub Actions で6時間ごとにサイト死活監視 + 記事鮮度チェック + ペイウォール検証。失敗時に自動 Issue 作成 |
+| Agent Telemetry | `docs/agent-runs/YYYY-MM.md` に毎回のパイプライン実行ログを公開（使用プロバイダ・試行回数・レイテンシ） |
+| /status | ビルド時生成のシステムステータスページ（最新記事・総記事数・エージェント実行履歴・監視スタック概要） |
+| Scheduled Post Verify | 毎日 12:00/13:00 UTC に自動投稿が正常にコミットされたか検証するワークフロー |
 
 ### 開発ツール・規約
 

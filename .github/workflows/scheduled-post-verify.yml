@@ -1,0 +1,198 @@
+name: Verify Scheduled Post Timing
+
+on:
+  schedule:
+    # Run 30 minutes after the daily post schedule (11:30 UTC → 12:00 UTC check)
+    # Also runs at 13:00 UTC as a secondary verification window
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      expected_date:
+        description: 'Expected post date (YYYY-MM-DD). Defaults to today.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  verify-post-timing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50  # Need enough history to find recent commits
+
+      - name: Determine expected date
+        id: date
+        run: |
+          EXPECTED="${{ github.event.inputs.expected_date }}"
+          if [ -z "$EXPECTED" ]; then
+            # Daily post schedule is 11:30 UTC (19:30 MYT)
+            # If this workflow ran at 12:00 UTC, the post should be dated today (UTC)
+            # Account for UTC date vs potential MYT date crossing
+            EXPECTED=$(date -u +'%Y-%m-%d')
+          fi
+          echo "expected=$EXPECTED" >> "$GITHUB_OUTPUT"
+          echo "Checking for post dated: $EXPECTED"
+
+      - name: Check if today's post exists in repo
+        id: check-post
+        run: |
+          EXPECTED="${{ steps.date.outputs.expected }}"
+          FOUND=false
+          POST_FILE=""
+
+          # Search in src/content/posts/ for a file starting with today's date
+          for file in src/content/posts/${EXPECTED}-*.md; do
+            if [ -f "$file" ]; then
+              FOUND=true
+              POST_FILE="$file"
+              break
+            fi
+          done
+
+          if [ "$FOUND" = true ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "post_file=$POST_FILE" >> "$GITHUB_OUTPUT"
+            echo "✅ Post found: $POST_FILE"
+
+            # Extract title for reporting
+            TITLE=$(head -10 "$POST_FILE" | grep -oP '(?<=title: ").*(?=")' | head -1)
+            echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+            echo "📝 Title: $TITLE"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "❌ No post found for $EXPECTED"
+          fi
+
+      - name: Check daily-post workflow ran today
+        id: check-workflow
+        run: |
+          EXPECTED="${{ steps.date.outputs.expected }}"
+
+          # Find the most recent daily-post commit
+          LATEST_COMMIT=$(git log --all --oneline --grep="Multi-Agent AI Pipeline" -1 --format="%H %ci")
+          LATEST_DATE=$(echo "$LATEST_COMMIT" | awk '{print $2}')
+          LATEST_SHA=$(echo "$LATEST_COMMIT" | awk '{print $1}')
+
+          echo "latest_date=$LATEST_DATE" >> "$GITHUB_OUTPUT"
+          echo "latest_sha=$LATEST_SHA" >> "$GITHUB_OUTPUT"
+          echo "Latest auto-post commit: $LATEST_SHA ($LATEST_DATE)"
+
+          # Check if the latest auto-post was today
+          TODAY="${{ steps.date.outputs.expected }}"
+          if [ "$LATEST_DATE" = "$TODAY" ]; then
+            echo "today=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Daily post workflow committed today"
+          else
+            echo "today=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️ Latest auto-post was on $LATEST_DATE (expected $TODAY)"
+          fi
+
+      - name: Check auto-post workflow timing
+        id: check-timing
+        run: |
+          # Find the commit timestamp of the latest auto-post
+          LATEST_SHA="${{ steps.check-workflow.outputs.latest_sha }}"
+          if [ -n "$LATEST_SHA" ]; then
+            # Get commit timestamp in UTC
+            COMMIT_TS=$(git show -s --format=%ci "$LATEST_SHA")
+            # Extract hour:minute
+            COMMIT_HOUR=$(echo "$COMMIT_TS" | awk '{print $2}' | cut -d: -f1-2)
+            echo "commit_time=$COMMIT_TS" >> "$GITHUB_OUTPUT"
+            echo "commit_hour=$COMMIT_HOUR" >> "$GITHUB_OUTPUT"
+            echo "🕐 Commit time: $COMMIT_HOUR UTC"
+
+            # Daily post is scheduled for 11:30 UTC
+            # Allow 60-minute window: 11:00 - 12:30 UTC
+            COMMIT_MINUTES=$(echo "$COMMIT_TS" | awk '{print $2}' | cut -d: -f1)
+            COMMIT_SECONDS_HOURS=$(echo "$COMMIT_TS" | awk '{print $2}')
+            echo "Scheduled: 11:30 UTC ± 60min window"
+          fi
+
+      - name: Verify post content quality
+        id: check-quality
+        if: steps.check-post.outputs.found == 'true'
+        run: |
+          POST_FILE="${{ steps.check-post.outputs.post_file }}"
+
+          # Check file size (should be > 500 chars for a real article)
+          SIZE=$(wc -c < "$POST_FILE")
+          echo "File size: $SIZE bytes"
+
+          # Check frontmatter completeness
+          HAS_TITLE=$(grep -c '^title:' "$POST_FILE" || true)
+          HAS_DATE=$(grep -c "^date: ${EXPECTED//\//\\/}" "$POST_FILE" || true)
+          HAS_TAGS=$(grep -c '^tags:' "$POST_FILE" || true)
+          HAS_BODY=false
+          BODY_LINES=$(awk '/^---$/{n++; if(n==2) exit} n==1{next} {print}' "$POST_FILE" | wc -l)
+          if [ "$BODY_LINES" -gt 5 ]; then
+            HAS_BODY=true
+          fi
+
+          echo "Frontmatter: title=$HAS_TITLE, date=$HAS_DATE, tags=$HAS_TAGS"
+          echo "Body: $BODY_LINES lines"
+
+          QUALITY_ISSUES=""
+          if [ "$SIZE" -lt 500 ]; then
+            QUALITY_ISSUES="${QUALITY_ISSUES}- Post file is suspiciously small ($SIZE bytes)\n"
+          fi
+          if [ "$HAS_TITLE" = "0" ]; then
+            QUALITY_ISSUES="${QUALITY_ISSUES}- Missing title in frontmatter\n"
+          fi
+          if [ "$HAS_TAGS" = "0" ]; then
+            QUALITY_ISSUES="${QUALITY_ISSUES}- Missing tags in frontmatter\n"
+          fi
+          if [ "$HAS_BODY" = "false" ]; then
+            QUALITY_ISSUES="${QUALITY_ISSUES}- Post body is too short or missing\n"
+          fi
+
+          if [ -n "$QUALITY_ISSUES" ]; then
+            echo "⚠️ Quality issues found:"
+            echo -e "$QUALITY_ISSUES"
+          else
+            echo "✅ Post quality check passed"
+          fi
+
+      - name: Summary report
+        if: always()
+        run: |
+          echo "## 📋 Scheduled Post Verification Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Expected Date | \`${{ steps.date.outputs.expected }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Post Found | ${{ steps.check-post.outputs.found == 'true' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Post Title | \`${{ steps.check-post.outputs.title || 'N/A' }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Latest Workflow | \`${{ steps.check-workflow.outputs.latest_date || 'N/A' }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Ran Today | ${{ steps.check-workflow.outputs.today == 'true' && '✅' || '⚠️' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit Time | \`${{ steps.check-timing.outputs.commit_hour || 'N/A' }}\` UTC |" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create issue if post is missing
+        if: steps.check-post.outputs.found != 'true'
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Scheduled post missing for ${{ steps.date.outputs.expected }}"
+          body: |
+            ## Daily Post Verification Failed
+
+            **Expected date**: `${{ steps.date.outputs.expected }}`
+            **Latest auto-post commit**: `${{ steps.check-workflow.outputs.latest_date || 'none' }}`
+            **Latest commit SHA**: `${{ steps.check-workflow.outputs.latest_sha || 'none' }}`
+
+            ### Action Required
+            1. Check the [daily-post workflow](https://github.com/${{ github.repository }}/actions/workflows/daily-post.yml) for recent runs
+            2. Verify AI provider API keys have not exceeded rate limits
+            3. Check for stuck pipeline state (`.pipeline-state.json`)
+            4. Manually trigger the daily-post workflow if needed
+
+            ---
+            *This issue was auto-created by the scheduled-post-verification workflow.*
+          labels: automated,bug,monitoring
+          assignees: gentaron

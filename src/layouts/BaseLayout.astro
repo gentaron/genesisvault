@@ -10,6 +10,10 @@ const {
   description = 'Genesis Vault — ミナ・エウレカ・エルンストの思考と日常を綴るデジタル日記',
   keywords = [],
 } = Astro.props;
+
+// Phase η: Umami analytics configuration (empty string = disabled)
+const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID || '';
+const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.com';
 import '../styles/app.css';
 import '../styles/global-legacy.css';
 ---
@@ -25,9 +29,17 @@ import '../styles/global-legacy.css';
     <link rel="icon" type="image/png" href="/mina-profile.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <!-- Plausible Analytics (privacy-friendly, self-hosted) -->
-    <!-- TODO: Replace /js/analytics.js with actual self-hosted Plausible endpoint -->
-    <script defer data-domain="genesisvault.vercel.app" src="/js/analytics.js"></script>
+    <!-- Phase η: Umami Analytics (privacy-friendly, self-hosted) -->
+    <!-- Configure via PUBLIC_UMAMI_WEBSITE_ID and PUBLIC_UMAMI_HOST env vars -->
+    <!-- See docs/adr/0007-observability.md for deployment instructions -->
+    {umamiWebsiteId && (
+      <script
+        data-umami-id={umamiWebsiteId}
+        data-umami-host={umamiHost}
+        data-umami-domains="genesisvault.vercel.app"
+        src="/js/analytics.js"
+      ></script>
+    )}
   </head>
   <body>
     <header>
@@ -38,6 +50,10 @@ import '../styles/global-legacy.css';
         <div class="nav-links">
           <a href="/">Home</a>
           <a href="/about">About</a>
+          <a href="/status">Status</a>
+          <button id="search-btn" aria-label="検索" title="記事を検索" style="background:none;border:none;cursor:pointer;color:inherit;padding:0;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </button>
           <button id="theme-toggle" aria-label="ダークモード切替">
             <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
             <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
@@ -66,6 +82,15 @@ import '../styles/global-legacy.css';
         <p>&copy; 2026 Genesis Vault — Mina Eureka Ernst</p>
       </div>
     </footer>
+
+    <!-- Phase η: Pagefind Search Dialog -->
+    <dialog id="search-dialog" style="width: 80vw; max-width: 720px; padding: 2rem; border: 1px solid var(--color-gray-light, #e0d8cc); border-radius: 0.75rem; background: var(--color-bg, #faf9f7);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h3 style="margin:0;font-size:1.1rem;">記事を検索</h3>
+        <button id="search-close" aria-label="閉じる" style="background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--color-gray-dark,#888);">&times;</button>
+      </div>
+      <div id="pagefind-search"></div>
+    </dialog>
 
     <script is:inline>
       const themeToggle = document.getElementById('theme-toggle');
@@ -103,6 +128,83 @@ import '../styles/global-legacy.css';
         closeBtn.addEventListener('click', function() {
           banner.style.display = 'none';
           localStorage.setItem('gv_web3_banner_dismissed', '1');
+        });
+      })();
+    </script>
+
+    <!-- Phase η: Pagefind Search (lazy-loaded) -->
+    <script is:inline>
+      (function() {
+        var searchBtn = document.getElementById('search-btn');
+        var searchDialog = document.getElementById('search-dialog');
+        var searchClose = document.getElementById('search-close');
+        var searchLoaded = false;
+
+        async function loadSearch() {
+          if (searchLoaded) return;
+          try {
+            var pagefind = await import('/pagefind/pagefind.js');
+            await pagefind.init();
+            searchLoaded = true;
+
+            // Create filter input
+            var filterInput = document.createElement('input');
+            filterInput.type = 'search';
+            filterInput.placeholder = '検索キーワード...';
+            filterInput.style.cssText = 'width:100%;padding:0.75rem 1rem;border:1px solid var(--color-gray-light,#e0d8cc);border-radius:0.5rem;font-size:1rem;background:var(--color-bg,#faf9f7);color:inherit;outline:none;';
+            filterInput.id = 'pagefind-filter';
+            document.getElementById('pagefind-search').prepend(filterInput);
+
+            var resultsContainer = document.createElement('div');
+            resultsContainer.id = 'pagefind-results';
+            resultsContainer.style.cssText = 'margin-top:1rem;max-height:400px;overflow-y:auto;';
+            document.getElementById('pagefind-search').appendChild(resultsContainer);
+
+            filterInput.addEventListener('input', async function() {
+              var query = filterInput.value.trim();
+              resultsContainer.innerHTML = '';
+              if (!query) return;
+              var search = await pagefind.search(query);
+              if (search.results.length === 0) {
+                resultsContainer.innerHTML = '<p style="color:var(--color-gray-dark,#888);text-align:center;padding:1rem;">結果が見つかりませんでした</p>';
+                return;
+              }
+              for (var i = 0; i < Math.min(search.results.length, 10); i++) {
+                var result = await search.results[i].data();
+                var link = document.createElement('a');
+                link.href = result.url;
+                link.style.cssText = 'display:block;padding:0.75rem;border-bottom:1px solid var(--color-gray-light,#e0d8cc);text-decoration:none;color:inherit;';
+                link.innerHTML = '<strong>' + result.meta.title + '</strong><br><small style="color:var(--color-gray-dark,#888);">' + result.meta.description?.substring(0, 100) + '</small>';
+                resultsContainer.appendChild(link);
+              }
+            });
+
+            filterInput.focus();
+          } catch (e) {
+            document.getElementById('pagefind-search').innerHTML = '<p style="color:var(--color-gray-dark,#888);text-align:center;">検索インデックスの読み込みに失敗しました</p>';
+          }
+        }
+
+        searchBtn.addEventListener('click', function() {
+          searchDialog.showModal();
+          loadSearch();
+        });
+
+        searchClose.addEventListener('click', function() {
+          searchDialog.close();
+        });
+
+        searchDialog.addEventListener('click', function(e) {
+          if (e.target === searchDialog) searchDialog.close();
+        });
+
+        // Cmd/Ctrl+K shortcut
+        document.addEventListener('keydown', function(e) {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            searchDialog.showModal();
+            loadSearch();
+          }
         });
       })();
     </script>

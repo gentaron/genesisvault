@@ -72,7 +72,8 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
 
     {isGated ? (
       <!-- GATED: Body fetched client-side from /api/article/[slug] -->
-      <div id="article-body" data-slug={post.slug}>
+      <!-- Phase η: data-pagefind-ignore prevents indexing of gated content -->
+      <div id="article-body" data-slug={post.slug} data-pagefind-ignore>
         <div class="gv-post-paywall-gate">
           <div class="gv-locked-icon">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -89,7 +90,8 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
       </div>
     ) : (
       <!-- FREE: Body rendered statically -->
-      <div id="post-content" data-post-index={postIndex}>
+      <!-- Phase η: data-pagefind-body marks this as searchable content -->
+      <div id="post-content" data-post-index={postIndex} data-pagefind-body>
         <div class="prose-custom">
           {BodyComponent && <BodyComponent />}
         </div>

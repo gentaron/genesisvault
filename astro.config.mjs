@@ -3,10 +3,7 @@ import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
 import cloudflare from "@astrojs/cloudflare";
-
-// TODO: Uncomment when @sentry/astro is verified compatible with Astro 5
-// import sentry from '@sentry/astro';
-// integrations: [mdx(), sentry()],
+import sentry from '@sentry/astro';
 
 // NOTE: API routes (unlock, article, unlock-legacy) are deployed as Vercel
 // serverless functions in the `api/` directory. They use `@vercel/node`.
@@ -16,7 +13,15 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://genesisvault.vercel.app',
-  integrations: [mdx()],
+  integrations: [
+    mdx(),
+    sentry({
+      sourceMapsUploadOptions: {
+        project: 'genesisvault',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
+    }),
+  ],
 
   markdown: {
     shikiConfig: {
@@ -26,7 +31,8 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    sourcemap: true,  // Required for Sentry source maps
   },
 
   adapter: cloudflare()
