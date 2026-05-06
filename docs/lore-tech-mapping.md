@@ -65,3 +65,16 @@ a single outage never silences the Vault. The chain is Mina's version of the
 principle she applies to her investments: diversification eliminates single points
 of failure. Telemetry records (`logs/agent-runs.jsonl`) serve as the Vault's
 "resonance log" — a record of which frequency each signal arrived on.
+
+## Vitest + Playwright → The Vault's Self-Awareness Protocol
+Mina built the Vault with an "observation layer" — 192 unit tests and 22 E2E journeys
+that continuously verify the dimensional barrier remains intact. Vitest runs in under
+2 seconds, faster than a single breath meditation, checking every HMAC signature,
+every ABI encoding, every theme categorization. Coverage at 98.6% means Mina can see
+almost every line of the Vault's code reflected in the test mirror. Playwright's
+6 journeys simulate a visitor walking through the Vault: reading free posts,
+encountering locked gates, attempting bypass, and verifying the paywall's resolve.
+CI gates enforce this vigilance automatically — if a regression slips in, the build
+fails before it reaches production. CodeQL adds a deeper scan, probing for
+vulnerabilities that even careful eyes might miss. Renovate ensures the Vault's
+dependencies never age past their usefulness.

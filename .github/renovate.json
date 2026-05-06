@@ -1,0 +1,55 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":pinAllExceptPeerDependencies",
+    "schedule:weekly",
+    "group:monorepos",
+    "group:recommended"
+  ],
+  "labels": ["dependencies"],
+  "reviewersFromCodeOwners": true,
+  "automerge": false,
+  "automergeType": "pr",
+  "prHourlyLimit": 2,
+  "rangeStrategy": "bump",
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": ["astro"],
+      "groupName": "astro ecosystem"
+    },
+    {
+      "matchPackageNames": ["vitest", "@vitest/coverage-v8"],
+      "groupName": "vitest"
+    },
+    {
+      "matchPackageNames": ["@playwright/test"],
+      "groupName": "playwright"
+    },
+    {
+      "matchPackageNames": ["viem"],
+      "groupName": "web3"
+    },
+    {
+      "matchPackageNames": ["ai", "@ai-sdk/*"],
+      "groupName": "ai sdk"
+    },
+    {
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/*"],
+      "groupName": "tailwind"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "patch updates",
+      "automerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
+  ]
+}

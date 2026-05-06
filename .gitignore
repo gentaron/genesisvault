@@ -13,3 +13,9 @@ logs/agent-runs.jsonl
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# test artifacts
+coverage/
+playwright-report/
+test-results/
+blob-report/

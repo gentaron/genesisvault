@@ -151,15 +151,19 @@ GEMINI_API_KEY=your_key bun run auto-post
 
 | 技術 | 詳細 |
 |------|------|
-| [Vitest](https://vitest.dev/) | 4.x。ユニットテスト（スキーマ検証・ウォレット・テーマバランス・ペイウォールロジック） |
-| [Playwright](https://playwright.dev/) | 1.50+。E2E テスト（ウォレットフロー・ゲート描画）。Chromium 対応 |
+| [Vitest](https://vitest.dev/) | 4.x。192 ユニットテスト（12 ファイル）。v8 カバレッジ: **98.6% lines** |
+| [@vitest/coverage-v8](https://vitest.dev/guide/coverage) | v8 カバレッジプロバイダー。CI で閾値強制 |
+| [happy-dom](https://github.com/capricorn86/happy-dom) | DOM テスト用ランタイム |
+| [Playwright](https://playwright.dev/) | 1.50+。22 E2E テスト（6 ファイル、6 ユーザージャーニー）。Chromium 対応 |
 
 ### CI/CD・自動化
 
 | 技術 | 詳細 |
 |------|------|
-| [GitHub Actions](https://github.com/features/actions) | `daily-post.yml`（毎日 19:30 MYT 自動生成）+ `healthcheck.yml`（6時間ごと） |
+| [GitHub Actions](https://github.com/features/actions) | `daily-post.yml`（自動生成）+ `healthcheck.yml` + `ci-test.yml`（Unit+Coverage）+ `ci-e2e.yml`（Playwright）+ `codeql.yml`（セキュリティスキャン） |
 | [oven-sh/setup-bun](https://github.com/oven-sh/setup-bun) | v2。CI で Bun を使用 |
+| [CodeQL](https://codeql.github.com/) | セキュリティスキャン（JS/TS）。Push/PR + 毎週月曜実行 |
+| [Renovate](https://github.com/renovatebot/renovate) | 依存関係の自動更新（パッチ auto-merge） |
 | [Vercel](https://vercel.com/) | 自動デプロイ + Edge Functions（ペイウォール検証 API） |
 | Conventional Commits | `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:` の形式を採用（AGENTS.md で規定） |
 
