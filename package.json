@@ -7,7 +7,7 @@
     "start": "astro dev",
     "build": "astro build && node scripts/build-search.mjs",
     "build:search": "node scripts/build-search.mjs",
-    "preview": "astro preview",
+    "preview": "bun run build && wrangler dev",
     "astro": "astro",
     "auto-post": "bun scripts/auto-post.mjs",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",
@@ -15,7 +15,9 @@
     "format": "biome format --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "deploy": "bun run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@ai-sdk/cerebras": "^2.0.0",
@@ -23,6 +25,7 @@
     "@ai-sdk/groq": "^2.0.0",
     "@ai-sdk/huggingface": "^1.0.48",
     "@astrojs/check": "^0.9.0",
+    "@astrojs/cloudflare": "12",
     "@astrojs/mdx": "^4.0.0",
     "@openrouter/ai-sdk-provider": "^2.9.0",
     "@sentry/astro": "^10.0.0",
@@ -40,6 +43,7 @@
     "pagefind": "^1.3.0",
     "tailwindcss": "^4.0.0",
     "vitest": "^4.1.5",
+    "wrangler": "^4.88.0",
     "zod": "^4.4.3"
   }
 }

@@ -7,3 +7,9 @@ dist/
 *.log
 .pipeline-state.json
 logs/agent-runs.jsonl
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
