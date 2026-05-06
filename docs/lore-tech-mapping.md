@@ -120,3 +120,38 @@ which provider each agent used, how many attempts were needed, how long the whol
 process took. It is the Vault's equivalent of a ship's log, a daily record that
 says: "the system ran, the article was created, here is the proof." Transparency
 is Mina's brand promise made tangible.
+
+## Pipeline State Machine → The Vault's Nervous System
+
+The state machine is the Vault's nervous system. It remembers where it was when
+the lights went out and picks up from exactly that moment. When the daily
+pipeline stumbles at Iris (the Editor), it doesn't restart from Nova (the
+Balancer) — that would burn API quota like a candle in a drafty room.
+The checkpoint is the memory that survives sleep. Each transition is a
+pure function: same state in, same state out, no hidden side effects.
+The runId is a deterministic fingerprint: the same date always produces the
+same key, so a retried run finds its own ghost waiting in the checkpoint
+file and resumes without repeating a single API call.
+
+## Quality Gate → The Final Inspection
+
+The quality gate is the Vault's last line of defense before an article ships.
+It checks for AI artifacts (placeholder text, code fences, disclaimer language),
+verifies the article has substance (minimum length, heading structure), and
+ensures the markdown is clean. Like a jeweler inspecting a gem under a loupe,
+it catches the flaws that the agents — for all their sophistication — sometimes
+let slip. A score below 50 triggers a warning; below the threshold, the
+article is flagged for review. The gate doesn't reject — it records — because
+shipping a slightly imperfect article is better than silence.
+
+## Prompt Versioning → The Vault's Genetic Code
+
+Each agent's prompt is a strand of DNA, versioned and preserved in `prompts/`.
+When a prompt is changed and an article quality regresses, the Vault can
+trace exactly which genetic variant caused the mutation. v1.0.0 produced
+beautiful prose; v1.1.0 added seasonal awareness but made titles too abstract;
+roll back to v1.0.0, ship the fix, and try again with v1.2.0. The version
+recorded in each article's metadata is the proof of lineage — this article
+was born from prompt v1.0.0, that one from v1.1.0. The /agents page makes
+this lineage visible to every reader, because algorithmic independence means
+showing your algorithms, not hiding them.

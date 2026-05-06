@@ -11,6 +11,8 @@
     "astro": "astro",
     "auto-post": "bun scripts/auto-post.mjs",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",
+    "gen:resume": "bun scripts/pipeline-resume.mjs",
+    "analyze:themes": "bun scripts/analyze-themes.mjs",
     "lint": "biome check .",
     "format": "biome format --write .",
     "test": "vitest run",

@@ -1,10 +1,26 @@
 # AGENTS.md — AI Development Rules for gentaron
 
-> **Version**: 1.0.0
+> **Version**: 2.0.0
 > **Maintainer**: gentaron
 > **Effective**: All AI assistants (Z.AI, Claude, Cursor, Copilot, etc.)
 
 This file is the **highest priority** instruction set for any AI operating on this repository.
+
+<!--
+  Phase θ — Machine-parseable rules (parsed by src/lib/pipeline/rules.ts)
+  These values are enforced at runtime by the pipeline driver.
+  DO NOT modify without understanding the consequences.
+-->
+<!-- rules:start
+version: "2.0.0"
+max_iterations_per_agent: 3
+max_total_iterations: 15
+allowed_commit_types: [feat, fix, docs, refactor, test, chore]
+deadlock_threshold_ms: 120000
+min_article_length: 500
+max_article_length: 5000
+quality_score_threshold: 50
+rules:end -->
 
 ---
 

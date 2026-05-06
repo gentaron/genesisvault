@@ -6,6 +6,7 @@ dist/
 .DS_Store
 *.log
 .pipeline-state.json
+.pipeline-state/
 logs/agent-runs.jsonl
 
 # wrangler files

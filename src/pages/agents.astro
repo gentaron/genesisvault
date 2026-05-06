@@ -1,0 +1,194 @@
+---
+/**
+ * Phase θ — Public Agent Transparency Page
+ *
+ * Shows each agent's persona, current prompt version, and recent runs.
+ * Proves the "algorithmically-independent media" claim.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.join(__dirname, '..', '..');
+
+// Agent definitions
+const agents = [
+  {
+    id: 'VE-005',
+    name: 'Nova Harmon',
+    role: 'Balancer',
+    emoji: '⚖️',
+    description: 'テーマバランス分析・ジャンル選定。直近の記事傾向を分析し、最も使われていないテーマを優先選定する。',
+    promptDir: 'prompts/nova',
+  },
+  {
+    id: 'VE-001',
+    name: 'Lena Strauss',
+    role: 'CEO',
+    emoji: '🎯',
+    description: 'トピック・切り口・タイトルの決定。Balancerが選んだテーマに沿って、具体的で魅力的な記事プランを作成する。',
+    promptDir: 'prompts/lena',
+  },
+  {
+    id: 'VE-003',
+    name: 'Chloe Verdant',
+    role: 'SEO',
+    emoji: '🔍',
+    description: 'タグ・キーワード・メタディスクリプション生成。検索エンジン最適化データを作成する。',
+    promptDir: 'prompts/chloe',
+  },
+  {
+    id: 'VE-002',
+    name: 'Sophia Nightingale',
+    role: 'Writer',
+    emoji: '✍️',
+    description: '本文執筆（1,000〜2,000字）。ミナのペルソナを反映した日記体で記事を書く。',
+    promptDir: 'prompts/sophia',
+  },
+  {
+    id: 'VE-006',
+    name: 'Iris Koenig',
+    role: 'Editor',
+    emoji: '📝',
+    description: '校正・品質チェック。ペルソナ一貫性・文字数・AIっぽさを検査し、修正する。',
+    promptDir: 'prompts/iris',
+  },
+];
+
+// Load prompt versions for each agent
+for (const agent of agents) {
+  try {
+    const dir = path.join(ROOT_DIR, agent.promptDir);
+    const files = await fs.readdir(dir);
+    const mdFiles = files.filter(f => f.endsWith('.md') && f !== 'CHANGELOG.md');
+    mdFiles.sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+    agent.currentVersion = mdFiles[0]?.replace('.md', '') || 'N/A';
+    agent.versionCount = mdFiles.length;
+  } catch {
+    agent.currentVersion = 'N/A';
+    agent.versionCount = 0;
+  }
+  (agent as any).currentVersion = (agent as any).currentVersion;
+  (agent as any).versionCount = (agent as any).versionCount;
+}
+
+// Read recent agent runs from telemetry
+let recentRuns: string[] = [];
+try {
+  const runsDir = path.join(ROOT_DIR, 'docs', 'agent-runs');
+  const files = await fs.readdir(runsDir);
+  const mdFiles = files.filter(f => f.endsWith('.md')).sort().reverse();
+  if (mdFiles.length > 0) {
+    const content = await fs.readFile(path.join(runsDir, mdFiles[0]), 'utf-8');
+    const lines = content.trim().split('\n').filter(l => l.trim());
+    // Get last 10 runs
+    recentRuns = lines.slice(-50);
+  }
+} catch {
+  // No telemetry data yet
+}
+
+const buildTime = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+---
+
+<BaseLayout title="AI Agents — Genesis Vault">
+  <div style="max-width: 48rem; margin: 0 auto; padding: 2rem 1rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h1 class="page-title" style="margin-bottom: 0.5rem;">
+        AI Agents
+      </h1>
+      <p style="color: var(--color-gray-dark);">
+        Genesis Vault の記事は5つの AI エージェント協働で生成されています
+      </p>
+      <p style="color: var(--color-gray-dark); font-size: 0.85rem; margin-top: 0.5rem;">
+        アルゴリズム的に独立したメディア — その仕組みを公開します
+      </p>
+    </div>
+
+    <!-- Pipeline Flow -->
+    <div style="margin-bottom: 3rem; padding: 1.5rem; background: var(--color-soft-beige); border-radius: 0.5rem; border: 1px solid var(--color-gray-light);">
+      <h2 style="font-size: 1rem; margin-bottom: 1rem;">Pipeline Flow</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: center; font-size: 0.85rem;">
+        {agents.map((agent, i) => (
+          <>
+            <span style="background: var(--color-bg); padding: 0.4rem 0.8rem; border-radius: 0.3rem; border: 1px solid var(--color-gray-light); white-space: nowrap;">
+              {agent.emoji} {agent.id} {agent.name}
+            </span>
+            {i < agents.length - 1 && <span style="color: var(--color-gray-dark);">→</span>}
+          </>
+        ))}
+      </div>
+    </div>
+
+    <!-- Agent Cards -->
+    <div style="display: grid; gap: 1.5rem; margin-bottom: 3rem;">
+      {agents.map((agent) => (
+        <div style="padding: 1.5rem; border: 1px solid var(--color-gray-light); border-radius: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <h3 style="margin: 0 0 0.25rem; font-size: 1.1rem;">
+                {agent.emoji} {agent.id} {agent.name}
+              </h3>
+              <span style="font-size: 0.8rem; color: var(--color-gray-dark); background: var(--color-soft-beige); padding: 0.15rem 0.5rem; border-radius: 0.2rem;">
+                {agent.role}
+              </span>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.75rem; color: var(--color-gray-dark);">Prompt v{(agent as any).currentVersion}</div>
+              <div style="font-size: 0.7rem; color: var(--color-gray-dark);">{(agent as any).versionCount} versions</div>
+            </div>
+          </div>
+          <p style="margin: 0.75rem 0 0; font-size: 0.9rem; color: var(--color-gray-dark);">
+            {agent.description}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Recent Telemetry -->
+    {recentRuns.length > 0 && (
+      <div style="margin-bottom: 3rem;">
+        <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Recent Pipeline Runs</h2>
+        <pre style="background: var(--color-soft-beige); padding: 1rem; border-radius: 0.5rem; font-size: 0.75rem; overflow-x: auto; white-space: pre-wrap; border: 1px solid var(--color-gray-light); max-height: 400px; overflow-y: auto;">{recentRuns.join('\n')}</pre>
+      </div>
+    )}
+
+    <!-- Multi-Provider Chain -->
+    <div style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-soft-beige); border-radius: 0.5rem; border: 1px solid var(--color-gray-light);">
+      <h2 style="font-size: 1rem; margin-bottom: 0.75rem;">Provider Chain (Zero-Cost Fallback)</h2>
+      <div style="display: grid; gap: 0.5rem; font-size: 0.85rem;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-gray-light); padding-bottom: 0.3rem;">
+          <span>1. Gemini 2.5 Flash Lite</span>
+          <span style="color: var(--color-gray-dark);">15 RPM / 1000 RPD</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-gray-light); padding-bottom: 0.3rem;">
+          <span>2. Gemini 2.5 Flash</span>
+          <span style="color: var(--color-gray-dark);">10 RPM / 250 RPD</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-gray-light); padding-bottom: 0.3rem;">
+          <span>3. Groq Llama 3.3 70B</span>
+          <span style="color: var(--color-gray-dark);">30 RPM / 14400 RPD</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-gray-light); padding-bottom: 0.3rem;">
+          <span>4. Cerebras Llama 3.3 70B</span>
+          <span style="color: var(--color-gray-dark);">30 RPM</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-gray-light); padding-bottom: 0.3rem;">
+          <span>5. OpenRouter (Free)</span>
+          <span style="color: var(--color-gray-dark);">20 RPM</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>6. HuggingFace Inference</span>
+          <span style="color: var(--color-gray-dark);">10 RPM</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem; text-align: center;">
+      <a href="/" style="color: var(--color-gentle-green);">&larr; Home</a>
+    </div>
+  </div>
+</BaseLayout>

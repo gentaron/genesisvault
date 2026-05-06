@@ -344,7 +344,7 @@ ${sampleTexts}
       prompt,
       agentId: 'VE-002',
       agentName: 'Sophia Nightingale',
-      maxTokens: 4096,
+      maxOutputTokens: 4096,
       temperature: 0.85,
     });
 
@@ -402,7 +402,7 @@ ${draft}
       prompt,
       agentId: 'VE-006',
       agentName: 'Iris Koenig',
-      maxTokens: 4096,
+      maxOutputTokens: 4096,
       temperature: 0.85,
     });
 
