@@ -16,6 +16,9 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Set date tag
+        run: echo "DATE_TAG=$(date -u +'%Y-%m-%d %H:%M UTC')" >> "$GITHUB_ENV"
+
       - name: Homepage reachable (HTTP 200)
         run: |
           STATUS=$(curl -fsS -o /dev/null -w "%{http_code}" https://genesisvault.vercel.app/ || true)
@@ -104,11 +107,11 @@ jobs:
         uses: dacbd/create-issue-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Healthcheck failed — $(date -u +'%Y-%m-%d %H:%M UTC')"
+          title: "Healthcheck failed — ${{ env.DATE_TAG }}"
           body: |
             ## Genesis Vault Healthcheck Failure
 
-            **Timestamp**: $(date -u +'%Y-%m-%d %H:%M UTC')
+            **Timestamp**: ${{ env.DATE_TAG }}
             **Workflow run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             ### What to check:
