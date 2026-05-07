@@ -1,4 +1,7 @@
 ---
+import '../styles/app.css';
+import '../styles/global-legacy.css';
+
 interface Props {
   title: string;
   description?: string;
@@ -14,8 +17,6 @@ const {
 // Phase η: Umami analytics configuration (empty string = disabled)
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID || '';
 const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.com';
-import '../styles/app.css';
-import '../styles/global-legacy.css';
 ---
 
 <!doctype html>
@@ -34,6 +35,7 @@ import '../styles/global-legacy.css';
     <!-- See docs/adr/0007-observability.md for deployment instructions -->
     {umamiWebsiteId && (
       <script
+        is:inline
         data-umami-id={umamiWebsiteId}
         data-umami-host={umamiHost}
         data-umami-domains="genesisvault.vercel.app"
