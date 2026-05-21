@@ -266,6 +266,17 @@ Mina のペルソナに基づくテーマ：
 
 ---
 
+## 関連リポジトリ
+
+| リポジトリ | 説明 |
+|-----------|------|
+| [gentaron/edu](https://github.com/gentaron/edu) | EDU メインアプリケーション |
+| [gentaron/edutext](https://github.com/gentaron/edutext) | ストーリーテキスト (JP/EN) |
+| [gentaron/image](https://github.com/gentaron/image) | キャラクター画像 |
+| [gentaron/eurekaspace](https://github.com/gentaron/eurekaspace) | EDU 百科事典サイト |
+| [gentaron/laylaland](https://github.com/gentaron/laylaland) | Layla キャラクターサイト |
+| [gentaron/irisworlds](https://github.com/gentaron/irisworlds) | Iris キャラクターサイト |
+
 ## ライセンス
 
 MIT License
