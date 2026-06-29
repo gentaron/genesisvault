@@ -48,6 +48,18 @@ Genesis Vault というパーソナルブログの著者で、${MINA_AGE}歳の�
 一人称は「わたし」、語尾は「〜だ」「〜と思う」「〜かもしれない」を混ぜます。
 `;
 
+// ─── Reference source files (WXR exports stored as .md) ─────────
+//
+// `gensnotes_1/2` … 旧ブログ「旧Gens Notes」(legacy). 文体・テーマ分析用。
+// `gensnotes_3/4/5` … 現行ブログ「Genesis Vault - ミナ・エウレカ」。
+//   ↑ これが「現時点の最新参照源」。継続性（整合性）チェックはこちらを基準にする。
+//
+// すべて文体サンプル・タイトル・テーマバランスの参照に使うが、
+// 過去記事との内容整合性（貯金額の逆行防止など）は CURRENT_BLOG_FILES を正典とする。
+export const LEGACY_BLOG_FILES = ['gensnotes_1.md', 'gensnotes_2.md'] as const;
+export const CURRENT_BLOG_FILES = ['gensnotes_3.md', 'gensnotes_4.md', 'gensnotes_5.md'] as const;
+export const REFERENCE_FILES = [...LEGACY_BLOG_FILES, ...CURRENT_BLOG_FILES];
+
 // ─── Helpers ────────────────────────────────────────────────────
 
 export function pick<T>(arr: T[]): T {

@@ -138,11 +138,17 @@ export async function runLena(
   titles: string[],
   styleSamples: string[],
   assignedTheme: string,
+  continuityBrief = '',
 ): Promise<CEOPlan> {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): トピック決定中…');
 
   const sampleTitles = pickN(titles, 10).join('\n- ');
   const sampleTexts = styleSamples.map((s, i) => `【サンプル${i + 1}】\n${s}`).join('\n\n');
+  const continuitySection = continuityBrief
+    ? `\n\n## 過去記事との継続性（最重要・厳守）
+新しい記事は過去に公開した記事の「続き」です。下記の確定事実と矛盾・逆行する企画を立ててはいけません。
+${continuityBrief}\n`
+    : '';
 
   const prompt = `あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
 Genesis Vault ブログの次の日記エントリーのトピック・切り口・タイトルを決めてください。
@@ -151,7 +157,7 @@ Genesis Vault ブログの次の日記エントリーのトピック・切り口
 「${assignedTheme}」
 
 上記テーマに沿った内容にしてください。他のテーマに変えてはいけません。
-たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。
+たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。${continuitySection}
 
 ## 参考：過去の記事タイトル（gensnotes より）
 - ${sampleTitles}
@@ -303,12 +309,20 @@ export async function runSophia(
   ceoPlan: CEOPlan,
   seoData: SEOData,
   styleSamples: string[],
+  continuityBrief = '',
 ): Promise<string | null> {
   console.log('✍️  [VE-002] Sophia Nightingale (Writer): 本文執筆中…');
 
   const sampleTexts = styleSamples.map((s, i) => `【サンプル${i + 1}】\n${s}`).join('\n\n');
+  const continuitySection = continuityBrief
+    ? `\n## 過去記事との継続性（最重要・厳守）
+この日記は過去記事の続きです。下記の確定事実と矛盾・逆行する描写は禁止です。
+特に、過去に書いた金額より低い額を「新たに達成した」ように書いてはいけません。
+${continuityBrief}\n`
+    : '';
 
   const prompt = `${PERSONA}
+${continuitySection}
 
 あなたは Sophia Nightingale（ソフィア・ナイチンゲール）、Writer Agent（VE-002）です。
 以下のプランに基づいて、ミナ・エウレカ視点のブログ日記を執筆してください。

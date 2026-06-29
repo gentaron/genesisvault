@@ -17,6 +17,14 @@ const ROOT_DIR = path.join(__dirname, '..', '..');
 // Agent definitions
 const agents = [
   {
+    id: 'VE-004',
+    name: 'Vera Holt',
+    role: 'Researcher',
+    emoji: '🔎',
+    description: '過去記事から確定事実（貯金額・到達済みマイルストーン等）を抽出。継続性の出発点。',
+    promptDir: 'prompts/vera',
+  },
+  {
     id: 'VE-005',
     name: 'Nova Harmon',
     role: 'Balancer',
@@ -55,6 +63,22 @@ const agents = [
     emoji: '📝',
     description: '校正・品質チェック。ペルソナ一貫性・文字数・AIっぽさを検査し、修正する。',
     promptDir: 'prompts/iris',
+  },
+  {
+    id: 'VE-007',
+    name: 'Edda Lindgren',
+    role: 'Summarizer',
+    emoji: '🧾',
+    description: '抽出された確定事実を継続性台帳に統合。執筆陣へ渡す「逆行禁止」ブリーフを生成する。',
+    promptDir: 'prompts/edda',
+  },
+  {
+    id: 'VE-008',
+    name: 'Mira Falk',
+    role: 'Recorder',
+    emoji: '🗂️',
+    description: '投稿された記事の確定事実を台帳へ記録・更新。次回以降の参照源を常に最新に保つ。',
+    promptDir: 'prompts/mira',
   },
 ];
 
