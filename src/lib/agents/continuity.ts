@@ -17,11 +17,10 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { PERSONA } from './shared.js';
 
-// 注: AI SDK(`../ai/generate`) は polishBrief 内で動的 import する。
-// これにより継続性の決定的コア（抽出・統合・台帳IO）は AI SDK 非依存で動き、
-// 単体テストやオフラインの台帳生成が可能になる。
+// 本モジュールは完全に決定的（AI SDK 非依存）。
+// 継続性ブリーフは抽出した確定事実から決定的に組み立てる。LLM 出力をファイル
+// (台帳) へ書き込まないことで再現性を保ち、外部データのファイル混入も避ける。
 //
 // 【継続性の正典ソース】
 // 過去記事との整合性（貯金300万→200万のような逆行防止）が問われるのは、本パイプ
@@ -291,18 +290,14 @@ export function buildDeterministicBrief(facts: CanonFact[], milestones: Mileston
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * 抽出事実を正典(台帳)へ統合し、執筆陣に渡す自然言語ブリーフを生成する。
- * 構造化部分は決定的。ブリーフ文だけ LLM で読みやすく整え、失敗時は決定的版を使う。
+ * 抽出事実を正典(台帳)へ統合し、執筆陣に渡す継続性ブリーフを決定的に組み立てる。
  */
-export async function runSummarizer(
+export function runSummarizer(
   minedFacts: MinedFact[],
   prev: ContinuityLedger | null,
-): Promise<ContinuityLedger> {
+): ContinuityLedger {
   console.log('🧾 [VE-007] Edda Lindgren (Summarizer): 過去データを台帳に統合中…');
   const { facts, milestones } = consolidate(minedFacts);
-  const deterministic = buildDeterministicBrief(facts, milestones);
-
-  const brief = await polishBrief(deterministic, 'VE-007', 'Edda Lindgren');
 
   const ledger: ContinuityLedger = {
     schema: LEDGER_SCHEMA,
@@ -310,7 +305,7 @@ export async function runSummarizer(
     diaryArticleCount: prev?.diaryArticleCount ?? 0,
     facts,
     milestones,
-    brief,
+    brief: buildDeterministicBrief(facts, milestones),
   };
   console.log(`  ✅ 台帳統合完了（数値${facts.length}件 / 出来事${milestones.length}件）`);
   return ledger;
@@ -324,10 +319,10 @@ export async function runSummarizer(
  * 新しく書かれた記事から事実を抽出し、台帳を更新する。
  * 金額は「最高到達点」を保持（後退させない）。出来事は追記。
  */
-export async function runRecorder(
+export function runRecorder(
   ledger: ContinuityLedger,
   newArticle: PastArticle,
-): Promise<ContinuityLedger> {
+): ContinuityLedger {
   console.log('🗂️  [VE-008] Mira Falk (Recorder): 新記事の事実を台帳に記録中…');
   const mined = runResearcherSilent([newArticle]);
 
@@ -367,16 +362,13 @@ export async function runRecorder(
     .filter((m, i, arr) => arr.findIndex(x => x.event === m.event) === i)
     .slice(0, 12);
 
-  const deterministic = buildDeterministicBrief(facts, milestones);
-  const brief = await polishBrief(deterministic, 'VE-008', 'Mira Falk');
-
   const updated: ContinuityLedger = {
     schema: LEDGER_SCHEMA,
     updated: new Date().toISOString().split('T')[0],
     diaryArticleCount: ledger.diaryArticleCount + 1,
     facts,
     milestones,
-    brief,
+    brief: buildDeterministicBrief(facts, milestones),
   };
   console.log(`  ✅ 台帳更新完了（数値${facts.length}件 / 出来事${milestones.length}件）`);
   return updated;
@@ -393,47 +385,7 @@ function runResearcherSilent(articles: PastArticle[]): MinedFact[] {
   }
 }
 
-// ─── Brief polishing (LLM, with deterministic fallback) ─────────
-
-async function polishBrief(
-  deterministic: string,
-  agentId: string,
-  agentName: string,
-): Promise<string> {
-  const prompt = `あなたは Genesis Vault ブログの「継続性アーカイブ担当」です。
-以下は過去記事から機械的に抽出した確定事実です。これを、記事執筆AIへ渡す
-「継続性メモ」として簡潔に（300字以内）整えてください。
-
-## 抽出された確定事実
-${deterministic}
-
-## メモ作成ルール
-1. 事実（金額・出来事）は一切変更・捏造しない。抽出結果の数値をそのまま使う
-2. 「過去にこれより低い金額を新たに達成したように書いてはいけない」という逆行禁止を明記する
-3. 箇条書き中心で、執筆AIが一目で守れる形にする
-4. 余計な前置き・後書きは書かない。メモ本文のみ出力する`;
-
-  try {
-    const { generateTextWithFallback } = await import('../ai/generate.js');
-    const result = await generateTextWithFallback({
-      system: PERSONA,
-      prompt,
-      agentId,
-      agentName,
-      maxOutputTokens: 800,
-      temperature: 0.3,
-    });
-    if (result.text && result.text.trim().length > 20) {
-      console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
-      return result.text.trim();
-    }
-  } catch (err) {
-    console.warn(`  ⚠️  Brief polish failed: ${(err as Error).message?.substring(0, 120)} — 決定的版を使用`);
-  }
-  return deterministic;
-}
-
-// ─── Reference article loading (current blog + local posts) ─────
+// ─── Reference article loading (diary posts) ────────────────────
 
 const HTML_ENTITIES: Record<string, string> = {
   '&nbsp;': ' ',
@@ -443,9 +395,18 @@ const HTML_ENTITIES: Record<string, string> = {
   '&quot;': '"',
 };
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, '')
+/**
+ * HTML タグを除去してプレーンテキスト化する。
+ * タグ除去は不動点まで繰り返す（`<<x>y>` のような入れ子で取りこぼさないため）。
+ */
+export function stripHtml(html: string): string {
+  let prev: string;
+  let out = html;
+  do {
+    prev = out;
+    out = out.replace(/<[^>]*>/g, '');
+  } while (out !== prev);
+  return out
     .replace(/&nbsp;|&amp;|&lt;|&gt;|&quot;/g, m => HTML_ENTITIES[m] ?? m)
     .replace(/\s+/g, ' ')
     .trim();

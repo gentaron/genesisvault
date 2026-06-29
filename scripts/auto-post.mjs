@@ -358,7 +358,7 @@ async function main() {
   if (!ledger || ledger.schema !== LEDGER_SCHEMA) {
     try {
       const mined = runResearcher(pastArticles);
-      ledger = await runSummarizer(mined, ledger);
+      ledger = runSummarizer(mined, ledger);
       ledger.diaryArticleCount = pastArticles.length;
       if (!DRY_RUN) await saveLedger(ROOT_DIR, ledger);
       logAgent('VE-004', 'Vera Holt', 'facts_mined', `${mined.length} facts`);
@@ -505,7 +505,7 @@ ${cleanBody}
   // ── VE-008 Mira (Recorder): 投稿した記事の確定事実を台帳へ記録・更新 ──
   if (ledger) {
     try {
-      ledger = await runRecorder(ledger, {
+      ledger = runRecorder(ledger, {
         title: ceoPlan.title,
         text: cleanBody,
         date: todayISO(),
