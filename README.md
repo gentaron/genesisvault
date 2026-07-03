@@ -19,15 +19,36 @@ Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト�
 
 ## Multi-Agent AI パイプライン
 
-記事生成は以下の5エージェントが順番に担当します：
+記事生成は以下の8エージェントが順番に担当します：
 
 | ID | エージェント | 役割 |
 |----|-------------|------|
+| VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（貯金額・到達済みマイルストーン等）を抽出 |
 | VE-005 | **Nova Harmon** (Balancer) | テーマバランス分析・ジャンル選定 |
 | VE-001 | **Lena Strauss** (CEO) | トピック・切り口・タイトルの決定 |
 | VE-003 | **Chloe Verdant** (SEO) | タグ・キーワード・メタディスクリプション生成 |
 | VE-002 | **Sophia Nightingale** (Writer) | 本文執筆（1,000〜2,000字・日記体） |
 | VE-006 | **Iris Koenig** (Editor) | 校正・品質チェック・ペルソナ一貫性確認 |
+| VE-007 | **Edda Lindgren** (Summarizer) | 抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成 |
+| VE-008 | **Mira Falk** (Recorder) | 投稿記事の確定事実を台帳へ記録・更新 |
+
+### 過去記事整合性（継続性サブシステム）
+
+Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger.json`) を構築し、
+**逆行禁止ブリーフ**を CEO/Writer に注入します。これにより
+「貯金300万円達成の記事の後に貯金200万円達成の記事を書く」といった内容の逆行・矛盾を防ぎます。
+投稿後は Mira が台帳を更新し、参照源を常に最新に保ちます。
+
+- 継続性の正典ソース: 本パイプラインが生成した日記（`src/content/posts/`）
+- 金額は「最高到達点」を正典とし、個人の現実的上限（1億円）超や統計引用は除外
+
+### 参照源（文体・テーマ）
+
+文体サンプル・タイトル・テーマバランスの参照には以下の WXR エクスポートを使います
+（`src/lib/agents/shared.ts` の `REFERENCE_FILES`）。
+
+- `gensnotes_1.md` / `gensnotes_2.md` — 旧ブログ「旧Gens Notes」（レガシー）
+- `gensnotes_3.md` / `gensnotes_4.md` / `gensnotes_5.md` — 現行ブログ「Genesis Vault - ミナ・エウレカ」（**現時点の最新参照源**）
 
 **使用モデル（優先順）**:
 1. `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD（メイン）
