@@ -66,6 +66,12 @@ principle she applies to her investments: diversification eliminates single poin
 of failure. Telemetry records (`logs/agent-runs.jsonl`) serve as the Vault's
 "resonance log" — a record of which frequency each signal arrived on.
 
+Even within a single provider, the doctrine holds: the OpenRouter tier
+(ADR-0010) no longer trusts one model alone. `OPENROUTER_FREE_MODELS` fans
+out across three unrelated labs' free-tier weights — Meta, Qwen, DeepSeek —
+so a single model's retirement from OpenRouter's shared pool thins the tier
+instead of collapsing it.
+
 ## Vitest + Playwright → The Vault's Self-Awareness Protocol
 Mina built the Vault with an "observation layer" — 192 unit tests and 22 E2E journeys
 that continuously verify the dimensional barrier remains intact. Vitest runs in under

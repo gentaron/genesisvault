@@ -53,12 +53,13 @@ describe('AI Providers — buildProviderChain', () => {
     expect(chain[0].name).toBe('cerebras-llama-3.3-70b');
   });
 
-  it('includes OpenRouter provider when OPENROUTER_API_KEY is set', async () => {
+  it('includes multiple OpenRouter free-tier models when OPENROUTER_API_KEY is set', async () => {
     process.env.OPENROUTER_API_KEY = 'test-or-key';
-    const { buildProviderChain } = await import('../src/lib/ai/providers');
+    const { buildProviderChain, OPENROUTER_FREE_MODELS } = await import('../src/lib/ai/providers');
     const chain = buildProviderChain();
-    expect(chain).toHaveLength(1);
-    expect(chain[0].name).toBe('openrouter-free');
+    expect(chain).toHaveLength(OPENROUTER_FREE_MODELS.length);
+    expect(chain[0].name).toBe('openrouter-llama');
+    expect(chain.map(c => c.name)).toEqual(OPENROUTER_FREE_MODELS.map(m => m.name));
   });
 
   it('includes HuggingFace provider when HF_TOKEN is set', async () => {
@@ -75,15 +76,17 @@ describe('AI Providers — buildProviderChain', () => {
     process.env.CEREBRAS_API_KEY = 'key';
     process.env.OPENROUTER_API_KEY = 'key';
     process.env.HF_TOKEN = 'key';
-    const { buildProviderChain } = await import('../src/lib/ai/providers');
+    const { buildProviderChain, OPENROUTER_FREE_MODELS } = await import('../src/lib/ai/providers');
     const chain = buildProviderChain();
-    expect(chain).toHaveLength(6);
+    expect(chain).toHaveLength(4 + OPENROUTER_FREE_MODELS.length + 1);
     expect(chain[0].name).toBe('gemini-2.5-flash-lite');
     expect(chain[1].name).toBe('gemini-2.5-flash');
     expect(chain[2].name).toBe('groq-llama-3.3-70b');
     expect(chain[3].name).toBe('cerebras-llama-3.3-70b');
-    expect(chain[4].name).toBe('openrouter-free');
-    expect(chain[5].name).toBe('huggingface');
+    for (let i = 0; i < OPENROUTER_FREE_MODELS.length; i++) {
+      expect(chain[4 + i].name).toBe(OPENROUTER_FREE_MODELS[i].name);
+    }
+    expect(chain[chain.length - 1].name).toBe('huggingface');
   });
 
   it('each entry has model, rpm, and rpd', async () => {
