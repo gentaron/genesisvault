@@ -1,11 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import crypto from 'crypto';
+import { buildUnlockCookie, verifyUsdcPayment } from './_lib/paywall';
 
-function hmacSign(data: string): string {
-  const secret = process.env.PAYWALL_SECRET || 'change-me-in-production';
-  return crypto.createHmac('sha256', secret).update(data).digest('base64url');
-}
-
+/**
+ * Legacy migration endpoint.
+ *
+ * Older clients stored a `{ txHash, wallet }` "paid" record in localStorage
+ * and call this endpoint to exchange it for a server-signed cookie. The stored
+ * record is fully attacker-controlled, so the transaction MUST be re-verified
+ * on-chain exactly like `/api/unlock` — otherwise any public successful tx hash
+ * could be replayed to bypass the paywall.
+ */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -21,23 +25,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const rpcUrl = process.env.ETH_RPC_URL || 'https://ethereum-rpc.publicnode.com';
-    const resp = await fetch(rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_getTransactionReceipt', params: [txHash] }),
-    }).then(r => r.json());
-    const receipt = resp?.result;
-    if (!receipt || receipt.status !== '0x1') {
-      return res.status(400).json({ error: 'Transaction not found or failed' });
+    // Same full on-chain verification as /api/unlock — never trust the
+    // client-supplied localStorage record on its own.
+    const result = await verifyUsdcPayment(wallet, txHash);
+    if (!result.ok) {
+      return res.status(result.status).json({ error: result.error });
     }
 
-    const expiry = Date.now() + 30 * 24 * 60 * 60 * 1000;
-    const payload = `${wallet.toLowerCase()}.${expiry}`;
-    const sig = hmacSign(payload);
-    const cookieValue = `${payload}.${sig}`;
-
-    res.setHeader('Set-Cookie', `gv_unlock=${encodeURIComponent(cookieValue)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${30 * 24 * 60 * 60}`);
+    res.setHeader('Set-Cookie', buildUnlockCookie(wallet));
     return res.status(200).json({ migrated: true });
   } catch (err) {
     console.error('Legacy migration error:', err);

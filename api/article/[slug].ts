@@ -1,37 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import fs from 'fs/promises';
 import path from 'path';
-import crypto from 'crypto';
+import { hmacVerify } from '../_lib/paywall';
 
 const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
-
-function hmacVerify(cookieHeader: string | undefined): { valid: boolean; wallet?: string } {
-  if (!cookieHeader) return { valid: false };
-  const match = cookieHeader.match(/gv_unlock=([^;]+)/);
-  if (!match) return { valid: false };
-
-  let payload: string, sig: string;
-  try {
-    const decoded = decodeURIComponent(match[1]);
-    const dotIndex = decoded.lastIndexOf('.');
-    if (dotIndex === -1) return { valid: false };
-    payload = decoded.substring(0, dotIndex);
-    sig = decoded.substring(dotIndex + 1);
-  } catch {
-    return { valid: false };
-  }
-
-  const secret = process.env.PAYWALL_SECRET || 'change-me-in-production';
-  const expected = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
-  if (sig !== expected) return { valid: false };
-
-  const parts = payload.split('.');
-  if (parts.length !== 2) return { valid: false };
-  const [wallet, expiry] = parts;
-  if (Number(expiry) < Date.now()) return { valid: false };
-
-  return { valid: true, wallet };
-}
 
 function extractMarkdownBody(raw: string): string {
   const fmEnd = raw.indexOf('---', raw.indexOf('---') + 3);
