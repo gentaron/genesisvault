@@ -107,11 +107,11 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Google Gemini API](https://ai.google.dev/) | `@ai-sdk/google`。`gemini-2.5-flash-lite`（メイン）+ `gemini-2.5-flash`（サブ）|
 | [Groq](https://groq.com/) | `@ai-sdk/groq`。`llama-3.3-70b-versatile`。30 RPM / 14400 RPD 無料ティア |
 | [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
-| [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。`meta-llama/llama-3.3-70b-instruct:free`。20 RPM 無料 |
+| [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。無料モデル3種を順に試行: `meta-llama/llama-3.3-70b-instruct:free` → `qwen/qwen-2.5-72b-instruct:free` → `deepseek/deepseek-chat:free`（ADR-0010）|
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
 | Multi-Agent Pipeline | 5エージェント順次実行（Nova → Lena → Chloe → Sophia → Iris）。`src/lib/agents/runners.ts` に分離 |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
-| Multi-Provider Fallback | 6プロバイダチェーン + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
+| Multi-Provider Fallback | 6プロバイダ8モデルチェーン（OpenRouter内は3モデル分散） + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
 | Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |
 | Dry Run Mode | `bun run gen:dry` でファイル書き込みなしのパイプラインテスト |
 | Idempotency | 同日の重複ポスト生成を防止。`.pipeline-state.json` でステート管理 |
