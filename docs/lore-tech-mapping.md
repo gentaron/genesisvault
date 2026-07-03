@@ -150,6 +150,13 @@ let slip. A score below 50 triggers a warning; below the threshold, the
 article is flagged for review. The gate doesn't reject — it records — because
 shipping a slightly imperfect article is better than silence.
 
+Since ADR-0011, the loupe looks for a subtler flaw too: the formulaic tells
+of AI-written prose — a heading that grandly claims a walk "taught her
+something," a diary entry reaching for "真理" over a cup of coffee, the same
+"A ではなく B" cadence repeated until it becomes a tic. `detectAiSlop()`
+names these patterns the way a jeweler names a flaw, and Iris (prompt
+v1.1.0) is told to sand them down before the gate ever sees them.
+
 ## Prompt Versioning → The Vault's Genetic Code
 
 Each agent's prompt is a strand of DNA, versioned and preserved in `prompts/`.
