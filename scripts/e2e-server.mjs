@@ -48,12 +48,18 @@ const MIME = {
 
 // ─── Minimal Vercel (req, res) adapter ─────────────────────────
 
+// Prototype-pollution-safe cookie parsing: null-prototype target and
+// an explicit denylist for prototype-related keys (CodeQL js/remote-property-injection).
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 function parseCookies(header = '') {
-  const cookies = {};
+  const cookies = Object.create(null);
   for (const part of header.split(';')) {
     const idx = part.indexOf('=');
     if (idx === -1) continue;
-    cookies[part.slice(0, idx).trim()] = decodeURIComponent(part.slice(idx + 1).trim());
+    const key = part.slice(0, idx).trim();
+    if (FORBIDDEN_KEYS.has(key)) continue;
+    cookies[key] = decodeURIComponent(part.slice(idx + 1).trim());
   }
   return cookies;
 }
