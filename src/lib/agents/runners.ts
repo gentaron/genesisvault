@@ -339,13 +339,13 @@ ${sampleTexts}
 10. **重要**: 今回のテーマ「${ceoPlan.theme}」に集中すること。他のテーマ（貯金・投資など）を無理に盛り込まないこと。テーマに直接関係するミナの日常だけを自然に描写する`;
 
   try {
+    // Temperature / token budget / provider order come from the
+    // per-agent routing table (src/lib/ai/routing.ts).
     const result = await generateTextWithFallback({
       system: PERSONA,
       prompt,
       agentId: 'VE-002',
       agentName: 'Sophia Nightingale',
-      maxOutputTokens: 4096,
-      temperature: 0.85,
     });
 
     console.log(`  ✅ 原稿完成 (${result.text.length}文字)`);
@@ -397,13 +397,13 @@ ${draft}
 - Markdown形式で出力してください`;
 
   try {
+    // Editing is precision work — the routing table pins VE-006 to a
+    // low temperature so Iris proofreads instead of rewriting.
     const result = await generateTextWithFallback({
       system: PERSONA,
       prompt,
       agentId: 'VE-006',
       agentName: 'Iris Koenig',
-      maxOutputTokens: 4096,
-      temperature: 0.85,
     });
 
     console.log(`  ✅ 校正完了 (${result.text.length}文字)`);
