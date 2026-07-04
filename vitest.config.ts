@@ -32,6 +32,7 @@ export default defineConfig({
         'scripts/ipfs-archive.mjs',    // main script with process.exit()
         'scripts/nostr-broadcast.mjs', // main script with process.exit()
         'scripts/build-search.mjs',    // requires built site output
+        'scripts/e2e-server.mjs',      // E2E test infra; exercised by Playwright itself
 
         // ─── Misc ──────────────────────────────────────────────
         '**/*.d.ts',
