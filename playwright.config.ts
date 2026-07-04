@@ -31,7 +31,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'bun run build && bun run preview',
+    // e2e-server serves the static dist/ AND mounts the Vercel api/
+    // handlers — `astro preview` alone cannot serve /api/* routes.
+    command: 'bun run build && bun scripts/e2e-server.mjs',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

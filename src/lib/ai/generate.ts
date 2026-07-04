@@ -12,6 +12,7 @@
 import { generateObject, generateText } from 'ai';
 import type { ZodSchema } from 'zod';
 import { buildProviderChain } from './providers.js';
+import { getAgentRoute, orderProvidersForAgent } from './routing.js';
 import { recordTelemetry } from './telemetry.js';
 
 // ─── Result types ───────────────────────────────────────────────
@@ -38,9 +39,12 @@ export async function generateWithFallback<T>(opts: {
   prompt: string;
   agentId: string;
   agentName: string;
+  temperature?: number;
+  maxOutputTokens?: number;
   abortSignal?: AbortSignal;
 }): Promise<FallbackResult<T>> {
-  const providers = buildProviderChain();
+  const route = getAgentRoute(opts.agentId);
+  const providers = orderProvidersForAgent(buildProviderChain(), opts.agentId);
   const errors: { provider: string; error: unknown }[] = [];
   const startTime = Date.now();
 
@@ -52,6 +56,8 @@ export async function generateWithFallback<T>(opts: {
         schema: opts.schema,
         system: opts.system,
         prompt: opts.prompt,
+        temperature: opts.temperature ?? route.temperature,
+        maxOutputTokens: opts.maxOutputTokens ?? route.maxOutputTokens,
         abortSignal: opts.abortSignal,
       });
       const latencyMs = Date.now() - startTime;
@@ -98,7 +104,8 @@ export async function generateTextWithFallback(opts: {
   temperature?: number;
   abortSignal?: AbortSignal;
 }): Promise<TextFallbackResult> {
-  const providers = buildProviderChain();
+  const route = getAgentRoute(opts.agentId);
+  const providers = orderProvidersForAgent(buildProviderChain(), opts.agentId);
   const errors: { provider: string; error: unknown }[] = [];
   const startTime = Date.now();
 
@@ -109,8 +116,8 @@ export async function generateTextWithFallback(opts: {
         model: provider.model,
         system: opts.system,
         prompt: opts.prompt,
-        maxOutputTokens: opts.maxOutputTokens ?? 4096,
-        temperature: opts.temperature ?? 0.85,
+        maxOutputTokens: opts.maxOutputTokens ?? route.maxOutputTokens,
+        temperature: opts.temperature ?? route.temperature,
         abortSignal: opts.abortSignal,
       });
       if (text && text.trim()) {
@@ -132,7 +139,10 @@ export async function generateTextWithFallback(opts: {
   }
 
   // All SDK providers failed — try direct Gemini REST as a last resort
-  const geminiText = await callGeminiDirect(opts.prompt);
+  const geminiText = await callGeminiDirect(opts.prompt, {
+    temperature: opts.temperature ?? route.temperature,
+    maxOutputTokens: opts.maxOutputTokens ?? route.maxOutputTokens,
+  });
   if (geminiText) {
     const latencyMs = Date.now() - startTime;
     recordTelemetry({
@@ -166,7 +176,10 @@ export async function generateTextWithFallback(opts: {
 
 // ─── Direct Gemini REST fallback ────────────────────────────────
 
-export async function callGeminiDirect(prompt: string): Promise<string | null> {
+export async function callGeminiDirect(
+  prompt: string,
+  opts: { temperature?: number; maxOutputTokens?: number } = {},
+): Promise<string | null> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
 
@@ -183,7 +196,10 @@ export async function callGeminiDirect(prompt: string): Promise<string | null> {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.85, maxOutputTokens: 4096 },
+            generationConfig: {
+              temperature: opts.temperature ?? 0.85,
+              maxOutputTokens: opts.maxOutputTokens ?? 4096,
+            },
           }),
         });
         if (!res.ok) {

@@ -55,6 +55,7 @@ import {
   saveLedger,
 } from '../src/lib/agents/continuity.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
+import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
 // ─── Phase η: Sentry for script errors (optional) ────────────
 let captureException = (e) => console.error('[Sentry unavailable]', e);
@@ -421,6 +422,29 @@ async function main() {
     const edited = await runIris(ceoPlan, seoData, draft);
     finalBody = edited || draft; // If editor fails, use the draft
     logAgent('VE-006', 'Iris Koenig', 'editing_complete', `${finalBody.length} chars`);
+    console.log('');
+
+    // ── Quality Gate (Phase θ — wired in Phase ι) ──────────
+    let gate = runQualityGate(finalBody);
+    console.log(`🚦 Quality Gate: score=${gate.score}/100 ${gate.passed ? '✅ PASSED' : '❌ FAILED'}`);
+    for (const check of gate.checks) {
+      if (!check.passed) console.log(`   - [${check.severity}] ${check.name}: ${check.message}`);
+    }
+    if (!gate.passed && edited && finalBody !== draft) {
+      // The edited version failed — maybe the editor damaged the draft.
+      const draftGate = runQualityGate(draft);
+      if (draftGate.passed) {
+        console.log('   ↩️  校正版が品質基準を下回ったため、Writer の原稿を採用します');
+        logAgent('SYSTEM', 'QualityGate', 'reverted_to_draft', `edited score=${gate.score}, draft score=${draftGate.score}`);
+        finalBody = draft;
+        gate = draftGate;
+      }
+    }
+    if (!gate.passed) {
+      logAgent('SYSTEM', 'QualityGate', 'failed', JSON.stringify(gate.checks.filter(c => !c.passed).map(c => c.name)));
+      throw new Error(`Quality gate failed (score=${gate.score})`);
+    }
+    logAgent('SYSTEM', 'QualityGate', 'passed', `score=${gate.score}`);
     console.log('');
 
   } catch (err) {

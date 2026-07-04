@@ -26,11 +26,13 @@ export default defineConfig({
         // ─── External-service-dependent files ───────────────────
         'src/lib/agents/runners.ts',   // calls AI providers; tested via integration
         'src/lib/ai/generate.ts',      // calls AI SDK + REST; tested via integration
+        'src/lib/sentry-script.ts',    // Sentry SDK init only; no testable logic
         'src/lib/web3/receipt.ts',     // calls Ethereum RPC; tested via integration
         'scripts/auto-post.mjs',       // main script with process.exit()
         'scripts/ipfs-archive.mjs',    // main script with process.exit()
         'scripts/nostr-broadcast.mjs', // main script with process.exit()
         'scripts/build-search.mjs',    // requires built site output
+        'scripts/e2e-server.mjs',      // E2E test infra; exercised by Playwright itself
 
         // ─── Misc ──────────────────────────────────────────────
         '**/*.d.ts',

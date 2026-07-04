@@ -50,13 +50,25 @@ Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger
 - `gensnotes_1.md` / `gensnotes_2.md` — 旧ブログ「旧Gens Notes」（レガシー）
 - `gensnotes_3.md` / `gensnotes_4.md` / `gensnotes_5.md` — 現行ブログ「Genesis Vault - ミナ・エウレカ」（**現時点の最新参照源**）
 
-**使用モデル（優先順）**:
-1. `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD（メイン）
-2. `gemini-2.5-flash` — 10 RPM / 250 RPD（フォールバック）
-3. `groq-llama-3.3-70b` — Groq 無料ティア
-4. `cerebras-llama-3.3-70b` — Cerebras 無料ティア
-5. `openrouter-free` — OpenRouter 無料モデル
-6. `huggingface` — HuggingFace Inference API
+**利用可能な無料プロバイダー**（APIキーが設定されたものだけがチェーンに入る）:
+- `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD
+- `gemini-2.5-flash` — 10 RPM / 250 RPD
+- `groq-llama-3.3-70b` — Groq 無料ティア
+- `cerebras-llama-3.3-70b` — Cerebras 無料ティア
+- `openrouter-free` — OpenRouter 無料モデル
+- `huggingface` — HuggingFace Inference API
+
+**ティア制ルーティング（Phase ι）**: エージェントの役割ごとに最適なプロバイダー順・temperature・トークン上限を割り当てます（`src/lib/ai/routing.ts`、詳細は `docs/adr/0010-tiered-agent-routing.md`）。
+
+| エージェント | ティア | 優先プロバイダー | temp |
+|-------------|--------|----------------|------|
+| Nova (Balancer) | light | Groq → Cerebras → flash-lite | 0.3 |
+| Lena (CEO) | creative | flash → flash-lite → Groq | 0.9 |
+| Chloe (SEO) | light | flash-lite → Groq → Cerebras | 0.4 |
+| Sophia (Writer) | heavy | flash → flash-lite | 0.85 |
+| Iris (Editor) | precision | flash-lite → flash | 0.3 |
+
+軽い分類タスクは高速な無料プロバイダーへ、日本語長文の執筆は最も強い Gemini モデルへ。優先プロバイダーが失敗・未設定の場合は残りのチェーンに自動フォールバックします。生成後は品質ゲート（`src/lib/pipeline/quality-gate.ts`）が文字数・プレースホルダー・AIアーティファクトを検査し、不合格ならテンプレートにフォールバックします。
 
 ---
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+/* Fonts are loaded via <link> in BaseLayout.astro (preconnect + display=swap) */
 
 * {
   margin: 0;
@@ -14,6 +14,16 @@
   --color-charcoal: #2D2D2D;
   --color-gray-light: #E5E5E5;
   --color-gray-dark: #666;
+
+  /* Design tokens (Phase ι — UI refinement) */
+  --color-accent-blue: #4A90C4;
+  --color-accent-teal: #6ECFCF;
+  --shadow-xs: 0 1px 2px rgba(45, 45, 45, 0.05);
+  --shadow-sm: 0 1px 3px rgba(45, 45, 45, 0.07), 0 1px 2px rgba(45, 45, 45, 0.04);
+  --shadow-md: 0 8px 24px rgba(45, 45, 45, 0.09), 0 2px 6px rgba(45, 45, 45, 0.05);
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --ease-soft: cubic-bezier(0.25, 0.6, 0.3, 1);
 }
 
 .dark {
@@ -24,6 +34,20 @@
   --color-charcoal: #E8E8E8;
   --color-gray-light: #333;
   --color-gray-dark: #AAA;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-gentle-green) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gentle-green);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 body {
@@ -34,6 +58,8 @@ body {
   font-feature-settings: "palt";
   letter-spacing: 0.02em;
   transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -46,18 +72,20 @@ h6 {
   font-weight: 600;
   line-height: 1.4;
   margin-bottom: 1rem;
+  letter-spacing: 0.01em;
 }
 
+/* Fluid type scale — comfortable from 320px up to desktop */
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.9rem, 1.3rem + 2.4vw, 2.5rem);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 1.15rem + 1.4vw, 2rem);
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
 }
 
 a {
@@ -77,9 +105,15 @@ a:hover {
 }
 
 header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   border-bottom: 1px solid var(--color-gray-light);
-  padding: 1.5rem 0;
+  padding: 1rem 0;
   margin-bottom: 3rem;
+  background: color-mix(in srgb, var(--color-warm-white) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 nav {
@@ -94,11 +128,11 @@ nav a {
 
 .card-hover {
   background: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-xs);
   border: 1px solid var(--color-gray-light);
-  transition: all 0.3s;
+  transition: box-shadow 0.3s var(--ease-soft), transform 0.3s var(--ease-soft), border-color 0.3s;
   margin-bottom: 2rem;
 }
 
@@ -108,8 +142,9 @@ nav a {
 }
 
 .card-hover:hover {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-gentle-green) 55%, var(--color-gray-light));
 }
 
 .post-meta {
@@ -175,10 +210,28 @@ nav a {
 .nav-links a {
   color: var(--color-charcoal);
   transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--color-gentle-green);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s var(--ease-soft);
 }
 
 .nav-links a:hover {
   color: var(--color-gentle-green);
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
 }
 
 .agent-badge {
@@ -198,10 +251,35 @@ nav a {
   border-radius: 9999px;
   background: var(--color-soft-beige);
   color: var(--color-charcoal);
+  border: 1px solid transparent;
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.card-hover:hover .tag {
+  border-color: color-mix(in srgb, var(--color-gentle-green) 45%, transparent);
 }
 
 .dark .tag {
   background: var(--color-gray-light);
+}
+
+/* "Read more" affordance on post cards */
+.post-readmore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--color-gentle-green);
+}
+
+.post-readmore .post-readmore-arrow {
+  display: inline-block;
+  transition: transform 0.25s var(--ease-soft);
+}
+
+.card-hover:hover .post-readmore-arrow {
+  transform: translateX(4px);
 }
 
 .prose-custom {
@@ -214,8 +292,10 @@ nav a {
 }
 
 .prose-custom h2 {
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-top: 2.75rem;
+  margin-bottom: 1.25rem;
+  padding-left: 0.85rem;
+  border-left: 3px solid var(--color-gentle-green);
 }
 
 .prose-custom ul,
@@ -788,20 +868,27 @@ footer {
 }
 
 @media (max-width: 640px) {
-  h1 {
-    font-size: 2rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
   .container-custom {
     padding: 0 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
   }
 
   .gv-wallet-picker-modal {
     width: 95%;
     max-width: none;
+  }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
