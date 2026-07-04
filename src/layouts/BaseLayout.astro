@@ -17,6 +17,9 @@ const {
 // Phase η: Umami analytics configuration (empty string = disabled)
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID || '';
 const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.com';
+
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-profile.png';
 ---
 
 <!doctype html>
@@ -30,6 +33,37 @@ const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.co
     <link rel="icon" type="image/png" href="/mina-profile.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <!-- Theme color follows the site palette (light / dark) -->
+    <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1A1A1A" media="(prefers-color-scheme: dark)" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Genesis Vault" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+    <!-- Fonts: preconnect + non-blocking stylesheet (moved out of CSS @import) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Apply saved theme before first paint to avoid a light-mode flash -->
+    <script is:inline>
+      if (
+        localStorage.getItem('color-theme') === 'dark' ||
+        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
     <!-- Phase η: Umami Analytics (privacy-friendly, self-hosted) -->
     <!-- Configure via PUBLIC_UMAMI_WEBSITE_ID and PUBLIC_UMAMI_HOST env vars -->
     <!-- See docs/adr/0007-observability.md for deployment instructions -->
@@ -100,8 +134,8 @@ const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.co
       const darkIcon = document.getElementById('theme-toggle-dark-icon');
       const lightIcon = document.getElementById('theme-toggle-light-icon');
 
-      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
+      // The theme class is applied in <head> before paint — only sync icons here
+      if (document.documentElement.classList.contains('dark')) {
         lightIcon.classList.remove('hidden');
       } else {
         darkIcon.classList.remove('hidden');
