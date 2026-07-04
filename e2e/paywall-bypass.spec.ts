@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /**
  * Journey 4: Paywall bypass fails
@@ -8,8 +8,6 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Journey 4 — Paywall bypass fails (402)', () => {
   test('gated article API returns 402 without cookie', async ({ request }) => {
-    // Get the slug of a gated post (3rd newest)
-    const page = await request.context.newPage();
     // We use the API directly instead of browser navigation
 
     // First, find a gated slug from the homepage
@@ -42,6 +40,6 @@ test.describe('Journey 4 — Paywall bypass fails (402)', () => {
 
   test('API returns 400 for missing slug', async ({ request }) => {
     const response = await request.get('/api/article/');
-    expect(response.status()).toBeOneOf([400, 404]);
+    expect([400, 404]).toContain(response.status());
   });
 });
