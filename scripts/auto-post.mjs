@@ -1,19 +1,25 @@
 /**
  * Genesis Vault — Multi-Agent AI Blog Post Generator
  *
- * Phase γ — Modular Pipeline
+ * Phase γ — Modular Pipeline / Phase ι — Continuity Subsystem
  *
- * 5-Agent Pipeline:
+ * 8-Agent Pipeline:
+ *   VE-004  Vera Holt         (Researcher)… 過去記事から確定事実を抽出（継続性）
  *   VE-005  Nova Harmon       (Balancer) … テーマバランス分析・ジャンル選定
  *   VE-001  Lena Strauss      (CEO)      … トピック・切り口・タイトルの決定
  *   VE-003  Chloe Verdant     (SEO)      … タグ・キーワード・メタディスクリプション生成
  *   VE-002  Sophia Nightingale(Writer)   … 本文執筆（1,000〜2,000字、日記体）
  *   VE-006  Iris Koenig       (Editor)   … 校正・品質チェック・ペルソナ一貫性確認
+ *   VE-007  Edda Lindgren     (Summarizer)… 抽出事実を継続性台帳へ統合
+ *   VE-008  Mira Falk         (Recorder) … 投稿記事の事実を台帳へ記録・更新
+ *
+ * 継続性サブシステム(Vera→Edda)が「過去記事と矛盾・逆行しない」ためのブリーフを
+ * 生成し、CEO/Writer に注入する。投稿後に Mira が台帳を更新する。
  *
  * Persona: Mina Eureka Ernst — Genesis Vault の著者
  *
  * AI modules: src/lib/ai/providers.ts, generate.ts, telemetry.ts
- * Agent modules: src/lib/agents/schemas.ts, shared.ts, runners.ts
+ * Agent modules: src/lib/agents/schemas.ts, shared.ts, runners.ts, continuity.ts
  */
 
 import fs from 'fs/promises';
@@ -23,6 +29,7 @@ import { fileURLToPath } from 'url';
 // ─── Phase γ imports ──────────────────────────────────────────
 import {
   THEME_KEYWORDS,
+  REFERENCE_FILES,
   pick,
   pickN,
   todayISO,
@@ -38,6 +45,15 @@ import {
   runSophia,
   runIris,
 } from '../src/lib/agents/runners.ts';
+import {
+  LEDGER_SCHEMA,
+  runResearcher,
+  runSummarizer,
+  runRecorder,
+  loadDiaryArticles,
+  loadLedger,
+  saveLedger,
+} from '../src/lib/agents/continuity.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
@@ -64,11 +80,14 @@ const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄�
 
 // ─── Phase η: Agent Telemetry Summary ─────────────────────────
 const AGENT_NAMES = {
+  'VE-004': 'Vera',
   'VE-005': 'Nova',
   'VE-001': 'Lena',
   'VE-003': 'Chloe',
   'VE-002': 'Sophia',
   'VE-006': 'Iris',
+  'VE-007': 'Edda',
+  'VE-008': 'Mira',
 };
 
 async function appendTelemetrySummary(articleSlug) {
@@ -167,7 +186,7 @@ function validateSEOData(data) {
 // ─── Reference Data Extraction ────────────────────────────────
 async function extractArticleSummaries() {
   const summaries = [];
-  for (const filename of ['gensnotes_1.md', 'gensnotes_2.md']) {
+  for (const filename of REFERENCE_FILES) {
     const filepath = path.join(ROOT_DIR, filename);
     let raw;
     try {
@@ -189,7 +208,7 @@ async function extractArticleSummaries() {
 
 async function extractStyleSamples(maxSamples = 3) {
   const samples = [];
-  for (const filename of ['gensnotes_1.md', 'gensnotes_2.md']) {
+  for (const filename of REFERENCE_FILES) {
     const filepath = path.join(ROOT_DIR, filename);
     let raw;
     try {
@@ -209,7 +228,7 @@ async function extractStyleSamples(maxSamples = 3) {
 
 async function extractArticles() {
   const articles = [];
-  for (const filename of ['gensnotes_1.md', 'gensnotes_2.md']) {
+  for (const filename of REFERENCE_FILES) {
     const filepath = path.join(ROOT_DIR, filename);
     let raw;
     try {
@@ -330,6 +349,32 @@ async function main() {
   });
   console.log('');
 
+  // ── Continuity subsystem (過去記事整合性) ──────────────────────
+  // VE-004 Vera (Researcher) → VE-007 Edda (Summarizer) で台帳を構築/ロードし、
+  // 「継続性ブリーフ」を執筆陣(Lena/Sophia)に注入して過去との逆行を防ぐ。
+  // VE-008 Mira (Recorder) は投稿後に台帳を更新する（本処理の末尾）。
+  console.log('🧭 Building continuity ledger (過去記事との整合性)...');
+  let ledger = await loadLedger(ROOT_DIR);
+  const pastArticles = await loadDiaryArticles(ROOT_DIR);
+  if (!ledger || ledger.schema !== LEDGER_SCHEMA) {
+    try {
+      const mined = runResearcher(pastArticles);
+      ledger = runSummarizer(mined, ledger);
+      ledger.diaryArticleCount = pastArticles.length;
+      if (!DRY_RUN) await saveLedger(ROOT_DIR, ledger);
+      logAgent('VE-004', 'Vera Holt', 'facts_mined', `${mined.length} facts`);
+      logAgent('VE-007', 'Edda Lindgren', 'ledger_built', `${ledger.facts.length} canon facts`);
+    } catch (err) {
+      console.warn(`  ⚠️  Continuity build failed: ${err.message?.substring(0, 120)}`);
+      ledger = ledger ?? null;
+    }
+  } else {
+    console.log(`  ✅ Loaded cached ledger (${ledger.facts.length} facts, updated ${ledger.updated})`);
+  }
+  const continuityBrief = ledger?.brief ?? '';
+  if (continuityBrief) console.log(`  🧭 継続性ブリーフを執筆陣へ注入します（${continuityBrief.length}字）`);
+  console.log('');
+
   const mood = pick(MOODS);
   const weather = pick(WEATHERS);
   const slug = slugify();
@@ -345,7 +390,7 @@ async function main() {
     console.log('');
 
     // ── Agent 1: CEO (Lena) ────────────────────────────────
-    ceoPlan = await runLena(titles, styleSamples, assignedTheme);
+    ceoPlan = await runLena(titles, styleSamples, assignedTheme, continuityBrief);
     if (!validateCEOPlan(ceoPlan)) {
       console.warn('  ⚠️  CEO plan validation failed — using fallback');
       logAgent('VE-001', 'Lena Strauss', 'validation_failed', JSON.stringify(ceoPlan));
@@ -367,7 +412,7 @@ async function main() {
     console.log('');
 
     // ── Agent 3: Writer (Sophia) ───────────────────────────
-    const draft = await runSophia(ceoPlan, seoData, styleSamples);
+    const draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief);
     if (!draft) throw new Error('Writer Agent returned empty');
     logAgent('VE-002', 'Sophia Nightingale', 'draft_written', `${draft.length} chars`);
     await savePipelineState({ step: 'writer', data: { draftLength: draft.length }, date: todayISO() });
@@ -449,11 +494,14 @@ tags: [${seoData.tags.map(t => `"${t}"`).join(', ')}]
 description: "${escapedDesc}"
 keywords: [${seoData.keywords.map(k => `"${k}"`).join(', ')}]
 agents:
+  researcher: "VE-004 Vera Holt"
   balancer: "VE-005 Nova Harmon"
   ceo: "VE-001 Lena Strauss"
   seo: "VE-003 Chloe Verdant"
   writer: "VE-002 Sophia Nightingale"
   editor: "VE-006 Iris Koenig"
+  summarizer: "VE-007 Edda Lindgren"
+  recorder: "VE-008 Mira Falk"
 ---
 
 ${cleanBody}
@@ -478,6 +526,21 @@ ${cleanBody}
   // Phase η: Append agent telemetry summary to public log
   await appendTelemetrySummary(`${todayISO()}-${slug}`);
 
+  // ── VE-008 Mira (Recorder): 投稿した記事の確定事実を台帳へ記録・更新 ──
+  if (ledger) {
+    try {
+      ledger = runRecorder(ledger, {
+        title: ceoPlan.title,
+        text: cleanBody,
+        date: todayISO(),
+      });
+      await saveLedger(ROOT_DIR, ledger);
+      logAgent('VE-008', 'Mira Falk', 'ledger_updated', `${ledger.facts.length} facts`);
+    } catch (err) {
+      console.warn(`⚠️  Recorder failed: ${err.message?.substring(0, 120)}`);
+    }
+  }
+
   console.log('═══════════════════════════════════════════════════');
   console.log('✅ 記事生成完了！');
   console.log(`📄 File: ${filePath}`);
@@ -486,11 +549,14 @@ ${cleanBody}
   console.log(`🔑 Keywords: ${seoData.keywords.join(', ')}`);
   console.log('');
   console.log('Agent Pipeline:');
+  console.log('  VE-004 Vera Holt        (Researcher)→ 過去事実抽出 ✅');
   console.log('  VE-005 Nova Harmon      (Balancer) → ジャンル選定 ✅');
   console.log('  VE-001 Lena Strauss     (CEO)      → トピック決定 ✅');
   console.log('  VE-003 Chloe Verdant    (SEO)      → SEO最適化   ✅');
   console.log('  VE-002 Sophia Nightingale(Writer)  → 本文執筆    ✅');
   console.log('  VE-006 Iris Koenig      (Editor)   → 校正・品質  ✅');
+  console.log('  VE-007 Edda Lindgren    (Summarizer)→ 台帳統合   ✅');
+  console.log('  VE-008 Mira Falk        (Recorder) → 台帳更新    ✅');
   console.log('═══════════════════════════════════════════════════');
 }
 

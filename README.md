@@ -19,15 +19,36 @@ Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト�
 
 ## Multi-Agent AI パイプライン
 
-記事生成は以下の5エージェントが順番に担当します：
+記事生成は以下の8エージェントが順番に担当します：
 
 | ID | エージェント | 役割 |
 |----|-------------|------|
+| VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（貯金額・到達済みマイルストーン等）を抽出 |
 | VE-005 | **Nova Harmon** (Balancer) | テーマバランス分析・ジャンル選定 |
 | VE-001 | **Lena Strauss** (CEO) | トピック・切り口・タイトルの決定 |
 | VE-003 | **Chloe Verdant** (SEO) | タグ・キーワード・メタディスクリプション生成 |
 | VE-002 | **Sophia Nightingale** (Writer) | 本文執筆（1,000〜2,000字・日記体） |
 | VE-006 | **Iris Koenig** (Editor) | 校正・品質チェック・ペルソナ一貫性確認 |
+| VE-007 | **Edda Lindgren** (Summarizer) | 抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成 |
+| VE-008 | **Mira Falk** (Recorder) | 投稿記事の確定事実を台帳へ記録・更新 |
+
+### 過去記事整合性（継続性サブシステム）
+
+Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger.json`) を構築し、
+**逆行禁止ブリーフ**を CEO/Writer に注入します。これにより
+「貯金300万円達成の記事の後に貯金200万円達成の記事を書く」といった内容の逆行・矛盾を防ぎます。
+投稿後は Mira が台帳を更新し、参照源を常に最新に保ちます。
+
+- 継続性の正典ソース: 本パイプラインが生成した日記（`src/content/posts/`）
+- 金額は「最高到達点」を正典とし、個人の現実的上限（1億円）超や統計引用は除外
+
+### 参照源（文体・テーマ）
+
+文体サンプル・タイトル・テーマバランスの参照には以下の WXR エクスポートを使います
+（`src/lib/agents/shared.ts` の `REFERENCE_FILES`）。
+
+- `gensnotes_1.md` / `gensnotes_2.md` — 旧ブログ「旧Gens Notes」（レガシー）
+- `gensnotes_3.md` / `gensnotes_4.md` / `gensnotes_5.md` — 現行ブログ「Genesis Vault - ミナ・エウレカ」（**現時点の最新参照源**）
 
 **利用可能な無料プロバイダー**（APIキーが設定されたものだけがチェーンに入る）:
 - `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD
@@ -119,11 +140,11 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Google Gemini API](https://ai.google.dev/) | `@ai-sdk/google`。`gemini-2.5-flash-lite`（メイン）+ `gemini-2.5-flash`（サブ）|
 | [Groq](https://groq.com/) | `@ai-sdk/groq`。`llama-3.3-70b-versatile`。30 RPM / 14400 RPD 無料ティア |
 | [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
-| [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。`meta-llama/llama-3.3-70b-instruct:free`。20 RPM 無料 |
+| [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。無料モデル3種を順に試行: `meta-llama/llama-3.3-70b-instruct:free` → `qwen/qwen-2.5-72b-instruct:free` → `deepseek/deepseek-chat:free`（ADR-0010）|
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
 | Multi-Agent Pipeline | 5エージェント順次実行（Nova → Lena → Chloe → Sophia → Iris）。`src/lib/agents/runners.ts` に分離 |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
-| Multi-Provider Fallback | 6プロバイダチェーン + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
+| Multi-Provider Fallback | 6プロバイダ8モデルチェーン（OpenRouter内は3モデル分散） + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
 | Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |
 | Dry Run Mode | `bun run gen:dry` でファイル書き込みなしのパイプラインテスト |
 | Idempotency | 同日の重複ポスト生成を防止。`.pipeline-state.json` でステート管理 |

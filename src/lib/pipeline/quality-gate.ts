@@ -33,6 +33,55 @@ const PLACEHOLDER_PATTERNS = [
   /本文は後で追加/,
 ];
 
+/**
+ * "AI slop" heading patterns — grandiose, generic proposition-style H2s
+ * (e.g. 「〜が教えてくれたもの」「〜と向き合う時間」) that Lena's title rules
+ * already ban for article titles (see prompts/lena) but which the Writer/Editor
+ * agents can still slip into section headings. Modeled on the detection
+ * categories in the stop-ai-slop-jp Claude Skill (structural/構造 issues).
+ */
+const GRANDIOSE_HEADING_PATTERNS = [
+  /見つけたもの/,
+  /気づいたこと/,
+  /教えてくれ(た|る)/,
+  /向き合う時間/,
+  /大切なこと/,
+  /という(選択|生き方)/,
+];
+
+/** Vocabulary that inflates a small diary moment into a universal truth (stop-ai-slop-jp: 語彙/vocabulary). */
+const CLICHE_VOCABULARY = ['真理', '美学', '境地', '本質'];
+
+export interface AiSlopReport {
+  grandioseHeadings: string[];
+  clicheWords: string[];
+  binaryContrastCount: number;
+  decorativeDashCount: number;
+  boldRemnantCount: number;
+}
+
+/**
+ * Heuristic detector for common Japanese "AI slop" writing artifacts,
+ * inspired by the stop-slop / stop-ai-slop-jp Claude Skills: grandiose
+ * proposition-style headings, cliché "universal truth" vocabulary,
+ * repetitive "A ではなく B" binary-contrast rhetoric, decorative full-width
+ * dash runs, and stray Markdown bold emphasis left in diary-style prose.
+ */
+export function detectAiSlop(body: string): AiSlopReport {
+  const headingLines = body.match(/^##\s+.+$/gm) || [];
+  const grandioseHeadings = headingLines.filter(line =>
+    GRANDIOSE_HEADING_PATTERNS.some(pattern => pattern.test(line)),
+  );
+
+  const clicheWords = CLICHE_VOCABULARY.filter(word => body.includes(word));
+
+  const binaryContrastCount = (body.match(/ではなく/g) || []).length;
+  const decorativeDashCount = (body.match(/――+|—{2,}/g) || []).length;
+  const boldRemnantCount = (body.match(/\*\*[^*\n]+\*\*/g) || []).length;
+
+  return { grandioseHeadings, clicheWords, binaryContrastCount, decorativeDashCount, boldRemnantCount };
+}
+
 /** Run all quality checks on the article body. */
 export function runQualityGate(body: string): QualityReport {
   const checks: QualityCheck[] = [];
@@ -91,6 +140,47 @@ export function runQualityGate(body: string): QualityReport {
     passed: !aiDisclaimer,
     message: aiDisclaimer ? 'AI免責事項が含まれている' : 'AI免責事項なし',
     severity: 'error',
+  });
+
+  // 6-10. AI slop heuristics (stop-ai-slop-jp inspired) — warnings, not blockers.
+  const slop = detectAiSlop(body);
+  checks.push({
+    name: 'no_grandiose_headings',
+    passed: slop.grandioseHeadings.length === 0,
+    message: slop.grandioseHeadings.length > 0
+      ? `使い古された見出し表現を検出: ${slop.grandioseHeadings.join(' / ')}`
+      : '見出しに定型的な表現なし',
+    severity: 'warning',
+  });
+  checks.push({
+    name: 'no_cliche_vocabulary',
+    passed: slop.clicheWords.length === 0,
+    message: slop.clicheWords.length > 0
+      ? `大げさな語彙を検出: ${slop.clicheWords.join('、')}`
+      : '大げさな語彙なし',
+    severity: 'warning',
+  });
+  checks.push({
+    name: 'no_binary_contrast_repetition',
+    passed: slop.binaryContrastCount < 3,
+    message: `「ではなく」の使用回数: ${slop.binaryContrastCount}（3回以上で定型的な対比表現とみなす）`,
+    severity: 'warning',
+  });
+  checks.push({
+    name: 'no_decorative_dashes',
+    passed: slop.decorativeDashCount === 0,
+    message: slop.decorativeDashCount > 0
+      ? `装飾的な全角ダッシュを検出: ${slop.decorativeDashCount}箇所`
+      : '装飾的な全角ダッシュなし',
+    severity: 'warning',
+  });
+  checks.push({
+    name: 'no_bold_remnants',
+    passed: slop.boldRemnantCount === 0,
+    message: slop.boldRemnantCount > 0
+      ? `Markdown太字の残留を検出: ${slop.boldRemnantCount}箇所`
+      : 'Markdown太字の残留なし',
+    severity: 'warning',
   });
 
   // Calculate score: each error = -25, each warning = -10

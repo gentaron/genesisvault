@@ -14,10 +14,14 @@ const postsCollection = defineCollection({
         gated: z.boolean().default(true),
         // Multi-agent metadata
         agents: z.object({
+            researcher: z.string().optional(),
+            balancer: z.string().optional(),
             ceo: z.string().optional(),
             seo: z.string().optional(),
             writer: z.string().optional(),
             editor: z.string().optional(),
+            summarizer: z.string().optional(),
+            recorder: z.string().optional(),
         }).optional(),
     }),
 });

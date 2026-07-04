@@ -66,6 +66,12 @@ principle she applies to her investments: diversification eliminates single poin
 of failure. Telemetry records (`logs/agent-runs.jsonl`) serve as the Vault's
 "resonance log" — a record of which frequency each signal arrived on.
 
+Even within a single provider, the doctrine holds: the OpenRouter tier
+(ADR-0010) no longer trusts one model alone. `OPENROUTER_FREE_MODELS` fans
+out across three unrelated labs' free-tier weights — Meta, Qwen, DeepSeek —
+so a single model's retirement from OpenRouter's shared pool thins the tier
+instead of collapsing it.
+
 ## Vitest + Playwright → The Vault's Self-Awareness Protocol
 Mina built the Vault with an "observation layer" — 192 unit tests and 22 E2E journeys
 that continuously verify the dimensional barrier remains intact. Vitest runs in under
@@ -143,6 +149,13 @@ it catches the flaws that the agents — for all their sophistication — someti
 let slip. A score below 50 triggers a warning; below the threshold, the
 article is flagged for review. The gate doesn't reject — it records — because
 shipping a slightly imperfect article is better than silence.
+
+Since ADR-0011, the loupe looks for a subtler flaw too: the formulaic tells
+of AI-written prose — a heading that grandly claims a walk "taught her
+something," a diary entry reaching for "真理" over a cup of coffee, the same
+"A ではなく B" cadence repeated until it becomes a tic. `detectAiSlop()`
+names these patterns the way a jeweler names a flaw, and Iris (prompt
+v1.1.0) is told to sand them down before the gate ever sees them.
 
 ## Prompt Versioning → The Vault's Genetic Code
 

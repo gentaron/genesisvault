@@ -2,7 +2,7 @@
  * Phase θ tests — Quality Gate
  */
 import { describe, it, expect } from 'vitest';
-import { runQualityGate, validateFrontmatter } from '../src/lib/pipeline/quality-gate.js';
+import { runQualityGate, validateFrontmatter, detectAiSlop } from '../src/lib/pipeline/quality-gate.js';
 
 describe('Quality Gate', () => {
   describe('runQualityGate', () => {
@@ -83,6 +83,70 @@ describe('Quality Gate', () => {
       const structureCheck = report.checks.find(c => c.name === 'markdown_structure');
       expect(structureCheck?.passed).toBe(false);
       expect(structureCheck?.severity).toBe('warning');
+    });
+  });
+
+  describe('detectAiSlop (stop-ai-slop-jp inspired heuristics)', () => {
+    it('flags grandiose proposition-style headings', () => {
+      const body = '## 散歩が教えてくれたもの\n\n本文。';
+      const result = detectAiSlop(body);
+      expect(result.grandioseHeadings.length).toBeGreaterThan(0);
+    });
+
+    it('does not flag concrete, specific headings', () => {
+      const body = '## 朝5時の家計簿タイム\n\n本文。';
+      const result = detectAiSlop(body);
+      expect(result.grandioseHeadings).toHaveLength(0);
+    });
+
+    it('flags cliché universal-truth vocabulary', () => {
+      const result = detectAiSlop('散歩をしていると、生きることの真理に触れた気がした。');
+      expect(result.clicheWords).toContain('真理');
+    });
+
+    it('counts repeated binary-contrast rhetoric', () => {
+      const body = 'これは贅沢ではなく必要だ。焦りではなく余裕だ。義務ではなく喜びだ。';
+      const result = detectAiSlop(body);
+      expect(result.binaryContrastCount).toBe(3);
+    });
+
+    it('counts decorative full-width dash runs', () => {
+      const result = detectAiSlop('今日は――そう、あの日と同じように――静かだった。');
+      expect(result.decorativeDashCount).toBeGreaterThan(0);
+    });
+
+    it('counts stray markdown bold remnants', () => {
+      const result = detectAiSlop('これは**とても重要**なポイントだ。');
+      expect(result.boldRemnantCount).toBe(1);
+    });
+
+    it('reports zero artifacts for clean diary prose', () => {
+      const result = detectAiSlop('## 朝のコーヒー\n\n今日は近所のカフェで新しい豆を試した。');
+      expect(result.grandioseHeadings).toHaveLength(0);
+      expect(result.clicheWords).toHaveLength(0);
+      expect(result.binaryContrastCount).toBe(0);
+      expect(result.decorativeDashCount).toBe(0);
+      expect(result.boldRemnantCount).toBe(0);
+    });
+  });
+
+  describe('runQualityGate — AI slop checks are warnings, not blockers', () => {
+    it('does not fail the gate on slop alone (only degrades score)', () => {
+      const body = [
+        '## 散歩が教えてくれたもの',
+        '',
+        '今日は近所を歩いた。'.repeat(30),
+        '',
+        '## まとめ',
+        '',
+        'それではなく、これでもなく、あれでもなかった。'.repeat(10),
+      ].join('\n');
+      const report = runQualityGate(body);
+      const headingCheck = report.checks.find(c => c.name === 'no_grandiose_headings');
+      expect(headingCheck?.passed).toBe(false);
+      expect(headingCheck?.severity).toBe('warning');
+      // Warnings alone must not flip `passed` to false.
+      expect(report.passed).toBe(true);
     });
   });
 
