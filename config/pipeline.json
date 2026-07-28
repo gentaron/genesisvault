@@ -1,0 +1,236 @@
+{
+  "$schema": "./pipeline.schema.json",
+  "version": "1.0.0",
+  "description": "Genesis Vault マルチエージェント・パイプラインの唯一の宣言的ソース。エージェント名簿・ルーティング・プロバイダーチェーン・品質ゲート閾値をここに集約する。TypeScript 側はこのファイルを読むだけで、値を持たない。編集したら `bun run verify` で検証すること。",
+  "agents": [
+    {
+      "id": "VE-004",
+      "name": "Vera Holt",
+      "shortName": "Vera",
+      "role": "researcher",
+      "roleJa": "過去記事から確定事実を抽出（継続性）",
+      "step": 1,
+      "promptDir": "vera"
+    },
+    {
+      "id": "VE-005",
+      "name": "Nova Harmon",
+      "shortName": "Nova",
+      "role": "balancer",
+      "roleJa": "テーマバランス分析・ジャンル選定",
+      "step": 2,
+      "promptDir": "nova"
+    },
+    {
+      "id": "VE-001",
+      "name": "Lena Strauss",
+      "shortName": "Lena",
+      "role": "ceo",
+      "roleJa": "トピック・切り口・タイトルの決定",
+      "step": 3,
+      "promptDir": "lena"
+    },
+    {
+      "id": "VE-003",
+      "name": "Chloe Verdant",
+      "shortName": "Chloe",
+      "role": "seo",
+      "roleJa": "タグ・キーワード・メタディスクリプション生成",
+      "step": 4,
+      "promptDir": "chloe"
+    },
+    {
+      "id": "VE-002",
+      "name": "Sophia Nightingale",
+      "shortName": "Sophia",
+      "role": "writer",
+      "roleJa": "本文執筆（1,000〜2,000字・日記体）",
+      "step": 5,
+      "promptDir": "sophia"
+    },
+    {
+      "id": "VE-006",
+      "name": "Iris Koenig",
+      "shortName": "Iris",
+      "role": "editor",
+      "roleJa": "校正・品質チェック・ペルソナ一貫性確認",
+      "step": 6,
+      "promptDir": "iris"
+    },
+    {
+      "id": "VE-007",
+      "name": "Edda Lindgren",
+      "shortName": "Edda",
+      "role": "summarizer",
+      "roleJa": "抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成",
+      "step": 7,
+      "promptDir": "edda"
+    },
+    {
+      "id": "VE-008",
+      "name": "Mira Falk",
+      "shortName": "Mira",
+      "role": "recorder",
+      "roleJa": "投稿記事の確定事実を台帳へ記録・更新",
+      "step": 8,
+      "promptDir": "mira"
+    }
+  ],
+  "providers": {
+    "comment": "チェーン順＝フォールバック順。envKey が未設定のプロバイダーは自動的にチェーンから外れる（設定不要で縮退する）。すべて無料ティア。",
+    "chain": [
+      {
+        "name": "gemini-2.5-flash-lite",
+        "sdk": "google",
+        "model": "gemini-2.5-flash-lite",
+        "envKey": "GEMINI_API_KEY",
+        "rpm": 15,
+        "rpd": 1000
+      },
+      {
+        "name": "gemini-2.5-flash",
+        "sdk": "google",
+        "model": "gemini-2.5-flash",
+        "envKey": "GEMINI_API_KEY",
+        "rpm": 10,
+        "rpd": 250
+      },
+      {
+        "name": "groq-llama-3.3-70b",
+        "sdk": "groq",
+        "model": "llama-3.3-70b-versatile",
+        "envKey": "GROQ_API_KEY",
+        "rpm": 30,
+        "rpd": 14400
+      },
+      {
+        "name": "cerebras-llama-3.3-70b",
+        "sdk": "cerebras",
+        "model": "llama-3.3-70b",
+        "envKey": "CEREBRAS_API_KEY",
+        "rpm": 30,
+        "rpd": 14400
+      },
+      {
+        "name": "openrouter-llama",
+        "sdk": "openrouter",
+        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "envKey": "OPENROUTER_API_KEY",
+        "rpm": 20,
+        "rpd": 200
+      },
+      {
+        "name": "openrouter-qwen",
+        "sdk": "openrouter",
+        "model": "qwen/qwen-2.5-72b-instruct:free",
+        "envKey": "OPENROUTER_API_KEY",
+        "rpm": 20,
+        "rpd": 200
+      },
+      {
+        "name": "openrouter-deepseek",
+        "sdk": "openrouter",
+        "model": "deepseek/deepseek-chat:free",
+        "envKey": "OPENROUTER_API_KEY",
+        "rpm": 20,
+        "rpd": 200
+      },
+      {
+        "name": "huggingface",
+        "sdk": "huggingface",
+        "model": "meta-llama/Llama-3.3-70B-Instruct",
+        "envKey": "HF_TOKEN",
+        "rpm": 10,
+        "rpd": 500
+      }
+    ]
+  },
+  "routing": {
+    "comment": "エージェントの仕事ごとに配線を変える。軽い分類は速い無料プロバイダーへ、日本語の長文執筆は最強の Gemini へ。preferredProviders に無いものは元のチェーン順で後続。",
+    "default": {
+      "tier": "heavy",
+      "preferredProviders": [],
+      "temperature": 0.85,
+      "maxOutputTokens": 4096
+    },
+    "byAgent": {
+      "VE-005": {
+        "tier": "light",
+        "preferredProviders": [
+          "groq-llama-3.3-70b",
+          "cerebras-llama-3.3-70b",
+          "gemini-2.5-flash-lite"
+        ],
+        "temperature": 0.3,
+        "maxOutputTokens": 512,
+        "why": "小さな JSON 分類。速い無料枠を先に使い Gemini の RPD を温存。選定は安定させたいので低温度。"
+      },
+      "VE-001": {
+        "tier": "creative",
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
+        "temperature": 0.9,
+        "maxOutputTokens": 1024,
+        "why": "日本語の企画・タイトル。創造性が要るので最強モデル＋高温度。"
+      },
+      "VE-003": {
+        "tier": "light",
+        "preferredProviders": [
+          "gemini-2.5-flash-lite",
+          "groq-llama-3.3-70b",
+          "cerebras-llama-3.3-70b"
+        ],
+        "temperature": 0.4,
+        "maxOutputTokens": 512,
+        "why": "構造化メタデータ。タグ・キーワードの一貫性を優先し中低温度。"
+      },
+      "VE-002": {
+        "tier": "heavy",
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+        "temperature": 0.85,
+        "maxOutputTokens": 4096,
+        "why": "1,000〜2,000字の日本語日記。品質のボトルネックなので最強モデルを最優先。"
+      },
+      "VE-006": {
+        "tier": "precision",
+        "preferredProviders": ["gemini-2.5-flash-lite", "gemini-2.5-flash"],
+        "temperature": 0.3,
+        "maxOutputTokens": 4096,
+        "why": "校正は精密作業。編集者が創造的に書き換えないよう低温度に固定。"
+      }
+    }
+  },
+  "qualityGate": {
+    "comment": "生成後の決定論的チェック。LLM を使わずここで落とせるものは全部ここで落とす。error は不合格（テンプレートへフォールバック）、warning は減点のみ。",
+    "minBodyLength": 400,
+    "maxBodyLength": 5000,
+    "minH2Headings": 1,
+    "binaryContrastLimit": 3,
+    "penalty": {
+      "error": 25,
+      "warning": 10
+    },
+    "placeholderPatterns": [
+      "\\[TODO\\]",
+      "\\[TBD\\]",
+      "\\[要補完\\]",
+      "\\[後で書く\\]",
+      "\\[PLACEHOLDER\\]",
+      "ここに本文を入力",
+      "本文は後で追加"
+    ],
+    "grandioseHeadingPatterns": [
+      "見つけたもの",
+      "気づいたこと",
+      "教えてくれ(た|る)",
+      "向き合う時間",
+      "大切なこと",
+      "という(選択|生き方)"
+    ],
+    "clicheVocabulary": ["真理", "美学", "境地", "本質"]
+  },
+  "references": {
+    "comment": "文体・テーマ・継続性の参照源。current が正典（整合性チェックの基準）、legacy は文体サンプルのみ。",
+    "legacy": ["gensnotes_1.md", "gensnotes_2.md"],
+    "current": ["gensnotes_3.md", "gensnotes_4.md", "gensnotes_5.md"]
+  }
+}

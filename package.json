@@ -9,6 +9,11 @@
     "build:search": "node scripts/build-search.mjs",
     "preview": "astro preview",
     "astro": "astro",
+    "verify": "bun scripts/verify.mjs",
+    "verify:quick": "bun scripts/verify.mjs --quick",
+    "config:schema": "bun scripts/sync-config-schema.mjs",
+    "almanac": "bun scripts/build-almanac.mjs",
+    "lint:content": "bun scripts/verify.mjs --quick",
     "auto-post": "bun scripts/auto-post.mjs",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",
     "gen:resume": "bun scripts/pipeline-resume.mjs",
@@ -48,6 +53,7 @@
     "pagefind": "^1.3.0",
     "tailwindcss": "^4.0.0",
     "vitest": "^4.1.5",
+    "yaml": "^2.6.0",
     "zod": "^4.4.3"
   }
 }

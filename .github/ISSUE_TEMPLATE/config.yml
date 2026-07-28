@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 運用手順（Runbook）を先に見る
+    url: https://github.com/gentaron/genesisvault/tree/main/docs/runbooks
+    about: パイプライン復旧・ペイウォール・監視まわりは、既に手順書があります。
+  - name: 既知の地雷（LANDMINES）を確認する
+    url: https://github.com/gentaron/genesisvault/blob/main/docs/almanac/LANDMINES.md
+    about: 「一度踏んだ罠」はここに記録されています。Issue を立てる前にどうぞ。

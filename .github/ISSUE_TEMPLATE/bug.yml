@@ -1,0 +1,65 @@
+name: バグ報告
+description: 再現手順と「直った」の判定条件をセットで書く。
+title: 'fix: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        再現できないバグは直せません。**再現手順**と**直った判定**が揃って初めて着手できます。
+
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: 期待した挙動 / 実際の挙動
+      value: |
+        **期待**:
+
+        **実際**:
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 再現手順
+      description: コマンドと入力を、そのまま貼れば再現する形で。
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: done-condition
+    attributes:
+      label: 「直った」の判定条件
+      description: |
+        再発を防ぐ回帰テストまで含めて書く。ここが埋まらない修正は、
+        同じバグをもう一度踏みます。
+      value: |
+        - [ ] 上記の再現手順で問題が起きない
+        - [ ] 回帰テストを追加した（テスト名:  ）
+        - [ ] `bun run verify` が通る
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境・発生範囲
+      placeholder: |
+        - 発生箇所: GitHub Actions / ローカル / 本番サイト
+        - 発生日時・該当ワークフロー実行 URL:
+        - 該当記事・該当エージェント:
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: ログ / エラー出力
+      render: shell
+    validations:
+      required: false

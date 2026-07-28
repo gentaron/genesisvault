@@ -1,4 +1,4 @@
-# ADR-0008: Pipeline State Machine
+# ADR-0013: Pipeline State Machine
 
 **Status**: Accepted
 **Date**: 2026-05-06
