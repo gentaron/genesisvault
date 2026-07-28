@@ -1,35 +1,36 @@
 name: Linear → Write
 
 on:
-  workflow_dispatch:        # 手動実行ボタン。まずはこれで動作確認する
+  workflow_dispatch:
   schedule:
-    - cron: '0 21 * * *'    # UTC 21:00 = マレーシア時間 朝5:00
+    - cron: '0 21 * * *'
 
 permissions:
   contents: write
   pull-requests: write
+
+env:
+  LINEAR_TEAM_KEY: GEN
 
 jobs:
   write:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
 
       - name: Claim the next brief from Linear
         id: claim
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-          LINEAR_TEAM_KEY: GEN
         run: bun scripts/linear-sync.mjs claim
 
       - name: Install dependencies
         if: steps.claim.outputs.found == 'true'
         run: bun install
 
-      - name: Write the article
-        id: write
+      # ── 1回目 ──────────────────────────────────────────────
+      - name: Write (attempt 1)
         if: steps.claim.outputs.found == 'true'
         env:
           GV_THEME: ${{ steps.claim.outputs.theme }}
@@ -40,13 +41,46 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: bun scripts/auto-post.mjs
 
+      - name: Review (attempt 1)
+        id: gate1
+        if: steps.claim.outputs.found == 'true'
+        continue-on-error: true          # 落ちても止めず、書き直しへ回す
+        env:
+          GV_THEME: ${{ steps.claim.outputs.theme }}
+          GV_BRIEF: ${{ steps.claim.outputs.brief }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: bun scripts/brief-gate.mjs
+
+      # ── 2回目（1回目が差し戻された場合のみ）────────────────
+      - name: Write (attempt 2)
+        if: steps.claim.outputs.found == 'true' && steps.gate1.outcome == 'failure'
+        env:
+          GV_THEME: ${{ steps.claim.outputs.theme }}
+          GV_BRIEF: "${{ steps.claim.outputs.brief }}\n\n${{ steps.gate1.outputs.revision }}"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: bun scripts/auto-post.mjs
+
+      - name: Review (attempt 2)
+        id: gate2
+        if: steps.claim.outputs.found == 'true' && steps.gate1.outcome == 'failure'
+        env:
+          GV_THEME: ${{ steps.claim.outputs.theme }}
+          GV_BRIEF: ${{ steps.claim.outputs.brief }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: bun scripts/brief-gate.mjs
+
+      # ── 通過したものだけがPRになる ─────────────────────────
       - name: Open a pull request
         id: pr
-        if: steps.claim.outputs.found == 'true' && success()
+        if: steps.gate1.outcome == 'success' || steps.gate2.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_KEY: ${{ steps.claim.outputs.issue_key }}
           THEME: ${{ steps.claim.outputs.theme }}
+          SCORE: ${{ steps.gate2.outputs.score || steps.gate1.outputs.score }}
         run: |
           set -euo pipefail
           BRANCH="linear/${ISSUE_KEY,,}-$(date +%s)"
@@ -61,20 +95,20 @@ jobs:
           git commit -m "${ISSUE_KEY}: ${THEME}"
           git push origin "$BRANCH"
           URL=$(gh pr create --title "${ISSUE_KEY}: ${THEME}" \
-                             --body "Closes ${ISSUE_KEY}" \
+                             --body "Closes ${ISSUE_KEY}
+
+Brief adherence: ${SCORE}/100" \
                              --base main --head "$BRANCH")
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Report success to Linear
-        if: steps.claim.outputs.found == 'true' && success()
+        if: steps.pr.outcome == 'success'
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-          LINEAR_TEAM_KEY: GEN
         run: bun scripts/linear-sync.mjs report "${{ steps.claim.outputs.issue_id }}" "${{ steps.pr.outputs.url }}"
 
       - name: Return the issue on failure
         if: steps.claim.outputs.found == 'true' && failure()
         env:
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-          LINEAR_TEAM_KEY: GEN
-        run: bun scripts/linear-sync.mjs fail "${{ steps.claim.outputs.issue_id }}" "See run ${{ github.run_id }}"
+        run: bun scripts/linear-sync.mjs fail "${{ steps.claim.outputs.issue_id }}" "Brief gate rejected the draft twice. Run ${{ github.run_id }}"
