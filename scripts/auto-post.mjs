@@ -371,7 +371,10 @@ async function main() {
   } else {
     console.log(`  ✅ Loaded cached ledger (${ledger.facts.length} facts, updated ${ledger.updated})`);
   }
-  const continuityBrief = ledger?.brief ?? '';
+  const continuityBrief = [
+    process.env.GV_BRIEF ? `【今回の企画指示・最優先】\n${process.env.GV_BRIEF}` : '',
+    ledger?.brief ?? '',
+  ].filter(Boolean).join('\n\n');
   if (continuityBrief) console.log(`  🧭 継続性ブリーフを執筆陣へ注入します（${continuityBrief.length}字）`);
   console.log('');
 
