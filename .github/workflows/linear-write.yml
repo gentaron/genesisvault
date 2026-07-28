@@ -1,0 +1,80 @@
+name: Linear → Write
+
+on:
+  workflow_dispatch:        # 手動実行ボタン。まずはこれで動作確認する
+  schedule:
+    - cron: '0 21 * * *'    # UTC 21:00 = マレーシア時間 朝5:00
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Claim the next brief from Linear
+        id: claim
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          LINEAR_TEAM_KEY: GEN
+        run: bun scripts/linear-sync.mjs claim
+
+      - name: Install dependencies
+        if: steps.claim.outputs.found == 'true'
+        run: bun install
+
+      - name: Write the article
+        id: write
+        if: steps.claim.outputs.found == 'true'
+        env:
+          GV_THEME: ${{ steps.claim.outputs.theme }}
+          GV_BRIEF: ${{ steps.claim.outputs.brief }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: bun scripts/auto-post.mjs
+
+      - name: Open a pull request
+        id: pr
+        if: steps.claim.outputs.found == 'true' && success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_KEY: ${{ steps.claim.outputs.issue_key }}
+          THEME: ${{ steps.claim.outputs.theme }}
+        run: |
+          set -euo pipefail
+          BRANCH="linear/${ISSUE_KEY,,}-$(date +%s)"
+          git config user.name  "genesis-vault-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes produced." >&2
+            exit 1
+          fi
+          git commit -m "${ISSUE_KEY}: ${THEME}"
+          git push origin "$BRANCH"
+          URL=$(gh pr create --title "${ISSUE_KEY}: ${THEME}" \
+                             --body "Closes ${ISSUE_KEY}" \
+                             --base main --head "$BRANCH")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Report success to Linear
+        if: steps.claim.outputs.found == 'true' && success()
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          LINEAR_TEAM_KEY: GEN
+        run: bun scripts/linear-sync.mjs report "${{ steps.claim.outputs.issue_id }}" "${{ steps.pr.outputs.url }}"
+
+      - name: Return the issue on failure
+        if: steps.claim.outputs.found == 'true' && failure()
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          LINEAR_TEAM_KEY: GEN
+        run: bun scripts/linear-sync.mjs fail "${{ steps.claim.outputs.issue_id }}" "See run ${{ github.run_id }}"
