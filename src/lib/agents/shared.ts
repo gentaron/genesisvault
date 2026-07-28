@@ -11,6 +11,8 @@
  *   - Theme balance analysis helpers
  */
 
+import { PIPELINE_CONFIG } from '../pipeline/config.js';
+
 // ─── Mina's birthday / auto-calculated age ──────────────────────
 export function calculateMinaAge(): number {
   const birth = new Date('1996-08-16');
@@ -56,8 +58,10 @@ Genesis Vault というパーソナルブログの著者で、${MINA_AGE}歳の�
 //
 // すべて文体サンプル・タイトル・テーマバランスの参照に使うが、
 // 過去記事との内容整合性（貯金額の逆行防止など）は CURRENT_BLOG_FILES を正典とする。
-export const LEGACY_BLOG_FILES = ['gensnotes_1.md', 'gensnotes_2.md'] as const;
-export const CURRENT_BLOG_FILES = ['gensnotes_3.md', 'gensnotes_4.md', 'gensnotes_5.md'] as const;
+//
+// Phase κ: 実際のファイル名は config/pipeline.json → references が正典。
+export const LEGACY_BLOG_FILES: readonly string[] = PIPELINE_CONFIG.references.legacy;
+export const CURRENT_BLOG_FILES: readonly string[] = PIPELINE_CONFIG.references.current;
 export const REFERENCE_FILES = [...LEGACY_BLOG_FILES, ...CURRENT_BLOG_FILES];
 
 // ─── Helpers ────────────────────────────────────────────────────

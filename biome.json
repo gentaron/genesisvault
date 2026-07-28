@@ -35,7 +35,8 @@
       "!src/content/posts",
       "!docs",
       "!gensnotes_1.md",
-      "!gensnotes_2.md"
+      "!gensnotes_2.md",
+      "!config/pipeline.schema.json"
     ]
   }
 }

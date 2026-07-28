@@ -1,6 +1,6 @@
 # AGENTS.md — AI Development Rules for gentaron
 
-> **Version**: 2.0.0
+> **Version**: 2.1.0
 > **Maintainer**: gentaron
 > **Effective**: All AI assistants (Z.AI, Claude, Cursor, Copilot, etc.)
 
@@ -12,7 +12,7 @@ This file is the **highest priority** instruction set for any AI operating on th
   DO NOT modify without understanding the consequences.
 -->
 <!-- rules:start
-version: "2.0.0"
+version: "2.1.0"
 max_iterations_per_agent: 3
 max_total_iterations: 15
 allowed_commit_types: [feat, fix, docs, refactor, test, chore]
@@ -30,12 +30,19 @@ When accessing this repository, read files in this exact order:
 
 1. **AGENTS.md** (this file) — highest priority instructions
 2. **CLAUDE.md** (if exists) — supplementary instructions
-3. **README.md** — project overview and purpose
-4. **package.json** or equivalent manifest — dependencies and scripts
-5. **src/ or lib/ entry point** — architecture overview
-6. **Test files** — expected behavior
+3. **docs/almanac/INVARIANTS.md** — what must not break, and how it is guarded
+4. **docs/almanac/LANDMINES.md** — traps already stepped on; do not step again
+5. **config/pipeline.json** — the declarative source of truth for the pipeline
+6. **README.md** — project overview and purpose
+7. **package.json** or equivalent manifest — dependencies and scripts
+8. **src/ or lib/ entry point** — architecture overview
+9. **Test files** — expected behavior
 
 Do NOT skip or reorder this sequence.
+
+Steps 3–5 exist because the expensive knowledge in this repository is not
+"what the code does" (readable) but "why it is this way" and "what breaks if
+you change it" (not readable). Read them before proposing changes.
 
 ---
 
@@ -86,6 +93,24 @@ Never enter a "cannot decide, stopping work" state.
 ---
 
 ## 3. Task Execution Protocol
+
+### 3.0 Work From a Contract, Not a Request
+
+A task is ready to start when it states, in verifiable form:
+
+1. **Acceptance criteria** — conditions whose pass/fail can be judged
+   without reading the implementation
+2. **Non-goals** — what is explicitly out of scope
+3. **How it is verified** — the command or test that proves it
+
+`.github/ISSUE_TEMPLATE/feature.yml` enforces all three. If you are handed
+work missing any of them, write the missing part first and confirm it
+before implementing. Implementation capacity is cheap; removing ambiguity
+is the scarce part, and doing it after the code is written is the
+expensive order.
+
+When done, the acceptance criteria — not your summary of the work — are
+what gets checked.
 
 ### 3.1 Pre-Implementation Decomposition
 Before starting any task:
@@ -142,10 +167,29 @@ When implementation is not progressing:
 
 ## 5. Quality Verification Protocol
 
+### 5.0 The Single Gate — `bun run verify`
+
+Generation is cheap; deciding whether output is correct is the bottleneck.
+So the decision "is this mergeable?" must be one deterministic command,
+not a judgment call:
+
+```bash
+bun run verify         # config + content + almanac + lint/types/tests
+bun run verify --quick # config + content + almanac only (fast, no subprocesses)
+```
+
+**`verify` must never require an LLM, a network call, or an API key.**
+That is what makes it trustworthy as a gate — it produces the same answer
+on a laptop, in CI, and inside an agent run. Do not add a check that
+violates this (see INV-004).
+
+Anything a rule can decide, decide with a rule. Send only genuinely
+subjective work to a model.
+
 ### 5.1 Verification Gates
-- **On file save**: Linter and type checker pass with zero errors
+- **On file save**: Linter and type checker introduce no new findings
 - **On feature completion**: Related tests all pass, build succeeds
-- **On task completion**: Full test suite, full build, self-review
+- **On task completion**: `bun run verify` exits 0
 
 ### 5.2 Self-Review Checklist
 Before marking any task complete:
@@ -155,6 +199,20 @@ Before marking any task complete:
 - [ ] No security issues
 - [ ] Naming is consistent
 - [ ] No leftover comments or debug code
+- [ ] `bun run verify` exits 0
+
+### 5.3 Pre-existing Findings — Ratchet, Do Not Sweep
+
+This repository carries a known backlog of Biome and type-check findings,
+recorded in `config/quality-baseline.json`. `verify` fails if the count
+**grows** and asks you to tighten the baseline when it shrinks.
+
+Do NOT "fix" the backlog in bulk. An 85-file formatting diff hides real
+changes from review and violates §3.3. Format only the files you touched:
+
+```bash
+bunx biome check --write <the files you actually changed>
+```
 
 ---
 
@@ -191,13 +249,43 @@ Before marking any task complete:
 
 ## 8. Context Management
 
+### 8.0 Configuration Lives in One File
+
+`config/pipeline.json` is the single source of truth for the agent roster,
+provider chain, per-agent routing, quality-gate thresholds, and reference
+files. To retune the pipeline, **edit the JSON — do not add constants to
+TypeScript**.
+
+- Validated by `src/lib/pipeline/config.ts` (Zod + referential integrity)
+- Invalid config throws at import time. Never make it fall back silently
+  to a hardcoded default — that hides the misconfiguration (INV-001)
+- After editing the Zod schema, run `bun run config:schema`
+- `config/pipeline.schema.json` is generated. Never hand-edit it (INV-002)
+
 ### 8.1 Cross-Session State Inheritance
 When a session is interrupted:
 1. Reload AGENTS.md / CLAUDE.md
-2. Check `git log --oneline -10`
-3. Check `git status`, `git diff`
-4. Search for TODO/FIXME comments
-5. Report to user: "Continuing from previous session"
+2. Read `docs/almanac/INVARIANTS.md` and `LANDMINES.md`
+3. Check `git log --oneline -10`
+4. Check `git status`, `git diff`
+5. Search for TODO/FIXME comments
+6. Report to user: "Continuing from previous session"
+
+### 8.2 Write Down What Code Cannot Say
+
+Code records *what*. It does not record *why*, *what must not break*, or
+*where someone already got hurt*. Those live in `docs/almanac/` and are
+worth more than the code when the next session starts cold.
+
+| You just… | Write it in |
+|-----------|-------------|
+| chose between real alternatives | `docs/adr/` (next free number — check `docs/almanac/INDEX.md`) |
+| got stuck, then unstuck | `docs/almanac/LANDMINES.md` (症状 → 原因 → 回避策) |
+| created or changed an assumption others must respect | `docs/almanac/INVARIANTS.md` |
+| repeated an operation for the second time | `docs/runbooks/` |
+
+Write it immediately after the fact. By the next session the reason is gone.
+`INDEX.md` is generated — run `bun run almanac`, never edit it by hand.
 
 ---
 

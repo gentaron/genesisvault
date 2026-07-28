@@ -1,0 +1,88 @@
+name: 機能 / 変更（契約として書く）
+description: 実装をエージェントに任せられる粒度の「契約」を書く。受け入れ条件と非目標が埋まっていない Issue は着手されません。
+title: 'feat: '
+labels: ['spec']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## この Issue は「依頼」ではなく「契約」です
+
+        実装能力は安く、曖昧さの解消は高い。ここで曖昧さを潰しきれた分だけ、
+        あとの実装・レビューが速くなります。**受け入れ条件と非目標は必須**です。
+
+        書けない項目があるなら、それは実装前に決めるべきことがまだ残っているサインです。
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景 / なぜ必要か
+      description: 今どうなっていて、何が困っているか。解決策ではなく問題を書く。
+      placeholder: |
+        毎日の自動投稿が失敗しても、翌朝までだれも気づかない。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 受け入れ条件（Acceptance Criteria）
+      description: |
+        **検証可能な形で**書く。「〜が改善される」ではなく「〜したとき〜になる」。
+        マージ判断はこのリストだけを見て行います。ここに無いものは完成条件ではありません。
+      value: |
+        - [ ]
+        - [ ]
+        - [ ] `bun run verify` が通る
+    validations:
+      required: true
+
+  - type: textarea
+    id: non-goals
+    attributes:
+      label: 非目標（Non-Goals）— やらないこと
+      description: |
+        スコープの外側を明示する。ここが空だと実装が際限なく広がります。
+        「ついでの改善」はこの欄に書いて、別 Issue に切り出してください（AGENTS.md §2.5）。
+      placeholder: |
+        - 既存記事のバックフィルはしない（別 Issue）
+        - UI の見た目は変更しない
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: 検証方法
+      description: |
+        どうやって「できた」を機械的に確認するか。新しい判定基準が要るなら、
+        それ自体が実装対象です（テスト・`scripts/verify.mjs` のチェック追加など）。
+      value: |
+        - コマンド: `bun run verify`
+        - 追加するテスト:
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: 影響範囲（分かる範囲で）
+      description: |
+        触ることになりそうなファイル。`config/pipeline.json` で済むならコード変更は不要かもしれません。
+      placeholder: |
+        - config/pipeline.json（ルーティングの調整のみ）
+        - src/lib/pipeline/quality-gate.ts
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: 着手前チェック
+      options:
+        - label: 受け入れ条件は、実装を見ずに合否を判定できる書き方になっている
+          required: true
+        - label: 非目標を書いた（「特になし」ではなく、実際に検討した上で）
+          required: true
+        - label: docs/almanac/LANDMINES.md に関連する既知の地雷がないか確認した
+          required: false

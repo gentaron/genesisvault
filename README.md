@@ -11,9 +11,34 @@ Mina Eureka Ernst による個人ブログ
 
 Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト）による個人日記ブログです。  
 散歩・瞑想・ひとり旅・ジャーナリング・貯金・投資・マインドフルネスをテーマに、  
-毎日 **5つのGemini AIエージェント（Liminal Forge）** が記事を自動生成・投稿します。
+毎日 **8つのAIエージェント（Liminal Forge）** が記事を自動生成・投稿します。
 
 記事は **Ethereum ウォレット接続（3 USDC）** でフルアクセス可能です。
+
+---
+
+## このリポジトリの歩き方
+
+生成は安く、検証が高い。だからこのリポジトリは「エージェントが速く書けること」より
+**「人間が速く判定できること」**を優先して構成されています。触る前に読む場所は4つ。
+
+| 見る場所 | 何が分かるか |
+|---------|-------------|
+| [`config/pipeline.json`](./config/pipeline.json) | パイプラインの設定すべて（エージェント・プロバイダー・ルーティング・品質閾値）。**設定はここ1枚だけ** |
+| [`docs/almanac/`](./docs/almanac/) | 壊してはいけない前提・一度踏んだ罠・ADR/Runbook の索引 |
+| [`AGENTS.md`](./AGENTS.md) | AI が従う開発プロトコル（最優先） |
+| `bun run verify` | マージしてよいかを決める単一コマンド |
+
+```bash
+bun run verify         # 設定・記事リント・記憶の鮮度・型・テストを一括検証
+bun run verify:quick   # 設定と記事リントのみ（数秒）
+```
+
+`verify` は **LLM もネットワークも API キーも使いません**。ローカルと CI で同じ答えが出ることが、
+ゲートとして信用できる条件だからです（詳細は [ADR-0015](./docs/adr/0015-workflow-restructure.md)）。
+
+設定を変えたいときは TypeScript を探さないでください。`config/pipeline.json` を編集して
+`bun run verify` を実行すれば、スキーマ検証と参照整合性チェックが結果を教えます。
 
 ---
 
@@ -45,7 +70,7 @@ Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger
 ### 参照源（文体・テーマ）
 
 文体サンプル・タイトル・テーマバランスの参照には以下の WXR エクスポートを使います
-（`src/lib/agents/shared.ts` の `REFERENCE_FILES`）。
+（`config/pipeline.json` の `references`）。
 
 - `gensnotes_1.md` / `gensnotes_2.md` — 旧ブログ「旧Gens Notes」（レガシー）
 - `gensnotes_3.md` / `gensnotes_4.md` / `gensnotes_5.md` — 現行ブログ「Genesis Vault - ミナ・エウレカ」（**現時点の最新参照源**）
@@ -58,7 +83,7 @@ Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger
 - `openrouter-free` — OpenRouter 無料モデル
 - `huggingface` — HuggingFace Inference API
 
-**ティア制ルーティング（Phase ι）**: エージェントの役割ごとに最適なプロバイダー順・temperature・トークン上限を割り当てます（`src/lib/ai/routing.ts`、詳細は `docs/adr/0010-tiered-agent-routing.md`）。
+**ティア制ルーティング（Phase ι）**: エージェントの役割ごとに最適なプロバイダー順・temperature・トークン上限を割り当てます。ルーティング表は `config/pipeline.json` の `routing.byAgent` に、各設定の理由（`why`）付きで宣言されています（実装は `src/lib/ai/routing.ts`、詳細は `docs/adr/0014-tiered-agent-routing.md`）。
 
 | エージェント | ティア | 優先プロバイダー | temp |
 |-------------|--------|----------------|------|
@@ -142,7 +167,8 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
 | [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。無料モデル3種を順に試行: `meta-llama/llama-3.3-70b-instruct:free` → `qwen/qwen-2.5-72b-instruct:free` → `deepseek/deepseek-chat:free`（ADR-0010）|
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
-| Multi-Agent Pipeline | 5エージェント順次実行（Nova → Lena → Chloe → Sophia → Iris）。`src/lib/agents/runners.ts` に分離 |
+| Multi-Agent Pipeline | 8エージェント順次実行（Vera → Nova → Lena → Chloe → Sophia → Iris → Edda → Mira）。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/runners.ts` |
+| Declarative Config | `config/pipeline.json` が設定の唯一のソース。Zod 検証＋参照整合性チェック（ADR-0015） |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
 | Multi-Provider Fallback | 6プロバイダ8モデルチェーン（OpenRouter内は3モデル分散） + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
 | Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |
@@ -184,16 +210,18 @@ GEMINI_API_KEY=your_key bun run auto-post
 
 | 技術 | 詳細 |
 |------|------|
-| [Vitest](https://vitest.dev/) | 4.x。192 ユニットテスト（12 ファイル）。v8 カバレッジ: **98.6% lines** |
+| [Vitest](https://vitest.dev/) | 4.x。ユニットテスト（件数は `bun run test` で確認）。v8 カバレッジを CI で強制 |
 | [@vitest/coverage-v8](https://vitest.dev/guide/coverage) | v8 カバレッジプロバイダー。CI で閾値強制 |
 | [happy-dom](https://github.com/capricorn86/happy-dom) | DOM テスト用ランタイム |
-| [Playwright](https://playwright.dev/) | 1.50+。22 E2E テスト（6 ファイル、6 ユーザージャーニー）。Chromium 対応 |
+| [Playwright](https://playwright.dev/) | 1.50+。E2E テスト（6 ユーザージャーニー）。Chromium 対応 |
 
 ### CI/CD・自動化
 
 | 技術 | 詳細 |
 |------|------|
-| [GitHub Actions](https://github.com/features/actions) | `daily-post.yml`（自動生成）+ `healthcheck.yml` + `ci-test.yml`（Unit+Coverage）+ `ci-e2e.yml`（Playwright）+ `codeql.yml`（セキュリティスキャン） |
+| [GitHub Actions](https://github.com/features/actions) | `daily-post.yml`（自動生成）+ `healthcheck.yml` + `ci-verify.yml`（決定論的ゲート）+ `ci-test.yml`（Unit+Coverage）+ `ci-e2e.yml`（Playwright）+ `codeql.yml`（セキュリティスキャン） |
+| Spec as Contract | Issue テンプレートが受け入れ条件と非目標を必須化。PR テンプレートは「契約が満たされた証明」を書かせる（ADR-0015） |
+| Deterministic Verify | `bun run verify` が LLM 不要・オフラインで設定・記事・記憶・型・テストを検証。CI と同一コマンド |
 | [oven-sh/setup-bun](https://github.com/oven-sh/setup-bun) | v2。CI で Bun を使用 |
 | [CodeQL](https://codeql.github.com/) | セキュリティスキャン（JS/TS）。Push/PR + 毎週月曜実行 |
 | [Renovate](https://github.com/renovatebot/renovate) | 依存関係の自動更新（パッチ auto-merge） |
@@ -246,6 +274,30 @@ bun run lint
 
 # フォーマット
 bun run format
+```
+
+### 検証ゲート・生成物の更新
+
+```bash
+# マージ可否を決める単一ゲート（LLM・ネットワーク・APIキー不要）
+bun run verify
+bun run verify:quick     # 設定と記事リントのみ（数秒）
+
+# 生成物の再生成（手編集しないこと）
+bun run config:schema    # config/pipeline.schema.json を Zod スキーマから再生成
+bun run almanac          # docs/almanac/INDEX.md を ADR/Runbook から再生成
+```
+
+`verify` は生成物のドリフト（再生成し忘れ）も検出して失敗します。
+
+### 既存指摘のラチェット
+
+Biome と `astro check` にはリポジトリ発足以来の指摘が残っています。一括修正は
+85ファイルの整形差分になりレビュー不能になるため、`config/quality-baseline.json` で
+**件数を増やさないこと**だけを機械的に保証しています。触ったファイルだけを直してください。
+
+```bash
+bunx biome check --write <実際に変更したファイル>
 ```
 
 ---

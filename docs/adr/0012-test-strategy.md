@@ -1,4 +1,4 @@
-# ADR-0006: Test Strategy — Vitest 4 + Playwright 1.50
+# ADR-0012: Test Strategy — Vitest 4 + Playwright 1.50
 
 ## Status
 Updated (Phase ζ)

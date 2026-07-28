@@ -3,7 +3,15 @@
  *
  * Post-generation quality checks before committing an article.
  * Enforces minimum content standards and catches common AI artifacts.
+ *
+ * This is the deterministic half of the pipeline: no model call, no
+ * network, no API key. Everything that can be decided by a rule is
+ * decided here, and only genuinely subjective work is left to the LLM
+ * agents. Thresholds and patterns are declared in
+ * `config/pipeline.json` → `qualityGate`.
  */
+
+import { PIPELINE_CONFIG } from './config.js';
 
 export interface QualityReport {
   passed: boolean;
@@ -18,20 +26,14 @@ export interface QualityCheck {
   severity: 'error' | 'warning';
 }
 
-/** Minimum body length in Japanese characters (excluding whitespace). */
-const MIN_BODY_LENGTH = 400;
-const MAX_BODY_LENGTH = 5000;
+const GATE = PIPELINE_CONFIG.qualityGate;
+
+/** Body length bounds in Japanese characters (excluding whitespace). */
+const MIN_BODY_LENGTH = GATE.minBodyLength;
+const MAX_BODY_LENGTH = GATE.maxBodyLength;
 
 /** Placeholder patterns that indicate incomplete AI output. */
-const PLACEHOLDER_PATTERNS = [
-  /\[TODO\]/i,
-  /\[TBD\]/i,
-  /\[要補完\]/,
-  /\[後で書く\]/,
-  /\[PLACEHOLDER\]/i,
-  /ここに本文を入力/,
-  /本文は後で追加/,
-];
+const PLACEHOLDER_PATTERNS = GATE.placeholderPatterns.map((p) => new RegExp(p, 'i'));
 
 /**
  * "AI slop" heading patterns — grandiose, generic proposition-style H2s
@@ -40,17 +42,10 @@ const PLACEHOLDER_PATTERNS = [
  * agents can still slip into section headings. Modeled on the detection
  * categories in the stop-ai-slop-jp Claude Skill (structural/構造 issues).
  */
-const GRANDIOSE_HEADING_PATTERNS = [
-  /見つけたもの/,
-  /気づいたこと/,
-  /教えてくれ(た|る)/,
-  /向き合う時間/,
-  /大切なこと/,
-  /という(選択|生き方)/,
-];
+const GRANDIOSE_HEADING_PATTERNS = GATE.grandioseHeadingPatterns.map((p) => new RegExp(p));
 
 /** Vocabulary that inflates a small diary moment into a universal truth (stop-ai-slop-jp: 語彙/vocabulary). */
-const CLICHE_VOCABULARY = ['真理', '美学', '境地', '本質'];
+const CLICHE_VOCABULARY = GATE.clicheVocabulary;
 
 export interface AiSlopReport {
   grandioseHeadings: string[];
@@ -116,8 +111,8 @@ export function runQualityGate(body: string): QualityReport {
   const h2Count = (body.match(/^##\s+.+$/gm) || []).length;
   checks.push({
     name: 'markdown_structure',
-    passed: h2Count >= 1,
-    message: `見出し (##) の数: ${h2Count}（最低1つ必要）`,
+    passed: h2Count >= GATE.minH2Headings,
+    message: `見出し (##) の数: ${h2Count}（最低${GATE.minH2Headings}つ必要）`,
     severity: 'warning',
   });
 
@@ -162,8 +157,8 @@ export function runQualityGate(body: string): QualityReport {
   });
   checks.push({
     name: 'no_binary_contrast_repetition',
-    passed: slop.binaryContrastCount < 3,
-    message: `「ではなく」の使用回数: ${slop.binaryContrastCount}（3回以上で定型的な対比表現とみなす）`,
+    passed: slop.binaryContrastCount < GATE.binaryContrastLimit,
+    message: `「ではなく」の使用回数: ${slop.binaryContrastCount}（${GATE.binaryContrastLimit}回以上で定型的な対比表現とみなす）`,
     severity: 'warning',
   });
   checks.push({
@@ -183,11 +178,11 @@ export function runQualityGate(body: string): QualityReport {
     severity: 'warning',
   });
 
-  // Calculate score: each error = -25, each warning = -10
+  // Calculate score using the configured penalties (default: error -25, warning -10)
   let score = 100;
   for (const check of checks) {
     if (!check.passed) {
-      score -= check.severity === 'error' ? 25 : 10;
+      score -= check.severity === 'error' ? GATE.penalty.error : GATE.penalty.warning;
     }
   }
   score = Math.max(0, score);

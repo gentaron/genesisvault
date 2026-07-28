@@ -7,86 +7,30 @@
  * free providers first (sparing the Gemini quota for prose), while
  * long-form Japanese writing is routed to the strongest Gemini model.
  *
- * The design follows the tiered-routing pattern used by agent runtimes
- * like OpenSquilla / OpenClaude (route cheap tasks to cheap models,
- * heavy reasoning to strong models) — implemented natively here so the
- * pipeline stays dependency-free and 100% free-tier.
+ * Phase κ: the routing table itself now lives in `config/pipeline.json`,
+ * next to the reason each route looks the way it does (`why`). This
+ * module is only the lookup and ordering logic — it holds no numbers.
+ * To retune routing, edit the JSON and run `bun run verify`.
  *
  * All providers referenced here are free-tier only. If a preferred
  * provider's API key is not set, it is simply absent from the chain
  * and the next preference applies — no configuration required.
  */
 
+import { PIPELINE_CONFIG } from '../pipeline/config.js';
+import type { AgentRoute, AgentTier } from '../pipeline/config.js';
 import type { ProviderEntry } from './providers.js';
 
-export type AgentTier = 'light' | 'creative' | 'heavy' | 'precision';
-
-export interface AgentRoute {
-  /** Task class — documents why the wiring looks the way it does. */
-  tier: AgentTier;
-  /** Provider names tried first, in order. Unlisted providers follow in chain order. */
-  preferredProviders: string[];
-  /** Sampling temperature suited to the agent's job. */
-  temperature: number;
-  /** Output token budget for the agent's job. */
-  maxOutputTokens: number;
-}
+export type { AgentRoute, AgentTier };
 
 /**
  * Routing table, keyed by agent ID.
- *
- * - VE-005 Nova (Balancer): tiny JSON classification. Fast free
- *   providers (Groq/Cerebras) first — spares Gemini RPD and cuts latency.
- *   Low temperature: selection should be stable, not creative.
- * - VE-001 Lena (CEO): creative planning + title writing in Japanese.
- *   gemini-2.5-flash first (best JA creativity), high temperature.
- * - VE-003 Chloe (SEO): structured metadata. flash-lite first,
- *   moderate-low temperature for consistent tags/keywords.
- * - VE-002 Sophia (Writer): 1,000–2,000 char Japanese diary prose.
- *   The quality-critical step — strongest Gemini model first.
- * - VE-006 Iris (Editor): proofreading. Precision work — low
- *   temperature (an editor should not rewrite creatively).
+ * Derived from `config/pipeline.json` → `routing.byAgent`.
  */
-export const AGENT_ROUTES: Record<string, AgentRoute> = {
-  'VE-005': {
-    tier: 'light',
-    preferredProviders: ['groq-llama-3.3-70b', 'cerebras-llama-3.3-70b', 'gemini-2.5-flash-lite'],
-    temperature: 0.3,
-    maxOutputTokens: 512,
-  },
-  'VE-001': {
-    tier: 'creative',
-    preferredProviders: ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'groq-llama-3.3-70b'],
-    temperature: 0.9,
-    maxOutputTokens: 1024,
-  },
-  'VE-003': {
-    tier: 'light',
-    preferredProviders: ['gemini-2.5-flash-lite', 'groq-llama-3.3-70b', 'cerebras-llama-3.3-70b'],
-    temperature: 0.4,
-    maxOutputTokens: 512,
-  },
-  'VE-002': {
-    tier: 'heavy',
-    preferredProviders: ['gemini-2.5-flash', 'gemini-2.5-flash-lite'],
-    temperature: 0.85,
-    maxOutputTokens: 4096,
-  },
-  'VE-006': {
-    tier: 'precision',
-    preferredProviders: ['gemini-2.5-flash-lite', 'gemini-2.5-flash'],
-    temperature: 0.3,
-    maxOutputTokens: 4096,
-  },
-};
+export const AGENT_ROUTES: Record<string, AgentRoute> = PIPELINE_CONFIG.routing.byAgent;
 
 /** Fallback route for unknown agent IDs — behaves like the pre-routing pipeline. */
-export const DEFAULT_ROUTE: AgentRoute = {
-  tier: 'heavy',
-  preferredProviders: [],
-  temperature: 0.85,
-  maxOutputTokens: 4096,
-};
+export const DEFAULT_ROUTE: AgentRoute = PIPELINE_CONFIG.routing.default;
 
 export function getAgentRoute(agentId: string): AgentRoute {
   return AGENT_ROUTES[agentId] ?? DEFAULT_ROUTE;
