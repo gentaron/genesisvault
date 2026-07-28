@@ -315,7 +315,7 @@ async function main() {
   try {
     const existingFiles = await fs.readdir(POSTS_DIR);
     const alreadyExists = existingFiles.some(f => f.startsWith(todayFile));
-    if (alreadyExists) {
+    if (alreadyExists && !process.env.GV_THEME) {
       console.log(`Post for ${todayISO()} already exists. Skipping.`);
       logAgent('SYSTEM', 'Idempotency', 'skip', `Post for ${todayISO()} already exists`);
       process.exit(0);
