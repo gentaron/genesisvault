@@ -384,7 +384,9 @@ async function main() {
 
   try {
     // ── Agent 0: Balancer (Nova) ──────────────────────────
-    const assignedTheme = await runNova(themeBalance, themeBalance.recentPostTitles);
+    const assignedTheme = process.env.GV_THEME
+      ? process.env.GV_THEME
+      : await runNova(themeBalance, themeBalance.recentPostTitles);
     logAgent('VE-005', 'Nova Harmon', 'theme_selected', assignedTheme);
     await savePipelineState({ step: 'balancer', data: { assignedTheme }, date: todayISO() });
     console.log('');
