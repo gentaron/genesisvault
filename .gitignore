@@ -15,6 +15,11 @@ logs/agent-runs.jsonl
 !.dev.vars.example
 !.env.example
 
+# 囲い（審査層）が差し戻した原稿の隔離先。
+# 消さずに残すのは、なぜ落ちたかを後から検証するため。
+# ローカルの作業痕跡なのでコミットはしない（判定記録は docs/gate-runs/ に残る）。
+.gate-quarantine/
+
 # test artifacts
 coverage/
 playwright-report/

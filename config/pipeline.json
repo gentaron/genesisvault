@@ -191,11 +191,11 @@
         "why": "1,000〜2,000字の日本語日記。品質のボトルネックなので最強モデルを最優先。"
       },
       "VE-006": {
-        "tier": "precision",
-        "preferredProviders": ["gemini-2.5-flash-lite", "gemini-2.5-flash"],
-        "temperature": 0.3,
+        "tier": "judge",
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+        "temperature": 0.2,
         "maxOutputTokens": 4096,
-        "why": "校正は精密作業。編集者が創造的に書き換えないよう低温度に固定。"
+        "why": "審査役には最も強いモデルを置く。書き手が雑でも審査が厳しければ差し戻して直せるが、審査が甘いと雑なものがそのまま外に出て、出た後は誰も止められない。弱いモデルの見逃しは画面に何も表示されないまま全部緑で通るため、ここを削るのが最も高くつく。温度は 0.2 — 校正者が創造的に書き換えないよう固定。"
       }
     }
   },
@@ -232,5 +232,66 @@
     "comment": "文体・テーマ・継続性の参照源。current が正典（整合性チェックの基準）、legacy は文体サンプルのみ。",
     "legacy": ["gensnotes_1.md", "gensnotes_2.md"],
     "current": ["gensnotes_3.md", "gensnotes_4.md", "gensnotes_5.md"]
+  },
+  "review": {
+    "comment": "囲い（審査層）の設定。設計原則は4つ。(1) 審査役には最強モデルを置く。(2) 審査は執筆と別の呼び出しで行い、審査側には仕様と成果物しか渡さない（書き手の自己評価にしない）。(3) モデルには観察だけをさせ、合否はコード側で決定論的に集計する（甘い採点を防ぐ）。(4) 審査できなかったときは通さない（fail-closed）。",
+    "minScore": 70,
+    "secondOpinionBand": 10,
+    "maxJudgeAttempts": 3,
+    "judgeTemperature": 0,
+    "requireEvidence": true,
+    "quarantineDir": ".gate-quarantine",
+    "auditLogDir": "docs/gate-runs",
+    "judgeProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+    "rubric": [
+      {
+        "id": "brief_coverage",
+        "label": "企画指示の論点を扱っているか",
+        "weight": 30,
+        "requiresBrief": true,
+        "veto": false,
+        "guidance": "指示された論点が原稿に実在するかだけを見る。読みやすさで加点しない。扱えていない論点は missing に列挙する。"
+      },
+      {
+        "id": "theme_drift",
+        "label": "テーマがすり替わっていないか",
+        "weight": 15,
+        "requiresBrief": true,
+        "veto": true,
+        "guidance": "指示と別のテーマに移っていたら veto。「関連はしている」は許容しない。指示の主題そのものを扱っていること。"
+      },
+      {
+        "id": "concrete_specificity",
+        "label": "具体があるか（抽象論に逃げていないか）",
+        "weight": 20,
+        "requiresBrief": false,
+        "veto": false,
+        "guidance": "数字・固有名・実際の行動・その日にしか起きなかった出来事があるか。どの日の記事にも貼り替えられる一般論だけで構成されていたら低評価。文字数と体裁は評価しない。"
+      },
+      {
+        "id": "persona_consistency",
+        "label": "ペルソナの一貫性",
+        "weight": 10,
+        "requiresBrief": false,
+        "veto": false,
+        "guidance": "一人称「わたし」、柔らかい日記体。ミナの人物像（独身・散歩・瞑想・貯金・投資）と矛盾しないこと。"
+      },
+      {
+        "id": "ai_slop",
+        "label": "AI 特有の言い回しが無いか",
+        "weight": 15,
+        "requiresBrief": false,
+        "veto": false,
+        "guidance": "提案型の抽象的な見出し、「真理」「美学」「境地」「本質」等の誇張語彙、「A ではなく B」の反復、装飾的な全角ダッシュ、本文に残った Markdown 太字。"
+      },
+      {
+        "id": "internal_consistency",
+        "label": "記事内・既知事実との整合",
+        "weight": 10,
+        "requiresBrief": false,
+        "veto": true,
+        "guidance": "記事内で矛盾していないか。貯金額など既知の到達点を逆行させていないか（逆行は veto）。"
+      }
+    ]
   }
 }

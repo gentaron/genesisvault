@@ -159,10 +159,77 @@ try {
   record('Almanac のチェック', false, err.message);
 }
 
-// ─── 4. Lint / types / tests ────────────────────────────────────
+// ─── 4. The enclosure (囲い) ────────────────────────────────────
+
+heading('4. 囲い（審査層）');
+
+try {
+  const manifest = JSON.parse(
+    await readFile(path.join(rootDir, 'tests/fixtures/gate/manifest.json'), 'utf-8'),
+  );
+  const fixtureDir = path.join(rootDir, 'tests/fixtures/gate');
+  const present = new Set(await readdir(fixtureDir));
+
+  const missing = manifest.fixtures.filter((f) => !present.has(f.file));
+  record(
+    'ゴールデン事例が揃っている',
+    missing.length === 0,
+    missing.length > 0
+      ? `不足: ${missing.map((f) => f.file).join(', ')}`
+      : `${manifest.fixtures.length} 件（不良 ${manifest.fixtures.filter((f) => f.kind !== 'good').length} / 正常 ${manifest.fixtures.filter((f) => f.kind === 'good').length}）`,
+  );
+
+  // 正常系の対照群が無いゲートは「全部落とす」でも満点になってしまう。
+  const goodCount = manifest.fixtures.filter((f) => f.kind === 'good').length;
+  record(
+    '誤検知の対照群がある',
+    goodCount > 0,
+    goodCount > 0 ? `正常な記事 ${goodCount} 件で厳しすぎを検出` : '正常系の事例がありません',
+  );
+
+  // 決定論では捕まえられない事例に、審査側の受け皿が宣言されているか。
+  const blindspots = manifest.fixtures.filter((f) => f.kind === 'blindspot');
+  const uncovered = blindspots.filter(
+    (f) =>
+      f.judge?.expectPass !== false ||
+      ((f.judge?.expectLowCriteria?.length ?? 0) === 0 && (f.judge?.expectVeto?.length ?? 0) === 0),
+  );
+  record(
+    '既知の死角に審査側の受け皿がある',
+    uncovered.length === 0,
+    uncovered.length > 0
+      ? `受け皿なし: ${uncovered.map((f) => f.file).join(', ')}`
+      : `死角 ${blindspots.length} 件すべてを審査役が担当`,
+  );
+
+  if (config) {
+    const writerTop = config.routing.byAgent['VE-002']?.preferredProviders[0];
+    const judgeTop = config.routing.byAgent['VE-006']?.preferredProviders[0];
+    record(
+      '審査役が書き手より弱いモデルになっていない',
+      writerTop === judgeTop,
+      `書き手 ${writerTop} / 審査役 ${judgeTop}`,
+    );
+
+    const vetoCount = config.review.rubric.filter((c) => c.veto).length;
+    record(
+      'veto 項目がある（加重平均で薄まらない）',
+      vetoCount > 0,
+      `${config.review.rubric.length} 項目中 ${vetoCount} 件が一発不合格`,
+    );
+  }
+
+  console.log(
+    '     \x1b[2mℹ 審査役そのものの捕捉率は `bun run gate:eval` で測ります（APIキー必須のため verify には含めません）\x1b[0m',
+  );
+} catch (err) {
+  record('囲いのチェック', false, err.message);
+}
+
+// ─── 5. Lint / types / tests ────────────────────────────────────
 
 if (!quick) {
-  heading('4. Lint・型・テスト');
+  heading('5. Lint・型・テスト');
 
   const baseline = JSON.parse(
     await readFile(path.join(rootDir, 'config/quality-baseline.json'), 'utf-8'),
@@ -227,7 +294,7 @@ if (!quick) {
     testMatch ? `${testMatch[1]} 件通過` : '`bun run test` で詳細を確認',
   );
 } else {
-  heading('4. Lint・型・テスト');
+  heading('5. Lint・型・テスト');
   console.log('  \x1b[2m⏭  --quick のためスキップ\x1b[0m');
 }
 

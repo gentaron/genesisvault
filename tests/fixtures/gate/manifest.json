@@ -1,0 +1,93 @@
+{
+  "comment": "囲い（審査層）の較正用ゴールデン事例集。ゲートが『何を捕まえ、何を見逃すか』を固定するための基準データ。見逃しは画面に何も表示されないので、既知の不良を意図的に置いて捕捉を機械的に確認する以外に、ゲートの実力を知る方法がない。新しい見逃しを見つけたら、必ずここに事例を足してから直すこと（再発したら赤くなる）。",
+  "layers": {
+    "deterministic": "src/lib/pipeline/quality-gate.ts と content-lint.ts。LLM 不要。tests/gate-calibration.test.ts が毎回検証する。",
+    "judge": "src/lib/pipeline/review.ts。モデル呼び出しが要るため scripts/gate-eval.mjs で別途測定する（APIキー必須）。"
+  },
+  "fixtures": [
+    {
+      "file": "good-concrete-diary.md",
+      "kind": "good",
+      "why": "具体的な数字・固有名・その日限りの出来事がある正常な記事。誤検知の対照群。",
+      "deterministic": { "mustPass": true, "mustFailChecks": [], "mustLintClean": true },
+      "judge": { "expectPass": true }
+    },
+    {
+      "file": "bad-ai-slop.md",
+      "kind": "bad",
+      "why": "提案型の抽象的な見出し、誇張語彙、二項対立の反復、Markdown 太字の残留。",
+      "deterministic": {
+        "mustPass": true,
+        "mustFailChecks": [
+          "no_grandiose_headings",
+          "no_cliche_vocabulary",
+          "no_binary_contrast_repetition",
+          "no_bold_remnants"
+        ],
+        "mustLintClean": true
+      },
+      "judge": { "expectPass": false, "expectLowCriteria": ["ai_slop"] }
+    },
+    {
+      "file": "bad-placeholder.md",
+      "kind": "bad",
+      "why": "未完成のプレースホルダーが本文に残ったまま提出された原稿。",
+      "deterministic": {
+        "mustPass": false,
+        "mustFailChecks": ["no_placeholders"],
+        "mustLintClean": false,
+        "mustLintRules": ["placeholder"]
+      },
+      "judge": { "expectPass": false }
+    },
+    {
+      "file": "bad-ai-disclaimer.md",
+      "kind": "bad",
+      "why": "「AIとして」という免責がそのまま本文に残っている。ペルソナの破綻。",
+      "deterministic": {
+        "mustPass": false,
+        "mustFailChecks": ["no_ai_disclaimer"],
+        "mustLintClean": true
+      },
+      "judge": { "expectPass": false, "expectLowCriteria": ["persona_consistency"] }
+    },
+    {
+      "file": "bad-too-short.md",
+      "kind": "bad",
+      "why": "本文が規定の文字数に満たない打ち切り原稿。",
+      "deterministic": {
+        "mustPass": false,
+        "mustFailChecks": ["body_length"],
+        "mustLintClean": true
+      },
+      "judge": { "expectPass": false }
+    },
+    {
+      "file": "bad-agent-credit.md",
+      "kind": "bad",
+      "why": "名簿に存在しないエージェント ID がクレジットされている（VE-404）。",
+      "deterministic": {
+        "mustPass": true,
+        "mustFailChecks": [],
+        "mustLintClean": false,
+        "mustLintRules": ["agent_credit"]
+      },
+      "judge": { "expectPass": true }
+    },
+    {
+      "file": "blindspot-generic-but-clean.md",
+      "kind": "blindspot",
+      "why": "決定論ゲートの既知の死角。文字数・体裁・語彙のどれにも触れないので満点で通るが、どの日にも貼り替えられる一般論しかなく、その日にしか書けないことが何ひとつ無い。ルールで捕まえられないため、審査役（LLM）の concrete_specificity が唯一の防波堤になる。この事例が judge 側で通ってしまうなら、囲いは実質機能していない。",
+      "deterministic": { "mustPass": true, "mustFailChecks": [], "mustLintClean": true },
+      "judge": { "expectPass": false, "expectLowCriteria": ["concrete_specificity"] }
+    },
+    {
+      "file": "blindspot-theme-drift.md",
+      "kind": "blindspot",
+      "why": "決定論ゲートの既知の死角。文章としては正常だが、指示されたテーマ（つみたてNISAの配分見直し）から完全に別の話題（コーヒーの淹れ方）へすり替わっている。ルールでは検出できない。judge の theme_drift が veto で落とすべき事例。",
+      "brief": "タイトル: つみたてNISAの配分を見直した話\n\nつみたてNISAの資産配分を見直した経緯を書く。見直し前と見直し後の配分、なぜ変えたのかの理由、迷った点を含めること。個別銘柄の推奨はしないこと。",
+      "deterministic": { "mustPass": true, "mustFailChecks": [], "mustLintClean": true },
+      "judge": { "expectPass": false, "expectVeto": ["theme_drift"] }
+    }
+  ]
+}

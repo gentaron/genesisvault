@@ -5,7 +5,7 @@
 このリポジトリで「なぜそうなっているか」を探すときの入口。
 設計判断は ADR、壊れたときの手順は Runbook にある。
 
-## ADR — 設計判断の記録（15件）
+## ADR — 設計判断の記録（16件）
 
 不可逆な決定と、その理由。新しい ADR は次の番号を使うこと（番号の重複は `bun run verify` で失敗する）。
 
@@ -26,6 +26,7 @@
 | 0013 | [ADR-0013: Pipeline State Machine](../adr/0013-pipeline-state-machine.md) | Accepted | 2026-05-06 |
 | 0014 | [ADR-0014 — Phase ι: ティア制エージェントルーティングと品質ゲート配線](../adr/0014-tiered-agent-routing.md) | Accepted | 2026-07-04 |
 | 0015 | [ADR-0015: ワークフロー再構成 — 宣言的設定・契約としての仕様・決定論的検証・記憶インフラ（Phase κ）](../adr/0015-workflow-restructure.md) | Accepted | 2026-07-28 |
+| 0016 | [ADR-0016: 囲い（審査層）— 見逃しを設計で潰す（Phase λ）](../adr/0016-the-enclosure.md) | Accepted | 2026-07-29 |
 
 ## Runbook — 手順書（7件）
 

@@ -34,9 +34,21 @@ describe('Phase ι — Per-Agent Tiered Routing', () => {
       expect(AGENT_ROUTES['VE-002'].tier).toBe('heavy');
     });
 
-    it('gives the Editor (VE-006) a low precision temperature', () => {
+    it('gives the Editor (VE-006) a low temperature — reviewing, not rewriting', () => {
       expect(AGENT_ROUTES['VE-006'].temperature).toBeLessThanOrEqual(0.4);
-      expect(AGENT_ROUTES['VE-006'].tier).toBe('precision');
+      expect(AGENT_ROUTES['VE-006'].tier).toBe('judge');
+    });
+
+    it('never gives the reviewer a weaker model than the writer', () => {
+      // Phase λ. The pipeline previously ran the writer on gemini-2.5-flash
+      // and the editor on flash-lite — the good model on the author, the
+      // cheap one on the check. That is backwards: a sloppy draft gets
+      // returned by a strict reviewer, but a lenient reviewer ships sloppy
+      // work with no error, no warning, and nothing downstream to catch it.
+      // A miss is invisible; a false alarm is merely a rerun.
+      const writerModel = AGENT_ROUTES['VE-002'].preferredProviders[0];
+      const reviewerModel = AGENT_ROUTES['VE-006'].preferredProviders[0];
+      expect(reviewerModel).toBe(writerModel);
     });
 
     it('gives the CEO (VE-001) a high creative temperature', () => {

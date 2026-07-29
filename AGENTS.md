@@ -214,6 +214,32 @@ changes from review and violates §3.3. Format only the files you touched:
 bunx biome check --write <the files you actually changed>
 ```
 
+### 5.4 The Enclosure — Never Weaken the Reviewer
+
+Generated output passes through a review layer (`src/lib/pipeline/review.ts`,
+`bun run gate`). Its rules are not negotiable defaults:
+
+- **The reviewer never runs a weaker model than the writer.** A sloppy
+  draft is fixed by a strict reviewer; a lenient reviewer ships sloppy
+  work. A miss prints nothing — no error, no warning, all green — so it
+  is never discovered in operation. Enforced by config integrity.
+- **The model observes; the code decides.** Never let a judge return a
+  total score or a pass/fail. Aggregate in code from the rubric.
+- **Deductions require a real quote.** Evidence is checked against the
+  article; fabricated citations are discarded.
+- **Fail-closed.** Cannot review ⇒ reject. Never skip, never default-pass.
+- **The judge sees only the brief and the article.** Adding writing
+  context turns review into self-assessment.
+
+When you touch the gate — model, rubric, thresholds — run:
+
+```bash
+bun run gate:eval    # measures what the reviewer catches and misses
+```
+
+If you find a miss, **add a fixture to `tests/fixtures/gate/` first**, then
+fix it. A miss with no fixture will come back and nobody will notice.
+
 ---
 
 ## 6. Conflict Resolution Protocol
