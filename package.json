@@ -13,6 +13,8 @@
     "verify:quick": "bun scripts/verify.mjs --quick",
     "config:schema": "bun scripts/sync-config-schema.mjs",
     "almanac": "bun scripts/build-almanac.mjs",
+    "gate": "bun scripts/brief-gate.mjs",
+    "gate:eval": "bun scripts/gate-eval.mjs",
     "lint:content": "bun scripts/verify.mjs --quick",
     "auto-post": "bun scripts/auto-post.mjs",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",
