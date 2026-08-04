@@ -11,6 +11,7 @@
  */
 
 import { z } from 'zod';
+import { VIDEO_BRIEF_CONFIG } from '../pipeline/config.js';
 
 // ─── VE-005 Nova Harmon (Balancer) ──────────────────────────
 
@@ -38,6 +39,33 @@ export const ChloeOutputSchema = z.object({
   description: z.string().min(30).max(160),
 });
 export type ChloeOutput = z.infer<typeof ChloeOutputSchema>;
+
+// ─── VE-009 Runa Vogel (Briefer) ────────────────────────────
+
+/**
+ * The content half of a short-video brief. Deliberately five fields and
+ * no markdown: the heading structure, the title prefix, and the target
+ * duration are rendered from config by `src/lib/pipeline/video-brief.ts`.
+ *
+ * The point bounds come from the config so the same numbers are not
+ * restated here and in the renderer (INV-001).
+ */
+export const RunaOutputSchema = z.object({
+  /** Video title *without* the `動画：` prefix — the renderer adds it. */
+  video_title: z.string().min(8).max(50),
+  /** What the video is about, in 1-2 sentences. */
+  theme: z.string().min(20).max(300),
+  /** The beats of the script, one idea per entry, no bullet characters. */
+  points: z
+    .array(z.string().min(10).max(120))
+    .min(VIDEO_BRIEF_CONFIG.minPoints)
+    .max(VIDEO_BRIEF_CONFIG.maxPoints),
+  /** How it should sound. */
+  tone: z.string().min(15).max(200),
+  /** What the images should and should not show. */
+  visual_direction: z.string().min(30).max(400),
+});
+export type RunaOutput = z.infer<typeof RunaOutputSchema>;
 
 // ─── Shared theme constants ─────────────────────────────────
 

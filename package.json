@@ -17,6 +17,8 @@
     "gate:eval": "bun scripts/gate-eval.mjs",
     "lint:content": "bun scripts/verify.mjs --quick",
     "auto-post": "bun scripts/auto-post.mjs",
+    "video:brief": "bun scripts/linear-video-brief.mjs",
+    "video:brief:dry": "bun scripts/linear-video-brief.mjs --dry-run",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",
     "gen:resume": "bun scripts/pipeline-resume.mjs",
     "analyze:themes": "bun scripts/analyze-themes.mjs",

@@ -13,6 +13,12 @@ jobs:
   create-post:
     runs-on: ubuntu-latest
 
+    # Bound at job level so a step's `if:` can test whether the optional
+    # cross-repo token exists — the `secrets` context is not available in
+    # `if`, but `env` is.
+    env:
+      VAIZ_DISPATCH_TOKEN: ${{ secrets.VAIZ_DISPATCH_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,3 +56,59 @@ jobs:
           git config --local user.name "Mina Eureka Ernst [Bot]"
           git add src/content/posts/*.md docs/agent-runs/
           git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)
+
+      # ── Phase μ — hand the article to VAIZ through Linear ──────
+      #
+      # VE-009 turns the article into a short-video brief and files it as
+      # a Linear issue in Todo + agent-ready; VAIZ's video-loop claims it
+      # and attaches the rendered video back onto the same issue.
+      #
+      # continue-on-error: the article is already written, verified and
+      # pushed by this point. A Linear outage must not turn a good post
+      # into a red build. The script itself refuses to file a brief that
+      # fails its checks, so "no issue" is always the safe outcome.
+      - name: File a video brief in Linear (VE-009 Runa)
+        id: brief
+        continue-on-error: true
+        env:
+          LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: bun run video:brief
+
+      # Runs unconditionally because the ledger is written on two paths:
+      # a new brief, and the repair path where an issue already existed in
+      # Linear but the ledger had lost it. `git diff --staged --quiet`
+      # makes this a no-op the rest of the time.
+      #
+      # ISSUE_KEY goes through env rather than `${{ }}` inside the script:
+      # it is a value returned by an external API, and interpolating one
+      # straight into a shell line is how that API gets to run commands.
+      - name: Commit the brief ledger
+        if: always()
+        env:
+          ISSUE_KEY: ${{ steps.brief.outputs.issue_key }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Mina Eureka Ernst [Bot]"
+          git add data/video-briefs.json
+          git diff --staged --quiet || (git commit -m "chore: 動画ブリーフ台帳を更新${ISSUE_KEY:+ (${ISSUE_KEY})}" && git push)
+
+      # Optional: wake VAIZ immediately instead of waiting for its 22:00
+      # UTC cron. Without VAIZ_DISPATCH_TOKEN this step is skipped and the
+      # cron still picks the brief up — the nudge is an optimisation, not
+      # a dependency.
+      - name: Nudge VAIZ to pick it up now
+        if: steps.brief.outputs.created == 'true' && env.VAIZ_DISPATCH_TOKEN != ''
+        run: |
+          set -euo pipefail
+          curl -sS -f -X POST \
+            -H "Authorization: Bearer $VAIZ_DISPATCH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository_owner }}/VAIZ/dispatches \
+            -d '{"event_type":"video-brief-ready"}'
+          echo "Dispatched video-brief-ready to VAIZ."

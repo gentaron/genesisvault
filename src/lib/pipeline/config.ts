@@ -103,6 +103,45 @@ export const ReviewConfigSchema = z.object({
   rubric: z.array(RubricCriterionSchema).min(1),
 });
 
+/**
+ * Turning a published article into a short-video brief for Linear.
+ *
+ * The scene/duration numbers are not free parameters: VAIZ's planner
+ * (`scripts/video/plan.mjs`) rejects a plan outside them, so a brief that
+ * asks for something else is a brief no downstream agent can satisfy.
+ * They live here so the constraint is stated once, next to the reason.
+ */
+export const VideoBriefConfigSchema = z.object({
+  comment: z.string().optional(),
+  /** Linear team key the briefs are filed under. */
+  teamKey: z.string().min(1),
+  /** Label that marks an issue as safe for an agent to start on. */
+  label: z.string().min(1),
+  /** Prefix added to the issue title, e.g. `動画：`. */
+  titlePrefix: z.string().min(1),
+  minSeconds: z.number().int().positive(),
+  maxSeconds: z.number().int().positive(),
+  minScenes: z.number().int().positive(),
+  maxScenes: z.number().int().positive(),
+  /** Bounds on the 「伝えたいこと」 bullet list. */
+  minPoints: z.number().int().positive(),
+  maxPoints: z.number().int().positive(),
+  /**
+   * Backpressure. If this many briefs are already waiting in Todo, stop
+   * filing new ones — the consumer is stuck and a growing queue only
+   * burns free-tier quota on work nobody is watching.
+   */
+  maxQueued: z.number().int().positive(),
+  /**
+   * Longest verbatim run from the article body allowed in a brief.
+   * A brief is a derivation; a brief that copies the article is a copy of
+   * a paywalled body sitting in a third-party tracker (INV-010's spirit).
+   */
+  maxVerbatimChars: z.number().int().positive(),
+  /** Repo-relative ledger of briefs already filed (idempotency record). */
+  ledgerFile: z.string().min(1),
+});
+
 export const PipelineConfigSchema = z.object({
   $schema: z.string().optional(),
   version: z.string(),
@@ -124,6 +163,7 @@ export const PipelineConfigSchema = z.object({
     current: z.array(z.string()),
   }),
   review: ReviewConfigSchema,
+  videoBrief: VideoBriefConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -134,6 +174,7 @@ export type AgentTier = z.infer<typeof AgentTierSchema>;
 export type QualityGateConfig = z.infer<typeof QualityGateSchema>;
 export type ReviewConfig = z.infer<typeof ReviewConfigSchema>;
 export type RubricCriterion = z.infer<typeof RubricCriterionSchema>;
+export type VideoBriefConfig = z.infer<typeof VideoBriefConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -247,6 +288,30 @@ export function checkConfigIntegrity(config: PipelineConfig): string[] {
     );
   }
 
+  // ─── Video brief (Linear への受け渡し) ────────────────────────
+  //
+  // An inverted bound here does not fail loudly: it produces briefs that
+  // no downstream planner can satisfy, and the failure surfaces one repo
+  // away, hours later, as an issue bounced back to Todo.
+
+  const vb = config.videoBrief;
+  if (vb.minSeconds >= vb.maxSeconds) {
+    problems.push('videoBrief.minSeconds は maxSeconds より小さい必要があります');
+  }
+  if (vb.minScenes >= vb.maxScenes) {
+    problems.push('videoBrief.minScenes は maxScenes より小さい必要があります');
+  }
+  if (vb.minPoints > vb.maxPoints) {
+    problems.push('videoBrief.minPoints は maxPoints 以下である必要があります');
+  }
+
+  // The brief is filed on behalf of an agent that then runs unattended.
+  // Without a ceiling on the queue, a stuck consumer turns a daily job
+  // into an unbounded backlog nobody is reading.
+  if (vb.maxQueued < 1) {
+    problems.push('videoBrief.maxQueued は 1 以上である必要があります（背圧が無効になります）');
+  }
+
   return problems;
 }
 
@@ -280,3 +345,5 @@ export function agentsInOrder(): AgentDef[] {
 export function getAgent(agentId: string): AgentDef | undefined {
   return PIPELINE_CONFIG.agents.find((a) => a.id === agentId);
 }
+
+export const VIDEO_BRIEF_CONFIG: VideoBriefConfig = PIPELINE_CONFIG.videoBrief;

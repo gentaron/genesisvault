@@ -86,6 +86,27 @@ describe('Phase κ — Declarative Pipeline Config', () => {
       const problems = checkConfigIntegrity(broken);
       expect(problems.some((p) => p.includes('正規表現'))).toBe(true);
     });
+
+    // These bounds are the contract with VAIZ's planner. Inverting one
+    // does not fail here — it fails one repo away, hours later, as briefs
+    // no consumer can satisfy.
+    it('detects inverted video-brief duration bounds', () => {
+      const broken = structuredClone(PIPELINE_CONFIG);
+      broken.videoBrief.minSeconds = broken.videoBrief.maxSeconds + 1;
+      expect(checkConfigIntegrity(broken).some((p) => p.includes('minSeconds'))).toBe(true);
+    });
+
+    it('detects inverted video-brief scene bounds', () => {
+      const broken = structuredClone(PIPELINE_CONFIG);
+      broken.videoBrief.minScenes = broken.videoBrief.maxScenes + 1;
+      expect(checkConfigIntegrity(broken).some((p) => p.includes('minScenes'))).toBe(true);
+    });
+
+    it('detects inverted video-brief point bounds', () => {
+      const broken = structuredClone(PIPELINE_CONFIG);
+      broken.videoBrief.minPoints = broken.videoBrief.maxPoints + 1;
+      expect(checkConfigIntegrity(broken).some((p) => p.includes('minPoints'))).toBe(true);
+    });
   });
 
   describe('committed JSON Schema', () => {
@@ -132,6 +153,25 @@ describe('Phase κ — Declarative Pipeline Config', () => {
       for (const agentId of Object.keys(PIPELINE_CONFIG.routing.byAgent)) {
         expect(getAgent(agentId)).toBeDefined();
       }
+    });
+
+    it('the Runa output schema takes its point bounds from the config', async () => {
+      const { RunaOutputSchema } = await import('../src/lib/agents/schemas');
+      const point = 'これは十文字以上ある項目です';
+      const tooFew = Array(PIPELINE_CONFIG.videoBrief.minPoints - 1).fill(point);
+      const tooMany = Array.from(
+        { length: PIPELINE_CONFIG.videoBrief.maxPoints + 1 },
+        (_, i) => `${point}${i}`,
+      );
+      const base = {
+        video_title: 'エージェントを止める場所を決める',
+        theme: 'AIエージェントに承認ゲートが必要になる理由を1本で扱う。',
+        tone: '断定しすぎない一人称で話す。',
+        visual_direction:
+          '抽象寄り。信号機、ゲート、ダムなど流れを制御するもの。暗めの背景に一点だけ色を置く。',
+      };
+      expect(RunaOutputSchema.safeParse({ ...base, points: tooFew }).success).toBe(false);
+      expect(RunaOutputSchema.safeParse({ ...base, points: tooMany }).success).toBe(false);
     });
   });
 });
