@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import crypto from 'crypto';
 
 // ─── Replicate hmacSign from unlock.ts for testing ──────────────
@@ -20,14 +20,22 @@ const RECEIVER = '0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c'.toLowerCase();
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase();
 const PRICE_USDC = 3000000n;
 
-function extractTransferLog(logs: any[], wallet: string): any | undefined {
+/** eth_getTransactionReceipt のログ 1 件（api/_lib/paywall.ts の RpcLog と同形） */
+interface TestRpcLog {
+  address?: string;
+  topics?: string[];
+  data?: string;
+}
+
+function extractTransferLog(logs: TestRpcLog[], wallet: string): TestRpcLog | undefined {
   const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
-  return logs.find((log: any) => {
-    if (log.topics?.[0] !== TRANSFER_TOPIC) return false;
+  return logs.find((log) => {
+    const topics = log.topics ?? [];
+    if (topics[0] !== TRANSFER_TOPIC) return false;
     if (log.address?.toLowerCase() !== USDC) return false;
-    const from = '0x' + (log.topics[1] || '').slice(26);
+    const from = '0x' + (topics[1] || '').slice(26);
     if (from.toLowerCase() !== wallet.toLowerCase()) return false;
-    const to = '0x' + (log.topics[2] || '').slice(26);
+    const to = '0x' + (topics[2] || '').slice(26);
     if (to.toLowerCase() !== RECEIVER) return false;
     const amount = BigInt(log.data || '0x0');
     return amount >= PRICE_USDC;
@@ -78,8 +86,8 @@ describe('Unlock API — Input Validation', () => {
   });
 
   it('rejects null/undefined wallet', () => {
-    expect(validateWallet(null as any)).toBe(false);
-    expect(validateWallet(undefined as any)).toBe(false);
+    expect(validateWallet(null as unknown as string)).toBe(false);
+    expect(validateWallet(undefined as unknown as string)).toBe(false);
   });
 
   it('accepts valid tx hash (66 hex chars with 0x)', () => {

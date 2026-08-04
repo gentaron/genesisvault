@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { buildUSDCTransferData, parseTransferLog, USDC_ADDRESS, RECEIVE_WALLET } from '../src/lib/wallet';
+import { buildUSDCTransferData, parseTransferLog, RECEIVE_WALLET } from '../src/lib/wallet';
 import { encodeUSDCTransfer, USDC_ADDRESS as PAY_USDC, RECEIVER_ADDRESS as PAY_RECEIVER } from '../src/lib/web3/pay';
-import { getWallets, initWalletDiscovery } from '../src/lib/web3/wallets';
+import { getWallets } from '../src/lib/web3/wallets';
 
 describe('Wallet Utilities (legacy compatibility)', () => {
   it('encodes USDC transfer correctly via buildUSDCTransferData', () => {

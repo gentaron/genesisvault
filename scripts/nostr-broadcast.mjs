@@ -237,7 +237,7 @@ async function main() {
   const privkey = NOSTR_PRIVATE_KEY;
   const event = buildNIP23Event(privkey, metadata, body);
   const relays = getRelays();
-  const result = await broadcast(relays, event);
+  await broadcast(relays, event);
 
   // Output npub for reference
   try {

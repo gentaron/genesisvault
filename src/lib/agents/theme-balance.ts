@@ -5,7 +5,7 @@
  * Extracted from shared.ts for testability and CLI access.
  */
 
-import { THEME_KEYWORDS, type ThemeBalance, type ThemePriority } from './shared.js';
+import { THEME_KEYWORDS, type ThemePriority } from './shared.js';
 
 /**
  * Calculate theme weights based on recent article history.

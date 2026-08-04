@@ -1,18 +1,21 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
+import { describe, it, expect } from 'vitest';
 
 // ═══════════════════════════════════════════════════════════════
 // Nostr Broadcast — parseFrontmatter
 // ═══════════════════════════════════════════════════════════════
 
 // Extract parseFrontmatter from nostr-broadcast.mjs logic for testing
-function parseFrontmatter(content: string): { metadata: Record<string, any>; body: string } {
+// frontmatter の値は文字列 (title/date/description) か文字列配列 (tags/keywords) の
+// どちらかしか作られない。any ではなくその union で受ける。
+type FrontmatterValue = string | string[];
+
+function parseFrontmatter(
+  content: string,
+): { metadata: Record<string, FrontmatterValue>; body: string } {
   const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!match) return { metadata: {}, body: content };
 
-  const metadata: Record<string, any> = {};
+  const metadata: Record<string, FrontmatterValue> = {};
   const fm = match[1];
   const body = match[2].trim();
 

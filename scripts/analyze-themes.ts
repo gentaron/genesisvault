@@ -12,7 +12,9 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const ROOT_DIR = path.join(__dirname, '..', '..');
+// scripts/ の 1 つ上がリポジトリルート。他のスクリプト (auto-post / build-search /
+// linear-video-brief) と同じ数え方。'..' を 2 つ重ねるとリポジトリの外を指す。
+const ROOT_DIR = path.join(__dirname, '..');
 const POSTS_DIR = path.join(ROOT_DIR, 'src', 'content', 'posts');
 
 async function main() {
@@ -22,7 +24,9 @@ async function main() {
   const files = await fs.readdir(POSTS_DIR);
   const mdFiles = files.filter(f => f.endsWith('.md'));
 
-  const recentArticles: { title: string; tags?: string[] } = [];
+  // getThemeDistribution が受け取るのは配列。`[]` を落とすと
+  // 「オブジェクト型に配列を代入」で型エラーになる。
+  const recentArticles: { title: string; tags?: string[] }[] = [];
   for (const file of mdFiles) {
     const raw = await fs.readFile(path.join(POSTS_DIR, file), 'utf-8');
     const titleMatch = raw.match(/^title:\s*"?([^"\n]+)"?\s*$/m);

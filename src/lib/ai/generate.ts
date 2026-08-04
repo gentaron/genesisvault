@@ -15,6 +15,14 @@ import { buildProviderChain } from './providers.js';
 import { getAgentRoute, orderProvidersForAgent } from './routing.js';
 import { recordTelemetry } from './telemetry.js';
 
+/**
+ * fetch レベルの失敗に HTTP ステータスを載せて投げ直すためのエラー型。
+ * 呼び出し側は 429 (レート制限) だけを再試行対象として見分ける。
+ */
+interface HttpError extends Error {
+  status?: number;
+}
+
 // ─── Result types ───────────────────────────────────────────────
 
 export interface FallbackResult<T> {
@@ -204,15 +212,17 @@ export async function callGeminiDirect(
         });
         if (!res.ok) {
           const errText = await res.text();
-          const error = new Error(`Gemini API error (${res.status}): ${errText.substring(0, 200)}`);
-          (error as any).status = res.status;
+          const error: HttpError = new Error(
+            `Gemini API error (${res.status}): ${errText.substring(0, 200)}`,
+          );
+          error.status = res.status;
           throw error;
         }
         const json = await res.json();
         const text = json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
         if (text) return text.trim();
-      } catch (err: any) {
-        if (err.status === 429 && attempt < maxRetries) {
+      } catch (err) {
+        if ((err as HttpError).status === 429 && attempt < maxRetries) {
           const delay = baseDelay * Math.pow(2, attempt);
           await new Promise(r => setTimeout(r, delay));
           continue;

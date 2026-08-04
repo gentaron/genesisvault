@@ -73,7 +73,9 @@ describe('Theme Balance Module', () => {
       const savingsScore = weights.find(w => w.theme === '貯金・節約')?.score;
       const investmentScore = weights.find(w => w.theme === '投資・資産形成')?.score;
       // Only one theme counted (貯金 comes first in keywords check)
-      expect(savingsScore + investmentScore).toBe(3); // 1 * 3
+      expect(savingsScore).toBeDefined();
+      expect(investmentScore).toBeDefined();
+      expect((savingsScore ?? 0) + (investmentScore ?? 0)).toBe(3); // 1 * 3
     });
   });
 

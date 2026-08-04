@@ -102,29 +102,137 @@ jobs:
           echo "| Paywall Gate | ${{ job.status == 'success' && 'OK (402)' || 'FAILED' }} |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Timestamp | $(date -u +'%Y-%m-%d %H:%M UTC') |" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Create issue on failure
+      # ── 障害通知 ────────────────────────────────────────────
+      #
+      # 6 時間ごとに走るジョブなので、失敗のたびに新しい Issue を立てると
+      # 一度の障害が放置されただけで Issue が数十件積み上がる。実際、この
+      # 方式で 194 件が滞留した（すべて同一障害の再通知）。
+      #
+      # そこで「未解決の障害 = 1 Issue」に集約する:
+      #   - 失敗時: 既存の open な healthcheck Issue があれば本文を最新化。
+      #             無ければ 1 件だけ作る。コメントは 24 時間に 1 回まで。
+      #   - 成功時: open な healthcheck Issue を自動クローズする。
+      #
+      # 後者は元の Issue 本文が "It will be auto-resolved once the next
+      # healthcheck passes" と書いておきながら実装されていなかった挙動で、
+      # 滞留の直接の原因だった。
+      #
+      # 第三者アクション (dacbd/create-issue-action@main) をやめて公式の
+      # actions/github-script に置き換えたのは、issues:write を持つ
+      # ワークフローが可変ブランチ参照の外部アクションを走らせていたため。
+      - name: Open or refresh the healthcheck issue
         if: failure()
-        uses: dacbd/create-issue-action@main
+        uses: actions/github-script@v7
+        env:
+          DATE_TAG: ${{ env.DATE_TAG }}
+          LATEST_AGE_HOURS: ${{ env.LATEST_AGE_HOURS }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Healthcheck failed — ${{ env.DATE_TAG }}"
-          body: |
-            ## Genesis Vault Healthcheck Failure
+          script: |
+            const TITLE = 'Healthcheck failing — Genesis Vault';
+            const COMMENT_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const dateTag = process.env.DATE_TAG || new Date().toISOString();
+            const age = process.env.LATEST_AGE_HOURS || 'unknown';
 
-            **Timestamp**: ${{ env.DATE_TAG }}
-            **Workflow run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            const body = [
+              '## Genesis Vault Healthcheck Failure',
+              '',
+              `**最終失敗**: ${dateTag}`,
+              `**最新の実行**: ${runUrl}`,
+              `**最新記事の経過時間**: ${age} 時間`,
+              '',
+              '### 確認する順番',
+              '1. **Vercel status**: https://www.vercel-status.com',
+              '2. **最新デプロイ**: Vercel dashboard',
+              '3. **自動投稿**: 11:30 UTC の daily post パイプラインが走ったか',
+              '4. **API キー**: AI プロバイダーのレート上限を超えていないか',
+              '5. **パイプライン状態**: `.pipeline-state.json` が詰まっていないか',
+              '',
+              '詳細な復旧手順は `docs/runbooks/` を参照。',
+              '',
+              '---',
+              '*この Issue はヘルスチェックが自動で開き、**次に成功した時点で自動クローズされます**。*',
+              '*障害が続く間は新しい Issue を作らず、この Issue の本文を最新化します。*',
+            ].join('\n');
 
-            ### What to check:
-            1. **Vercel status**: [vercel-status.com](https://www.vercel-status.com)
-            2. **Latest deployment**: [Vercel dashboard](https://vercel.com)
-            3. **Auto-post workflow**: Check if the daily post pipeline ran at 11:30 UTC
-            4. **API keys**: Verify AI provider rate limits haven't been exceeded
-            5. **Pipeline state**: Check for stuck `.pipeline-state.json` in the repo
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: 'healthcheck',
+              per_page: 100,
+            });
 
-            ### Latest article age: ${{ env.LATEST_AGE_HOURS || 'unknown' }} hours
+            if (open.length === 0) {
+              const { data: created } = await github.rest.issues.create({
+                ...context.repo,
+                title: TITLE,
+                body,
+                labels: ['healthcheck', 'bug'],
+                assignees: ['gentaron'],
+              });
+              core.info(`Opened healthcheck issue #${created.number}`);
+              return;
+            }
 
-            ---
-            *This issue was auto-created by the healthcheck workflow.*
-            *It will be auto-resolved once the next healthcheck passes.*
-          labels: healthcheck,bug
-          assignees: gentaron
+            // 既に開いているものに集約する。複数残っていても最も新しい 1 件だけ更新する。
+            const issue = open[0];
+            await github.rest.issues.update({
+              ...context.repo,
+              issue_number: issue.number,
+              body,
+            });
+
+            const age_ms = Date.now() - new Date(issue.updated_at).getTime();
+            if (age_ms >= COMMENT_COOLDOWN_MS) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: issue.number,
+                body: `まだ失敗しています (${dateTag})。最新の実行: ${runUrl}`,
+              });
+            }
+            core.info(`Refreshed healthcheck issue #${issue.number} (open: ${open.length})`);
+
+      - name: Close the healthcheck issue on recovery
+        if: success()
+        uses: actions/github-script@v7
+        env:
+          DATE_TAG: ${{ env.DATE_TAG }}
+        with:
+          script: |
+            const dateTag = process.env.DATE_TAG || new Date().toISOString();
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: 'healthcheck',
+              per_page: 100,
+            });
+
+            if (open.length === 0) {
+              core.info('No open healthcheck issue to close.');
+              return;
+            }
+
+            // 回復の経緯は最新の 1 件にだけ書く。過去に溜まった同一障害の
+            // 再通知にまで一斉コメントすると、通知が数百件飛ぶだけで情報量がない。
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: open[0].number,
+              body: [
+                `ヘルスチェックが回復しました (${dateTag})。実行: ${runUrl}`,
+                open.length > 1
+                  ? `\n同一障害の通知として開いていた ${open.length} 件をまとめてクローズします。`
+                  : '',
+              ].join(''),
+            });
+
+            for (const issue of open) {
+              await github.rest.issues.update({
+                ...context.repo,
+                issue_number: issue.number,
+                state: 'closed',
+                state_reason: 'completed',
+              });
+              core.info(`Closed healthcheck issue #${issue.number}`);
+            }

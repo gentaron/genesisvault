@@ -195,8 +195,7 @@ async function extractArticleSummaries() {
       continue;
     }
     const titleRegex = /<title>\s*<!\[CDATA\[\s*(.+?)\s*\]\]>\s*<\/title>/g;
-    let match;
-    while ((match = titleRegex.exec(raw)) !== null) {
+    for (let match = titleRegex.exec(raw); match !== null; match = titleRegex.exec(raw)) {
       const title = match[1].trim();
       if (title && title !== 'Genesis Vault - 旧Gens Notes') {
         summaries.push(title);
@@ -217,8 +216,7 @@ async function extractStyleSamples(maxSamples = 3) {
       continue;
     }
     const contentRegex = /<content:encoded>\s*<!\[CDATA\[\s*([\s\S]*?)\s*\]\]>\s*<\/content:encoded>/g;
-    let match;
-    while ((match = contentRegex.exec(raw)) !== null) {
+    for (let match = contentRegex.exec(raw); match !== null; match = contentRegex.exec(raw)) {
       const text = match[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 500);
       if (text.length > 100) samples.push(text);
     }
@@ -237,8 +235,7 @@ async function extractArticles() {
       continue;
     }
     const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-    let match;
-    while ((match = itemRegex.exec(raw)) !== null) {
+    for (let match = itemRegex.exec(raw); match !== null; match = itemRegex.exec(raw)) {
       const item = match[1];
       const titleMatch = item.match(/<title>\s*<!\[CDATA\[\s*(.+?)\s*\]\]>\s*<\/title>/);
       const contentMatch = item.match(/<content:encoded>\s*<!\[CDATA\[\s*([\s\S]*?)\s*\]\]>\s*<\/content:encoded>/);

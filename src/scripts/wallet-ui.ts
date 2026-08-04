@@ -27,15 +27,21 @@ import {
   type WalletProvider,
 } from '../lib/web3/pay';
 
+/**
+ * EIP-1193 のプロバイダーエラー。`code` は標準の Error には無いが、
+ * ウォレット拡張は必ず載せてくる（4001 = ユーザーが要求を拒否）。
+ */
+interface ProviderRpcError extends Error {
+  code?: number;
+}
+
 // ─── Constants ─────────────────────────────────────────────────
 const STORAGE_KEY = 'gv_paid_status';
 const FREE_LIMIT = 2;
-const MAINNET_CHAIN_ID = '0x1';
 
 // ─── State ─────────────────────────────────────────────────────
 let paymentInProgress = false;
 let currentProvider: WalletProvider | null = null;
-let currentAccount: string | null = null;
 let currentCleanupFns: (() => void)[] = [];
 
 // ─── Helpers ───────────────────────────────────────────────────
@@ -79,7 +85,11 @@ function shortAddress(addr: string): string {
 
 // ─── Payment Logic ─────────────────────────────────────────────
 
-function showPayError(payBtn: HTMLElement | null, errEl: HTMLElement | null, msg: string): void {
+function showPayError(
+  payBtn: HTMLButtonElement | null,
+  errEl: HTMLElement | null,
+  msg: string,
+): void {
   paymentInProgress = false;
   if (errEl) {
     errEl.textContent = msg;
@@ -116,12 +126,12 @@ async function markPaid(wallet: string, txHash: string): Promise<void> {
       );
       applyPaywall();
     } else {
-      const payBtn = document.getElementById('btn-pay');
+      const payBtn = document.getElementById('btn-pay') as HTMLButtonElement | null;
       const errEl = document.getElementById('pay-error');
       showPayError(payBtn, errEl, `\u30b5\u30fc\u30d0\u30fc\u691c\u8a3c\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ${data.error || '\u4e0d\u660e\u306a\u30a8\u30e9\u30fc'}`);
     }
   } catch {
-    const payBtn = document.getElementById('btn-pay');
+    const payBtn = document.getElementById('btn-pay') as HTMLButtonElement | null;
     const errEl = document.getElementById('pay-error');
     showPayError(payBtn, errEl, '\u30b5\u30fc\u30d0\u30fc\u306b\u63a5\u7d9a\u3067\u304d\u307e\u305b\u3093\u3002\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u3092\u78ba\u8a8d\u3057\u3066\u518d\u8a66\u884c\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
   }
@@ -130,7 +140,7 @@ async function markPaid(wallet: string, txHash: string): Promise<void> {
 async function handlePayment(addr: string): Promise<void> {
   if (paymentInProgress || !currentProvider) return;
 
-  const payBtn = document.getElementById('btn-pay');
+  const payBtn = document.getElementById('btn-pay') as HTMLButtonElement | null;
   const errEl = document.getElementById('pay-error');
   if (!payBtn || !errEl) return;
 
@@ -171,7 +181,9 @@ async function handlePayment(addr: string): Promise<void> {
 
 function setupWalletListeners(provider: WalletProvider): void {
   // Clean up previous listeners
-  currentCleanupFns.forEach((fn) => fn());
+  currentCleanupFns.forEach((fn) => {
+      fn();
+    });
   currentCleanupFns = [];
 
   // Account changes
@@ -179,12 +191,12 @@ function setupWalletListeners(provider: WalletProvider): void {
     if (!accounts) {
       // User disconnected their wallet — clear state and reset UI
       currentProvider = null;
-      currentAccount = null;
-      currentCleanupFns.forEach((fn) => fn());
+      currentCleanupFns.forEach((fn) => {
+      fn();
+    });
       currentCleanupFns = [];
       renderConnectButton();
     } else if (accounts[0]) {
-      currentAccount = accounts[0];
       renderWalletPanel(accounts[0]);
     }
   });
@@ -241,8 +253,9 @@ function renderWalletPanel(addr: string): void {
 
   document.getElementById('btn-disconnect')?.addEventListener('click', () => {
     currentProvider = null;
-    currentAccount = null;
-    currentCleanupFns.forEach((fn) => fn());
+    currentCleanupFns.forEach((fn) => {
+      fn();
+    });
     currentCleanupFns = [];
     renderConnectButton();
   });
@@ -334,11 +347,11 @@ async function connectToWallet(wallet: EIP6963ProviderDetail): Promise<void> {
     }
 
     currentProvider = wallet.provider as WalletProvider;
-    currentAccount = addr;
     renderWalletPanel(addr);
     setupWalletListeners(wallet.provider as WalletProvider);
   } catch (err: unknown) {
-    if (err instanceof Error && err.code !== 4001) {
+    // 4001 = EIP-1193 の「ユーザーが要求を拒否」。拒否は失敗ではないので黙って返す。
+    if (err instanceof Error && (err as ProviderRpcError).code !== 4001) {
       alert('\u30a6\u30a9\u30ec\u30c3\u30c8\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u518d\u8a66\u884c\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
     }
   }
@@ -454,7 +467,9 @@ function init(): void {
   // Cleanup on page unload
   document.addEventListener('astro:before-swap', () => {
     destroyWalletDiscovery();
-    currentCleanupFns.forEach((fn) => fn());
+    currentCleanupFns.forEach((fn) => {
+      fn();
+    });
   });
 }
 

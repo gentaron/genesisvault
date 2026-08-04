@@ -428,6 +428,31 @@ Mina のペルソナに基づくテーマ：
 
 ---
 
+## Issue の読み方
+
+**このリポジトリの Issue は、大半が人間の書いたものではありません。**
+6 時間ごとのヘルスチェックが本番サイトを検査し、失敗すると Issue を開きます。
+
+human が扱うべきものだけを見るには、`healthcheck` ラベルを除外してください。
+
+```
+is:issue is:open -label:healthcheck
+```
+
+| 出どころ | ラベル | 扱い |
+|---|---|---|
+| ヘルスチェック失敗 | `healthcheck` | 運用イベント。未解決の障害につき **1 件に集約**され、回復時に自動クローズ |
+| バグ報告 / 機能要求 | `bug` / `enhancement` | 人間が立てたもの。手動トリアージ |
+| 依存更新 | `dependencies` / `security` | Renovate。`security` は automerge |
+
+2026 年 6 月時点で open な Issue が 194 件ありましたが、これは 194 個の問題ではなく、
+**1 個の障害が 6 時間おきに再通知され続けた結果**です（当時は失敗のたびに新規 Issue を
+作り、回復時に閉じる処理がありませんでした）。現在は重複排除と自動クローズを実装済みです。
+
+詳細は [`docs/runbooks/issue-triage.md`](./docs/runbooks/issue-triage.md)。
+
+---
+
 ## 関連リポジトリ
 
 | リポジトリ | 説明 |
@@ -441,7 +466,7 @@ Mina のペルソナに基づくテーマ：
 
 ## ライセンス
 
-MIT License
+[MIT License](LICENSE) — 全文はリポジトリ直下の `LICENSE` を参照。
 
 ---
 

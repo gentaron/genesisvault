@@ -1,5 +1,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+/**
+ * window を差し替えるための globalThis ビュー。
+ * `globalThis as any` を書かずに済ませるための最小の型。
+ */
+const globalWithWindow = globalThis as { window?: unknown };
+
+/**
+ * テストが登録・発火させるイベントハンドラ。
+ * 引数の形は各テストが作る偽イベント側で決まるので unknown で受ける
+ * （`Function` は呼び出しシグネチャを持たない banned type）。
+ */
+type TestEventHandler = (event: unknown) => void;
+
+
 // ═══════════════════════════════════════════════════════════════
 // EIP-6963 Wallet Discovery — initWalletDiscovery
 // ═══════════════════════════════════════════════════════════════
@@ -17,7 +31,7 @@ describe('EIP-6963 Wallet Discovery — initWalletDiscovery', () => {
   it('registers announceProvider listener', async () => {
     const addEventListener = vi.fn();
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener,
       dispatchEvent,
     };
@@ -35,12 +49,12 @@ describe('EIP-6963 Wallet Discovery — initWalletDiscovery', () => {
   });
 
   it('collects announced wallets and deduplicates by UUID', async () => {
-    const listeners: Map<string, Function> = new Map();
-    const addEventListener = vi.fn((event: string, handler: Function) => {
+    const listeners: Map<string, TestEventHandler> = new Map();
+    const addEventListener = vi.fn((event: string, handler: TestEventHandler) => {
       listeners.set(event, handler);
     });
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener,
       dispatchEvent,
     };
@@ -68,12 +82,12 @@ describe('EIP-6963 Wallet Discovery — initWalletDiscovery', () => {
   });
 
   it('ignores duplicate announcements by UUID', async () => {
-    const listeners: Map<string, Function> = new Map();
-    const addEventListener = vi.fn((event: string, handler: Function) => {
+    const listeners: Map<string, TestEventHandler> = new Map();
+    const addEventListener = vi.fn((event: string, handler: TestEventHandler) => {
       listeners.set(event, handler);
     });
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener,
       dispatchEvent,
     };
@@ -94,18 +108,18 @@ describe('EIP-6963 Wallet Discovery — initWalletDiscovery', () => {
   });
 
   it('no-op when window is undefined (SSR)', async () => {
-    delete (globalThis as any).window;
+    delete globalWithWindow.window;
     const { initWalletDiscovery } = await import('../src/lib/web3/wallets');
     expect(() => initWalletDiscovery()).not.toThrow();
   });
 
   it('sorts wallets by name alphabetically', async () => {
-    const listeners: Map<string, Function> = new Map();
-    const addEventListener = vi.fn((event: string, handler: Function) => {
+    const listeners: Map<string, TestEventHandler> = new Map();
+    const addEventListener = vi.fn((event: string, handler: TestEventHandler) => {
       listeners.set(event, handler);
     });
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener,
       dispatchEvent,
     };
@@ -143,13 +157,13 @@ describe('EIP-6963 Wallet Discovery — destroyWalletDiscovery', () => {
   });
 
   it('removes the announceProvider listener', async () => {
-    const listeners: Map<string, Function> = new Map();
-    const addEventListener = vi.fn((event: string, handler: Function) => {
+    const listeners: Map<string, TestEventHandler> = new Map();
+    const addEventListener = vi.fn((event: string, handler: TestEventHandler) => {
       listeners.set(event, handler);
     });
     const removeEventListener = vi.fn();
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener,
       removeEventListener,
       dispatchEvent,
@@ -182,7 +196,7 @@ describe('EIP-6963 Wallet Discovery — getWallets fallback', () => {
 
   it('falls back to window.ethereum if no EIP-6963 wallets announced', async () => {
     const dispatchEvent = vi.fn();
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent,
       ethereum: {
@@ -202,7 +216,7 @@ describe('EIP-6963 Wallet Discovery — getWallets fallback', () => {
   });
 
   it('uses "Browser Wallet" name for non-MetaMask providers', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
       ethereum: {
@@ -219,7 +233,7 @@ describe('EIP-6963 Wallet Discovery — getWallets fallback', () => {
   });
 
   it('returns empty array when no wallets available', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
       // no ethereum property
@@ -243,7 +257,7 @@ describe('EIP-6963 Wallet Discovery — hasWalletProvider', () => {
   });
 
   it('returns true when wallets are available', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
       ethereum: { request: vi.fn() },
@@ -255,7 +269,7 @@ describe('EIP-6963 Wallet Discovery — hasWalletProvider', () => {
   });
 
   it('returns false when no wallets available', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
     };
@@ -276,7 +290,7 @@ describe('EIP-6963 Wallet Discovery — getWalletByName', () => {
   });
 
   it('finds wallet by exact name (case-insensitive)', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
       ethereum: { request: vi.fn(), isMetaMask: true },
@@ -290,7 +304,7 @@ describe('EIP-6963 Wallet Discovery — getWalletByName', () => {
   });
 
   it('returns undefined for non-existent wallet', async () => {
-    (globalThis as any).window = {
+    globalWithWindow.window = {
       addEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
       ethereum: { request: vi.fn() },

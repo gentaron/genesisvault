@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import type { Address } from 'viem';
 
 // ═══════════════════════════════════════════════════════════════
 // Web3 Pay — encodeUSDCTransfer & ensureMainnet
@@ -7,40 +8,40 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 describe('Web3 Pay — encodeUSDCTransfer', () => {
   it('encodes ERC-20 transfer calldata with correct selector', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as any, 3);
+    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as Address, 3);
     expect(data.startsWith('0xa9059cbb')).toBe(true);
   });
 
   it('encodes 3 USDC correctly (3 * 10^6 = 3000000)', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as any, 3);
+    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as Address, 3);
     const amountHex = (3000000n).toString(16).padStart(64, '0');
     expect(data).toContain(amountHex);
   });
 
   it('encodes 1 USDC correctly', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as any, 1);
+    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as Address, 1);
     const amountHex = (1000000n).toString(16).padStart(64, '0');
     expect(data).toContain(amountHex);
   });
 
   it('encodes 10 USDC correctly (10 * 10^6 = 10000000)', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as any, 10);
+    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as Address, 10);
     const amountHex = (10000000n).toString(16).padStart(64, '0');
     expect(data).toContain(amountHex);
   });
 
   it('calldata length is 138 chars (0x + 4 + 32 + 32)', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as any, 3);
+    const data = encodeUSDCTransfer('0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c' as Address, 3);
     expect(data.length).toBe(138);
   });
 
   it('encodes correct recipient address', async () => {
     const { encodeUSDCTransfer } = await import('../src/lib/web3/pay');
-    const addr = '0x1234567890abcdef1234567890abcdef12345678' as any;
+    const addr = '0x1234567890abcdef1234567890abcdef12345678' as Address;
     const data = encodeUSDCTransfer(addr, 3);
     const addrHex = '0x1234567890abcdef1234567890abcdef12345678'.toLowerCase().replace('0x', '').padStart(64, '0');
     expect(data).toContain(addrHex);
@@ -105,7 +106,7 @@ describe('Web3 Pay — ensureMainnet', () => {
 describe('Web3 Pay — payThreeUsdc', () => {
   it('sends transaction and returns hash', async () => {
     const { payThreeUsdc } = await import('../src/lib/web3/pay');
-    const expectedHash = '0x' + 'ab'.repeat(32) as any;
+    const expectedHash = ('0x' + 'ab'.repeat(32)) as `0x${string}`;
     const mockProvider = {
       request: vi.fn()
         .mockResolvedValueOnce('0x1')             // chainId = mainnet

@@ -264,7 +264,6 @@ export function checkConfigIntegrity(config: PipelineConfig): string[] {
   const writerRoute = config.routing.byAgent['VE-002'];
   const editorRoute = config.routing.byAgent['VE-006'];
   if (writerRoute && editorRoute) {
-    const chainRank = new Map(config.providers.chain.map((p, i) => [p.name, i]));
     const writerTop = writerRoute.preferredProviders[0];
     const editorTop = editorRoute.preferredProviders[0];
     if (writerTop && editorTop && writerTop !== editorTop) {

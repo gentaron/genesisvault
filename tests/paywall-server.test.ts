@@ -9,7 +9,11 @@ async function hmacSign(data: string): Promise<string> {
   return sig;
 }
 
-async function hmacVerify(cookieHeader: string | null): { valid: boolean; wallet?: string } {
+// NOTE: これは本番実装 (api/_lib/paywall.ts の hmacVerify) の写しであって、
+// 本番コードそのものではない。両者がずれるとこのテストは通ったまま本番が壊れる。
+async function hmacVerify(
+  cookieHeader: string | null,
+): Promise<{ valid: boolean; wallet?: string }> {
   if (!cookieHeader) return { valid: false };
   const match = cookieHeader.match(/gv_unlock=([^;]+)/);
   if (!match) return { valid: false };
