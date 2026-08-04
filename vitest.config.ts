@@ -47,7 +47,11 @@ export default defineConfig({
       },
     },
     // Vitest 4 pool options
+    //
+    // `maxForks` は Vitest 4 の設定キーとして存在しない（型定義にも無い）ため、
+    // ここに書いてあっても黙って無視されていた。並列度を実際に絞るキーは
+    // `maxWorkers`。意図（コア数の 50% まで）はそのままに、効くキーへ直す。
     pool: 'forks',
-    maxForks: '50%',
+    maxWorkers: '50%',
   },
 });

@@ -14,8 +14,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, '..', '..');
 
-// Agent definitions
-const agents = [
+// Agent definitions.
+//
+// currentVersion / versionCount は下のループで prompts/ を読んで埋める。
+// 型に optional として宣言しておくことで、代入側も参照側も `as any` なしで済む
+// （以前は代入のたびに any へ逃がしたうえ、自己代入する no-op が 2 行残っていた）。
+interface AgentCard {
+  id: string;
+  name: string;
+  role: string;
+  emoji: string;
+  description: string;
+  promptDir: string;
+  currentVersion?: string;
+  versionCount?: number;
+}
+
+const agents: AgentCard[] = [
   {
     id: 'VE-004',
     name: 'Vera Holt',
@@ -95,8 +110,6 @@ for (const agent of agents) {
     agent.currentVersion = 'N/A';
     agent.versionCount = 0;
   }
-  (agent as any).currentVersion = (agent as any).currentVersion;
-  (agent as any).versionCount = (agent as any).versionCount;
 }
 
 // Read recent agent runs from telemetry
@@ -115,7 +128,6 @@ try {
   // No telemetry data yet
 }
 
-const buildTime = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
 ---
 
 <BaseLayout title="AI Agents — Genesis Vault">
@@ -161,8 +173,8 @@ const buildTime = new Date().toISOString().replace('T', ' ').substring(0, 19) + 
               </span>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 0.75rem; color: var(--color-gray-dark);">Prompt v{(agent as any).currentVersion}</div>
-              <div style="font-size: 0.7rem; color: var(--color-gray-dark);">{(agent as any).versionCount} versions</div>
+              <div style="font-size: 0.75rem; color: var(--color-gray-dark);">Prompt v{agent.currentVersion}</div>
+              <div style="font-size: 0.7rem; color: var(--color-gray-dark);">{agent.versionCount} versions</div>
             </div>
           </div>
           <p style="margin: 0.75rem 0 0; font-size: 0.9rem; color: var(--color-gray-dark);">

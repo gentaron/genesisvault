@@ -12,6 +12,64 @@
 
 ## [Unreleased]
 
+### Removed
+
+- **デッドコード 58 件を削除。** 未使用の変数・import に加えて、実際に死んでいたもの:
+  - `src/scripts/wallet-ui.ts` の `currentAccount` — 4 箇所で代入されるが一度も読まれない
+    書き込み専用の状態（アドレスは毎回 `renderWalletPanel(addr)` に直接渡している）。
+    未使用の `MAINNET_CHAIN_ID` も削除。
+  - `src/pages/agents.astro` の `(agent as any).currentVersion = (agent as any).currentVersion;`
+    2 行 — `as any` を経由した自己代入で、何もしていなかった。`buildTime` も未使用。
+  - `src/lib/pipeline/config.ts` の `chainRank` — 構築されるが参照されない Map。
+  - `vitest.config.ts` の `maxForks: '50%'` — Vitest 4 に存在しない設定キーで、
+    黙って無視されていた。意図（コア数の 50%）を保ったまま `maxWorkers` に直した。
+
+### Fixed
+
+- **`.mjs` に TypeScript 構文を書いた 2 本のスクリプトが起動すらしなかった問題。**
+  `bun run analyze:themes` と `bun run gen:resume` は `node --check` も `bun` も通らない
+  構文エラーで即死していた（Bun は拡張子を尊重するので `.mjs` では型を剥がさない）。
+  `.mjs` は tsc の対象外でもあるため、型チェックにもかからず誰も気づけなかった。
+  両方を `.ts` にリネームし、`package.json` の呼び出しも合わせた。
+
+  `analyze-themes` にはさらに 2 つの欠陥が隠れていた:
+  - `ROOT_DIR` が `path.join(__dirname, '..', '..')` でリポジトリの外を指していた
+    （他のスクリプトはすべて `'..'` 1 つ）。
+  - 型注釈 `{ title: string; tags?: string[] }` から配列の `[]` が落ちていた。
+
+  修正後、`analyze:themes` は 172 記事のテーマバランスを出力する。
+
+- **`biome check --write` がサイトを壊す問題**（`biome.json` の `overrides`）。
+  Biome 2.x の Astro 対応は frontmatter しか解析しないため、テンプレートからのみ
+  参照される変数と import がすべて「未使用」に見える。`index.astro` の
+  `import BaseLayout` は FIXABLE な削除対象として報告されていた — 適用すれば
+  ページ全体を包むレイアウトが消える。`{age}` `{formattedDate}` `{sortedPosts}` なども
+  `_age` 等へリネームされ、ページは壊れた顔をせず undefined を描画する。
+  `**/*.astro` について `noUnusedVariables` / `noUnusedImports` を off にした
+  （astro ファイルの未使用チェックは `astro check` 側の責務）。詳細は LM-011。
+
+### Changed
+
+- **`any` をリポジトリ全体から排除（36 件 → 0 件）。** 主なもの:
+  - `api/_lib/paywall.ts` — JSON-RPC の応答に `RpcResponse<T>` / `RpcReceipt` / `RpcLog`
+    を与え、`makeRpcCall` をジェネリックにした。支払い検証が依存するフィールドが
+    型として明示される。
+  - `src/lib/ai/generate.ts` — `(error as any).status` を `HttpError` インターフェースに。
+  - `src/lib/agents/runners.ts` / `src/lib/pipeline/rules.ts` — リテラル union 配列の
+    `includes()` を `any` で回避していた箇所を `readonly string[]` への widening に。
+  - `src/pages/agents.astro` — `AgentCard` インターフェースを定義し、代入側・参照側
+    双方の `as any` を不要にした。
+  - テスト群 — `globalThis as any` を型付きビューに、banned type の `Function` を
+    明示的な呼び出しシグネチャに（8 件 → 0 件）。
+- 型エラーを 17 件 → 3 件に削減。残り 3 件は `@ai-sdk/*` が `LanguageModelV3` を返すのに
+  `ai` v5 の `LanguageModel` が `V2` を指している版ずれで、**コード側では直せない**。
+  フォールバック連鎖 5 本のうち 3 本（cerebras / openrouter / huggingface）が該当する。
+  依存の更新方針として判断が要る（LM-003）。
+- 品質ラチェットを締めた: `biomeErrors` 105 → 94、`astroCheckErrors` 17 → 3。
+  残る 94 件は 93 件が純粋な整形（`format` / `organizeImports`）と CSS の parse 1 件。
+- `LANDMINES.md` に LM-011（Biome の autofix が Astro を壊す）と
+  LM-012（`.mjs` に型を書くと誰にも検査されない）を追加。LM-003 / LM-004 を実態に更新。
+
 ### Added
 
 - `LICENSE` (MIT)。README が MIT を宣言していたのに実体がなく、GitHub のライセンス検出も

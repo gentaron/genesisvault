@@ -23,7 +23,6 @@ import type { NovaOutput, LenaOutput, ChloeOutput, RunaOutput } from './schemas.
 import type { ArticleSource } from '../pipeline/video-brief.js';
 import {
   PERSONA,
-  THEME_KEYWORDS,
   pickN,
   pick,
   todayISO,
@@ -106,7 +105,11 @@ ${recentTitlesList}
     });
 
     const selectedTheme = result.value.selected_theme;
-    if (selectedTheme && ALL_THEMES.includes(selectedTheme as any)) {
+    // ALL_THEMES はリテラル union の配列なので、任意の string を渡すと
+    // includes() の引数型で弾かれる。any に逃がす代わりに readonly string[]
+    // へ widening して比較する（実行時の挙動は同じ）。
+    const knownThemes: readonly string[] = ALL_THEMES;
+    if (selectedTheme && knownThemes.includes(selectedTheme)) {
       console.log(`  ✅ 選定テーマ: ${selectedTheme}`);
       console.log(`  💬 理由: ${result.value.reason || '(なし)'}`);
       console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);

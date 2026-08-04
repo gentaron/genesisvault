@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // ─── Schema validation tests ────────────────────────────────
 // Import schemas directly (they don't depend on AI SDK)

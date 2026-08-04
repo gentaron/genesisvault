@@ -9,9 +9,7 @@
  * @module wallet
  */
 
-import { createPublicClient, http, type Address, type Hash } from 'viem';
-import { mainnet } from 'viem/chains';
-import { parseAbi, encodeFunctionData } from 'viem';
+import { encodeFunctionData, parseAbi, type Address } from 'viem';
 
 // Re-export new modular types for backward compatibility
 export { USDC_ADDRESS, RECEIVER_ADDRESS as RECEIVE_WALLET, PRICE_USDC } from './web3/pay';

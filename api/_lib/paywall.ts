@@ -106,13 +106,37 @@ export function hmacVerify(cookieHeader: string | undefined): { valid: boolean; 
 
 // ─── On-chain payment verification ─────────────────────────────
 
-function makeRpcCall(method: string, params: unknown[]) {
+/**
+ * JSON-RPC の応答のうち、このモジュールが実際に読むフィールドだけを型にする。
+ * ノード側は他にも大量のフィールドを返すが、支払い検証が依存しているのは
+ * ここに書いてあるものだけ — 依存範囲を型として明示しておく。
+ */
+interface RpcResponse<T> {
+  result?: T;
+}
+
+/** eth_getTransactionReceipt のログ 1 件 */
+interface RpcLog {
+  address?: string;
+  topics?: string[];
+  data?: string;
+}
+
+/** eth_getTransactionReceipt の結果 */
+interface RpcReceipt {
+  status?: string;
+  to?: string;
+  blockNumber: string;
+  logs?: RpcLog[];
+}
+
+function makeRpcCall<T>(method: string, params: unknown[]): Promise<RpcResponse<T>> {
   const rpcUrl = process.env.ETH_RPC_URL || 'https://ethereum-rpc.publicnode.com';
   return fetch(rpcUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
-  }).then(r => r.json());
+  }).then((r) => r.json() as Promise<RpcResponse<T>>);
 }
 
 export type VerifyResult = { ok: true } | { ok: false; status: number; error: string };
@@ -130,7 +154,7 @@ export type VerifyResult = { ok: true } | { ok: false; status: number; error: st
  *   5. an ERC-20 Transfer log from `wallet` → `RECEIVER` for >= PRICE_USDC
  */
 export async function verifyUsdcPayment(wallet: string, txHash: string): Promise<VerifyResult> {
-  const receiptResp = await makeRpcCall('eth_getTransactionReceipt', [txHash]);
+  const receiptResp = await makeRpcCall<RpcReceipt>('eth_getTransactionReceipt', [txHash]);
   const receipt = receiptResp?.result;
   if (!receipt) {
     return { ok: false, status: 404, error: 'Transaction not found' };
@@ -144,19 +168,20 @@ export async function verifyUsdcPayment(wallet: string, txHash: string): Promise
     return { ok: false, status: 400, error: 'Not a USDC transaction' };
   }
 
-  const blockResp = await makeRpcCall('eth_blockNumber', []);
+  const blockResp = await makeRpcCall<string>('eth_blockNumber', []);
   const currentBlock = BigInt(blockResp?.result || '0x0');
   const txBlock = BigInt(receipt.blockNumber);
   if (currentBlock - txBlock + 1n < 2n) {
     return { ok: false, status: 400, error: 'Insufficient confirmations (need 2)' };
   }
 
-  const transferLog = (receipt.logs || []).find((log: any) => {
-    if (log.topics?.[0] !== TRANSFER_TOPIC) return false;
+  const transferLog = (receipt.logs || []).find((log) => {
+    const topics = log.topics ?? [];
+    if (topics[0] !== TRANSFER_TOPIC) return false;
     if (log.address?.toLowerCase() !== USDC) return false;
-    const from = '0x' + (log.topics[1] || '').slice(26);
+    const from = '0x' + (topics[1] || '').slice(26);
     if (from.toLowerCase() !== wallet.toLowerCase()) return false;
-    const to = '0x' + (log.topics[2] || '').slice(26);
+    const to = '0x' + (topics[2] || '').slice(26);
     if (to.toLowerCase() !== RECEIVER) return false;
     const amount = BigInt(log.data || '0x0');
     return amount >= PRICE_USDC;

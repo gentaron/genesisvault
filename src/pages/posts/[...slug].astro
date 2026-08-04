@@ -21,8 +21,13 @@ const { post, postIndex, isFree } = Astro.props;
 const { title, date, mood, weather, tags, description, keywords, agents, gated } = post.data;
 const isGated = gated !== false && !isFree;
 
-// Only render body component for free (non-gated) posts in the static HTML
-let BodyComponent;
+// Only render body component for free (non-gated) posts in the static HTML.
+//
+// 型は post.render() の戻り値から引く。ここを `let BodyComponent;` と
+// 書くと暗黙の any になり、「ゲート記事の本文を静的出力に含めない」という
+// ペイウォールの前提（docs/security.md, Phase δ）が型の側から支えられなくなる。
+type RenderedContent = Awaited<ReturnType<typeof post.render>>['Content'];
+let BodyComponent: RenderedContent | undefined;
 if (!isGated) {
   const { Content } = await post.render();
   BodyComponent = Content;

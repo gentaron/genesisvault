@@ -123,5 +123,8 @@ export async function loadRules(): Promise<Rules> {
 export function validateCommitType(commitMsg: string, rules: Rules): boolean {
   const match = commitMsg.match(/^(\w+)(?:\(.+\))?:/);
   if (!match) return false;
-  return rules.allowed_commit_types.includes(match[1] as any);
+  // allowed_commit_types はリテラル union の配列。match[1] は任意の string な
+  // ので、any へ逃がす代わりに readonly string[] へ widening して比較する。
+  const allowed: readonly string[] = rules.allowed_commit_types;
+  return allowed.includes(match[1]);
 }
