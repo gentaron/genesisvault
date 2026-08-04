@@ -1,5 +1,12 @@
 {
   "version": 1,
   "comment": "一度 Linear に送った記事の記録。再実行で同じ記事の Issue が二重に生えるのを防ぐ（scripts/linear-video-brief.mjs）。正典は Linear 側の Issue 本文にある gv:source マーカーで、この台帳は速い経路と監査用。",
-  "briefs": []
+  "briefs": [
+    {
+      "slug": "2026-08-04-post-j2vwaj",
+      "issue": "GEN-9",
+      "url": "https://linear.app/gentaron/issue/GEN-9/動画貯金300万達成暗号資産3年目の長期投資戦略",
+      "filedAt": "2026-08-04T13:14:52.774Z"
+    }
+  ]
 }
