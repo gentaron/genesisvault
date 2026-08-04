@@ -29,7 +29,7 @@
 | 0016 | [ADR-0016: 囲い（審査層）— 見逃しを設計で潰す（Phase λ）](../adr/0016-the-enclosure.md) | Accepted | 2026-07-29 |
 | 0017 | [ADR-0017: 記事から動画への受け渡し — Linear を境界にする（Phase μ）](../adr/0017-video-brief-handoff.md) | Accepted | 2026-08-04 |
 
-## Runbook — 手順書（8件）
+## Runbook — 手順書（9件）
 
 壊れたとき・運用するときに読むもの。
 
@@ -37,6 +37,7 @@
 |--------|--------|
 | [Agent Pipeline Runbook](../runbooks/agent-pipeline.md) | — |
 | [Incident Response Runbook](../runbooks/incident-response.md) | — |
+| [Issue Triage Runbook](../runbooks/issue-triage.md) | — |
 | [Observability Runbook](../runbooks/observability.md) | — |
 | [Paywall Runbook](../runbooks/paywall.md) | — |
 | [Pipeline Recovery Runbook](../runbooks/pipeline-recovery.md) | — |

@@ -94,10 +94,14 @@ jobs:
           fi
           git commit -m "${ISSUE_KEY}: ${THEME}"
           git push origin "$BRANCH"
+          # PR 本文の改行は printf で作る。ここをシェルの複数行文字列で書くと、
+          # 2 行目が列 1 から始まって `run: |` のブロックスカラーを終わらせてしまい、
+          # **ワークフローファイル全体が YAML として壊れる**。
+          # (壊れている間、GitHub はこのファイルの name: を読めず、
+          #  ワークフロー名がファイルパスのまま表示され、一度も実行されない)
+          BODY=$(printf 'Closes %s\n\nBrief adherence: %s/100' "$ISSUE_KEY" "$SCORE")
           URL=$(gh pr create --title "${ISSUE_KEY}: ${THEME}" \
-                             --body "Closes ${ISSUE_KEY}
-
-Brief adherence: ${SCORE}/100" \
+                             --body "$BODY" \
                              --base main --head "$BRANCH")
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
