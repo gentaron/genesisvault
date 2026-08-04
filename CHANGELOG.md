@@ -50,6 +50,21 @@
 
 ### Changed
 
+- **カバレッジしきい値が main でもずっと満たされていなかった問題を解消。**
+  `Unit Tests + Coverage` ジョブは lines 59.7% / しきい値 85% で赤かった
+  （このブランチの変更以前から。base main の 2e83008 でも同じ数字が出る）。
+
+  原因は `vitest.config.ts` の coverage `include` が `scripts/**/*.mjs` を
+  丸ごと拾う一方、`exclude` への追加が漏れていた CLI スクリプトが 5 本
+  （`verify` / `brief-gate` / `gate-eval` / `linear-sync` / `linear-video-brief`）
+  あったこと。いずれも `main()` + `process.exit()` で export を持たない、
+  既に除外済みの `auto-post.mjs` 等とまったく同じ形のスクリプトで、
+  単体テストは書けない。0% のまま全体に混ざり、しきい値を誰も満たせなくしていた。
+
+  同じ理由で exclude に追加した。これでしきい値は本来の対象
+  （`src/lib` と `api`）だけを測るようになり、
+  statements 86.97% / branches 81.07% / functions 91.26% / lines 87.9% で通過する。
+
 - **`any` をリポジトリ全体から排除（36 件 → 0 件）。** 主なもの:
   - `api/_lib/paywall.ts` — JSON-RPC の応答に `RpcResponse<T>` / `RpcReceipt` / `RpcLog`
     を与え、`makeRpcCall` をジェネリックにした。支払い検証が依存するフィールドが

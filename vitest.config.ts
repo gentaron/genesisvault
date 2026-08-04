@@ -34,6 +34,17 @@ export default defineConfig({
         'scripts/build-search.mjs',    // requires built site output
         'scripts/e2e-server.mjs',      // E2E test infra; exercised by Playwright itself
 
+        // 同じ「main() + process.exit() で export を持たない CLI」だが、
+        // 書かれた当時にこの一覧へ足し忘れていたもの。除外されないまま
+        // 0% として全体に混ざり、しきい値 (85%) を誰も満たせない状態に
+        // していた（このジョブは main でもずっと赤かった）。
+        // 実行そのものが検証になる種類のスクリプトで、単体テストは書けない。
+        'scripts/verify.mjs',          // 検証ゲート本体; 実行が検証
+        'scripts/brief-gate.mjs',      // 審査ゲート; main script with process.exit()
+        'scripts/gate-eval.mjs',       // 審査役の捕捉率測定; APIキー必須
+        'scripts/linear-sync.mjs',     // Linear CLI; main script with process.exit()
+        'scripts/linear-video-brief.mjs', // Linear CLI; main script with process.exit()
+
         // ─── Misc ──────────────────────────────────────────────
         '**/*.d.ts',
         '**/*.config.*',
