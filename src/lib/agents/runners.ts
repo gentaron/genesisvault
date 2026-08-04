@@ -11,8 +11,16 @@
  */
 
 import { generateWithFallback, generateTextWithFallback } from '../ai/generate.js';
-import { NovaOutputSchema, LenaOutputSchema, ChloeOutputSchema, ALL_THEMES } from './schemas.js';
-import type { NovaOutput, LenaOutput, ChloeOutput } from './schemas.js';
+import { VIDEO_BRIEF_CONFIG } from '../pipeline/config.js';
+import {
+  NovaOutputSchema,
+  LenaOutputSchema,
+  ChloeOutputSchema,
+  RunaOutputSchema,
+  ALL_THEMES,
+} from './schemas.js';
+import type { NovaOutput, LenaOutput, ChloeOutput, RunaOutput } from './schemas.js';
+import type { ArticleSource } from '../pipeline/video-brief.js';
 import {
   PERSONA,
   THEME_KEYWORDS,
@@ -431,4 +439,95 @@ ${draft}
     console.warn(`  ⚠️  Iris text generation failed: ${(err as Error).message?.substring(0, 120)}`);
     return null;
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VE-009 Runa Vogel (Briefer) — 記事 → 短尺動画のブリーフ
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Turns a published article into the content of a short-video brief.
+ *
+ * Unlike the other runners, this one has **no deterministic fallback**.
+ * Nova falling back picks a slightly worse theme; Runa falling back files
+ * a template brief under an `agent-ready` label, and an unattended agent
+ * one repo away spends the night rendering a video from it. Nobody sees
+ * that until the video exists. When the model cannot produce a brief, the
+ * correct output is no brief — so this throws (INV-012's reasoning,
+ * applied to the handoff rather than the gate).
+ *
+ * `feedback` carries the previous attempt's lint findings back to the
+ * model so a retry fixes the specific problem instead of rerolling.
+ */
+export async function runRuna(
+  article: ArticleSource,
+  feedback?: string,
+): Promise<RunaOutput> {
+  console.log('🎬 [VE-009] Runa Vogel (Briefer): 動画ブリーフを起こしています…');
+
+  const vb = VIDEO_BRIEF_CONFIG;
+  const anchors = [...article.tags, ...article.keywords];
+
+  const systemPrompt =
+    'あなたは日本語の短尺動画（縦型・SNS向け）の企画者です。与えられた記事を1本の動画に落とすための企画メモを、指定された JSON 構造だけで返します。';
+
+  const prompt = `あなたは Runa Vogel（ルナ・フォーゲル）、Briefer Agent（VE-009）です。
+Genesis Vault で公開された記事を、縦型ショート動画1本ぶんの企画メモに変換してください。
+
+## 元記事
+
+タイトル: ${article.title}
+公開日: ${article.date}
+タグ: ${anchors.join('、') || '（なし）'}
+概要: ${article.description || '（なし）'}
+
+---
+${article.body}
+---
+
+## 作るもの
+
+この記事の中から **動画1本で扱いきれる論点を1つだけ** 選び、その論点で企画を組んでください。
+記事全体を要約しないでください。詰め込むと ${vb.minSeconds}〜${vb.maxSeconds}秒に収まりません。
+
+## 各フィールドの書き方
+
+- **video_title**: 動画のタイトル。8〜50文字。「動画：」のような接頭辞は付けないでください
+- **theme**: 何についての動画か。1〜2文
+- **points**: 動画で伝える中身を ${vb.minPoints}〜${vb.maxPoints} 項目。1項目1アイデアで、話す順に並べる。
+  行頭に「*」「-」「・」などの記号は付けないでください
+- **tone**: どういう語り口か。断定しすぎない、一人称、など。1〜3文
+- **visual_direction**: 画づくりの方向。抽象寄りに。直球のモチーフ（記事の題材そのものを図解した絵、
+  歯車やロボットのような紋切り型）は避け、何を映すかと何を映さないかを書く。2〜4文
+
+## 守ること
+
+- 記事の本文をそのまま写さないでください。自分の言葉で書き直すこと
+- 記事に書かれていない事実・数字を足さないでください
+- 記事のテーマから離れないでください。関連する別の話にすり替えない
+- JSON の指定フィールド以外は出力しないでください${
+    feedback
+      ? `
+
+## 前回の企画が差し戻された理由
+
+${feedback}
+
+同じ問題を繰り返さないように直してください。`
+      : ''
+  }`;
+
+  const result = await generateWithFallback<RunaOutput>({
+    schema: RunaOutputSchema,
+    system: systemPrompt,
+    prompt,
+    agentId: 'VE-009',
+    agentName: 'Runa Vogel',
+  });
+
+  console.log(`  ✅ ブリーフ: ${result.value.video_title}`);
+  console.log(
+    `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+  );
+  return result.value;
 }

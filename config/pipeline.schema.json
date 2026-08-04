@@ -411,6 +411,84 @@
         "judgeProviders",
         "rubric"
       ]
+    },
+    "videoBrief": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "teamKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "titlePrefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minScenes": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxScenes": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minPoints": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxPoints": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxQueued": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxVerbatimChars": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "ledgerFile": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "teamKey",
+        "label",
+        "titlePrefix",
+        "minSeconds",
+        "maxSeconds",
+        "minScenes",
+        "maxScenes",
+        "minPoints",
+        "maxPoints",
+        "maxQueued",
+        "maxVerbatimChars",
+        "ledgerFile"
+      ]
     }
   },
   "required": [
@@ -420,6 +498,7 @@
     "routing",
     "qualityGate",
     "references",
-    "review"
+    "review",
+    "videoBrief"
   ]
 }

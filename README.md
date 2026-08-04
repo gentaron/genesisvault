@@ -104,6 +104,35 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 | VE-007 | **Edda Lindgren** (Summarizer) | 抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成 |
 | VE-008 | **Mira Falk** (Recorder) | 投稿記事の確定事実を台帳へ記録・更新 |
 
+記事が push されたあと、9体目が別工程として走ります。
+
+| ID | エージェント | 役割 |
+|----|-------------|------|
+| VE-009 | **Runa Vogel** (Briefer) | 公開記事から短尺動画のブリーフを起こし Linear へ渡す |
+
+### 記事 → 動画（Phase μ）
+
+公開した記事は、そのまま短尺動画の企画になります。
+
+```
+記事を push
+  ▼ VE-009 Runa      記事 → 動画ブリーフ（テーマ / 伝えたいこと / トーン / 尺 / ビジュアル）
+  ▼ Linear           Todo + agent-ready で起票
+  ▼ VAIZ             ブリーフを claim → 画像・音声・描画 → 同じ Issue に mp4 を添付
+```
+
+境界は Linear だけです。Genesis Vault は Issue を置くだけ、
+[VAIZ](https://github.com/gentaron/VAIZ) は Issue を拾うだけで、互いを知りません。
+同じ形式で人間が手書きした Issue も、VAIZ からは区別なく処理されます。
+
+`agent-ready` は無人パイプラインの着手合図なので、貼る前に4つの機械的な制約
+（冪等・背圧・決定論検証・転載検出）を全部通します。どれか1つでも欠けたら
+Issue を作らずに終わります（INV-017）。
+
+- 設計判断: [ADR-0017](./docs/adr/0017-video-brief-handoff.md)
+- 運用手順: [docs/runbooks/video-brief.md](./docs/runbooks/video-brief.md)
+- 手で試す: `bun run video:brief:dry`（Linear には触りません）
+
 ### 過去記事整合性（継続性サブシステム）
 
 Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger.json`) を構築し、
@@ -216,6 +245,7 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
 | Multi-Agent Pipeline | 8エージェント順次実行（Vera → Nova → Lena → Chloe → Sophia → Iris → Edda → Mira）。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/runners.ts` |
 | Declarative Config | `config/pipeline.json` が設定の唯一のソース。Zod 検証＋参照整合性チェック（ADR-0015） |
+| Article → Video Handoff | VE-009 Runa が記事を動画ブリーフに変換し Linear へ起票。VAIZ が拾って動画にする。境界は Linear のみ（ADR-0017） |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
 | Multi-Provider Fallback | 6プロバイダ8モデルチェーン（OpenRouter内は3モデル分散） + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
 | Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |

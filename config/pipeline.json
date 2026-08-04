@@ -74,6 +74,15 @@
       "roleJa": "投稿記事の確定事実を台帳へ記録・更新",
       "step": 8,
       "promptDir": "mira"
+    },
+    {
+      "id": "VE-009",
+      "name": "Runa Vogel",
+      "shortName": "Runa",
+      "role": "briefer",
+      "roleJa": "公開記事から短尺動画のブリーフを起こし Linear へ渡す",
+      "step": 9,
+      "promptDir": "runa"
     }
   ],
   "providers": {
@@ -196,6 +205,13 @@
         "temperature": 0.2,
         "maxOutputTokens": 4096,
         "why": "審査役には最も強いモデルを置く。書き手が雑でも審査が厳しければ差し戻して直せるが、審査が甘いと雑なものがそのまま外に出て、出た後は誰も止められない。弱いモデルの見逃しは画面に何も表示されないまま全部緑で通るため、ここを削るのが最も高くつく。温度は 0.2 — 校正者が創造的に書き換えないよう固定。"
+      },
+      "VE-009": {
+        "tier": "creative",
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
+        "temperature": 0.6,
+        "maxOutputTokens": 1024,
+        "why": "記事から動画の切り口・トーン・ビジュアル方向性を起こす日本語の企画仕事。ブリーフの骨格（見出し・想定尺）は video-brief.ts が決めるので、モデルが返すのは中身だけ。テーマがすり替わると別テーマの動画が出来上がり、それを止める仕組みは下流に無いので温度は控えめ。"
       }
     }
   },
@@ -293,5 +309,20 @@
         "guidance": "記事内で矛盾していないか。貯金額など既知の到達点を逆行させていないか（逆行は veto）。"
       }
     ]
+  },
+  "videoBrief": {
+    "comment": "公開した記事から短尺動画のブリーフを起こし、Linear の Todo + agent-ready に積むための設定（VE-009 Runa）。minScenes/maxScenes/minSeconds/maxSeconds は VAIZ 側 scripts/video/plan.mjs の PlanSchema の受け入れ条件と一致させること——ここだけ動かすと、VAIZ が組めない企画を毎晩生成して Issue が差し戻され続ける。",
+    "teamKey": "GEN",
+    "label": "agent-ready",
+    "titlePrefix": "動画：",
+    "minSeconds": 45,
+    "maxSeconds": 60,
+    "minScenes": 6,
+    "maxScenes": 8,
+    "minPoints": 4,
+    "maxPoints": 7,
+    "maxQueued": 3,
+    "maxVerbatimChars": 60,
+    "ledgerFile": "data/video-briefs.json"
   }
 }
