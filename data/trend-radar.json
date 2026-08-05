@@ -3,45 +3,45 @@
   "tech": [
     {
       "source": "Hacker News",
-      "title": "LLMs reward expertise",
-      "url": "https://www.seangoedecke.com/llms-reward-expertise/",
-      "score": 1362,
-      "date": "2026-08-03"
-    },
-    {
-      "source": "Hacker News",
       "title": "AI-Generated Images Discourage Me from Reading Your Blog",
       "url": "https://nelson.cloud/ai-generated-images-discourage-me-from-reading-your-blog/",
-      "score": 768,
+      "score": 780,
       "date": "2026-08-04"
     },
     {
       "source": "Hacker News",
       "title": "AI fuels more than half of cybercrime in Africa as scams surge – Interpol",
       "url": "https://www.africanews.com/2026/08/04/ai-fuels-more-than-half-of-cybercrime-in-africa-as-digital-scams-surge-interpol/",
-      "score": 268,
+      "score": 290,
       "date": "2026-08-04"
     },
     {
       "source": "Hacker News",
-      "title": "Smaller, faster, safer: running Kimi and GLM at scale",
-      "url": "https://blog.cloudflare.com/smaller-faster-safer-models/",
-      "score": 265,
-      "date": "2026-08-03"
+      "title": "TIME Is Serving AI Bots a Different Website, with Ads Built In",
+      "url": "https://www.vincentschmalbach.com/time-serves-ai-bots-a-different-website/",
+      "score": 222,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "AI's debt binge can't last, hidden borrowing reaches $1.65T",
-      "url": "https://fortune.com/2026/07/31/ai-debt-hypescalers-capex-capital-spending-hidden-borrowing-bond-issuance/",
-      "score": 144,
-      "date": "2026-08-03"
+      "title": "Position: LLMs Can't Jump",
+      "url": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DklU4737opt",
+      "score": 222,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "The AI Demand Bubble",
-      "url": "https://www.wheresyoured.at/the-ai-demand-bubble/",
-      "score": 106,
-      "date": "2026-08-04"
+      "title": "Oracle cut its Always Free ARM limits to 2 OCPU / 12GB, enforced Aug 18",
+      "url": "https://www.cnelecar.com/blog/oracle-always-free-arm-limits-cut-2026/",
+      "score": 163,
+      "date": "2026-08-05"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Meta Ran Ads That Contained AI-Generated Child Sexual Abuse Imagery",
+      "url": "https://www.wired.com/story/meta-ran-ads-that-contained-ai-generated-child-sexual-abuse-imagery/",
+      "score": 157,
+      "date": "2026-08-05"
     }
   ],
   "market": [],
