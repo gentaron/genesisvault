@@ -315,3 +315,46 @@ export function ledgerAppend(ledger: BriefLedger, entry: LedgerEntry): BriefLedg
 export function renderLedger(ledger: BriefLedger): string {
   return `${JSON.stringify(ledger, null, 2)}\n`;
 }
+
+/** Sort key for an entry. A missing timestamp ranks last so a complete entry wins. */
+function filedAtKey(entry: LedgerEntry): string {
+  return typeof entry.filedAt === 'string' && entry.filedAt ? entry.filedAt : '9999';
+}
+
+/**
+ * Merge two divergent copies of the ledger.
+ *
+ * Two writers append to this file (`daily-post.yml` on main, and any branch
+ * that files a brief), so the same append-at-the-end conflict that
+ * `merge=union` solves for `docs/agent-runs/*.md` happens here too — except
+ * this file is JSON, where union would produce syntactically broken output
+ * that no one is told about (LM-015).
+ *
+ * The ledger is append-only and keyed by slug, so the merge is a union: an
+ * entry present on either side is kept. A slug on both sides is the same
+ * article filed twice; the earlier `filedAt` is the filing Linear actually
+ * has, so that one wins and the later duplicate is dropped.
+ *
+ * Order is by `filedAt` then slug, which makes the result independent of
+ * which side is passed first — two runners resolving the same conflict
+ * produce byte-identical files.
+ */
+export function mergeLedgers(a: BriefLedger, b: BriefLedger): BriefLedger {
+  const bySlug = new Map<string, LedgerEntry>();
+  for (const entry of [...a.briefs, ...b.briefs]) {
+    const seen = bySlug.get(entry.slug);
+    if (!seen || filedAtKey(entry) < filedAtKey(seen)) bySlug.set(entry.slug, entry);
+  }
+
+  const briefs = [...bySlug.values()].sort((x, y) => {
+    const kx = filedAtKey(x);
+    const ky = filedAtKey(y);
+    return kx === ky ? x.slug.localeCompare(y.slug) : kx < ky ? -1 : 1;
+  });
+
+  return {
+    version: Math.max(a.version, b.version),
+    comment: a.comment ?? b.comment,
+    briefs,
+  };
+}

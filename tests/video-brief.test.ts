@@ -9,8 +9,10 @@ import {
   ledgerHas,
   lintVideoBrief,
   longestVerbatimRun,
+  mergeLedgers,
   parseArticle,
   parseLedger,
+  renderLedger,
   renderVideoBrief,
   sourceMarker,
   type VideoBrief,
@@ -271,5 +273,65 @@ describe('Phase μ — brief ledger', () => {
       fs.readFile(new URL(`../${VB.ledgerFile}`, import.meta.url), 'utf-8'),
     );
     expect(parseLedger(raw).version).toBe(1);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 衝突した台帳の統合（scripts/merge-brief-ledger.mjs の中身）
+//
+// 二人の書き手が同じ配列の末尾に追記したときの解決。ここを間違えると
+// 「片側の記録が消える」→ 同じ記事の Issue がもう一度生える、という形で
+// Linear 側に出る。union が正しいことをここで固定しておく。
+// ═══════════════════════════════════════════════════════════════
+describe('Phase μ — 台帳の衝突解決', () => {
+  const entry = (slug: string, issue: string, filedAt: string) => ({
+    slug,
+    issue,
+    url: `https://linear.app/gentaron/issue/${issue}`,
+    filedAt,
+  });
+
+  const a = entry('post-a', 'GEN-1', '2026-08-01T00:00:00.000Z');
+  const b = entry('post-b', 'GEN-2', '2026-08-02T00:00:00.000Z');
+
+  it('両側の記録を残す', () => {
+    const merged = mergeLedgers(
+      { version: 1, comment: 'c', briefs: [a] },
+      { version: 1, comment: 'c', briefs: [b] },
+    );
+    expect(merged.briefs.map((e) => e.slug)).toEqual(['post-a', 'post-b']);
+  });
+
+  it('どちらを先に渡しても同じ結果になる', () => {
+    const left = { version: 1, comment: 'c', briefs: [a, b] };
+    const right = { version: 1, comment: 'c', briefs: [b] };
+    expect(mergeLedgers(left, right)).toEqual(mergeLedgers(right, left));
+  });
+
+  it('同じ記事が両側にあるときは先に届け出たほうを残す', () => {
+    const later = entry('post-a', 'GEN-99', '2026-08-09T00:00:00.000Z');
+    const merged = mergeLedgers({ version: 1, briefs: [later] }, { version: 1, briefs: [a] });
+    expect(merged.briefs).toHaveLength(1);
+    expect(merged.briefs[0].issue).toBe('GEN-1');
+  });
+
+  it('時刻を持たない壊れた記録より、揃っている記録を優先する', () => {
+    const broken = { slug: 'post-a', issue: '', url: '', filedAt: '' };
+    const merged = mergeLedgers({ version: 1, briefs: [broken] }, { version: 1, briefs: [a] });
+    expect(merged.briefs[0].issue).toBe('GEN-1');
+  });
+
+  it('片側が空でも失わない', () => {
+    expect(mergeLedgers(parseLedger(''), { version: 1, briefs: [a, b] }).briefs).toHaveLength(2);
+    expect(mergeLedgers({ version: 1, briefs: [a] }, parseLedger('{{{')).briefs).toHaveLength(1);
+  });
+
+  it('統合した結果はそのまま台帳として読み書きできる', () => {
+    const merged = mergeLedgers(
+      { version: 1, comment: EMPTY_LEDGER.comment, briefs: [b] },
+      { version: 1, briefs: [a] },
+    );
+    expect(parseLedger(renderLedger(merged)).briefs).toEqual(merged.briefs);
+    expect(renderLedger(merged).endsWith('}\n')).toBe(true);
   });
 });

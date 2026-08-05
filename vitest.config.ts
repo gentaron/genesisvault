@@ -44,6 +44,9 @@ export default defineConfig({
         'scripts/gate-eval.mjs',       // 審査役の捕捉率測定; APIキー必須
         'scripts/linear-sync.mjs',     // Linear CLI; main script with process.exit()
         'scripts/linear-video-brief.mjs', // Linear CLI; main script with process.exit()
+        'scripts/merge-brief-ledger.mjs', // git の衝突ステージを読む薄い CLI。
+        //   統合そのものは mergeLedgers() 側でテストしている
+        //   (tests/video-brief.test.ts)。ここは git の中でしか動かない。
 
         // ─── Misc ──────────────────────────────────────────────
         '**/*.d.ts',

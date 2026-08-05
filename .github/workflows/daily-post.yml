@@ -53,12 +53,18 @@ jobs:
       # 台帳とトレンドのスナップショットも一緒にコミットする。
       # ランナーは毎回まっさらなチェックアウトなので、ここで押さないと
       # 「到達点の記録」が毎晩捨てられ、継続性の正典が数週間前で凍る（LM-013）。
+      #
+      # push は push-with-rebase.sh 経由。記事の生成中に main が進んでいると
+      # 素の `git push` は non-fast-forward で弾かれ、**書き上がった記事ごと**
+      # 捨てられる（ランナーは使い捨てで再試行が無い）。取り込んで押し直す
+      # ところまでが「投稿する」という仕事の範囲（LM-016）。
       - name: Commit and push new post + telemetry + continuity ledger
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Mina Eureka Ernst [Bot]"
-          git add src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)
+          scripts/push-with-rebase.sh \
+            "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" \
+            src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
 
       # ── Phase μ — hand the article to VAIZ through Linear ──────
       #
@@ -84,8 +90,12 @@ jobs:
 
       # Runs unconditionally because the ledger is written on two paths:
       # a new brief, and the repair path where an issue already existed in
-      # Linear but the ledger had lost it. `git diff --staged --quiet`
-      # makes this a no-op the rest of the time.
+      # Linear but the ledger had lost it. push-with-rebase.sh makes this a
+      # no-op the rest of the time (nothing staged → no commit, no push).
+      #
+      # `if: always()` also gives the post commit a second chance: if the
+      # push above lost a race and left the article committed but unpushed,
+      # this step's rebase-and-push carries it along.
       #
       # ISSUE_KEY goes through env rather than `${{ }}` inside the script:
       # it is a value returned by an external API, and interpolating one
@@ -97,8 +107,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Mina Eureka Ernst [Bot]"
-          git add data/video-briefs.json
-          git diff --staged --quiet || (git commit -m "chore: 動画ブリーフ台帳を更新${ISSUE_KEY:+ (${ISSUE_KEY})}" && git push)
+          scripts/push-with-rebase.sh \
+            "chore: 動画ブリーフ台帳を更新${ISSUE_KEY:+ (${ISSUE_KEY})}" \
+            data/video-briefs.json
 
       # Optional: wake VAIZ immediately instead of waiting for its 22:00
       # UTC cron. Without VAIZ_DISPATCH_TOKEN this step is skipped and the
