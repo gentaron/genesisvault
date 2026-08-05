@@ -32,8 +32,13 @@ import path from 'path';
 
 // ─── Ledger types ───────────────────────────────────────────────
 
-export const LEDGER_SCHEMA = 1;
+// schema 2: 金額以外の指標（継続日数・年数・冊数）を同じ台帳で扱えるように
+// `unit` を追加した。schema が変わると auto-post は台帳を記事から作り直す。
+export const LEDGER_SCHEMA = 2;
 export const LEDGER_REL_PATH = path.join('data', 'continuity-ledger.json');
+
+/** 比較に使う単位。'yen' だけ表記の正規化（万/億）が要るので別扱い。 */
+export type MetricUnit = 'yen' | '日' | '年' | '冊' | '回';
 
 export interface PastArticle {
   title: string;
@@ -42,9 +47,10 @@ export interface PastArticle {
 }
 
 export interface MinedFact {
-  metric: string; // 例: '貯金額'
+  metric: string; // 例: '貯金額' / '瞑想の継続日数' / '2026年の読了冊数'
   value: string; // 元の表記（例: '200万円'）
-  valueNum: number | null; // 比較用の数値（円換算）。数値化できなければ null
+  valueNum: number | null; // 比較用の数値。数値化できなければ null
+  unit: MetricUnit;
   monotonic: boolean; // true = 単調増加（逆行禁止）の指標
   date: string;
   source: string; // 記事タイトル
@@ -55,6 +61,7 @@ export interface CanonFact {
   metric: string;
   value: string;
   valueNum: number | null;
+  unit: MetricUnit;
   monotonic: boolean;
   asOf: string;
   source: string;
@@ -83,7 +90,7 @@ export const MONEY_MAX_YEN = 100_000_000; // 1億円
 
 function toHalfWidth(s: string): string {
   return s
-    .replace(/[０-９]/g, d => String.fromCharCode(d.charCodeAt(0) - 0xfee0))
+    .replace(/[０-９]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xfee0))
     .replace(/[，]/g, ',');
 }
 
@@ -122,18 +129,30 @@ export function parseAmountYen(raw: string): number | null {
 
 // ─── Metric definitions ─────────────────────────────────────────
 
+/**
+ * 逆行を検出したい指標の定義。
+ *
+ * 金額だけを見ていると「貯金300万→200万」は止まるが、「瞑想100日目→30日目」
+ * 「積立5年目→2年目」は素通りする。読者から見ればどちらも同じ嘘なので、
+ * 単位の違う指標を同じ枠組みで扱う。
+ *
+ * `scope: 'year'` は年ごとにリセットされる指標（今年の読了冊数など）。
+ * 年をまたいだ比較は逆行ではないので、台帳のキーに年を含める。
+ */
 interface MetricDef {
-  metric: string;
-  keyword: RegExp;
+  /** 台帳に載る指標名のもと（scope が 'year' なら「2026年の◯◯」になる）。 */
+  base: string;
+  unit: MetricUnit;
   monotonic: boolean;
+  scope: 'lifetime' | 'year';
+  /** 文にこの語が無ければ、この指標の話ではない。 */
+  keyword: RegExp;
+  /**
+   * 値の取り出し方。'amount' は文中の金額トークンを拾う（従来の金額処理）。
+   * 正規表現の場合は capture group 1 を数値として読む。
+   */
+  value: RegExp | 'amount';
 }
-
-// 金額系（単調増加 = 逆行禁止）。貯金200万→100万のような後退を検出するための核。
-const MONEY_METRICS: MetricDef[] = [
-  { metric: '貯金額', keyword: /貯金|貯蓄|預金/, monotonic: true },
-  { metric: '総資産額', keyword: /総資産|純資産|資産総額|資産額/, monotonic: true },
-  { metric: '投資額', keyword: /投資額|積立|つみたて|ETF|NISA|iDeCo/, monotonic: true },
-];
 
 // 金額トークン: 億/万 で終わる（円は任意）か、円で終わる数値。
 // 「300万達成」「貯金300万」のように円を伴わない万単位も拾えるようにする。
@@ -143,16 +162,160 @@ const AMOUNT_TOKEN =
 // 個人事実ではなく一般統計の引用を金額抽出から除外するための語。
 const MONEY_EXCLUDE = /平均|世帯|中央値|統計|ランキング|と言われ|だそう|らしい|目安|相場/;
 
+/**
+ * 相場・ニュース由来の数値を個人の事実から切り離すための語。
+ *
+ * Phase ν でトレンド情報（AI ニュース＋株式相場）を執筆陣に渡すようになった。
+ * 「日経平均が4万2000円」を貯金額として台帳に書き込むと、翌日から到達不能な
+ * 下限が居座り、以後すべての原稿が逆行判定で落ちる。外の数字は外の数字。
+ */
+const MARKET_NOISE =
+  /日経平均|ダウ|ナスダック|NASDAQ|S&P|SP500|指数|株価|為替|ドル円|円安|円高|時価総額|市場|銘柄|最高値|終値|相場/i;
+
+const NUM = '([0-9０-９][0-9０-９,，]*)';
+/** 主語→数値の順、かつ句読点をまたがない近接に限定して誤検出を抑える。 */
+function adjacent(subject: string, tail: string): RegExp {
+  return new RegExp(`(?:${subject})[^。、！？]{0,8}?${NUM}\\s*${tail}`);
+}
+
+/** 「瞑想を120日続けた」のような継続日数。 */
+function streakDays(label: string, subject: string): MetricDef {
+  return {
+    base: `${label}の継続日数`,
+    unit: '日',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: new RegExp(subject),
+    value: adjacent(subject, '日(?:目|連続|続け|続いて)'),
+  };
+}
+
+/** 「積立5年目」のような継続年数。 */
+function streakYears(label: string, subject: string): MetricDef {
+  return {
+    base: `${label}の継続年数`,
+    unit: '年',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: new RegExp(subject),
+    value: adjacent(subject, '年(?:目|続け|続いて|になる|が経|経っ)'),
+  };
+}
+
+/**
+ * 逆行を禁止する指標の一覧。
+ *
+ * 増やすときの原則: **取りこぼしは安いが、誤検出は高い**。
+ * 拾い損ねた事実は「その日の記事に継続性の縛りが1つ減る」だけだが、
+ * 誤って拾った事実は台帳に居座り、以後の原稿を毎日落とし続ける。
+ * だから主語と数値の近接を要求し、曖昧な言い回しは拾わない。
+ */
+export const CONTINUITY_METRICS: MetricDef[] = [
+  // 金額（従来からの核）
+  {
+    base: '貯金額',
+    unit: 'yen',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: /貯金|貯蓄|預金/,
+    value: 'amount',
+  },
+  {
+    base: '総資産額',
+    unit: 'yen',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: /総資産|純資産|資産総額|資産額/,
+    value: 'amount',
+  },
+  {
+    base: '投資額',
+    unit: 'yen',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: /投資額|積立|つみたて|ETF|NISA|iDeCo/,
+    value: 'amount',
+  },
+
+  // 習慣の継続（日数）
+  streakDays('瞑想', '瞑想|マインドフルネス'),
+  streakDays('ジャーナリング', 'ジャーナリング|日記'),
+  streakDays('散歩', '散歩|ウォーキング'),
+  streakDays('早起き', '早起き|朝活'),
+  streakDays('ブログ', 'ブログ|更新'),
+  streakDays('読書', '読書'),
+  streakDays('運動', '筋トレ|ストレッチ|ヨガ|ランニング'),
+
+  // 継続（年数）
+  streakYears('積立投資', '積立|つみたて|投資|運用'),
+  streakYears('ブログ', 'ブログ'),
+  streakYears('ひとり暮らし', 'ひとり暮らし|一人暮らし|独身'),
+  streakYears('瞑想', '瞑想'),
+
+  // 読了冊数（今年ぶんは年でリセットするので scope: 'year'）
+  {
+    base: '読了冊数',
+    unit: '冊',
+    monotonic: true,
+    scope: 'year',
+    keyword: /今年|ことし/,
+    value: adjacent('今年|ことし', '冊'),
+  },
+  {
+    base: '累計読了冊数',
+    unit: '冊',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: /累計|通算|これまでに/,
+    value: adjacent('累計|通算|これまでに', '冊'),
+  },
+
+  // 訪れた土地（ひとり旅）
+  {
+    base: '訪れた都道府県数',
+    unit: '回',
+    monotonic: true,
+    scope: 'lifetime',
+    keyword: /都道府県|県目/,
+    value: adjacent('都道府県|訪れた|行った', '(?:県|都道府県)目?'),
+  },
+];
+
+/** 金額指標だけを見たいとき用（相場ノイズの除外など、金額特有の処理がある）。 */
+const MONEY_METRICS = CONTINUITY_METRICS.filter((m) => m.unit === 'yen');
+
+/** 年スコープの指標名（記事の年を前置きする）。 */
+function metricLabel(def: MetricDef, date: string): string | null {
+  if (def.scope !== 'year') return def.base;
+  const year = date.slice(0, 4);
+  if (!/^\d{4}$/.test(year)) return null; // 日付不明の記事は年で括れない
+  return `${year}年の${def.base}`;
+}
+
+/** 「120」「1,200」→ 数値。全角も受ける。 */
+export function parseCount(raw: string): number | null {
+  const n = Number(toHalfWidth(raw).replace(/,/g, ''));
+  return Number.isFinite(n) ? n : null;
+}
+
 // マイルストーン系（到達・達成を表す語。数字を伴う短文のみ採用する）
 const MILESTONE_KEYWORD = /達成|突破|到達|完済|超え(?:た|る)?/;
+const MILESTONE_METRIC = 'マイルストーン';
+
+/**
+ * 過去の低い数値に「回想として」触れるのは矛盾ではない。
+ * 「あの頃は貯金100万だった」は正しい記述で、止めてはいけない。
+ */
+const RETROSPECTIVE =
+  /あの頃|当時|昔|かつて|最初は|始めた頃|はじめた頃|だった頃|振り返る|振り返っ|去年|昨年|数年前|以前|前回|先日|この前|一年前|１年前|[0-9０-９]+\s*[ヶかカ]月前|思い出|スタート(?:時|地点)|の頃は/;
 
 // ─── Sentence splitting ─────────────────────────────────────────
 
 function splitSentences(text: string): string[] {
   return text
     .split(/(?<=[。！？!?])|\n/)
-    .map(s => s.trim())
-    .filter(s => s.length > 0 && s.length <= 200);
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0 && s.length <= 200);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -168,39 +331,61 @@ export function runResearcher(articles: PastArticle[]): MinedFact[] {
 
   for (const article of articles) {
     for (const sentence of splitSentences(article.text)) {
-      // 金額系メトリクス（個人の現実的な上限を超える額・統計引用はノイズとして除外）
-      if (!MONEY_EXCLUDE.test(sentence)) {
-        for (const def of MONEY_METRICS) {
-          if (!def.keyword.test(sentence)) continue;
+      for (const def of CONTINUITY_METRICS) {
+        if (!def.keyword.test(sentence)) continue;
+        const metric = metricLabel(def, article.date);
+        if (metric === null) continue;
+
+        let value: string;
+        let valueNum: number | null;
+
+        if (def.value === 'amount') {
+          // 金額: 一般統計の引用と、相場・ニュースの数字は個人の事実ではない
+          if (MONEY_EXCLUDE.test(sentence) || MARKET_NOISE.test(sentence)) continue;
           const amount = sentence.match(AMOUNT_TOKEN);
           if (!amount) continue;
-          const value = amount[0].replace(/\s+/g, '');
-          const valueNum = parseAmountYen(value);
+          value = amount[0].replace(/\s+/g, '');
+          valueNum = parseAmountYen(value);
+          // 個人の貯金として現実離れした額はエッセイ由来の誤抽出とみなす
           if (valueNum === null || valueNum > MONEY_MAX_YEN) continue;
-          facts.push({
-            metric: def.metric,
-            value,
-            valueNum,
-            monotonic: def.monotonic,
-            date: article.date,
-            source: article.title,
-            snippet: sentence,
-          });
+        } else {
+          const hit = sentence.match(def.value);
+          if (!hit?.[1]) continue;
+          valueNum = parseCount(hit[1]);
+          if (valueNum === null || valueNum <= 0) continue;
+          value = `${valueNum}${def.unit}`;
         }
+
+        facts.push({
+          metric,
+          value,
+          valueNum,
+          unit: def.unit,
+          monotonic: def.monotonic,
+          date: article.date,
+          source: article.title,
+          snippet: sentence,
+        });
       }
       // マイルストーン（達成・到達系の語 ＋ 金額/数字を含む短文に限定。
       // 見出し記号や一般論は除外し、保守的に絞る）
+      //
+      // 回想の文（「以前、300万円を超えた時のことを思い出した」）は出来事の
+      // 記録ではなく、出来事への言及にすぎない。台帳に入れると、同じ達成が
+      // 言及されるたびに増殖して、本当の出来事を枠から押し出してしまう。
       const clean = sentence.replace(/^#+\s*/, '').trim();
       if (
         MILESTONE_KEYWORD.test(clean) &&
         clean.length <= 40 &&
         !clean.includes('#') &&
+        !RETROSPECTIVE.test(clean) &&
         AMOUNT_TOKEN.test(clean)
       ) {
         facts.push({
-          metric: 'マイルストーン',
+          metric: MILESTONE_METRIC,
           value: clean,
           valueNum: null,
+          unit: '回', // 出来事に単位は無い。比較には使わない（valueNum が null）
           monotonic: false,
           date: article.date,
           source: article.title,
@@ -220,39 +405,109 @@ function byDateDesc(a: { date: string }, b: { date: string }): number {
   return (b.date || '').localeCompare(a.date || '');
 }
 
+/** 台帳の並び順を安定させる（金額を先、あとは指標名順）。 */
+function byMetricOrder(a: CanonFact, b: CanonFact): number {
+  if (a.unit === 'yen' && b.unit !== 'yen') return -1;
+  if (b.unit === 'yen' && a.unit !== 'yen') return 1;
+  return a.metric.localeCompare(b.metric, 'ja');
+}
+
 /**
  * 抽出した候補を正典(台帳)へ統合する。
- * - 金額系: 確定済みの「最高到達点」を採用（逆行防止の下限になる）
- * - マイルストーン: 直近のものを最大12件保持
+ * - 単調増加の指標: 確定済みの「最高到達点」を採用（逆行防止の下限になる）
+ * - マイルストーン: 直近のものを最大12件保持。ただし到達点を下回るものは捨てる
+ *
+ * 最後の一文が重要。以前の実装は最高到達点だけを守り、出来事はそのまま
+ * 追記していたので、「貯金300万達成」の13日後に「貯金200万達成」という
+ * 出来事が台帳に並んでいた。逆行した記事を台帳が追認していたことになる。
  */
 export function consolidate(facts: MinedFact[]): { facts: CanonFact[]; milestones: Milestone[] } {
   const canon: CanonFact[] = [];
 
-  for (const def of MONEY_METRICS) {
-    const candidates = facts.filter(f => f.metric === def.metric && f.valueNum !== null);
-    if (candidates.length === 0) continue;
-    // 最高額を正典とする（金額は単調増加 = 後退させない）
+  const measurable = facts.filter((f) => f.metric !== MILESTONE_METRIC && f.valueNum !== null);
+  for (const metric of new Set(measurable.map((f) => f.metric))) {
+    const candidates = measurable.filter((f) => f.metric === metric);
+    // 最高到達点を正典とする（単調増加 = 後退させない）
     const top = candidates.reduce((best, cur) =>
       (cur.valueNum as number) > (best.valueNum as number) ? cur : best,
     );
     canon.push({
-      metric: def.metric,
+      metric,
       value: top.value,
       valueNum: top.valueNum,
-      monotonic: def.monotonic,
+      unit: top.unit,
+      monotonic: top.monotonic,
       asOf: top.date,
       source: top.source,
     });
   }
+  canon.sort(byMetricOrder);
 
-  const milestones: Milestone[] = facts
-    .filter(f => f.metric === 'マイルストーン')
-    .sort(byDateDesc)
-    .filter((m, i, arr) => arr.findIndex(x => x.value === m.value) === i) // dedupe
-    .slice(0, 12)
-    .map(m => ({ date: m.date, event: m.value, source: m.source }));
+  const milestones: Milestone[] = dedupeMilestones(
+    facts
+      .filter((f) => f.metric === MILESTONE_METRIC)
+      .filter((f) => !isRegressiveMilestone(f.value, canon))
+      .map((f) => ({ date: f.date, event: f.value, source: f.source })),
+  ).slice(0, 12);
 
   return { facts: canon, milestones };
+}
+
+/**
+ * 同じ到達を指す出来事を1件にまとめ、**最初に起きた日**を残す。
+ *
+ * 「貯金300万」は達成後も繰り返し言及されるので、素朴に重複排除すると
+ * 同じ節目の言い換えが12件並び、他の出来事を枠から押し出す。
+ * 出来事として意味があるのは、初めてそこに到達した日のほうである。
+ */
+export function dedupeMilestones<T extends { date: string; event: string }>(items: T[]): T[] {
+  const groups = new Map<string, T[]>();
+  for (const item of items) {
+    const key = milestoneKey(item.event);
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(item);
+    else groups.set(key, [item]);
+  }
+
+  const kept: T[] = [];
+  for (const bucket of groups.values()) {
+    const dated = bucket.filter((m) => m.date);
+    if (dated.length === 0) {
+      kept.push(bucket[0]);
+      continue;
+    }
+    kept.push(dated.reduce((first, cur) => (cur.date < first.date ? cur : first)));
+  }
+  return kept.sort(byDateDesc);
+}
+
+/** 出来事の同一性キー。金額系は「指標＋金額」、それ以外は本文そのもの。 */
+function milestoneKey(event: string): string {
+  for (const def of MONEY_METRICS) {
+    if (!def.keyword.test(event)) continue;
+    const amount = event.match(AMOUNT_TOKEN);
+    if (!amount) continue;
+    const parsed = parseAmountYen(amount[0].replace(/\s+/g, ''));
+    if (parsed !== null) return `${def.base}:${parsed}`;
+  }
+  return event;
+}
+
+/**
+ * 「貯金200万達成！」のような、既に到達済みの水準を下回る出来事か。
+ * 台帳に残すと、書き手に「200万を達成したばかり」と読ませてしまう。
+ */
+export function isRegressiveMilestone(event: string, canon: CanonFact[]): boolean {
+  for (const def of MONEY_METRICS) {
+    if (!def.keyword.test(event)) continue;
+    const known = canon.find((c) => c.metric === def.base);
+    if (!known || known.valueNum === null) continue;
+    const amount = event.match(AMOUNT_TOKEN);
+    if (!amount) continue;
+    const claimed = parseAmountYen(amount[0].replace(/\s+/g, ''));
+    if (claimed !== null && claimed < known.valueNum) return true;
+  }
+  return false;
 }
 
 // ─── Brief text ─────────────────────────────────────────────────
@@ -264,16 +519,31 @@ function formatYen(n: number | null, fallback: string): string {
   return `${n.toLocaleString('ja-JP')}円`;
 }
 
-/** 決定的な台帳サマリ（LLM入力かつフォールバックとして使う）。 */
+/** 台帳の値を人が読む表記に直す（金額は万/億へ、それ以外は単位付き）。 */
+export function formatFactValue(fact: Pick<CanonFact, 'valueNum' | 'value' | 'unit'>): string {
+  if (fact.unit === 'yen') return formatYen(fact.valueNum, fact.value);
+  if (fact.valueNum === null) return fact.value;
+  return `${fact.valueNum.toLocaleString('ja-JP')}${fact.unit}`;
+}
+
+/**
+ * 決定的な台帳サマリ（LLM入力かつフォールバックとして使う）。
+ *
+ * 「下回るな」だけでは書き手は同じ数字を書き続ける。到達点と一緒に
+ * **次に書いてよい下限**を明示して、話題が何であれ前に進ませる。
+ */
 export function buildDeterministicBrief(facts: CanonFact[], milestones: Milestone[]): string {
   const lines: string[] = [];
-  lines.push('【確定済みの数値（これより低い値を「新たに達成した」ように書かない＝逆行禁止）】');
+  lines.push('【確定済みの到達点（これより低い値を「新たに達成した」ように書かない＝逆行禁止）】');
   if (facts.length === 0) {
     lines.push('  （まだ確定した数値はありません）');
   } else {
     for (const f of facts) {
-      const norm = formatYen(f.valueNum, f.value);
-      lines.push(`  - ${f.metric}：${norm}（到達済み・出典「${f.source}」${f.asOf ? ` / ${f.asOf}` : ''}）`);
+      const norm = formatFactValue(f);
+      const floor = f.monotonic ? `　→ 次に触れるなら ${norm} 以上` : '';
+      lines.push(
+        `  - ${f.metric}：${norm}（到達済み・出典「${f.source}」${f.asOf ? ` / ${f.asOf}` : ''}）${floor}`,
+      );
     }
   }
   if (milestones.length > 0) {
@@ -282,6 +552,83 @@ export function buildDeterministicBrief(facts: CanonFact[], milestones: Mileston
       lines.push(`  - ${m.event}${m.date ? `（${m.date}）` : ''}`);
     }
   }
+  lines.push('【全テーマ共通のルール】');
+  lines.push(
+    '  - 金額・日数・年数・冊数など、話題を問わずすべての数値は過去の到達点を下回らせない',
+  );
+  lines.push(
+    '  - 過去の低い数値に触れてよいのは回想のときだけ。「あの頃は」「始めた頃は」と明示する',
+  );
+  lines.push('  - 台帳に無い新しい数値を出すのは自由。ただし一度書いたら次からはそれが下限になる');
+  return lines.join('\n');
+}
+
+// ─── 逆行検出（決定的ゲート） ────────────────────────────────────
+
+export interface Regression {
+  metric: string;
+  claimed: string;
+  claimedNum: number;
+  canon: string;
+  canonNum: number;
+  sentence: string;
+}
+
+/**
+ * 原稿が台帳の到達点を逆行していないか調べる。
+ *
+ * ブリーフで「逆行するな」と伝えるのは指示であって、保証ではない。
+ * 指示は無視されても何も表示されない — 逆行した記事はいつも通り緑で公開され、
+ * 気づくのは読者だけになる。だから最後は決定的なチェックで止める。
+ *
+ * 回想（「あの頃は貯金100万だった」）は矛盾ではないので通す。
+ */
+export function detectRegressions(
+  article: PastArticle,
+  ledger: ContinuityLedger | null,
+): Regression[] {
+  if (!ledger || ledger.facts.length === 0) return [];
+  const found: Regression[] = [];
+
+  for (const fact of runResearcherSilent([article])) {
+    if (fact.metric === MILESTONE_METRIC || fact.valueNum === null) continue;
+    if (RETROSPECTIVE.test(fact.snippet)) continue;
+    const known = ledger.facts.find((f) => f.metric === fact.metric && f.monotonic);
+    if (!known || known.valueNum === null) continue;
+    if (fact.valueNum >= known.valueNum) continue;
+
+    found.push({
+      metric: fact.metric,
+      claimed: formatFactValue(fact),
+      claimedNum: fact.valueNum,
+      canon: formatFactValue(known),
+      canonNum: known.valueNum,
+      sentence: fact.snippet,
+    });
+  }
+
+  // 同じ指標で複数の逆行が出たら、最も低い1件だけを報告する（指摘の重複を避ける）
+  const worst = new Map<string, Regression>();
+  for (const reg of found) {
+    const prev = worst.get(reg.metric);
+    if (!prev || reg.claimedNum < prev.claimedNum) worst.set(reg.metric, reg);
+  }
+  return [...worst.values()];
+}
+
+/** 差し戻し時に書き手へ渡す、直し方まで書いた指摘文。 */
+export function buildRegressionFeedback(regressions: Regression[]): string {
+  const lines = ['過去記事の到達点を下回る数値が本文にありました（逆行は公開できません）。'];
+  for (const reg of regressions) {
+    lines.push(
+      `  - ${reg.metric}：本文は「${reg.claimed}」ですが、到達済みの水準は「${reg.canon}」です。` +
+        `該当箇所「${reg.sentence.slice(0, 60)}」`,
+    );
+  }
+  lines.push('');
+  lines.push('直し方はどちらかです:');
+  lines.push('  1. 数値を到達済みの水準以上に書き直す');
+  lines.push('  2. 過去の話として書く（「始めた頃は…」と回想であることを本文で明示する）');
   return lines.join('\n');
 }
 
@@ -317,50 +664,53 @@ export function runSummarizer(
 
 /**
  * 新しく書かれた記事から事実を抽出し、台帳を更新する。
- * 金額は「最高到達点」を保持（後退させない）。出来事は追記。
+ * 指標は「最高到達点」を保持（後退させない）。出来事は追記。
+ *
+ * 金額に限らず、継続日数・年数・冊数も同じ扱いにする。単位が違うだけで、
+ * 読者から見れば「先週120日目と書いた瞑想が今日30日目になっている」のも
+ * 「貯金が300万から200万に戻る」のも同じ矛盾だから。
  */
-export function runRecorder(
-  ledger: ContinuityLedger,
-  newArticle: PastArticle,
-): ContinuityLedger {
+export function runRecorder(ledger: ContinuityLedger, newArticle: PastArticle): ContinuityLedger {
   console.log('🗂️  [VE-008] Mira Falk (Recorder): 新記事の事実を台帳に記録中…');
   const mined = runResearcherSilent([newArticle]);
 
-  const facts: CanonFact[] = ledger.facts.map(f => ({ ...f }));
+  const facts: CanonFact[] = ledger.facts.map((f) => ({ ...f }));
 
-  // 金額系: 新記事の値が既存より高ければ更新（逆行は無視）
-  for (const def of MONEY_METRICS) {
-    const candidates = mined.filter(m => m.metric === def.metric && m.valueNum !== null);
-    if (candidates.length === 0) continue;
+  const measurable = mined.filter((m) => m.metric !== MILESTONE_METRIC && m.valueNum !== null);
+  for (const metric of new Set(measurable.map((m) => m.metric))) {
+    const candidates = measurable.filter((m) => m.metric === metric);
     const top = candidates.reduce((best, cur) =>
       (cur.valueNum as number) > (best.valueNum as number) ? cur : best,
     );
-    const existing = facts.find(f => f.metric === def.metric);
+    const existing = facts.find((f) => f.metric === metric);
     if (!existing) {
       facts.push({
-        metric: def.metric,
+        metric,
         value: top.value,
         valueNum: top.valueNum,
-        monotonic: def.monotonic,
+        unit: top.unit,
+        monotonic: top.monotonic,
         asOf: top.date,
         source: top.source,
       });
-    } else if ((top.valueNum as number) > (existing.valueNum ?? -Infinity)) {
+    } else if ((top.valueNum as number) > (existing.valueNum ?? Number.NEGATIVE_INFINITY)) {
       existing.value = top.value;
       existing.valueNum = top.valueNum;
       existing.asOf = top.date;
       existing.source = top.source;
     }
   }
+  facts.sort(byMetricOrder);
 
-  // 出来事: 新規のみ先頭に追記（最大12件）
+  // 出来事: 新規のみ先頭に追記（最大12件）。
+  // 到達点を下回る「達成」は記録しない — 台帳が逆行を追認してしまう。
   const newMilestones = mined
-    .filter(m => m.metric === 'マイルストーン')
-    .map(m => ({ date: m.date, event: m.value, source: m.source }));
-  const merged = [...newMilestones, ...ledger.milestones];
-  const milestones = merged
-    .filter((m, i, arr) => arr.findIndex(x => x.event === m.event) === i)
-    .slice(0, 12);
+    .filter((m) => m.metric === MILESTONE_METRIC)
+    .filter((m) => !isRegressiveMilestone(m.value, facts))
+    .map((m) => ({ date: m.date, event: m.value, source: m.source }));
+  const milestones = dedupeMilestones(
+    [...newMilestones, ...ledger.milestones].filter((m) => !isRegressiveMilestone(m.event, facts)),
+  ).slice(0, 12);
 
   const updated: ContinuityLedger = {
     schema: LEDGER_SCHEMA,
@@ -407,7 +757,7 @@ export function stripHtml(html: string): string {
     out = out.replace(/<[^>]*>/g, '');
   } while (out !== prev);
   return out
-    .replace(/&nbsp;|&amp;|&lt;|&gt;|&quot;/g, m => HTML_ENTITIES[m] ?? m)
+    .replace(/&nbsp;|&amp;|&lt;|&gt;|&quot;/g, (m) => HTML_ENTITIES[m] ?? m)
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -421,7 +771,7 @@ export async function loadDiaryArticles(rootDir: string): Promise<PastArticle[]>
   const articles: PastArticle[] = [];
   try {
     const postsDir = path.join(rootDir, 'src', 'content', 'posts');
-    const files = (await fs.readdir(postsDir)).filter(f => f.endsWith('.md'));
+    const files = (await fs.readdir(postsDir)).filter((f) => f.endsWith('.md'));
     for (const file of files) {
       const raw = await fs.readFile(path.join(postsDir, file), 'utf-8');
       const titleMatch = raw.match(/^title:\s*"?(.+?)"?\s*$/m);

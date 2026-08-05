@@ -1,5 +1,5 @@
 {
-  "comment": "品質ラチェット（quality ratchet）。このリポジトリには Biome / 型チェックの既存指摘が残っており、一括修正は差分が大きく AGENTS.md §3.3（整形と論理変更を混ぜない）に反する。そこで『これ以上増やさない』を機械的に保証する。`bun run verify` は現在の件数がここの数値を超えたら不合格。下回ったらその場で数値を下げること（ラチェットは締める方向にしか動かさない）。2026-08 の棚卸しで biome 105→94 / 型 17→3 に締めた。biome の残り 94 件は 93 件が純粋な整形（format / organizeImports）と 1 件の CSS parse で、意味のある指摘は残っていない。型の残り 3 件は @ai-sdk/* と ai v5 の LanguageModel V2/V3 版ずれで、コード側では直せない（LM-003）。",
-  "biomeErrors": 94,
+  "comment": "品質ラチェット（quality ratchet）。このリポジトリには Biome / 型チェックの既存指摘が残っており、一括修正は差分が大きく AGENTS.md §3.3（整形と論理変更を混ぜない）に反する。そこで『これ以上増やさない』を機械的に保証する。`bun run verify` は現在の件数がここの数値を超えたら不合格。下回ったらその場で数値を下げること（ラチェットは締める方向にしか動かさない）。2026-08 の棚卸しで biome 105→94 / 型 17→3 に締め、Phase ν で触れたファイルを整形して 94→86 に締めた。biome の残り 86 件は 85 件が純粋な整形（format / organizeImports）と 1 件の CSS parse で、意味のある指摘は残っていない。型の残り 3 件は @ai-sdk/* と ai v5 の LanguageModel V2/V3 版ずれで、コード側では直せない（LM-003）。",
+  "biomeErrors": 86,
   "astroCheckErrors": 3
 }

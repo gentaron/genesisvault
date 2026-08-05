@@ -4,12 +4,21 @@
   "description": "Genesis Vault マルチエージェント・パイプラインの唯一の宣言的ソース。エージェント名簿・ルーティング・プロバイダーチェーン・品質ゲート閾値をここに集約する。TypeScript 側はこのファイルを読むだけで、値を持たない。編集したら `bun run verify` で検証すること。",
   "agents": [
     {
+      "id": "VE-010",
+      "name": "Tessa Brandt",
+      "shortName": "Tessa",
+      "role": "scout",
+      "roleJa": "AI・最先端技術の話題と株式市場の地合いを収集（トレンド・レーダー）",
+      "step": 1,
+      "promptDir": "tessa"
+    },
+    {
       "id": "VE-004",
       "name": "Vera Holt",
       "shortName": "Vera",
       "role": "researcher",
       "roleJa": "過去記事から確定事実を抽出（継続性）",
-      "step": 1,
+      "step": 2,
       "promptDir": "vera"
     },
     {
@@ -18,7 +27,7 @@
       "shortName": "Nova",
       "role": "balancer",
       "roleJa": "テーマバランス分析・ジャンル選定",
-      "step": 2,
+      "step": 3,
       "promptDir": "nova"
     },
     {
@@ -27,7 +36,7 @@
       "shortName": "Lena",
       "role": "ceo",
       "roleJa": "トピック・切り口・タイトルの決定",
-      "step": 3,
+      "step": 4,
       "promptDir": "lena"
     },
     {
@@ -36,7 +45,7 @@
       "shortName": "Chloe",
       "role": "seo",
       "roleJa": "タグ・キーワード・メタディスクリプション生成",
-      "step": 4,
+      "step": 5,
       "promptDir": "chloe"
     },
     {
@@ -45,7 +54,7 @@
       "shortName": "Sophia",
       "role": "writer",
       "roleJa": "本文執筆（1,000〜2,000字・日記体）",
-      "step": 5,
+      "step": 6,
       "promptDir": "sophia"
     },
     {
@@ -54,7 +63,7 @@
       "shortName": "Iris",
       "role": "editor",
       "roleJa": "校正・品質チェック・ペルソナ一貫性確認",
-      "step": 6,
+      "step": 7,
       "promptDir": "iris"
     },
     {
@@ -63,7 +72,7 @@
       "shortName": "Edda",
       "role": "summarizer",
       "roleJa": "抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成",
-      "step": 7,
+      "step": 8,
       "promptDir": "edda"
     },
     {
@@ -72,7 +81,7 @@
       "shortName": "Mira",
       "role": "recorder",
       "roleJa": "投稿記事の確定事実を台帳へ記録・更新",
-      "step": 8,
+      "step": 9,
       "promptDir": "mira"
     },
     {
@@ -81,7 +90,7 @@
       "shortName": "Runa",
       "role": "briefer",
       "roleJa": "公開記事から短尺動画のブリーフを起こし Linear へ渡す",
-      "step": 9,
+      "step": 10,
       "promptDir": "runa"
     }
   ],
@@ -324,5 +333,32 @@
     "maxQueued": 3,
     "maxVerbatimChars": 60,
     "ledgerFile": "data/video-briefs.json"
+  },
+  "trends": {
+    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
+    "enabled": true,
+    "timeoutMs": 8000,
+    "cacheFile": "data/trend-radar.json",
+    "maxCacheAgeDays": 3,
+    "tech": {
+      "hnEndpoint": "https://hn.algolia.com/api/v1/search",
+      "arxivEndpoint": "https://export.arxiv.org/api/query",
+      "queries": ["AI", "LLM", "robotics"],
+      "arxivCategories": ["cs.AI"],
+      "maxSignals": 6,
+      "minPoints": 100,
+      "lookbackHours": 48
+    },
+    "market": {
+      "endpoint": "https://stooq.com/q/d/l/",
+      "lookbackDays": 45,
+      "flatBandPct": 1.5,
+      "symbols": [
+        { "symbol": "^spx", "label": "S&P500" },
+        { "symbol": "^nkx", "label": "日経平均" },
+        { "symbol": "usdjpy", "label": "ドル円" },
+        { "symbol": "btcusd", "label": "ビットコイン" }
+      ]
+    }
   }
 }

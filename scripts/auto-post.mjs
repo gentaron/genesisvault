@@ -2,8 +2,10 @@
  * Genesis Vault — Multi-Agent AI Blog Post Generator
  *
  * Phase γ — Modular Pipeline / Phase ι — Continuity Subsystem
+ * Phase ν — Trend Radar（外部トレンド取り込み）＋ 継続性ゲート
  *
- * 8-Agent Pipeline:
+ * 9-Agent Pipeline (この工程で走るぶん):
+ *   VE-010  Tessa Brandt      (Scout)    … AI/技術トレンドと相場の地合いを収集
  *   VE-004  Vera Holt         (Researcher)… 過去記事から確定事実を抽出（継続性）
  *   VE-005  Nova Harmon       (Balancer) … テーマバランス分析・ジャンル選定
  *   VE-001  Lena Strauss      (CEO)      … トピック・切り口・タイトルの決定
@@ -46,14 +48,20 @@ import {
   runIris,
 } from '../src/lib/agents/runners.ts';
 import {
-  LEDGER_SCHEMA,
   runResearcher,
   runSummarizer,
   runRecorder,
   loadDiaryArticles,
   loadLedger,
   saveLedger,
+  detectRegressions,
+  buildRegressionFeedback,
 } from '../src/lib/agents/continuity.ts';
+import {
+  runScout,
+  buildTrendBrief,
+  saveTrendRadar,
+} from '../src/lib/agents/trends.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
@@ -80,6 +88,7 @@ const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄�
 
 // ─── Phase η: Agent Telemetry Summary ─────────────────────────
 const AGENT_NAMES = {
+  'VE-010': 'Tessa',
   'VE-004': 'Vera',
   'VE-005': 'Nova',
   'VE-001': 'Lena',
@@ -346,27 +355,51 @@ async function main() {
   });
   console.log('');
 
+  // ── VE-010 Tessa (Scout): 今日の外の景色 ───────────────────────
+  // AI・最先端技術の話題と株式市場の地合いを集めて企画/執筆に渡す。
+  // fail-soft: 取れなければトレンド無しで続行する（記事は書ける）。
+  let trendRadar = null;
+  try {
+    trendRadar = await runScout(ROOT_DIR);
+    if (trendRadar && !DRY_RUN) await saveTrendRadar(ROOT_DIR, trendRadar);
+    if (trendRadar) {
+      logAgent(
+        'VE-010',
+        'Tessa Brandt',
+        'trends_collected',
+        `tech=${trendRadar.tech.length} market=${trendRadar.market.length}`,
+      );
+    }
+  } catch (err) {
+    console.warn(`  ⚠️  Scout failed: ${err.message?.substring(0, 120)}`);
+  }
+  const trendBrief = buildTrendBrief(trendRadar);
+  if (trendBrief) console.log(`  📡 トレンド・ブリーフを執筆陣へ注入します（${trendBrief.length}字）`);
+  console.log('');
+
   // ── Continuity subsystem (過去記事整合性) ──────────────────────
-  // VE-004 Vera (Researcher) → VE-007 Edda (Summarizer) で台帳を構築/ロードし、
+  // VE-004 Vera (Researcher) → VE-007 Edda (Summarizer) で台帳を構築し、
   // 「継続性ブリーフ」を執筆陣(Lena/Sophia)に注入して過去との逆行を防ぐ。
   // VE-008 Mira (Recorder) は投稿後に台帳を更新する（本処理の末尾）。
+  //
+  // 台帳は毎回 src/content/posts から作り直す。以前はファイルが在れば
+  // そのまま使っていたが、日次ジョブは台帳をコミットしていなかったので、
+  // 記事が増えても正典が数週間前のまま凍りついていた（LM-013）。
+  // 走査は 170 本強のローカルファイルで、LLM もネットワークも使わない。
+  // 「導出できるものは導出する」ほうが、更新漏れの心配より安い。
   console.log('🧭 Building continuity ledger (過去記事との整合性)...');
   let ledger = await loadLedger(ROOT_DIR);
   const pastArticles = await loadDiaryArticles(ROOT_DIR);
-  if (!ledger || ledger.schema !== LEDGER_SCHEMA) {
-    try {
-      const mined = runResearcher(pastArticles);
-      ledger = runSummarizer(mined, ledger);
-      ledger.diaryArticleCount = pastArticles.length;
-      if (!DRY_RUN) await saveLedger(ROOT_DIR, ledger);
-      logAgent('VE-004', 'Vera Holt', 'facts_mined', `${mined.length} facts`);
-      logAgent('VE-007', 'Edda Lindgren', 'ledger_built', `${ledger.facts.length} canon facts`);
-    } catch (err) {
-      console.warn(`  ⚠️  Continuity build failed: ${err.message?.substring(0, 120)}`);
-      ledger = ledger ?? null;
-    }
-  } else {
-    console.log(`  ✅ Loaded cached ledger (${ledger.facts.length} facts, updated ${ledger.updated})`);
+  try {
+    const mined = runResearcher(pastArticles);
+    ledger = runSummarizer(mined, ledger);
+    ledger.diaryArticleCount = pastArticles.length;
+    if (!DRY_RUN) await saveLedger(ROOT_DIR, ledger);
+    logAgent('VE-004', 'Vera Holt', 'facts_mined', `${mined.length} facts`);
+    logAgent('VE-007', 'Edda Lindgren', 'ledger_built', `${ledger.facts.length} canon facts`);
+  } catch (err) {
+    console.warn(`  ⚠️  Continuity build failed: ${err.message?.substring(0, 120)}`);
+    // 作り直しに失敗したら、読み込んだ既存台帳のまま進む（無いよりはよい）
   }
   const continuityBrief = [
     process.env.GV_BRIEF ? `【今回の企画指示・最優先】\n${process.env.GV_BRIEF}` : '',
@@ -374,6 +407,10 @@ async function main() {
   ].filter(Boolean).join('\n\n');
   if (continuityBrief) console.log(`  🧭 継続性ブリーフを執筆陣へ注入します（${continuityBrief.length}字）`);
   console.log('');
+
+  /** 原稿が台帳の到達点を逆行していないか（タイトルも本文の一部として見る）。 */
+  const findRegressions = (title, body) =>
+    detectRegressions({ title, text: `${title}。${body}`, date: todayISO() }, ledger);
 
   const mood = pick(MOODS);
   const weather = pick(WEATHERS);
@@ -386,13 +423,13 @@ async function main() {
     // ── Agent 0: Balancer (Nova) ──────────────────────────
     const assignedTheme = process.env.GV_THEME
       ? process.env.GV_THEME
-      : await runNova(themeBalance, themeBalance.recentPostTitles);
+      : await runNova(themeBalance, themeBalance.recentPostTitles, trendBrief);
     logAgent('VE-005', 'Nova Harmon', 'theme_selected', assignedTheme);
     await savePipelineState({ step: 'balancer', data: { assignedTheme }, date: todayISO() });
     console.log('');
 
     // ── Agent 1: CEO (Lena) ────────────────────────────────
-    ceoPlan = await runLena(titles, styleSamples, assignedTheme, continuityBrief);
+    ceoPlan = await runLena(titles, styleSamples, assignedTheme, continuityBrief, trendBrief);
     if (!validateCEOPlan(ceoPlan)) {
       console.warn('  ⚠️  CEO plan validation failed — using fallback');
       logAgent('VE-001', 'Lena Strauss', 'validation_failed', JSON.stringify(ceoPlan));
@@ -414,8 +451,40 @@ async function main() {
     console.log('');
 
     // ── Agent 3: Writer (Sophia) ───────────────────────────
-    const draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief);
+    //
+    // 継続性の逆行だけは、書き直させれば直る種類の不合格なので、ここで
+    // 1度だけ差し戻す。ブリーフに「逆行するな」と書いてあっても、守られた
+    // かどうかは誰も確認しない限り分からない — 指示ではなく検査で担保する。
+    let draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief, trendBrief);
     if (!draft) throw new Error('Writer Agent returned empty');
+
+    let regressions = findRegressions(ceoPlan.title, draft);
+    if (regressions.length > 0) {
+      const feedback = buildRegressionFeedback(regressions);
+      console.warn('  ⚠️  継続性の逆行を検出。書き直しを指示します:');
+      for (const reg of regressions) {
+        console.warn(`     - ${reg.metric}: 本文「${reg.claimed}」< 到達済み「${reg.canon}」`);
+      }
+      logAgent('VE-004', 'Vera Holt', 'regression_detected', regressions.map(r => r.metric).join(', '));
+      const rewritten = await runSophia(
+        ceoPlan,
+        seoData,
+        styleSamples,
+        continuityBrief,
+        trendBrief,
+        feedback,
+      );
+      if (rewritten) {
+        const remaining = findRegressions(ceoPlan.title, rewritten);
+        if (remaining.length === 0) {
+          console.log('  ✅ 書き直しで逆行が解消しました');
+          draft = rewritten;
+          regressions = [];
+        } else {
+          regressions = remaining;
+        }
+      }
+    }
     logAgent('VE-002', 'Sophia Nightingale', 'draft_written', `${draft.length} chars`);
     await savePipelineState({ step: 'writer', data: { draftLength: draft.length }, date: todayISO() });
     console.log('');
@@ -449,11 +518,40 @@ async function main() {
     logAgent('SYSTEM', 'QualityGate', 'passed', `score=${gate.score}`);
     console.log('');
 
+    // ── Continuity Gate (逆行は公開しない) ──────────────────────
+    //
+    // 校正(Iris)は本文を書き換えるので、書き手の原稿が通っていても
+    // 校正後にもう一度見る。ここまで来ても逆行が残っているなら、
+    // 逆行した記事を出すより、テンプレートの日記を出すほうがましだ。
+    const finalRegressions = findRegressions(ceoPlan.title, finalBody);
+    if (finalRegressions.length > 0) {
+      if (regressions.length === 0) {
+        console.warn('   ⚠️  校正後に逆行が再発しました（Writer の原稿では解消していた）');
+      }
+      logAgent(
+        'SYSTEM',
+        'ContinuityGate',
+        'failed',
+        finalRegressions.map(r => `${r.metric}:${r.claimed}<${r.canon}`).join(', '),
+      );
+      throw new Error(
+        `Continuity gate failed: ${finalRegressions.map(r => `${r.metric} ${r.claimed} < ${r.canon}`).join(' / ')}`,
+      );
+    }
+    console.log('🧭 Continuity Gate: ✅ 過去記事の到達点と矛盾なし');
+    logAgent('SYSTEM', 'ContinuityGate', 'passed', `${ledger?.facts.length ?? 0} canon facts checked`);
+    console.log('');
+
   } catch (err) {
     logAgent('SYSTEM', 'Pipeline', 'error', undefined, err.message);
     console.error(`❌ Agent Pipeline Error: ${err.message}`);
     console.log('📋 Falling back to template...');
-    const fallback = generateFallbackPost(themeBalance);
+    // テンプレートにも同じ継続性チェックを通す。AI が全滅した日にだけ
+    // 逆行が出るのが、一番見つけにくい壊れ方だから。
+    const fallback = generateFallbackPost(
+      themeBalance,
+      text => detectRegressions({ title: '', text, date: todayISO() }, ledger).length === 0,
+    );
     ceoPlan = fallback.ceoPlan;
     seoData = fallback.seoData;
     finalBody = fallback.body;
@@ -496,6 +594,7 @@ tags: [${seoData.tags.map(t => `"${t}"`).join(', ')}]
 description: "${escapedDesc}"
 keywords: [${seoData.keywords.map(k => `"${k}"`).join(', ')}]
 agents:
+  scout: "VE-010 Tessa Brandt"
   researcher: "VE-004 Vera Holt"
   balancer: "VE-005 Nova Harmon"
   ceo: "VE-001 Lena Strauss"
@@ -533,7 +632,9 @@ ${cleanBody}
     try {
       ledger = runRecorder(ledger, {
         title: ceoPlan.title,
-        text: cleanBody,
+        // タイトルも走査対象に含める（「貯金300万達成！」のような確定事実は
+        // 本文ではなくタイトルにだけ現れることがある。loadDiaryArticles と同じ形）
+        text: `${ceoPlan.title}。${cleanBody}`,
         date: todayISO(),
       });
       await saveLedger(ROOT_DIR, ledger);
@@ -551,6 +652,7 @@ ${cleanBody}
   console.log(`🔑 Keywords: ${seoData.keywords.join(', ')}`);
   console.log('');
   console.log('Agent Pipeline:');
+  console.log(`  VE-010 Tessa Brandt     (Scout)    → トレンド収集 ${trendRadar ? '✅' : '⏭️'}`);
   console.log('  VE-004 Vera Holt        (Researcher)→ 過去事実抽出 ✅');
   console.log('  VE-005 Nova Harmon      (Balancer) → ジャンル選定 ✅');
   console.log('  VE-001 Lena Strauss     (CEO)      → トピック決定 ✅');

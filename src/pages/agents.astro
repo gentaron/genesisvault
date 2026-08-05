@@ -32,11 +32,21 @@ interface AgentCard {
 
 const agents: AgentCard[] = [
   {
+    id: 'VE-010',
+    name: 'Tessa Brandt',
+    role: 'Scout',
+    emoji: '📡',
+    description:
+      'AI・最先端技術の話題と株式市場の地合いを収集。「今日の外の景色」を企画と執筆に渡す。取れない日は黙って諦める（記事は通常どおり書ける）。',
+    promptDir: 'prompts/tessa',
+  },
+  {
     id: 'VE-004',
     name: 'Vera Holt',
     role: 'Researcher',
     emoji: '🔎',
-    description: '過去記事から確定事実（貯金額・到達済みマイルストーン等）を抽出。継続性の出発点。',
+    description:
+      '過去記事から確定事実（金額・継続日数・継続年数・冊数）を抽出。継続性の出発点。',
     promptDir: 'prompts/vera',
   },
   {

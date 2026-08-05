@@ -1,21 +1,23 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 // ─── Schema validation tests ────────────────────────────────
 // Import schemas directly (they don't depend on AI SDK)
 import {
-  NovaOutputSchema,
-  LenaOutputSchema,
-  ChloeOutputSchema,
   ALL_THEMES,
+  ChloeOutputSchema,
+  LenaOutputSchema,
+  NovaOutputSchema,
 } from '../src/lib/agents/schemas';
 
 // ─── Shared module tests ────────────────────────────────────
 import {
-  categorizeByTheme,
   buildThemePriorityList,
+  categorizeByTheme,
   generateFallbackPost,
   pick,
   pickN,
+  THEME_KEYWORDS,
+  THEMES,
   todayISO,
 } from '../src/lib/agents/shared';
 
@@ -111,7 +113,8 @@ describe('Phase γ — Agent Zod Schemas', () => {
       const result = ChloeOutputSchema.safeParse({
         tags: ['投資', 'NISA', 'iDeCo', '資産運用', '初心者'],
         keywords: ['NISA 2026', 'iDeCo 活用', '投資戦略'],
-        description: '2026年の新NISA制度とiDeCoを両立させる具体的な方法を解説。初心者でも始められる投資戦略。',
+        description:
+          '2026年の新NISA制度とiDeCoを両立させる具体的な方法を解説。初心者でも始められる投資戦略。',
       });
       expect(result.success).toBe(true);
     });
@@ -145,8 +148,18 @@ describe('Phase γ — Agent Zod Schemas', () => {
   });
 
   describe('ALL_THEMES', () => {
-    it('contains all 9 theme categories', () => {
-      expect(ALL_THEMES).toHaveLength(9);
+    // 数を数えるのではなく、2つのテーマ表が一致していることを見る。
+    // Nova が選べるテーマ(ALL_THEMES)とバランス計算の対象(THEME_KEYWORDS)が
+    // ずれると、選ばれても集計されないテーマ・集計されても選ばれないテーマが
+    // 静かに生まれる。テーマを増やしたときに落ちてほしいのはこちら。
+    it('matches THEME_KEYWORDS exactly', () => {
+      expect([...ALL_THEMES].sort()).toEqual(Object.keys(THEME_KEYWORDS).sort());
+    });
+
+    it('has a fallback title set for every theme', () => {
+      for (const theme of ALL_THEMES) {
+        expect(THEMES.find((t) => t.category === theme)).toBeDefined();
+      }
     });
 
     it('contains expected themes', () => {
@@ -235,8 +248,8 @@ describe('Phase γ — Theme Balance Analysis', () => {
 
   it('builds priority list sorted by score ascending', () => {
     const themeBalance = {
-      gensnotesCount: { '貯金・節約': 5, '投資・資産形成': 0, 'ひとり旅': 2 },
-      recentCount: { '貯金・節約': 3, '投資・資産形成': 1, 'ひとり旅': 0 },
+      gensnotesCount: { '貯金・節約': 5, '投資・資産形成': 0, ひとり旅: 2 },
+      recentCount: { '貯金・節約': 3, '投資・資産形成': 1, ひとり旅: 0 },
       recentPostTitles: [],
     };
     const list = buildThemePriorityList(themeBalance);
@@ -244,12 +257,12 @@ describe('Phase γ — Theme Balance Analysis', () => {
     // Themes not in the input default to score 0.
     // Among non-zero: 投資=3, ひとり旅=2, 貯金=14
     // Verify the list is sorted (non-decreasing scores).
-    const scores = list.map(p => p.score);
+    const scores = list.map((p) => p.score);
     for (let i = 1; i < scores.length; i++) {
       expect(scores[i]).toBeGreaterThanOrEqual(scores[i - 1]);
     }
     // Verify specific themes have correct scores
-    const themeScores = Object.fromEntries(list.map(p => [p.theme, p.score]));
+    const themeScores = Object.fromEntries(list.map((p) => [p.theme, p.score]));
     expect(themeScores['投資・資産形成']).toBe(3);
     expect(themeScores['ひとり旅']).toBe(2);
     expect(themeScores['貯金・節約']).toBe(14);
@@ -288,6 +301,28 @@ describe('Phase γ — Fallback Post Generation', () => {
     // 投資・資産形成 has lowest score (0), so it should be preferred
     // if a fallback body exists for it
     expect(post.ceoPlan.theme).toBe('投資・資産形成');
+  });
+
+  // AI が全滅した日にだけ逆行が出るのが、一番見つけにくい壊れ方。
+  // テンプレートにも継続性チェックを通せるようにしてある。
+  it('skips template posts that contradict the continuity ledger', () => {
+    const themeBalance = {
+      gensnotesCount: { '貯金・節約': 0, '投資・資産形成': 10 },
+      recentCount: { '貯金・節約': 0, '投資・資産形成': 10 },
+      recentPostTitles: [],
+    };
+    const post = generateFallbackPost(themeBalance, (text) => !text.includes('貯金'));
+    expect(post.body).not.toContain('貯金');
+  });
+
+  it('still produces a post when every template is rejected', () => {
+    // 記事が出ないより、矛盾のある記事のほうがまし……ではないが、
+    // ここで空を返すと呼び出し側が落ちる。最後は必ず何かを返す。
+    const post = generateFallbackPost(
+      { gensnotesCount: {}, recentCount: {}, recentPostTitles: [] },
+      () => false,
+    );
+    expect(post.body.length).toBeGreaterThan(100);
   });
 });
 

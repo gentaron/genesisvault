@@ -142,6 +142,47 @@ export const VideoBriefConfigSchema = z.object({
   ledgerFile: z.string().min(1),
 });
 
+/**
+ * トレンド・レーダー（VE-010 Tessa）の設定。
+ *
+ * ここに並ぶのは**外部サービスの都合**なので、コードではなく設定に置く。
+ * どのソースも API キーを要求しないこと（INV-003 と同じ理由: 鍵の有無で
+ * 挙動が変わると、鍵の無い環境でだけ壊れる）。
+ */
+export const TrendsConfigSchema = z.object({
+  comment: z.string().optional(),
+  /** false にすると収集そのものを行わない（記事生成は通常どおり続く）。 */
+  enabled: z.boolean(),
+  /** 1リクエストあたりの上限時間。日次ジョブを外部サービスに人質に取らせない。 */
+  timeoutMs: z.number().int().positive(),
+  /** 取得結果のスナップショット（リポジトリ相対）。 */
+  cacheFile: z.string().min(1),
+  /** 取得に失敗したとき、何日前のスナップショットまで使ってよいか。 */
+  maxCacheAgeDays: z.number().int().min(0),
+  tech: z.object({
+    hnEndpoint: z.string().url(),
+    arxivEndpoint: z.string().url(),
+    /** Hacker News の検索語。 */
+    queries: z.array(z.string().min(1)).min(1),
+    arxivCategories: z.array(z.string().min(1)),
+    /** ブリーフに載せる話題の上限。多すぎると日記がニュース欄になる。 */
+    maxSignals: z.number().int().positive(),
+    /** この点数以下の投稿は「話題になっている」とは呼ばない。 */
+    minPoints: z.number().int().min(0),
+    lookbackHours: z.number().int().positive(),
+  }),
+  market: z.object({
+    endpoint: z.string().url(),
+    /** 20日移動平均を出すため、営業日で20本以上取れる長さが要る。 */
+    lookbackDays: z.number().int().positive(),
+    /** 変化率がこの幅の内側なら「横ばい」と呼ぶ（%）。 */
+    flatBandPct: z.number().positive(),
+    symbols: z
+      .array(z.object({ symbol: z.string().min(1), label: z.string().min(1) }))
+      .min(1),
+  }),
+});
+
 export const PipelineConfigSchema = z.object({
   $schema: z.string().optional(),
   version: z.string(),
@@ -164,6 +205,7 @@ export const PipelineConfigSchema = z.object({
   }),
   review: ReviewConfigSchema,
   videoBrief: VideoBriefConfigSchema,
+  trends: TrendsConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -175,6 +217,7 @@ export type QualityGateConfig = z.infer<typeof QualityGateSchema>;
 export type ReviewConfig = z.infer<typeof ReviewConfigSchema>;
 export type RubricCriterion = z.infer<typeof RubricCriterionSchema>;
 export type VideoBriefConfig = z.infer<typeof VideoBriefConfigSchema>;
+export type TrendsConfig = z.infer<typeof TrendsConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -311,6 +354,33 @@ export function checkConfigIntegrity(config: PipelineConfig): string[] {
     problems.push('videoBrief.maxQueued は 1 以上である必要があります（背圧が無効になります）');
   }
 
+  // ─── Trend radar (外部データの取り込み) ──────────────────────
+  //
+  // 外向きの通信をする唯一の任意サブシステム。設定ミスは記事を止めないが、
+  // 「毎日 degraded で、誰も気づかないまま何も収集していない」に静かに化ける。
+
+  const tr = config.trends;
+  if (tr.market.lookbackDays < 30) {
+    problems.push(
+      'trends.market.lookbackDays が短すぎます（20営業日ぶんの終値が要るので30日以上にしてください）',
+    );
+  }
+  const seenSymbols = new Set<string>();
+  for (const entry of tr.market.symbols) {
+    if (seenSymbols.has(entry.symbol)) {
+      problems.push(`trends.market.symbols のシンボルが重複しています: ${entry.symbol}`);
+    }
+    seenSymbols.add(entry.symbol);
+  }
+  // 日次ジョブの中で走るので、上限時間 × ソース数が現実的な範囲に収まること。
+  const sourceCount = tr.tech.queries.length + tr.tech.arxivCategories.length + tr.market.symbols.length;
+  if (tr.timeoutMs * sourceCount > 120_000) {
+    problems.push(
+      `trends の最悪待ち時間が ${Math.round((tr.timeoutMs * sourceCount) / 1000)}秒 になります。` +
+        'timeoutMs かソース数を減らしてください（日次ジョブが外部サービスの応答待ちで詰まります）',
+    );
+  }
+
   return problems;
 }
 
@@ -346,3 +416,4 @@ export function getAgent(agentId: string): AgentDef | undefined {
 }
 
 export const VIDEO_BRIEF_CONFIG: VideoBriefConfig = PIPELINE_CONFIG.videoBrief;
+export const TRENDS_CONFIG: TrendsConfig = PIPELINE_CONFIG.trends;

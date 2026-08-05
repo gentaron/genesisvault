@@ -489,6 +489,136 @@
         "maxVerbatimChars",
         "ledgerFile"
       ]
+    },
+    "trends": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "cacheFile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maxCacheAgeDays": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "tech": {
+          "type": "object",
+          "properties": {
+            "hnEndpoint": {
+              "type": "string",
+              "format": "uri"
+            },
+            "arxivEndpoint": {
+              "type": "string",
+              "format": "uri"
+            },
+            "queries": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "arxivCategories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "maxSignals": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "minPoints": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "lookbackHours": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "hnEndpoint",
+            "arxivEndpoint",
+            "queries",
+            "arxivCategories",
+            "maxSignals",
+            "minPoints",
+            "lookbackHours"
+          ]
+        },
+        "market": {
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "format": "uri"
+            },
+            "lookbackDays": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "flatBandPct": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "symbols": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "symbol": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "symbol",
+                  "label"
+                ]
+              }
+            }
+          },
+          "required": [
+            "endpoint",
+            "lookbackDays",
+            "flatBandPct",
+            "symbols"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "timeoutMs",
+        "cacheFile",
+        "maxCacheAgeDays",
+        "tech",
+        "market"
+      ]
     }
   },
   "required": [
@@ -499,6 +629,7 @@
     "qualityGate",
     "references",
     "review",
-    "videoBrief"
+    "videoBrief",
+    "trends"
   ]
 }
