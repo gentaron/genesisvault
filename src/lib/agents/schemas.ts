@@ -69,6 +69,10 @@ export type RunaOutput = z.infer<typeof RunaOutputSchema>;
 
 // ─── Shared theme constants ─────────────────────────────────
 
+// THEME_KEYWORDS（shared.ts）と同じ集合であること。
+// 片方にだけテーマを足すと、Nova が選べないテーマが生まれたり、逆に
+// バランス計算に出てこないテーマを Nova が選んだりする。
+// `tests/theme-balance.test.ts` が両者の一致を検証している。
 export const ALL_THEMES = [
   '貯金・節約',
   '投資・資産形成',
@@ -79,6 +83,7 @@ export const ALL_THEMES = [
   '散歩・日常',
   '暗号資産',
   '自己成長',
+  'AI・テクノロジー',
 ] as const;
 
 export type Theme = (typeof ALL_THEMES)[number];

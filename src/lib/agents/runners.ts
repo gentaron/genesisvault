@@ -10,26 +10,19 @@
  * All runners preserve their existing fallback logic when AI fails completely.
  */
 
-import { generateWithFallback, generateTextWithFallback } from '../ai/generate.js';
+import { generateTextWithFallback, generateWithFallback } from '../ai/generate.js';
 import { VIDEO_BRIEF_CONFIG } from '../pipeline/config.js';
-import {
-  NovaOutputSchema,
-  LenaOutputSchema,
-  ChloeOutputSchema,
-  RunaOutputSchema,
-  ALL_THEMES,
-} from './schemas.js';
-import type { NovaOutput, LenaOutput, ChloeOutput, RunaOutput } from './schemas.js';
 import type { ArticleSource } from '../pipeline/video-brief.js';
+import type { ChloeOutput, LenaOutput, NovaOutput, RunaOutput } from './schemas.js';
 import {
-  PERSONA,
-  pickN,
-  pick,
-  todayISO,
-  THEMES,
-  buildThemePriorityList,
-} from './shared.js';
+  ALL_THEMES,
+  ChloeOutputSchema,
+  LenaOutputSchema,
+  NovaOutputSchema,
+  RunaOutputSchema,
+} from './schemas.js';
 import type { ThemeBalance } from './shared.js';
+import { buildThemePriorityList, PERSONA, pick, pickN, THEMES, todayISO } from './shared.js';
 
 // ═══════════════════════════════════════════════════════════════
 // VE-005 Nova Harmon (Balancer) — テーマバランス分析・ジャンル選定
@@ -42,6 +35,7 @@ import type { ThemeBalance } from './shared.js';
 export async function runNova(
   themeBalance: ThemeBalance,
   recentPostTitles: string[],
+  trendBrief = '',
 ): Promise<string> {
   console.log('\n⚖️  [VE-005] Nova Harmon (Balancer): ジャンル選定中…');
 
@@ -50,20 +44,22 @@ export async function runNova(
 
   // Format data for the prompt
   const balanceTable = priorityList
-    .map(p => {
+    .map((p) => {
       const recent = recentCount[p.theme] || 0;
       const gensnotes = gensnotesCount[p.theme] || 0;
       return `  - ${p.theme}：直近${recent}回 / gensnotes${gensnotes}件 / スコア${p.score}`;
     })
     .join('\n');
 
-  const recentTitlesList = recentPostTitles.length > 0
-    ? recentPostTitles.map(t => `  - ${t}`).join('\n')
-    : '  （まだ記事がありません）';
+  const recentTitlesList =
+    recentPostTitles.length > 0
+      ? recentPostTitles.map((t) => `  - ${t}`).join('\n')
+      : '  （まだ記事がありません）';
 
-  const themeListText = ALL_THEMES.map(t => `「${t}」`).join('、');
+  const themeListText = ALL_THEMES.map((t) => `「${t}」`).join('、');
 
-  const systemPrompt = 'あなたは Genesis Vault ブログの編集部で、話題の多様性とバランスを管理する分析官です。';
+  const systemPrompt =
+    'あなたは Genesis Vault ブログの編集部で、話題の多様性とバランスを管理する分析官です。';
 
   const prompt = `あなたは Nova Harmon（ノヴァ・ハーモン）、Balancer Agent（VE-005）です。
 Genesis Vault ブログの編集部で、話題の多様性とバランスを管理する分析官です。
@@ -79,7 +75,7 @@ ${themeListText}
 ${balanceTable}
 
 ## 直近の記事タイトル（時系列順、新しい順）
-${recentTitlesList}
+${recentTitlesList}${trendBrief ? `\n\n## 今日の外の景色（参考）\n${trendBrief}` : ''}
 
 ## 選定基準（優先度順）
 1. **偏り解消**: スコアが低い（= 最近使われていない）テーマを優先する
@@ -87,6 +83,7 @@ ${recentTitlesList}
 3. **gensnotes との補完**: gensnotes で少ないテーマは新鮮味があるので加点する
 4. **季節感**: 今日は ${todayISO()} です。季節に合うテーマがあれば考慮する
 5. **読者の飽き防止**: 似たようなテーマが短期間に集中しないようにする
+6. **時事性**: 上の「外の景色」に強い動きがあれば、それに触れやすいテーマを少しだけ優先してよい。ただし 1〜2 を覆すほどではない（偏り解消のほうが上位）
 
 ## 出力形式
 以下の JSON を出力してください（他の文は書かないで）:
@@ -112,7 +109,9 @@ ${recentTitlesList}
     if (selectedTheme && knownThemes.includes(selectedTheme)) {
       console.log(`  ✅ 選定テーマ: ${selectedTheme}`);
       console.log(`  💬 理由: ${result.value.reason || '(なし)'}`);
-      console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
+      console.log(
+        `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+      );
       return selectedTheme;
     }
     console.warn(`  ⚠️  無効なテーマ「${selectedTheme}」が返却されました`);
@@ -123,7 +122,7 @@ ${recentTitlesList}
   // Fallback: deterministic — pick from least-used tier
   console.log('  ⚠️  Balancer Agent fallback（プログラムで選択）');
   const lowestScore = priorityList[0].score;
-  const topTier = priorityList.filter(p => p.score === lowestScore);
+  const topTier = priorityList.filter((p) => p.score === lowestScore);
   const fallbackTheme = pick(topTier).theme;
   console.log(`  🎲 Fallback テーマ: ${fallbackTheme}`);
   return fallbackTheme;
@@ -150,6 +149,7 @@ export async function runLena(
   styleSamples: string[],
   assignedTheme: string,
   continuityBrief = '',
+  trendBrief = '',
 ): Promise<CEOPlan> {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): トピック決定中…');
 
@@ -160,6 +160,10 @@ export async function runLena(
 新しい記事は過去に公開した記事の「続き」です。下記の確定事実と矛盾・逆行する企画を立ててはいけません。
 ${continuityBrief}\n`
     : '';
+  const trendSection = trendBrief
+    ? `\n\n## 今日の外の景色（企画のフックとして使ってよい材料）
+${trendBrief}\n`
+    : '';
 
   const prompt = `あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
 Genesis Vault ブログの次の日記エントリーのトピック・切り口・タイトルを決めてください。
@@ -168,7 +172,7 @@ Genesis Vault ブログの次の日記エントリーのトピック・切り口
 「${assignedTheme}」
 
 上記テーマに沿った内容にしてください。他のテーマに変えてはいけません。
-たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。${continuitySection}
+たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。${continuitySection}${trendSection}
 
 ## 参考：過去の記事タイトル（gensnotes より）
 - ${sampleTitles}
@@ -227,7 +231,9 @@ ${sampleTexts}
     console.log(`  ✅ テーマ: ${assignedTheme}`);
     console.log(`  ✅ トピック: ${result.value.topic}`);
     console.log(`  ✅ タイトル: ${result.value.title}`);
-    console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
+    console.log(
+      `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+    );
     return {
       theme: assignedTheme,
       ...result.value,
@@ -238,7 +244,7 @@ ${sampleTexts}
 
   // Fallback: pick a concrete title from THEMES
   console.log('  ⚠️  CEO Agent fallback');
-  const themeData = THEMES.find(t => t.category === assignedTheme);
+  const themeData = THEMES.find((t) => t.category === assignedTheme);
   const fallbackTitle = themeData ? pick(themeData.titles) : '朝のルーティンを全部変えた';
   return {
     theme: assignedTheme,
@@ -294,7 +300,9 @@ export async function runChloe(ceoPlan: CEOPlan): Promise<SEOData> {
     console.log(`  ✅ タグ: ${result.value.tags.join(', ')}`);
     console.log(`  ✅ キーワード: ${result.value.keywords.join(', ')}`);
     console.log(`  ✅ Description: ${result.value.description}`);
-    console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
+    console.log(
+      `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+    );
     return result.value;
   } catch (err) {
     console.warn(`  ⚠️  Chloe generateObject failed: ${(err as Error).message?.substring(0, 120)}`);
@@ -315,12 +323,17 @@ export async function runChloe(ceoPlan: CEOPlan): Promise<SEOData> {
 
 /**
  * Returns the article body text (Markdown). Returns null if all providers fail.
+ *
+ * `feedback` は差し戻し理由（継続性の逆行など）。前回どこが駄目だったかを
+ * 具体的に返すことで、書き直しがサイコロの振り直しではなく修正になる。
  */
 export async function runSophia(
   ceoPlan: CEOPlan,
   seoData: SEOData,
   styleSamples: string[],
   continuityBrief = '',
+  trendBrief = '',
+  feedback = '',
 ): Promise<string | null> {
   console.log('✍️  [VE-002] Sophia Nightingale (Writer): 本文執筆中…');
 
@@ -328,12 +341,20 @@ export async function runSophia(
   const continuitySection = continuityBrief
     ? `\n## 過去記事との継続性（最重要・厳守）
 この日記は過去記事の続きです。下記の確定事実と矛盾・逆行する描写は禁止です。
-特に、過去に書いた金額より低い額を「新たに達成した」ように書いてはいけません。
+特に、過去に書いた金額・日数・年数・冊数より低い値を「新たに達成した」ように書いてはいけません。
 ${continuityBrief}\n`
+    : '';
+  const trendSection = trendBrief
+    ? `\n## 今日の外の景色（使うかどうかは自由）
+${trendBrief}\n`
+    : '';
+  const feedbackSection = feedback
+    ? `\n## 前回の原稿が差し戻された理由（最優先で直すこと）
+${feedback}\n`
     : '';
 
   const prompt = `${PERSONA}
-${continuitySection}
+${continuitySection}${trendSection}${feedbackSection}
 
 あなたは Sophia Nightingale（ソフィア・ナイチンゲール）、Writer Agent（VE-002）です。
 以下のプランに基づいて、ミナ・エウレカ視点のブログ日記を執筆してください。
@@ -361,7 +382,8 @@ ${sampleTexts}
 7. 読者に語りかけるような温かみを持たせる
 8. 本文のみ出力する（タイトルやfrontmatterは不要）
 9. ターゲット読者は独身で、ミナと似た多趣味な暮らしに共感する人。「わかる」と思ってもらえる内容にする
-10. **重要**: 今回のテーマ「${ceoPlan.theme}」に集中すること。他のテーマ（貯金・投資など）を無理に盛り込まないこと。テーマに直接関係するミナの日常だけを自然に描写する`;
+10. **重要**: 今回のテーマ「${ceoPlan.theme}」に集中すること。他のテーマ（貯金・投資など）を無理に盛り込まないこと。テーマに直接関係するミナの日常だけを自然に描写する
+11. 数値（金額・継続日数・年数・冊数）を書くときは、上の継続性ブリーフの到達点以上にすること。過去の低い数値に触れるのは回想のときだけで、そのときは「始めた頃は」のように過去の話だと本文で明示する`;
 
   try {
     // Temperature / token budget / provider order come from the
@@ -374,10 +396,14 @@ ${sampleTexts}
     });
 
     console.log(`  ✅ 原稿完成 (${result.text.length}文字)`);
-    console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
+    console.log(
+      `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+    );
     return result.text;
   } catch (err) {
-    console.warn(`  ⚠️  Sophia text generation failed: ${(err as Error).message?.substring(0, 120)}`);
+    console.warn(
+      `  ⚠️  Sophia text generation failed: ${(err as Error).message?.substring(0, 120)}`,
+    );
     return null;
   }
 }
@@ -436,7 +462,9 @@ ${draft}
     });
 
     console.log(`  ✅ 校正完了 (${result.text.length}文字)`);
-    console.log(`  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`);
+    console.log(
+      `  📡 Provider: ${result.providerUsed} (${result.attempts} attempts, ${result.latencyMs}ms)`,
+    );
     return result.text;
   } catch (err) {
     console.warn(`  ⚠️  Iris text generation failed: ${(err as Error).message?.substring(0, 120)}`);
@@ -462,10 +490,7 @@ ${draft}
  * `feedback` carries the previous attempt's lint findings back to the
  * model so a retry fixes the specific problem instead of rerolling.
  */
-export async function runRuna(
-  article: ArticleSource,
-  feedback?: string,
-): Promise<RunaOutput> {
+export async function runRuna(article: ArticleSource, feedback?: string): Promise<RunaOutput> {
   console.log('🎬 [VE-009] Runa Vogel (Briefer): 動画ブリーフを起こしています…');
 
   const vb = VIDEO_BRIEF_CONFIG;

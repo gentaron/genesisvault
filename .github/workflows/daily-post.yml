@@ -50,11 +50,14 @@ jobs:
       - name: Verify generated post (deterministic, no LLM)
         run: bun run verify:quick
 
-      - name: Commit and push new post + telemetry
+      # 台帳とトレンドのスナップショットも一緒にコミットする。
+      # ランナーは毎回まっさらなチェックアウトなので、ここで押さないと
+      # 「到達点の記録」が毎晩捨てられ、継続性の正典が数週間前で凍る（LM-013）。
+      - name: Commit and push new post + telemetry + continuity ledger
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Mina Eureka Ernst [Bot]"
-          git add src/content/posts/*.md docs/agent-runs/
+          git add src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
           git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)
 
       # ── Phase μ — hand the article to VAIZ through Linear ──────

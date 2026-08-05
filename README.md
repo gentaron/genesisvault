@@ -11,7 +11,7 @@ Mina Eureka Ernst による個人ブログ
 
 Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト）による個人日記ブログです。  
 散歩・瞑想・ひとり旅・ジャーナリング・貯金・投資・マインドフルネスをテーマに、  
-毎日 **8つのAIエージェント（Liminal Forge）** が記事を自動生成・投稿します。
+毎日 **9つのAIエージェント（Liminal Forge）** が記事を自動生成・投稿します。
 
 記事は **Ethereum ウォレット接続（3 USDC）** でフルアクセス可能です。
 
@@ -91,11 +91,12 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 
 ## Multi-Agent AI パイプライン
 
-記事生成は以下の8エージェントが順番に担当します：
+記事生成は以下の9エージェントが順番に担当します：
 
 | ID | エージェント | 役割 |
 |----|-------------|------|
-| VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（貯金額・到達済みマイルストーン等）を抽出 |
+| VE-010 | **Tessa Brandt** (Scout) | AI・最先端技術の話題と株式市場の地合いを収集（トレンド・レーダー） |
+| VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（金額・継続日数・年数・冊数）を抽出 |
 | VE-005 | **Nova Harmon** (Balancer) | テーマバランス分析・ジャンル選定 |
 | VE-001 | **Lena Strauss** (CEO) | トピック・切り口・タイトルの決定 |
 | VE-003 | **Chloe Verdant** (SEO) | タグ・キーワード・メタディスクリプション生成 |
@@ -104,7 +105,7 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 | VE-007 | **Edda Lindgren** (Summarizer) | 抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成 |
 | VE-008 | **Mira Falk** (Recorder) | 投稿記事の確定事実を台帳へ記録・更新 |
 
-記事が push されたあと、9体目が別工程として走ります。
+記事が push されたあと、10体目が別工程として走ります。
 
 | ID | エージェント | 役割 |
 |----|-------------|------|
@@ -141,7 +142,34 @@ Vera → Edda が過去記事から「継続性台帳」(`data/continuity-ledger
 投稿後は Mira が台帳を更新し、参照源を常に最新に保ちます。
 
 - 継続性の正典ソース: 本パイプラインが生成した日記（`src/content/posts/`）
-- 金額は「最高到達点」を正典とし、個人の現実的上限（1億円）超や統計引用は除外
+- 台帳は毎回そこから作り直す（キャッシュを信じない。導出できるものは導出する）
+- 対象は金額だけではない。**話題を問わず**、単調増加する数値はすべて逆行禁止:
+  貯金額 / 総資産額 / 投資額（円）、習慣の継続日数（瞑想・散歩・ジャーナリング等）、
+  継続年数（積立投資・ブログ等）、読了冊数（年ごとにリセット）
+- 各指標は「最高到達点」を正典とし、個人の現実的上限（1億円）超・統計引用・
+  相場やニュース由来の数値は個人の事実から除外する
+
+**ブリーフは指示であって保証ではない**ので、最後は決定論的なゲートが止めます
+（`detectRegressions()`）。逆行を検出したら、指摘つきで書き手に1度だけ書き直させ、
+校正後にもう一度確認し、テンプレートのフォールバックにも同じ判定を通します
+（AI が全滅した日にだけ逆行が出るのが、いちばん見つけにくい壊れ方なので）。
+回想は矛盾ではないので、「始めた頃は貯金100万円だった」は通ります。
+
+### トレンド・レーダー（外の景色）
+
+VE-010 Tessa が、記事を書く前に外で何が起きているかを集めます。
+
+| 何を | どこから | 何に使うか |
+|------|---------|-----------|
+| AI・最先端技術の話題 | Hacker News (Algolia API) / arXiv | テーマ選定・企画のフック |
+| 株式市場の地合い | Stooq 日足（S&P500 / 日経平均 / ドル円 / BTC） | その日の空気感（5日変化率・20日移動平均との位置） |
+
+- **API キー不要のソースだけ**を使います（鍵の有無で挙動が変わらないように）
+- **fail-soft**: 取得できなければ `degraded` として記録し、記事は通常どおり書きます。
+  直近3日以内のスナップショット（`data/trend-radar.json`）があればそれを使います
+- 相場は**予測しません**。見ればわかることだけを言葉にして、判断は書き手に渡します
+- ブリーフには必ず**使い方の制約**が付きます（1〜2文まで／投資助言は書かない／
+  レーダーの数字をミナ自身の資産額として書かない）。材料だけ渡すと日記がニュース要約に化けるので
 
 ### 参照源（文体・テーマ）
 
@@ -243,7 +271,9 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
 | [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。無料モデル3種を順に試行: `meta-llama/llama-3.3-70b-instruct:free` → `qwen/qwen-2.5-72b-instruct:free` → `deepseek/deepseek-chat:free`（ADR-0010）|
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
-| Multi-Agent Pipeline | 8エージェント順次実行（Vera → Nova → Lena → Chloe → Sophia → Iris → Edda → Mira）。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/runners.ts` |
+| Multi-Agent Pipeline | 9エージェント順次実行（Tessa → Vera → Nova → Lena → Chloe → Sophia → Iris → Edda → Mira）。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/runners.ts` |
+| Trend Radar | VE-010 Tessa が Hacker News / arXiv / Stooq から AI・技術の話題と相場の地合いを収集し、企画と執筆に渡す。API キー不要・fail-soft（ADR-0018） |
+| Continuity Gate | 金額・継続日数・年数・冊数の逆行を決定論的に検出。原稿・校正後・テンプレートの3箇所で確認し、逆行は公開しない（ADR-0018 / INV-019） |
 | Declarative Config | `config/pipeline.json` が設定の唯一のソース。Zod 検証＋参照整合性チェック（ADR-0015） |
 | Article → Video Handoff | VE-009 Runa が記事を動画ブリーフに変換し Linear へ起票。VAIZ が拾って動画にする。境界は Linear のみ（ADR-0017） |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
@@ -252,7 +282,7 @@ GEMINI_API_KEY=your_key bun run auto-post
 | Dry Run Mode | `bun run gen:dry` でファイル書き込みなしのパイプラインテスト |
 | Idempotency | 同日の重複ポスト生成を防止。`.pipeline-state.json` でステート管理 |
 | Resume from Failure | パイプライン中断時に最後の成功ステップから再開可能 |
-| テーマバランス分析 | 9カテゴリのキーワードマッチング＋スコアリング。直近20記事の傾向を考慮 |
+| テーマバランス分析 | 10カテゴリのキーワードマッチング＋スコアリング。直近20記事の傾向を考慮 |
 
 ### Web3 / ブロックチェーン
 

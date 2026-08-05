@@ -95,6 +95,7 @@ export const THEME_KEYWORDS: Record<string, string[]> = {
   '散歩・日常':           ['散歩', '日常', '朝', '夜', '習慣', '暮らし', '季節', '天気'],
   '暗号資産':             ['暗号', 'ビットコイン', 'BTC', 'ETH', 'NFT', 'Web3', '仮想通貨', 'ブロックチェーン'],
   '自己成長':             ['成長', '自己啓発', 'スキル', '目標', '学び', 'キャリア', '継続', 'チャレンジ'],
+  'AI・テクノロジー':     ['AI', '人工知能', 'ChatGPT', 'LLM', 'ロボット', 'テクノロジー', 'ガジェット', '自動化', 'デジタル'],
 };
 
 // ─── Theme balance analysis ─────────────────────────────────────
@@ -195,6 +196,11 @@ export const THEMES: ThemeEntry[] = [
     titles: ['朝のルーティンを全部変えた', '苦手なことを30日やってみる', '独身10年目のスキルツリー'],
     tags: ['自己成長', '独身ライフ', 'ライフスタイル'],
   },
+  {
+    category: 'AI・テクノロジー',
+    titles: ['AIに家計簿を読ませてみた', '音声メモをAIで日記にする', '新しいAIを1週間だけ試した'],
+    tags: ['AI', 'テクノロジー', '暮らしの実験'],
+  },
 ];
 
 export interface FallbackBody {
@@ -275,7 +281,17 @@ ETFの積立投資も同じだなと思った。毎月コツコツ買い足し�
 
 // ─── Fallback post generation ───────────────────────────────────
 
-export function generateFallbackPost(themeBalance: ThemeBalance): {
+/**
+ * @param isConsistent 過去記事の到達点と矛盾しないテキストか判定する述語。
+ *   フォールバックはテンプレートなので、そのままだと「貯金100万円を超えた朝」の
+ *   ような固定タイトルが、300万に到達済みの台帳の上に落ちてくる。
+ *   AI が全滅した日にだけ逆行が出るのが一番見つけにくい壊れ方なので、
+ *   ここにも同じ継続性チェックを通す。
+ */
+export function generateFallbackPost(
+  themeBalance: ThemeBalance,
+  isConsistent: (text: string) => boolean = () => true,
+): {
   ceoPlan: { theme: string; topic: string; title: string; angle: string; mood_hint: string };
   seoData: { tags: string[]; keywords: string[]; description: string };
   body: string;
@@ -283,12 +299,15 @@ export function generateFallbackPost(themeBalance: ThemeBalance): {
   const priorityList = buildThemePriorityList(themeBalance);
   const priorityThemes = priorityList.map(p => p.theme);
 
+  const safeBodies = FALLBACK_BODIES.filter(fb => isConsistent(`${fb.title}。${fb.body}`));
+  const usable = safeBodies.length > 0 ? safeBodies : FALLBACK_BODIES;
+
   let chosen: FallbackBody | undefined;
   for (const theme of priorityThemes) {
-    chosen = FALLBACK_BODIES.find(fb => fb.theme === theme);
+    chosen = usable.find(fb => fb.theme === theme);
     if (chosen) break;
   }
-  chosen = chosen ?? pick(FALLBACK_BODIES);
+  chosen = chosen ?? pick(usable);
 
   const theme = THEMES.find(t => t.category === chosen!.theme) || THEMES[0];
 
