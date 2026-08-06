@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-05",
+  "capturedAt": "2026-08-06",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "LLMs reward expertise",
-      "url": "https://www.seangoedecke.com/llms-reward-expertise/",
-      "score": 1362,
-      "date": "2026-08-03"
+      "title": "Born Against, or why hobby programming communities are against LLM usage",
+      "url": "https://blog.fogus.me/llm/born-against.html",
+      "score": 306,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "AI-Generated Images Discourage Me from Reading Your Blog",
-      "url": "https://nelson.cloud/ai-generated-images-discourage-me-from-reading-your-blog/",
-      "score": 768,
-      "date": "2026-08-04"
+      "title": "Meta Ran Ads That Contained AI-Generated Child Sexual Abuse Imagery",
+      "url": "https://www.wired.com/story/meta-ran-ads-that-contained-ai-generated-child-sexual-abuse-imagery/",
+      "score": 304,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
       "title": "AI fuels more than half of cybercrime in Africa as scams surge – Interpol",
       "url": "https://www.africanews.com/2026/08/04/ai-fuels-more-than-half-of-cybercrime-in-africa-as-digital-scams-surge-interpol/",
-      "score": 268,
+      "score": 292,
       "date": "2026-08-04"
     },
     {
       "source": "Hacker News",
-      "title": "Smaller, faster, safer: running Kimi and GLM at scale",
-      "url": "https://blog.cloudflare.com/smaller-faster-safer-models/",
-      "score": 265,
-      "date": "2026-08-03"
+      "title": "Position: LLMs Can't Jump",
+      "url": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DklU4737opt",
+      "score": 287,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "AI's debt binge can't last, hidden borrowing reaches $1.65T",
-      "url": "https://fortune.com/2026/07/31/ai-debt-hypescalers-capex-capital-spending-hidden-borrowing-bond-issuance/",
-      "score": 144,
-      "date": "2026-08-03"
+      "title": "TIME Is Serving AI Bots a Different Website, with Ads Built In",
+      "url": "https://www.vincentschmalbach.com/time-serves-ai-bots-a-different-website/",
+      "score": 251,
+      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "The AI Demand Bubble",
-      "url": "https://www.wheresyoured.at/the-ai-demand-bubble/",
-      "score": 106,
-      "date": "2026-08-04"
+      "title": "Prime Agent: A self-improving RLM agent",
+      "url": "https://www.primeintellect.ai/blog/prime-agent",
+      "score": 196,
+      "date": "2026-08-05"
     }
   ],
   "market": [],
