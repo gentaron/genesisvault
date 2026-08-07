@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-06",
+  "capturedAt": "2026-08-07",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Born Against, or why hobby programming communities are against LLM usage",
       "url": "https://blog.fogus.me/llm/born-against.html",
-      "score": 306,
+      "score": 408,
       "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
       "title": "Meta Ran Ads That Contained AI-Generated Child Sexual Abuse Imagery",
       "url": "https://www.wired.com/story/meta-ran-ads-that-contained-ai-generated-child-sexual-abuse-imagery/",
-      "score": 304,
+      "score": 318,
       "date": "2026-08-05"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI fuels more than half of cybercrime in Africa as scams surge – Interpol",
-      "url": "https://www.africanews.com/2026/08/04/ai-fuels-more-than-half-of-cybercrime-in-africa-as-digital-scams-surge-interpol/",
-      "score": 292,
-      "date": "2026-08-04"
     },
     {
       "source": "Hacker News",
       "title": "Position: LLMs Can't Jump",
       "url": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DklU4737opt",
-      "score": 287,
+      "score": 295,
       "date": "2026-08-05"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Almost no skill required to cook a steak",
+      "url": "https://blog.sydorets.com/en/posts/almost-no-skill-required-to-cook-a-steak/",
+      "score": 271,
+      "date": "2026-08-06"
     },
     {
       "source": "Hacker News",
       "title": "TIME Is Serving AI Bots a Different Website, with Ads Built In",
       "url": "https://www.vincentschmalbach.com/time-serves-ai-bots-a-different-website/",
-      "score": 251,
+      "score": 253,
       "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
-      "title": "Prime Agent: A self-improving RLM agent",
-      "url": "https://www.primeintellect.ai/blog/prime-agent",
-      "score": 196,
-      "date": "2026-08-05"
+      "title": "Humans missed 1 in 3 threats approving AI agent commands across 40k game runs",
+      "url": "https://scalex.dev/blog/ai-agent-permissions-stats/",
+      "score": 248,
+      "date": "2026-08-06"
     }
   ],
   "market": [],
