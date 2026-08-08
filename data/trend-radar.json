@@ -5,42 +5,42 @@
       "source": "Hacker News",
       "title": "Oracle bans AI-generated code from OpenJDK",
       "url": "https://app.dealroom.co/news/feed/oracle-bans-ai-generated-code-from-openjdk-despite-ellison-s-claim-oracle-isn-t-writing-its-own-code",
-      "score": 481,
+      "score": 510,
       "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
-      "title": "Software development with AI is starting to feel like cooking steak",
-      "url": "https://blog.sydorets.com/en/posts/almost-no-skill-required-to-cook-a-steak/",
-      "score": 411,
-      "date": "2026-08-06"
+      "title": "DeepMind's WeatherNext model achieves breakthrough forecasting cyclones",
+      "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+      "score": 335,
+      "date": "2026-08-08"
     },
     {
       "source": "Hacker News",
-      "title": "Humans missed 1 in 3 threats approving AI agent commands across 40k game runs",
-      "url": "https://scalex.dev/blog/ai-agent-permissions-stats/",
-      "score": 332,
-      "date": "2026-08-06"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: I spent 2 years designing a mechanical Magic Keyboard",
-      "url": "https://electronicmaterialsoffice.com/",
-      "score": 294,
-      "date": "2026-08-06"
+      "title": "Denmark Requires Oral Defenses for Students' Written Work to Counter AI Cheating",
+      "url": "https://mezha.net/eng/bukvy/ca117584_denmark_requires_oral/",
+      "score": 324,
+      "date": "2026-08-08"
     },
     {
       "source": "Hacker News",
       "title": "Managing AI Coding Costs at Scale",
       "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
-      "score": 252,
+      "score": 295,
       "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
-      "title": "Federal Communications Commission scraps limit on broadcast TV ownership",
-      "url": "https://www.nbcnews.com/business/media/federal-communications-commission-scraps-limit-broadcast-tv-ownership-rcna587641",
-      "score": 175,
+      "title": "AI psychosis is the new leadership blind spot",
+      "url": "https://www.fastcompany.com/91576086/ai-psychosis-is-the-new-leadership-blind-spot-ai-leadership-blind-spots",
+      "score": 171,
+      "date": "2026-08-07"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Inside vLLM: Anatomy of a High-Throughput LLM Inference System (2025)",
+      "url": "https://www.aleksagordic.com/blog/vllm",
+      "score": 146,
       "date": "2026-08-06"
     }
   ],
