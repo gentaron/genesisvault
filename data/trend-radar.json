@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-07",
+  "capturedAt": "2026-08-08",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Born Against, or why hobby programming communities are against LLM usage",
-      "url": "https://blog.fogus.me/llm/born-against.html",
-      "score": 418,
-      "date": "2026-08-05"
+      "title": "Oracle bans AI-generated code from OpenJDK",
+      "url": "https://app.dealroom.co/news/feed/oracle-bans-ai-generated-code-from-openjdk-despite-ellison-s-claim-oracle-isn-t-writing-its-own-code",
+      "score": 481,
+      "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
       "title": "Software development with AI is starting to feel like cooking steak",
       "url": "https://blog.sydorets.com/en/posts/almost-no-skill-required-to-cook-a-steak/",
-      "score": 374,
+      "score": 411,
       "date": "2026-08-06"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Meta Ran Ads That Contained AI-Generated Child Sexual Abuse Imagery",
-      "url": "https://www.wired.com/story/meta-ran-ads-that-contained-ai-generated-child-sexual-abuse-imagery/",
-      "score": 320,
-      "date": "2026-08-05"
     },
     {
       "source": "Hacker News",
       "title": "Humans missed 1 in 3 threats approving AI agent commands across 40k game runs",
       "url": "https://scalex.dev/blog/ai-agent-permissions-stats/",
-      "score": 310,
+      "score": 332,
       "date": "2026-08-06"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: I spent 2 years designing a mechanical Magic Keyboard",
       "url": "https://electronicmaterialsoffice.com/",
-      "score": 274,
+      "score": 294,
       "date": "2026-08-06"
     },
     {
       "source": "Hacker News",
-      "title": "TIME Is Serving AI Bots a Different Website, with Ads Built In",
-      "url": "https://www.vincentschmalbach.com/time-serves-ai-bots-a-different-website/",
-      "score": 260,
-      "date": "2026-08-05"
+      "title": "Managing AI Coding Costs at Scale",
+      "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
+      "score": 252,
+      "date": "2026-08-07"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Federal Communications Commission scraps limit on broadcast TV ownership",
+      "url": "https://www.nbcnews.com/business/media/federal-communications-commission-scraps-limit-broadcast-tv-ownership-rcna587641",
+      "score": 175,
+      "date": "2026-08-06"
     }
   ],
   "market": [],
