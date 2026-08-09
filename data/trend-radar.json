@@ -3,38 +3,31 @@
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Oracle bans AI-generated code from OpenJDK",
-      "url": "https://app.dealroom.co/news/feed/oracle-bans-ai-generated-code-from-openjdk-despite-ellison-s-claim-oracle-isn-t-writing-its-own-code",
-      "score": 529,
-      "date": "2026-08-07"
-    },
-    {
-      "source": "Hacker News",
       "title": "DeepMind's WeatherNext model achieves breakthrough forecasting cyclones",
       "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
-      "score": 424,
+      "score": 432,
       "date": "2026-08-08"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Managing AI Coding Costs at Scale",
-      "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
-      "score": 304,
-      "date": "2026-08-07"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI psychosis is the new leadership blind spot",
-      "url": "https://www.fastcompany.com/91576086/ai-psychosis-is-the-new-leadership-blind-spot-ai-leadership-blind-spots",
-      "score": 174,
-      "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
       "title": "Gentoo bugzilla closed due AI bot scraper overload",
       "url": "https://social.treehouse.systems/@mgorny/117058483039362779",
-      "score": 166,
+      "score": 168,
       "date": "2026-08-08"
+    },
+    {
+      "source": "Hacker News",
+      "title": "How I use LLMs to learn complex topics",
+      "url": "https://laurentiugabriel.github.io/blog/articles/how-i-use-llms-to-learn/",
+      "score": 167,
+      "date": "2026-08-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Everything you do is being recorded",
+      "url": "https://www.theatlantic.com/technology/2026/05/ai-wearable-surveillance-countermeasures/687203/",
+      "score": 130,
+      "date": "2026-08-09"
     },
     {
       "source": "arXiv",
@@ -42,12 +35,18 @@
       "url": "http://arxiv.org/abs/2608.06377v1",
       "score": null,
       "date": "2026-08-06"
+    },
+    {
+      "source": "arXiv",
+      "title": "Tracing the Heart: An Evidence-Linked Pipeline for Heart-Failure Feature Engineering",
+      "url": "http://arxiv.org/abs/2608.06366v1",
+      "score": null,
+      "date": "2026-08-06"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: LLM",
     "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
