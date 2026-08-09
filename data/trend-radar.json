@@ -1,52 +1,53 @@
 {
-  "capturedAt": "2026-08-08",
+  "capturedAt": "2026-08-09",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Oracle bans AI-generated code from OpenJDK",
       "url": "https://app.dealroom.co/news/feed/oracle-bans-ai-generated-code-from-openjdk-despite-ellison-s-claim-oracle-isn-t-writing-its-own-code",
-      "score": 481,
+      "score": 529,
       "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
-      "title": "Software development with AI is starting to feel like cooking steak",
-      "url": "https://blog.sydorets.com/en/posts/almost-no-skill-required-to-cook-a-steak/",
-      "score": 411,
-      "date": "2026-08-06"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Humans missed 1 in 3 threats approving AI agent commands across 40k game runs",
-      "url": "https://scalex.dev/blog/ai-agent-permissions-stats/",
-      "score": 332,
-      "date": "2026-08-06"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: I spent 2 years designing a mechanical Magic Keyboard",
-      "url": "https://electronicmaterialsoffice.com/",
-      "score": 294,
-      "date": "2026-08-06"
+      "title": "DeepMind's WeatherNext model achieves breakthrough forecasting cyclones",
+      "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
+      "score": 424,
+      "date": "2026-08-08"
     },
     {
       "source": "Hacker News",
       "title": "Managing AI Coding Costs at Scale",
       "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
-      "score": 252,
+      "score": 304,
       "date": "2026-08-07"
     },
     {
       "source": "Hacker News",
-      "title": "Federal Communications Commission scraps limit on broadcast TV ownership",
-      "url": "https://www.nbcnews.com/business/media/federal-communications-commission-scraps-limit-broadcast-tv-ownership-rcna587641",
-      "score": 175,
+      "title": "AI psychosis is the new leadership blind spot",
+      "url": "https://www.fastcompany.com/91576086/ai-psychosis-is-the-new-leadership-blind-spot-ai-leadership-blind-spots",
+      "score": 174,
+      "date": "2026-08-07"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Gentoo bugzilla closed due AI bot scraper overload",
+      "url": "https://social.treehouse.systems/@mgorny/117058483039362779",
+      "score": 166,
+      "date": "2026-08-08"
+    },
+    {
+      "source": "arXiv",
+      "title": "Learning When to Trust via Selective Context Preference Optimization",
+      "url": "http://arxiv.org/abs/2608.06377v1",
+      "score": null,
       "date": "2026-08-06"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
+    "Hacker News に該当なし: LLM",
     "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
