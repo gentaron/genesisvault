@@ -1,53 +1,52 @@
 {
-  "capturedAt": "2026-08-09",
+  "capturedAt": "2026-08-10",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Oracle bans AI-generated code from OpenJDK",
-      "url": "https://app.dealroom.co/news/feed/oracle-bans-ai-generated-code-from-openjdk-despite-ellison-s-claim-oracle-isn-t-writing-its-own-code",
-      "score": 529,
-      "date": "2026-08-07"
+      "title": "How I use LLMs to learn complex topics",
+      "url": "https://laurentiugabriel.github.io/blog/articles/how-i-use-llms-to-learn/",
+      "score": 680,
+      "date": "2026-08-09"
     },
     {
       "source": "Hacker News",
-      "title": "DeepMind's WeatherNext model achieves breakthrough forecasting cyclones",
-      "url": "https://deepmind.google/blog/weathernext-ai-model-achieves-breakthrough-in-forecasting-cyclones/",
-      "score": 424,
-      "date": "2026-08-08"
+      "title": "Everything you do is being recorded",
+      "url": "https://www.theatlantic.com/technology/2026/05/ai-wearable-surveillance-countermeasures/687203/",
+      "score": 333,
+      "date": "2026-08-09"
     },
     {
       "source": "Hacker News",
-      "title": "Managing AI Coding Costs at Scale",
-      "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
-      "score": 304,
-      "date": "2026-08-07"
+      "title": "Docker Sandboxes – Disposable, isolated sandboxes for AI agents",
+      "url": "https://www.docker.com/products/docker-sandboxes/",
+      "score": 291,
+      "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
-      "title": "AI psychosis is the new leadership blind spot",
-      "url": "https://www.fastcompany.com/91576086/ai-psychosis-is-the-new-leadership-blind-spot-ai-leadership-blind-spots",
-      "score": 174,
-      "date": "2026-08-07"
+      "title": "Meta Muse Glimmer – open weights 30B local coding model",
+      "url": "https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model",
+      "score": 199,
+      "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
       "title": "Gentoo bugzilla closed due AI bot scraper overload",
       "url": "https://social.treehouse.systems/@mgorny/117058483039362779",
-      "score": 166,
+      "score": 170,
       "date": "2026-08-08"
     },
     {
-      "source": "arXiv",
-      "title": "Learning When to Trust via Selective Context Preference Optimization",
-      "url": "http://arxiv.org/abs/2608.06377v1",
-      "score": null,
-      "date": "2026-08-06"
+      "source": "Hacker News",
+      "title": "The tragedy of the commons, AI edition",
+      "url": "https://www.economist.com/britain/2026/08/06/the-tragedy-of-the-commons-ai-edition",
+      "score": 131,
+      "date": "2026-08-09"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: LLM",
     "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
