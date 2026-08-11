@@ -3,45 +3,45 @@
   "tech": [
     {
       "source": "Hacker News",
-      "title": "How I use LLMs to learn complex topics",
-      "url": "https://laurentiugabriel.github.io/blog/articles/how-i-use-llms-to-learn/",
-      "score": 803,
-      "date": "2026-08-09"
+      "title": "France to ban unsolicited telemarketing calls",
+      "url": "https://www.lemonde.fr/en/france/article/2026/08/06/france-to-ban-unsolicited-telemarketing-calls-from-august-11_6756208_7.html",
+      "score": 973,
+      "date": "2026-08-11"
+    },
+    {
+      "source": "Hacker News",
+      "title": "As AI eats the web, the internet’s collective memory is disappearing",
+      "url": "https://thewalrus.ca/google-search-is-dying/",
+      "score": 843,
+      "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
       "title": "Docker Sandboxes – Disposable, isolated sandboxes for AI agents",
       "url": "https://www.docker.com/products/docker-sandboxes/",
-      "score": 658,
+      "score": 678,
       "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
       "title": "Mark Zuckerberg attacks 'closed' AI rivals as Meta returns to open models",
       "url": "https://www.ft.com/content/4e3957f8-ea7c-4c46-a3de-cdce8e526878",
-      "score": 535,
-      "date": "2026-08-10"
-    },
-    {
-      "source": "Hacker News",
-      "title": "As AI eats the web, the internet’s collective memory is disappearing",
-      "url": "https://thewalrus.ca/google-search-is-dying/",
-      "score": 380,
+      "score": 622,
       "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
       "url": "https://cactuscompute.com/needle",
-      "score": 372,
+      "score": 501,
       "date": "2026-08-10"
     },
     {
       "source": "Hacker News",
-      "title": "France to ban unsolicited telemarketing calls",
-      "url": "https://www.lemonde.fr/en/france/article/2026/08/06/france-to-ban-unsolicited-telemarketing-calls-from-august-11_6756208_7.html",
-      "score": 352,
-      "date": "2026-08-11"
+      "title": "How Claude marks AI-generated content",
+      "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+      "score": 406,
+      "date": "2026-08-10"
     }
   ],
   "market": [],
