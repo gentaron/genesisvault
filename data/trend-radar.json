@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-14",
+  "capturedAt": "2026-08-15",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "AI is removing the middle class of software engineering?",
-      "url": "https://blog.florianherrengt.com/ai-removing-middle-class-software-engineering.html",
-      "score": 976,
-      "date": "2026-08-12"
-    },
     {
       "source": "Hacker News",
       "title": "GLM-5.3: Frontier coding with emergent cyber capabilities",
       "url": "https://z.ai/blog/glm-5.3",
-      "score": 602,
+      "score": 1100,
       "date": "2026-08-14"
     },
     {
       "source": "Hacker News",
-      "title": "Someone is running mass vulnerability scans, spoofing AI bots like ClaudeBot",
-      "url": "https://knownagents.com/insights",
-      "score": 301,
-      "date": "2026-08-12"
+      "title": "Google is making private AI practical with homomorphic encryption",
+      "url": "https://blog.google/security/how-google-is-making-private-ai-practical-with-homomorphic-encryption/",
+      "score": 413,
+      "date": "2026-08-14"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI by Hand",
+      "url": "https://www.byhand.ai/",
+      "score": 317,
+      "date": "2026-08-14"
     },
     {
       "source": "Hacker News",
       "title": "Choosing an AI model: one prompt, 11 models, different results",
       "url": "https://www.netlify.com/blog/one-prompt-11-models-very-different-results/",
-      "score": 207,
+      "score": 216,
       "date": "2026-08-13"
     },
     {
       "source": "Hacker News",
-      "title": "AI agents lie, cheat and steal. That is putting off users",
-      "url": "https://www.economist.com/business/2026/08/12/ai-agents-lie-cheat-and-steal-that-is-putting-off-users",
-      "score": 162,
-      "date": "2026-08-13"
+      "title": "Dear people who work at the airport",
+      "url": "https://life-after-ssri.bearblog.dev/dear-people-who-work-at-the-airport/",
+      "score": 200,
+      "date": "2026-08-14"
     },
     {
       "source": "Hacker News",
-      "title": "Text AI watermarks will always be trivial to remove",
-      "url": "https://www.seangoedecke.com/text-ai-watermarks/",
-      "score": 132,
-      "date": "2026-08-13"
+      "title": "When Genius Fails: The Intellectual Arrogance of the AI Labs",
+      "url": "https://weightythoughts.com/p/when-genius-failsthe-intellectual",
+      "score": 172,
+      "date": "2026-08-14"
     }
   ],
   "market": [],
