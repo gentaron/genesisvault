@@ -1,0 +1,96 @@
+---
+/**
+ * Access counter window.
+ *
+ * A small panel in the site footer showing how many times the site (and the
+ * current page) has been viewed. The site is static, so the count is fetched
+ * from `/api/views` after load; the panel stays hidden until a real number
+ * arrives, which means it simply does not appear when the counter is not
+ * configured (no KV credentials) or the API is unreachable.
+ *
+ * A page is counted at most once per visitor per 30-minute window. The mark
+ * lives in `localStorage` rather than `sessionStorage` on purpose: a reader
+ * who opens three articles in three tabs is one visit, and `sessionStorage` is
+ * per-tab, so it would count each tab again.
+ */
+---
+
+<aside class="gv-counter" id="gv-counter" hidden aria-live="polite">
+  <span class="gv-counter-title">アクセス数</span>
+  <span class="gv-counter-metric">
+    <span class="gv-counter-value" id="gv-counter-total">—</span>
+    <span class="gv-counter-unit">総アクセス</span>
+  </span>
+  <span class="gv-counter-divider" aria-hidden="true"></span>
+  <span class="gv-counter-metric">
+    <span class="gv-counter-value" id="gv-counter-page">—</span>
+    <span class="gv-counter-unit">このページ</span>
+  </span>
+</aside>
+
+<script is:inline>
+  (function () {
+    var panel = document.getElementById('gv-counter');
+    if (!panel) return;
+
+    var STORE_KEY = 'gv_viewed';
+    var VISIT_WINDOW_MS = 30 * 60 * 1000;
+
+    var path = location.pathname.replace(/\/index\.html$/, '/') || '/';
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+
+    // { "<path>": <epoch ms of the last counted view> }, pruned as we go.
+    function readMarks() {
+      try {
+        var parsed = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    var now = Date.now();
+    var marks = readMarks();
+    var alreadyCounted = now - (marks[path] || 0) < VISIT_WINDOW_MS;
+
+    var request = alreadyCounted
+      ? fetch('/api/views?path=' + encodeURIComponent(path), { method: 'GET' })
+      : fetch('/api/views', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: path }),
+        });
+
+    request
+      .then(function (res) {
+        if (!res.ok) throw new Error('counter unavailable');
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || data.enabled === false) return;
+
+        if (!alreadyCounted) {
+          marks[path] = now;
+          Object.keys(marks).forEach(function (key) {
+            if (now - marks[key] >= VISIT_WINDOW_MS) delete marks[key];
+          });
+          try {
+            localStorage.setItem(STORE_KEY, JSON.stringify(marks));
+          } catch (e) {
+            // Storage disabled — the view was still counted server-side.
+          }
+        }
+
+        document.getElementById('gv-counter-total').textContent = Number(
+          data.total || 0,
+        ).toLocaleString('ja-JP');
+        document.getElementById('gv-counter-page').textContent = Number(
+          data.page || 0,
+        ).toLocaleString('ja-JP');
+        panel.hidden = false;
+      })
+      .catch(function () {
+        // The counter is decorative: stay hidden rather than show an error.
+      });
+  })();
+</script>

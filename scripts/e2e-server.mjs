@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import articleHandler from '../api/article/[slug].ts';
 import unlockHandler from '../api/unlock.ts';
 import unlockLegacyHandler from '../api/unlock-legacy.ts';
+import viewsHandler from '../api/views.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -153,6 +154,9 @@ const server = http.createServer(async (req, res) => {
   }
   if (pathname === '/api/unlock-legacy') {
     return adaptVercel(unlockLegacyHandler)(req, res, url);
+  }
+  if (pathname === '/api/views') {
+    return adaptVercel(viewsHandler)(req, res, url);
   }
   if (pathname === '/api/article' || pathname.startsWith('/api/article/')) {
     const slug = decodeURIComponent(pathname.replace(/^\/api\/article\/?/, ''));
