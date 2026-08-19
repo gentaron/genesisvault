@@ -1,53 +1,54 @@
 {
-  "capturedAt": "2026-08-18",
+  "capturedAt": "2026-08-19",
   "tech": [
     {
       "source": "Hacker News",
       "title": "AI;DR (AI; Didn't Read)",
       "url": "https://www.rickmanelius.com/p/aidr-ai-didnt-read",
-      "score": 925,
+      "score": 1078,
       "date": "2026-08-17"
     },
     {
       "source": "Hacker News",
       "title": "Israel creates fake think tank in likely attempt to dupe AI chatbots",
       "url": "https://responsiblestatecraft.org/israel-influence-chatgpt/",
-      "score": 609,
+      "score": 1028,
       "date": "2026-08-17"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Google has acquired the data of failed US airline Spirit",
+      "url": "https://www.theregister.com/ai-and-ml/2026/08/18/google-buys-crashed-airline-spirits-data-at-auction-because-ai/5288962",
+      "score": 585,
+      "date": "2026-08-18"
     },
     {
       "source": "Hacker News",
       "title": "AI-Generated GitHub Copilot “Autofix” Allowed Compromise of Snowflake's Jira",
       "url": "https://www.wiz.io/blog/red-agent-snowflake-copilot-cicd-bug",
-      "score": 383,
+      "score": 422,
       "date": "2026-08-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The AI Credit Resale Economy",
-      "url": "https://vectoral.com/blog/who-are-the-token-brokers",
-      "score": 327,
-      "date": "2026-08-16"
     },
     {
       "source": "Hacker News",
       "title": "How to disable or avoid intrusive AI",
       "url": "https://www.librarian.net/notoai/",
-      "score": 308,
+      "score": 335,
       "date": "2026-08-17"
     },
     {
       "source": "Hacker News",
-      "title": "GIMP Development Update",
-      "url": "https://www.gimp.org/news/2026/08/16/dev-update-august-2026/",
-      "score": 261,
-      "date": "2026-08-17"
+      "title": "Field measurements of neighborhood-scale air temperature impacts of data centers",
+      "url": "https://asmedigitalcollection.asme.org/sustainablebuildings/article/7/2/024501/1233035/Data-Center-Waste-Heat-as-an-Emerging-Urban",
+      "score": 303,
+      "date": "2026-08-18"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
+    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
