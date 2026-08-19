@@ -22,6 +22,7 @@ export default defineConfig({
         'api/unlock.ts',
         'api/article/[slug].ts',
         'api/unlock-legacy.ts',
+        'api/views.ts',                // thin handler; helpers in api/_lib/views.ts
 
         // ─── External-service-dependent files ───────────────────
         'src/lib/agents/runners.ts',   // calls AI providers; tested via integration

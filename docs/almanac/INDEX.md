@@ -5,7 +5,7 @@
 このリポジトリで「なぜそうなっているか」を探すときの入口。
 設計判断は ADR、壊れたときの手順は Runbook にある。
 
-## ADR — 設計判断の記録（18件）
+## ADR — 設計判断の記録（19件）
 
 不可逆な決定と、その理由。新しい ADR は次の番号を使うこと（番号の重複は `bun run verify` で失敗する）。
 
@@ -29,6 +29,7 @@
 | 0016 | [ADR-0016: 囲い（審査層）— 見逃しを設計で潰す（Phase λ）](../adr/0016-the-enclosure.md) | Accepted | 2026-07-29 |
 | 0017 | [ADR-0017: 記事から動画への受け渡し — Linear を境界にする（Phase μ）](../adr/0017-video-brief-handoff.md) | Accepted | 2026-08-04 |
 | 0018 | [ADR-0018: 外の景色を取り込み、到達点を後退させない（Phase ν）](../adr/0018-trend-radar-and-continuity-gate.md) | Accepted | 2026-08-05 |
+| 0019 | [ADR-0019: サイト内アクセスカウンタ — KV への INCR をブラウザから叩く](../adr/0019-access-counter.md) | Accepted | 2026-08-18 |
 
 ## Runbook — 手順書（9件）
 
