@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-08-19",
+  "capturedAt": "2026-08-20",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AI;DR (AI; Didn't Read)",
-      "url": "https://www.rickmanelius.com/p/aidr-ai-didnt-read",
-      "score": 1078,
-      "date": "2026-08-17"
+      "title": "OpenRouter is joining Stripe",
+      "url": "https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe/",
+      "score": 875,
+      "date": "2026-08-19"
     },
     {
       "source": "Hacker News",
-      "title": "Israel creates fake think tank in likely attempt to dupe AI chatbots",
-      "url": "https://responsiblestatecraft.org/israel-influence-chatgpt/",
-      "score": 1028,
-      "date": "2026-08-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Google has acquired the data of failed US airline Spirit",
-      "url": "https://www.theregister.com/ai-and-ml/2026/08/18/google-buys-crashed-airline-spirits-data-at-auction-because-ai/5288962",
-      "score": 585,
-      "date": "2026-08-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI-Generated GitHub Copilot “Autofix” Allowed Compromise of Snowflake's Jira",
-      "url": "https://www.wiz.io/blog/red-agent-snowflake-copilot-cicd-bug",
-      "score": 422,
-      "date": "2026-08-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "How to disable or avoid intrusive AI",
-      "url": "https://www.librarian.net/notoai/",
-      "score": 335,
-      "date": "2026-08-17"
+      "title": "Don't Paste the AI, please",
+      "url": "https://dontpastetheai.com/",
+      "score": 457,
+      "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
       "title": "Field measurements of neighborhood-scale air temperature impacts of data centers",
       "url": "https://asmedigitalcollection.asme.org/sustainablebuildings/article/7/2/024501/1233035/Data-Center-Waste-Heat-as-an-Emerging-Urban",
-      "score": 303,
+      "score": 311,
+      "date": "2026-08-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Claude Code May–August 2026 weekly limits promotion",
+      "url": "https://support.claude.com/en/articles/15910845-claude-code-may-august-2026-weekly-limits-promotion",
+      "score": 292,
+      "date": "2026-08-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Air Theremin – A browser theremin you play by waving at your webcam",
+      "url": "https://theremin.bizibah.com/",
+      "score": 281,
+      "date": "2026-08-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI usage patterns in software teams",
+      "url": "https://linear.app/data",
+      "score": 190,
       "date": "2026-08-18"
     }
   ],
@@ -48,7 +48,6 @@
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
-    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
