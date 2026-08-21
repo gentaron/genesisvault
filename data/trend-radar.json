@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-20",
+  "capturedAt": "2026-08-21",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "OpenRouter is joining Stripe",
-      "url": "https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe/",
-      "score": 875,
-      "date": "2026-08-19"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Don't Paste the AI, please",
+      "title": "Don't paste the AI, please",
       "url": "https://dontpastetheai.com/",
-      "score": 457,
+      "score": 1016,
       "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
-      "title": "Field measurements of neighborhood-scale air temperature impacts of data centers",
-      "url": "https://asmedigitalcollection.asme.org/sustainablebuildings/article/7/2/024501/1233035/Data-Center-Waste-Heat-as-an-Emerging-Urban",
-      "score": 311,
-      "date": "2026-08-18"
+      "title": "AI companies destroy physical books – let's scan rare books before it's too late",
+      "url": "https://annas-archive.gl/blog/physical-destruction.html",
+      "score": 353,
+      "date": "2026-08-21"
     },
     {
       "source": "Hacker News",
-      "title": "Claude Code May–August 2026 weekly limits promotion",
-      "url": "https://support.claude.com/en/articles/15910845-claude-code-may-august-2026-weekly-limits-promotion",
-      "score": 292,
-      "date": "2026-08-18"
+      "title": "Show HN: Huzzah – a novel approach to coding with AI",
+      "url": "https://www.danielvaughn.dev/posts/huzzah/",
+      "score": 326,
+      "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
-      "title": "Air Theremin – A browser theremin you play by waving at your webcam",
-      "url": "https://theremin.bizibah.com/",
-      "score": 281,
+      "title": "Vomit: Clean up Claude 5's token output with a separate LLM",
+      "url": "https://github.com/zachahn/vomit",
+      "score": 263,
+      "date": "2026-08-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Mathematics in the age of AI",
+      "url": "https://arxiv.org/abs/2608.16753",
+      "score": 207,
       "date": "2026-08-19"
     },
     {
       "source": "Hacker News",
-      "title": "AI usage patterns in software teams",
-      "url": "https://linear.app/data",
-      "score": 190,
-      "date": "2026-08-18"
+      "title": "Copyright does not protect AI-generated content in EU",
+      "url": "https://mathstodon.xyz/@maxpool/117128107757895678",
+      "score": 177,
+      "date": "2026-08-21"
     }
   ],
   "market": [],
