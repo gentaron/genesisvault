@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-08-21",
+  "capturedAt": "2026-08-22",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Don't paste the AI, please",
-      "url": "https://dontpastetheai.com/",
-      "score": 1016,
-      "date": "2026-08-20"
-    },
     {
       "source": "Hacker News",
       "title": "AI companies destroy physical books – let's scan rare books before it's too late",
       "url": "https://annas-archive.gl/blog/physical-destruction.html",
-      "score": 353,
+      "score": 572,
+      "date": "2026-08-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I'm becoming AI-blind",
+      "url": "https://cymerys.com/w/im-becoming-ai-blind",
+      "score": 387,
       "date": "2026-08-21"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: Huzzah – a novel approach to coding with AI",
       "url": "https://www.danielvaughn.dev/posts/huzzah/",
-      "score": 326,
+      "score": 369,
       "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
       "title": "Vomit: Clean up Claude 5's token output with a separate LLM",
       "url": "https://github.com/zachahn/vomit",
-      "score": 263,
+      "score": 298,
       "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
-      "title": "Mathematics in the age of AI",
-      "url": "https://arxiv.org/abs/2608.16753",
-      "score": 207,
-      "date": "2026-08-19"
+      "title": "Anti-AI fonts are useless and harmful",
+      "url": "https://blog.yaros.ae/anti-ai-fonts-are-useless-and-harmful/",
+      "score": 208,
+      "date": "2026-08-20"
     },
     {
       "source": "Hacker News",
       "title": "Copyright does not protect AI-generated content in EU",
       "url": "https://mathstodon.xyz/@maxpool/117128107757895678",
-      "score": 177,
+      "score": 186,
       "date": "2026-08-21"
     }
   ],
