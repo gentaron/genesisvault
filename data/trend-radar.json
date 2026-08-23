@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-22",
+  "capturedAt": "2026-08-23",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "AI companies destroy physical books – let's scan rare books before it's too late",
-      "url": "https://annas-archive.gl/blog/physical-destruction.html",
-      "score": 572,
-      "date": "2026-08-21"
-    },
     {
       "source": "Hacker News",
       "title": "I'm becoming AI-blind",
       "url": "https://cymerys.com/w/im-becoming-ai-blind",
-      "score": 387,
+      "score": 486,
       "date": "2026-08-21"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Huzzah – a novel approach to coding with AI",
-      "url": "https://www.danielvaughn.dev/posts/huzzah/",
-      "score": 369,
-      "date": "2026-08-20"
+      "title": "Why your local LLM feels dumber than it is",
+      "url": "https://forum.level1techs.com/t/why-your-local-llm-feels-dumber-than-it-is/253917",
+      "score": 378,
+      "date": "2026-08-22"
     },
     {
       "source": "Hacker News",
-      "title": "Vomit: Clean up Claude 5's token output with a separate LLM",
-      "url": "https://github.com/zachahn/vomit",
-      "score": 298,
-      "date": "2026-08-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Anti-AI fonts are useless and harmful",
-      "url": "https://blog.yaros.ae/anti-ai-fonts-are-useless-and-harmful/",
-      "score": 208,
-      "date": "2026-08-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Copyright does not protect AI-generated content in EU",
-      "url": "https://mathstodon.xyz/@maxpool/117128107757895678",
-      "score": 186,
+      "title": "How a Texas student blew the whistle on a rogue AI hacking attempt",
+      "url": "https://www.reuters.com/world/how-texas-student-blew-whistle-rogue-ai-hacking-attempt-2026-08-20/",
+      "score": 167,
       "date": "2026-08-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI boosted homework scores, then exam scores dropped: Study",
+      "url": "https://canews24.online/?p=71",
+      "score": 165,
+      "date": "2026-08-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Building an (almost) fully self-hosted, sandboxed, agentic software factory",
+      "url": "https://blog.jakesaunders.dev/building-an-almost-fully-self-hosted-sandboxed-agentic-software-factory/",
+      "score": 116,
+      "date": "2026-08-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "NanoGPT Speedrun Frontier",
+      "url": "https://www.primeintellect.ai/research/nanogpt-speedrun",
+      "score": 112,
+      "date": "2026-08-22"
     }
   ],
   "market": [],
