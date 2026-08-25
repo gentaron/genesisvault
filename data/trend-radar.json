@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-24",
+  "capturedAt": "2026-08-25",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Why your local LLM feels dumber than it is",
-      "url": "https://forum.level1techs.com/t/why-your-local-llm-feels-dumber-than-it-is/253917",
-      "score": 417,
-      "date": "2026-08-22"
+      "title": "Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded",
+      "url": "https://twitter.com/lemire/status/2091894299289874926",
+      "score": 898,
+      "date": "2026-08-24"
     },
     {
       "source": "Hacker News",
-      "title": "NanoGPT Speedrun Frontier",
-      "url": "https://www.primeintellect.ai/research/nanogpt-speedrun",
-      "score": 127,
-      "date": "2026-08-22"
+      "title": "Anthropic's best AI model struggles to attract users as cheaper tools thrive",
+      "url": "https://www.ft.com/content/5ee49718-c258-4f01-aa32-7e5b76ae5245",
+      "score": 786,
+      "date": "2026-08-23"
     },
     {
-      "source": "arXiv",
-      "title": "Primal Acceleration of Newton's Method",
-      "url": "http://arxiv.org/abs/2608.21359v1",
-      "score": null,
-      "date": "2026-08-21"
+      "source": "Hacker News",
+      "title": "I spent $266 and four AI models to own my tablet. GLM-5.3 finished it in a day",
+      "url": "https://ericpardee.github.io/fire-hd-ownership/",
+      "score": 686,
+      "date": "2026-08-23"
     },
     {
-      "source": "arXiv",
-      "title": "VIALS: A Benchmark for Visual Interpretation of Artifacts in the Life Sciences",
-      "url": "http://arxiv.org/abs/2608.21357v1",
-      "score": null,
-      "date": "2026-08-21"
+      "source": "Hacker News",
+      "title": "I were 17, I'd learn how to build LLMs from scratch",
+      "url": "https://twitter.com/paulg/status/2091544343589060625",
+      "score": 559,
+      "date": "2026-08-23"
     },
     {
-      "source": "arXiv",
-      "title": "AI with Authority, from Application to Silicon",
-      "url": "http://arxiv.org/abs/2608.21356v1",
-      "score": null,
-      "date": "2026-08-21"
+      "source": "Hacker News",
+      "title": "Coding expertise is going to collapse from AI reliance",
+      "url": "https://larsfaye.com/articles/ai-coding-will-prevent-expertise",
+      "score": 518,
+      "date": "2026-08-24"
     },
     {
-      "source": "arXiv",
-      "title": "TurboBias 2.0: Streaming Context-Biasing for Production-Efficient ASR Systems",
-      "url": "http://arxiv.org/abs/2608.21343v1",
-      "score": null,
-      "date": "2026-08-21"
+      "source": "Hacker News",
+      "title": "My agent.md to improve LLM-assisted code quality",
+      "url": "https://fabiensanglard.net/agent.md/index.html",
+      "score": 405,
+      "date": "2026-08-23"
     }
   ],
   "market": [],
