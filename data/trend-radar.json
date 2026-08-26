@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-08-25",
+  "capturedAt": "2026-08-26",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded",
       "url": "https://twitter.com/lemire/status/2091894299289874926",
-      "score": 898,
+      "score": 993,
       "date": "2026-08-24"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Anthropic's best AI model struggles to attract users as cheaper tools thrive",
-      "url": "https://www.ft.com/content/5ee49718-c258-4f01-aa32-7e5b76ae5245",
-      "score": 786,
-      "date": "2026-08-23"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I spent $266 and four AI models to own my tablet. GLM-5.3 finished it in a day",
-      "url": "https://ericpardee.github.io/fire-hd-ownership/",
-      "score": 686,
-      "date": "2026-08-23"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I were 17, I'd learn how to build LLMs from scratch",
-      "url": "https://twitter.com/paulg/status/2091544343589060625",
-      "score": 559,
-      "date": "2026-08-23"
     },
     {
       "source": "Hacker News",
       "title": "Coding expertise is going to collapse from AI reliance",
       "url": "https://larsfaye.com/articles/ai-coding-will-prevent-expertise",
-      "score": 518,
+      "score": 552,
       "date": "2026-08-24"
     },
     {
       "source": "Hacker News",
-      "title": "My agent.md to improve LLM-assisted code quality",
-      "url": "https://fabiensanglard.net/agent.md/index.html",
-      "score": 405,
-      "date": "2026-08-23"
+      "title": "How much of HN is AI?",
+      "url": "https://blog.coredump.cx/p/how-much-of-hn-is-ai",
+      "score": 267,
+      "date": "2026-08-25"
+    },
+    {
+      "source": "Hacker News",
+      "title": "LLMs could control their host machines by exploiting inference engines",
+      "url": "https://boydkane.com/essays/llms-could-control-their-host-machines-by-exploiting-inference-engines",
+      "score": 189,
+      "date": "2026-08-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Show HN: I made a Raspberry with Qwen my local car AI",
+      "url": "https://github.com/ThinkOffApp/CarWatch",
+      "score": 143,
+      "date": "2026-08-25"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI is hitting entry-level jobs hardest, Stanford study finds",
+      "url": "https://arstechnica.com/ai/2026/08/ai-is-hitting-entry-level-jobs-hardest-stanford-study-finds/",
+      "score": 141,
+      "date": "2026-08-25"
     }
   ],
   "market": [],
