@@ -1,53 +1,52 @@
 {
-  "capturedAt": "2026-08-26",
+  "capturedAt": "2026-08-27",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded",
-      "url": "https://twitter.com/lemire/status/2091894299289874926",
-      "score": 993,
-      "date": "2026-08-24"
+      "title": "GLM-5.3-Flash",
+      "url": "https://z.ai/blog/glm-5.3-flash",
+      "score": 1103,
+      "date": "2026-08-26"
     },
     {
       "source": "Hacker News",
-      "title": "Coding expertise is going to collapse from AI reliance",
-      "url": "https://larsfaye.com/articles/ai-coding-will-prevent-expertise",
-      "score": 552,
-      "date": "2026-08-24"
+      "title": "CEO fired developers to make room for AI. Developers create open source AI CEO",
+      "url": "https://github.com/SenteLabsAI/OpenExecutive",
+      "score": 911,
+      "date": "2026-08-27"
     },
     {
       "source": "Hacker News",
-      "title": "How much of HN is AI?",
-      "url": "https://blog.coredump.cx/p/how-much-of-hn-is-ai",
-      "score": 267,
-      "date": "2026-08-25"
+      "title": "Z.ai confirms Ox Alpha is a new GLM-series model and will release its weights",
+      "url": "https://www.bloomberg.com/news/articles/2026-08-26/china-s-z-ai-made-ox-alpha-stealth-model-that-rivals-deepseek",
+      "score": 429,
+      "date": "2026-08-26"
     },
     {
       "source": "Hacker News",
-      "title": "LLMs could control their host machines by exploiting inference engines",
-      "url": "https://boydkane.com/essays/llms-could-control-their-host-machines-by-exploiting-inference-engines",
-      "score": 189,
-      "date": "2026-08-24"
+      "title": "Microduck",
+      "url": "https://pollen-robotics.com/microduck/",
+      "score": 422,
+      "date": "2026-08-27"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: I made a Raspberry with Qwen my local car AI",
-      "url": "https://github.com/ThinkOffApp/CarWatch",
-      "score": 143,
-      "date": "2026-08-25"
+      "title": "The turbulent AI era is here",
+      "url": "https://www.gatesnotes.com/a-turbulent-ai-era-and-critical-choices-to-make",
+      "score": 342,
+      "date": "2026-08-26"
     },
     {
       "source": "Hacker News",
-      "title": "AI is hitting entry-level jobs hardest, Stanford study finds",
-      "url": "https://arstechnica.com/ai/2026/08/ai-is-hitting-entry-level-jobs-hardest-stanford-study-finds/",
-      "score": 141,
-      "date": "2026-08-25"
+      "title": "It’s so hard to finish an idea that is not yours and is just suggested by AI",
+      "url": "https://www.ssp.sh/brain/using-obsidian-with-ai/",
+      "score": 246,
+      "date": "2026-08-26"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
