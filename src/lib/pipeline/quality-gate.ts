@@ -178,6 +178,22 @@ export function runQualityGate(body: string): QualityReport {
     severity: 'warning',
   });
 
+  // 11. Forbidden topic detection (Phase Ω — Neuro-Symbolic)
+  const forbiddenTopics = (GATE as Record<string, unknown>).forbiddenTopics as
+    { terms?: string[]; maxHitCount?: number } | undefined;
+  if (forbiddenTopics?.terms && forbiddenTopics.terms.length > 0) {
+    const maxHits = forbiddenTopics.maxHitCount ?? 0;
+    const hitTerms = forbiddenTopics.terms.filter(t => body.includes(t));
+    checks.push({
+      name: 'no_forbidden_topics',
+      passed: hitTerms.length <= maxHits,
+      message: hitTerms.length > maxHits
+        ? `禁止トピック検出: ${hitTerms.join('、')}（最大${maxHits}件まで許容）`
+        : '禁止トピックなし',
+      severity: 'error',
+    });
+  }
+
   // Calculate score using the configured penalties (default: error -25, warning -10)
   let score = 100;
   for (const check of checks) {

@@ -230,6 +230,11 @@
     "maxBodyLength": 5000,
     "minH2Headings": 1,
     "binaryContrastLimit": 3,
+    "forbiddenTopics": {
+      "comment": "これらのキーワードを本文に複数含む記事は生成を禁止する（シンボリックガードで検出）",
+      "terms": ["貯金", "貯蓄", "家計簿", "貯める", "貯金額"],
+      "maxHitCount": 0
+    },
     "penalty": {
       "error": 25,
       "warning": 10
@@ -299,7 +304,7 @@
         "weight": 10,
         "requiresBrief": false,
         "veto": false,
-        "guidance": "一人称「わたし」、柔らかい日記体。ミナの人物像（独身・散歩・瞑想・貯金・投資）と矛盾しないこと。"
+        "guidance": "一人称「わたし」、柔らかい日記体。ミナの人物像（独身・散歩・瞑想・暗号資産投資・読書・AI・物理学）と矛盾しないこと。"
       },
       {
         "id": "ai_slop",
@@ -315,7 +320,7 @@
         "weight": 10,
         "requiresBrief": false,
         "veto": true,
-        "guidance": "記事内で矛盾していないか。貯金額など既知の到達点を逆行させていないか（逆行は veto）。"
+        "guidance": "記事内で矛盾していないか。既知の到達点（積立年数・瞑想日数など）を逆行させていないか（逆行は veto）。"
       }
     ]
   },
@@ -359,6 +364,56 @@
         { "symbol": "usdjpy", "label": "ドル円" },
         { "symbol": "btcusd", "label": "ビットコイン" }
       ]
+    }
+  },
+  "tierOmega": {
+    "comment": "Neuro-Symbolic Heavy Creative — 無料最高峰モデル配置。Qwen3.8-Flash-NextのHybrid Attention+N-gramで構造的文脈理解。GLM-5.3-FlashのmHC多様体制約で物理的妥当性検証。Claude-obsidianのエアロックパターンでエージェント間データ不変性保証。",
+    "providers": {
+      "long_context_creative": {
+        "comment": "Qwen3.8-Flash-Next — Hybrid Attention + N-gram for structural coherence over long context (1M tokens). Used for writer/editor to learn style patterns from 2500+ past articles.",
+        "model": "qwen3.8-flash-next",
+        "sdk": "huggingface",
+        "envKey": "HF_TOKEN",
+        "context": 1000000,
+        "useFor": ["writer", "editor"],
+        "temperature": 0.85,
+        "maxOutputTokens": 4096
+      },
+      "logical_synthesis": {
+        "comment": "GLM-5.3-Flash — mHC manifold constraint for logical consistency in numerical reasoning. Used for treasurer/coach agents where data integrity matters.",
+        "model": "glm-5.3-flash",
+        "sdk": "openrouter",
+        "envKey": "OPENROUTER_API_KEY",
+        "context": 128000,
+        "useFor": ["balancer", "summarizer", "recorder"],
+        "temperature": 0.3,
+        "maxOutputTokens": 2048
+      },
+      "local_verification": {
+        "comment": "Local symbolic guard — deterministic, zero-cost, zero-latency. Runs before LLM judge to filter 90% of violations without API calls.",
+        "useFor": ["symbolic_guard", "provenance_checker"],
+        "enabled": true
+      }
+    },
+    "routing": {
+      "comment": "Tier-Omega routing overrides: agents listed here use Omega providers instead of default chain.",
+      "overrides": {
+        "writer": "long_context_creative",
+        "editor": "long_context_creative",
+        "balancer": "logical_synthesis",
+        "summarizer": "logical_synthesis",
+        "recorder": "logical_synthesis"
+      }
+    },
+    "graphMemory": {
+      "enabled": true,
+      "ledgerFile": "data/continuity-ledger.json",
+      "vectorSimilarityThreshold": 0.9,
+      "lookbackDays": 30
+    },
+    "airlock": {
+      "enabled": true,
+      "verifyOnJudge": true
     }
   }
 }

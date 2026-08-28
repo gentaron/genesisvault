@@ -402,3 +402,58 @@ VE-010 Tessa（`src/lib/agents/trends.ts`）は、このリポジトリで唯一
 - **`bun run verify` から呼ばない**: 検証はオフラインで完結する（INV-004）
 - **API キーを要求するソースを足さない**: 鍵の有無で挙動が変えない（INV-003）
 - **材料には必ず使い方を添える**: 制約なしで渡すと、日記がニュース要約に化ける
+
+## 13. Phase Ω — Neuro-Symbolic Graph Memory Protocol (NS-GMP)
+
+2026-08-28 導導入。知識の構造的整合性を担保するための拡張プロトコル。
+
+### 13.1 Symbolic Guard (`src/lib/pipeline/symbolic-guard.ts`)
+
+決定論的検証レイヤー。LLM 呼び出しゼロで記事の矛盾を事前に検出する。
+
+- **多様体制約**: 複数のアセット指標が構成要素の合計と整合するか
+- **因果律**: `succeeds` エッジが時間的に前向きであることを保証
+- **Provenance Chain**: 記事が台帳ノードからの派生パスを持つこと
+- **単調回帰**: monotonic=true の指標が減少していないこと
+- **禁止トピック検出**: 貯蓄・貯金・家計簿のキーワードが本文に含まれる場合は不合格
+- **タイトル一意性**: 直近30日間に同一タイトルが存在しないこと
+
+### 13.2 Airlock (`src/lib/pipeline/airlock.ts`)
+
+エージェント間データの不変性保証。SHA-256チェーンでパケットを署名。
+
+- 各エージェントの出力を `sealPacket()` でハッシュ化し次エージェントに渡す
+- `verifyChain()` でチェーン全体の完全性を検証（改竄・欠落を検出）
+- `extractProvenance()` で記事の全てのデータ起源を追跡可能
+
+### 13.3 Tier-Ω (`config/pipeline.json` → `tierOmega`)
+
+無料最高峰モデルの戦略配置。
+
+- writer/editor: Qwen3.8-Flash-Next（100万トークン、構造的文脈理解）
+- balancer/summarizer/recorder: GLM-5.3-Flash（mHC多様体制約、論理的整合性）
+- symbolic_guard: ローカル実行（コストゼロ、レイテンシゼロ）
+
+### 13.4 Graph Memory (`data/continuity-ledger.json` → `graph`)
+
+台帳にグラフ構造を追加（後方互換）。ノード・エッジで因果関係を表現。
+
+### 13.5 禁止トピック
+
+以下のトピックに関する記事は **一切生成しない**。過去に存在したが削除済み。
+
+- 貯金（貯金額・貯金日記・貯金術など全て）
+- 貯蓄（貯蓄額・貯蓄目標など全て）
+- 家計簿（家計簿記録・家計簿アプリなど全て）
+- 「貯める」という動作に関する記事全て
+
+代わりに推奨するトピック:
+- 暗号資産ポートフォリオ戦略・運用記録
+- AI・物理学・バイオテクノロジジーの学習記録
+- 散歩・瞑想・ジャーナリングの習慣化
+- 読書・カフェ・ひとり旅の体験
+
+### 13.6 Quality Gate 統合
+
+`quality-gate.ts` の `runQualityGate()` は自動的に禁止トピックを検出する（check #11）。
+`symbolic-guard.ts` の `runSymbolicGuard()` はパイプラインの構造検証レイヤーとして動作する。
