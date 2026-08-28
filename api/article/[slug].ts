@@ -58,9 +58,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).send(html);
     }
 
-    // Gated posts: verify cookie AND wallet whitelist
+    // Gated posts: verify access
+    // Accept either: (1) valid HMAC cookie with owner wallet, or
+    //                 (2) X-Owner-Wallet header matching the owner address
+    const ownerHeader = (req.headers['x-owner-wallet'] as string | undefined) || '';
     const verification = hmacVerify(req.headers.cookie);
-    if (!verification.valid || !isAllowedWallet(verification.wallet || '')) {
+    const wallet = verification.valid ? (verification.wallet || '') : '';
+    const authenticatedWallet = isAllowedWallet(wallet) ? wallet : (isAllowedWallet(ownerHeader) ? ownerHeader : '');
+
+    if (!authenticatedWallet) {
       res.setHeader('Content-Type', 'text/plain');
       res.setHeader('WWW-Authenticate', 'X-Payment realm="USDC" price="3" chain="ethereum"');
       return res.status(402).send('Payment required');

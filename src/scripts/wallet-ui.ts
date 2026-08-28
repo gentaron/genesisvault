@@ -89,41 +89,48 @@ function shortAddress(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
 
+/**
+ * Unlock content for the owner wallet.
+ *
+ * Strategy: set localStorage IMMEDIATELY (no server dependency),
+ * then attempt to get a server cookie in the background for article pages.
+ * This ensures the homepage paywall lifts instantly even if the API is down.
+ */
+function unlockOwnerLocally(addr: string): void {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      paid: true,
+      wallet: addr.toLowerCase(),
+      chain: 'ethereum',
+      txHash: '',
+      timestamp: Date.now(),
+      ownerUnlock: true,
+    })
+  );
+  applyPaywall();
+}
+
+/**
+ * Try to get a server-side unlock cookie (for gated article pages).
+ * Fire-and-forget — failure is non-fatal since localStorage already unlocked the homepage.
+ */
+function tryServerCookie(addr: string): void {
+  fetch('/api/unlock', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ wallet: addr }),
+    credentials: 'include',
+  }).catch(() => {
+    /* non-fatal: homepage already unlocked via localStorage */
+  });
+}
+
 async function attemptOwnerUnlock(addr: string): Promise<void> {
-  const errEl = document.getElementById('pay-error') as HTMLElement | null;
-  try {
-    const response = await fetch('/api/unlock', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ wallet: addr }),
-    });
-    const data = await response.json();
-    if (data.ok) {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          paid: true,
-          wallet: addr.toLowerCase(),
-          chain: 'ethereum',
-          txHash: '',
-          timestamp: Date.now(),
-          ownerUnlock: true,
-        })
-      );
-      applyPaywall();
-    } else {
-      if (errEl) {
-        errEl.textContent = '\u30b5\u30fc\u30d0\u30fc\u691c\u8a3c\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ' + (data.error || '\u4e0d\u660e\u306a\u30a8\u30e9\u30fc');
-        errEl.style.display = '';
-      }
-    }
-  } catch (err) {
-    console.error('Owner unlock failed:', err);
-    if (errEl) {
-      errEl.textContent = '\u30b5\u30fc\u30d0\u30fc\u306b\u63a5\u7d9a\u3067\u304d\u307e\u305b\u3093\u3002\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u3092\u78ba\u8a8d\u3057\u3066\u518d\u8a9f\u884c\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
-      errEl.style.display = '';
-    }
-  }
+  // 1. Instant client-side unlock (no server round-trip)
+  unlockOwnerLocally(addr);
+  // 2. Background: try to establish server cookie for article pages
+  tryServerCookie(addr);
 }
 
 // ─── Payment Logic ─────────────────────────────────────────────
@@ -405,9 +412,10 @@ async function connectToWallet(wallet: EIP6963ProviderDetail): Promise<void> {
     renderWalletPanel(addr);
     setupWalletListeners(wallet.provider as WalletProvider);
 
-    // Auto-unlock for whitelisted owner wallet
+    // Auto-unlock for whitelisted owner wallet (instant, no API dependency)
     if (addr.toLowerCase() === OWNER_WALLET && !isPaid()) {
-      attemptOwnerUnlock(addr);
+      unlockOwnerLocally(addr);
+      tryServerCookie(addr);
     }
   } catch (err: unknown) {
     // 4001 = EIP-1193 の「ユーザーが要求を拒否」。拒否は失敗ではないので黙って返す。
@@ -514,6 +522,7 @@ function init(): void {
         txHash: '',
         timestamp: Date.now(),
         serverVerified: true,
+        ownerUnlock: true,
       })
     );
   }
