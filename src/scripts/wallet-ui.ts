@@ -64,6 +64,11 @@ function isLocalPaid(): boolean {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return false;
     const d = JSON.parse(raw);
+    // Owner unlock: no txHash needed, just the owner flag + wallet + timestamp
+    if (d.ownerUnlock === true && d.paid === true && isValidAddress(d.wallet) && typeof d.timestamp === 'number') {
+      return true;
+    }
+    // Paid via USDC: requires a valid txHash
     return (
       d.paid === true &&
       isValidTxHash(d.txHash) &&
@@ -85,6 +90,7 @@ function shortAddress(addr: string): string {
 }
 
 async function attemptOwnerUnlock(addr: string): Promise<void> {
+  const errEl = document.getElementById('pay-error') as HTMLElement | null;
   try {
     const response = await fetch('/api/unlock', {
       method: 'POST',
@@ -105,9 +111,18 @@ async function attemptOwnerUnlock(addr: string): Promise<void> {
         })
       );
       applyPaywall();
+    } else {
+      if (errEl) {
+        errEl.textContent = '\u30b5\u30fc\u30d0\u30fc\u691c\u8a3c\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ' + (data.error || '\u4e0d\u660e\u306a\u30a8\u30e9\u30fc');
+        errEl.style.display = '';
+      }
     }
-  } catch {
-    /* silently fail — user can retry by reconnecting */
+  } catch (err) {
+    console.error('Owner unlock failed:', err);
+    if (errEl) {
+      errEl.textContent = '\u30b5\u30fc\u30d0\u30fc\u306b\u63a5\u7d9a\u3067\u304d\u307e\u305b\u3093\u3002\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u3092\u78ba\u8a8d\u3057\u3066\u518d\u8a9f\u884c\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+      errEl.style.display = '';
+    }
   }
 }
 

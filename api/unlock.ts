@@ -16,7 +16,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Whitelisted wallet: unlock without payment
   if (isAllowedWallet(wallet)) {
-    res.setHeader('Set-Cookie', buildUnlockCookie(wallet));
+    try {
+      res.setHeader('Set-Cookie', buildUnlockCookie(wallet));
+    } catch (err) {
+      console.error('Cookie signing failed (PAYWALL_SECRET misconfigured?):', err);
+      return res.status(500).json({ error: 'Server configuration error: PAYWALL_SECRET not set' });
+    }
     return res.status(200).json({ ok: true, method: 'whitelist' });
   }
 

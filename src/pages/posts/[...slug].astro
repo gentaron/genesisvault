@@ -123,6 +123,32 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
     <script is:inline>
       (function() {
         var slug = document.getElementById('article-body').getAttribute('data-slug');
+        var STORAGE_KEY = 'gv_paid_status';
+
+        // Check localStorage for owner unlock state first
+        function isOwnerLocal() {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            var d = JSON.parse(raw);
+            return d.ownerUnlock === true && d.paid === true;
+          } catch(e) { return false; }
+        }
+
+        // If owner unlock exists in localStorage but no server cookie, re-establish the cookie
+        if (isOwnerLocal()) {
+          var stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+          if (stored.wallet) {
+            fetch('/api/unlock', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ wallet: stored.wallet }),
+              credentials: 'include'
+            }).catch(function() {});
+          }
+        }
+
+        // Fetch article content with credentials (sends cookie)
         fetch('/api/article/' + encodeURIComponent(slug), { credentials: 'include' })
           .then(function(r) {
             if (r.status === 200) return r.text();
@@ -133,7 +159,7 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
               var el = document.getElementById('article-body');
               el.innerHTML = '<div class="prose-custom">' + html + '</div>';
             }
-            // If 402/401, the gate UI stays visible — user needs to pay
+            // If 402/401, the gate UI stays visible — user needs to unlock
           });
       })();
     </script>
