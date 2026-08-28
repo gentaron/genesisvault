@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { buildUnlockCookie, verifyUsdcPayment } from './_lib/paywall';
+import { buildUnlockCookie, verifyUsdcPayment, isAllowedWallet } from './_lib/paywall';
 
 /**
  * Legacy migration endpoint.
@@ -7,8 +7,7 @@ import { buildUnlockCookie, verifyUsdcPayment } from './_lib/paywall';
  * Older clients stored a `{ txHash, wallet }` "paid" record in localStorage
  * and call this endpoint to exchange it for a server-signed cookie. The stored
  * record is fully attacker-controlled, so the transaction MUST be re-verified
- * on-chain exactly like `/api/unlock` — otherwise any public successful tx hash
- * could be replayed to bypass the paywall.
+ * on-chain exactly like `/api/unlock` — unless the wallet is the whitelisted owner.
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -16,17 +15,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { txHash, wallet } = req.body;
-  if (!txHash || !wallet) {
-    return res.status(400).json({ error: 'Missing fields' });
+  if (!wallet) {
+    return res.status(400).json({ error: 'Missing wallet' });
   }
 
-  if (!/^0x[0-9a-fA-F]{64}$/.test(txHash) || !/^0x[0-9a-fA-F]{40}$/.test(wallet)) {
+  if (!/^0x[0-9a-fA-F]{40}$/.test(wallet)) {
+    return res.status(400).json({ error: 'Invalid format' });
+  }
+
+  // Whitelisted wallet: unlock without on-chain verification
+  if (isAllowedWallet(wallet)) {
+    res.setHeader('Set-Cookie', buildUnlockCookie(wallet));
+    return res.status(200).json({ migrated: true });
+  }
+
+  if (!txHash) {
+    return res.status(400).json({ error: 'Missing txHash' });
+  }
+
+  if (!/^0x[0-9a-fA-F]{64}$/.test(txHash)) {
     return res.status(400).json({ error: 'Invalid format' });
   }
 
   try {
-    // Same full on-chain verification as /api/unlock — never trust the
-    // client-supplied localStorage record on its own.
     const result = await verifyUsdcPayment(wallet, txHash);
     if (!result.ok) {
       return res.status(result.status).json({ error: result.error });

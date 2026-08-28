@@ -48,6 +48,12 @@ import {
   runIris,
 } from '../src/lib/agents/runners.ts';
 import {
+  findRelatedArticles,
+  buildTopicContinuityBrief,
+  detectDuplicateTitle,
+  buildTitleDupFeedback,
+} from '../src/lib/agents/continuity.ts';
+import {
   runResearcher,
   runSummarizer,
   runRecorder,
@@ -408,6 +414,17 @@ async function main() {
   if (continuityBrief) console.log(`  🧭 継続性ブリーフを執筆陣へ注入します（${continuityBrief.length}字）`);
   console.log('');
 
+  /** タイトル重複チェック（Phase κ: 90日以内の類似タイトルを拒否） */
+  const checkTitleDup = (title) => {
+    const dup = detectDuplicateTitle(title, pastArticles);
+    if (dup) {
+      console.warn(`  ⚠️  タイトル重複: ${dup.date}「${dup.title}」(類似度${Math.round(dup.similarity * 100)}%)`);
+      return buildTitleDupFeedback(dup);
+    }
+    return null;
+  };
+  console.log('');
+
   /** 原稿が台帳の到達点を逆行していないか（タイトルも本文の一部として見る）。 */
   const findRegressions = (title, body) =>
     detectRegressions({ title, text: `${title}。${body}`, date: todayISO() }, ledger);
@@ -429,7 +446,26 @@ async function main() {
     console.log('');
 
     // ── Agent 1: CEO (Lena) ────────────────────────────────
-    ceoPlan = await runLena(titles, styleSamples, assignedTheme, continuityBrief, trendBrief);
+    // Phase κ: 同テーマの過去記事を検索し、トピック継続性ブリーフを追加
+    const relatedArticles = findRelatedArticles(pastArticles, assignedTheme, assignedTheme);
+    const topicBrief = buildTopicContinuityBrief(relatedArticles, assignedTheme);
+    const enhancedContinuityBrief = [continuityBrief, topicBrief].filter(Boolean).join('\n\n');
+    if (topicBrief) {
+      console.log(`  🔗 同テーマの過去記事${relatedArticles.length}件を参照:`);
+      for (const a of relatedArticles.slice(0, 3)) {
+        console.log(`     - ${a.date}「${a.title}」`);
+      }
+    }
+
+    // Phase κ: タイトル重複チェック付きでCEOを実行（最大3回リトライ）
+    let titleRetries = 0;
+    let titleFeedback = '';
+    do {
+      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, trendBrief, titleFeedback);
+      titleFeedback = checkTitleDup(ceoPlan.title) || '';
+      titleRetries++;
+    } while (titleFeedback && titleRetries < 3);
+
     if (!validateCEOPlan(ceoPlan)) {
       console.warn('  ⚠️  CEO plan validation failed — using fallback');
       logAgent('VE-001', 'Lena Strauss', 'validation_failed', JSON.stringify(ceoPlan));

@@ -15,6 +15,19 @@ import crypto from 'crypto';
 export const RECEIVER = (
   process.env.RECEIVER_ADDRESS || '0x94Ac0Cbf9188E31979Ad1434d86Cdc75ddBEc10c'
 ).toLowerCase();
+
+/**
+ * Whitelisted wallet address that is allowed to unlock content without payment.
+ * Only this specific wallet can bypass the USDC paywall.
+ */
+export const ALLOWED_WALLET = '0xd445e5037ab9c1a6c27179bec43c3061a687b087'.toLowerCase();
+
+/**
+ * Check if a wallet address matches the whitelisted owner wallet.
+ */
+export function isAllowedWallet(wallet: string): boolean {
+  return wallet.toLowerCase() === ALLOWED_WALLET;
+}
 export const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'.toLowerCase();
 export const PRICE_USDC = 3000000n; // 3 USDC with 6 decimals
 export const TRANSFER_TOPIC =

@@ -150,6 +150,7 @@ export async function runLena(
   assignedTheme: string,
   continuityBrief = '',
   trendBrief = '',
+  feedback = '',
 ): Promise<CEOPlan> {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): トピック決定中…');
 
@@ -164,6 +165,10 @@ ${continuityBrief}\n`
     ? `\n\n## 今日の外の景色（企画のフックとして使ってよい材料）
 ${trendBrief}\n`
     : '';
+  const feedbackSection = feedback
+    ? `\n## 前回のタイトルが差し戻された理由（必ず直すこと）
+${feedback}\n`
+    : '';
 
   const prompt = `あなたは Lena Strauss（レナ・シュトラウス）、CEO Agent（VE-001）です。
 Genesis Vault ブログの次の日記エントリーのトピック・切り口・タイトルを決めてください。
@@ -172,7 +177,7 @@ Genesis Vault ブログの次の日記エントリーのトピック・切り口
 「${assignedTheme}」
 
 上記テーマに沿った内容にしてください。他のテーマに変えてはいけません。
-たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。${continuitySection}${trendSection}
+たとえば「${assignedTheme}」がテーマなら、それに直接関係する話題だけを扱ってください。${continuitySection}${trendSection}${feedbackSection}
 
 ## 参考：過去の記事タイトル（gensnotes より）
 - ${sampleTitles}

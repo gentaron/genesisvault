@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import fs from 'fs/promises';
 import path from 'path';
-import { hmacVerify } from '../_lib/paywall';
+import { hmacVerify, isAllowedWallet } from '../_lib/paywall';
 
 const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
 
@@ -58,9 +58,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).send(html);
     }
 
-    // Gated posts: verify cookie
+    // Gated posts: verify cookie AND wallet whitelist
     const verification = hmacVerify(req.headers.cookie);
-    if (!verification.valid) {
+    if (!verification.valid || !isAllowedWallet(verification.wallet || '')) {
       res.setHeader('Content-Type', 'text/plain');
       res.setHeader('WWW-Authenticate', 'X-Payment realm="USDC" price="3" chain="ethereum"');
       return res.status(402).send('Payment required');

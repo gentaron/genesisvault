@@ -804,3 +804,169 @@ export async function saveLedger(rootDir: string, ledger: ContinuityLedger): Pro
   await fs.mkdir(path.dirname(full), { recursive: true });
   await fs.writeFile(full, `${JSON.stringify(ledger, null, 2)}\n`, 'utf-8');
 }
+
+// ─── Topic Continuity (Phase κ) ───────────────────────────────
+
+/**
+ * 過去記事の中から、指定テーマに関連する記事を検索する。
+ * 同じテーマを扱う過去記事がある場合、新しい記事はその「続き」として書く必要がある。
+ * 例えば「筋トレ5日目」を書くなら「筋トレ1日目」の記事が存在し、
+ * 5日続いていることを前提にしなければならない。
+ */
+export function findRelatedArticles(
+  articles: PastArticle[],
+  theme: string,
+  topic: string,
+  maxResults = 5,
+): PastArticle[] {
+  // テーマ・トピックから検索キーワードを抽出
+  const searchTerms = [...extractKeywords(theme), ...extractKeywords(topic)];
+  if (searchTerms.length === 0) return [];
+
+  // 各記事をスコアリング（キーワードマッチ数 × 日付の新しさ）
+  const scored = articles
+    .map((article) => {
+      const titleAndText = `${article.title} ${article.text}`;
+      let matchCount = 0;
+      for (const term of searchTerms) {
+        if (titleAndText.includes(term)) matchCount++;
+      }
+      return { article, score: matchCount, date: article.date };
+    })
+    .filter((s) => s.score > 0)
+    .sort((a, b) => {
+      // スコアが同じなら日付の新しいものを優先
+      if (b.score !== a.score) return b.score - a.score;
+      return b.date.localeCompare(a.date);
+    });
+
+  return scored.slice(0, maxResults).map((s) => s.article);
+}
+
+/**
+ * 日本語テキストから意味のあるキーワードを抽出する（決定的）。
+ * 助詞・助動詞などを除去し、2文字以上の単語を返す。
+ */
+function extractKeywords(text: string): string[] {
+  // 一般的なストップワードを除去
+  const stopWords = new Set([
+    'の', 'に', 'は', 'が', 'を', 'で', 'と', 'も', 'から', 'へ', 'より',
+    'について', 'についての', 'という', 'による', 'として', 'ための',
+    'こと', 'もの', 'ところ', 'ほう', 'とき', 'まま', 'よう',
+    'それ', 'これ', 'あれ', 'どれ', 'なに', 'どこ', 'いつ',
+    'できる', 'ない', 'ある', 'いる', 'なる', 'する', 'くる', 'いく',
+    '毎日', '今日', '最近', '最近の', '新しい', '古い',
+  ]);
+
+  // テキストから漢字・カタカナを含む2文字以上の語を抽出
+  const words = text
+    .replace(/[\s\n\r]/g, ' ')
+    .split(/[\s、。！？！？,\.\-\/]/)
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 2 && !stopWords.has(w));
+
+  // 重複を除去し、意味のあるキーワードのみ返す（最大10個）
+  const unique = [...new Set(words)];
+  return unique.slice(0, 10);
+}
+
+/**
+ * 関連記事の情報を執筆ブリーフに追加するセクションを構築する。
+ * 同じテーマの過去記事が存在する場合、Writer にその情報を渡す。
+ */
+export function buildTopicContinuityBrief(
+  relatedArticles: PastArticle[],
+  theme: string,
+): string {
+  if (relatedArticles.length === 0) return '';
+
+  const lines: string[] = [];
+  lines.push(`【同テーマの過去記事（「${theme}」関連）— 続きとして書くこと】`);
+  lines.push('同じテーマを扱う過去記事が存在します。新しい記事はそれらの「続き」として書いてください。');
+  lines.push('過去の記事の内容を踏まえつつ、進行・変化・新しい発見があるようにしてください。');
+  lines.push('');
+
+  for (const article of relatedArticles) {
+    const dateStr = article.date || '日付不明';
+    lines.push(`  - ${dateStr} 「${article.title}」`);
+  }
+
+  lines.push('');
+  lines.push('ルール:');
+  lines.push('  - 過去記事で書いた内容と同じデータ・数字を「再発見・再達成」として書かない');
+  lines.push('  - 系列物（筋トレ日目、瞑想記録など）は日数・回数が過去の最高値から連続していること');
+  lines.push('  - 過去記事のエピソードを参照してもよいが、「前回は〜だったが、今回は〜」のように進行させる');
+
+  return lines.join('\n');
+}
+
+// ─── Title Deduplication (Phase κ) ─────────────────────────────
+
+/**
+ * 過去90日以内の記事タイトルと重複しているかをチェックする。
+ * 完全一致および類似度80%以上のタイトルを重複と判定する。
+ *
+ * @returns 重複している場合、重複先のタイトルと日付。問題なければ null。
+ */
+export function detectDuplicateTitle(
+  newTitle: string,
+  articles: PastArticle[],
+  windowDays = 90,
+): { title: string; date: string; similarity: number } | null {
+  const cutoff = new Date();toISOString().slice(0, 10).replace(/\d{2}$/, '00');
+  const windowStart = new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10);
+
+  const recent = articles.filter((a) => a.date >= windowStart);
+  const normalized = newTitle.replace(/[\s！？!?.、,]/g, '');
+
+  for (const article of recent) {
+    const existing = article.title.replace(/[\s！？!?.、,]/g, '');
+
+    // 完全一致
+    if (normalized === existing) {
+      return { title: article.title, date: article.date, similarity: 1.0 };
+    }
+
+    // 類似度チェック（文字の bigram 共通率）
+    const similarity = bigramSimilarity(normalized, existing);
+    if (similarity >= 0.8) {
+      return { title: article.title, date: article.date, similarity };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * 2つの文字列間の bigram 類似度（0〜1）を計算する。
+ */
+function bigramSimilarity(a: string, b: string): number {
+  if (a.length < 2 || b.length < 2) return 0;
+
+  const bigramsA = new Set<string>();
+  for (let i = 0; i < a.length - 1; i++) {
+    bigramsA.add(a.slice(i, i + 2));
+  }
+
+  const bigramsB = new Set<string>();
+  for (let i = 0; i < b.length - 1; i++) {
+    bigramsB.add(b.slice(i, i + 2));
+  }
+
+  let intersection = 0;
+  for (const bg of bigramsA) {
+    if (bigramsB.has(bg)) intersection++;
+  }
+
+  const union = bigramsA.size + bigramsB.size - intersection;
+  return union === 0 ? 0 : intersection / union;
+}
+
+/**
+ * タイトル重複のフィードバック文を生成する。
+ */
+export function buildTitleDupFeedback(
+  dup: { title: string; date: string; similarity: number },
+): string {
+  return `タイトルが過去記事と重複しています（${dup.date}「${dup.title}」、類似度${Math.round(dup.similarity * 100)}%）。\n別のタイトルを考えてください。過去90日以内のタイトルとは被らないようにしてください。`;
+}

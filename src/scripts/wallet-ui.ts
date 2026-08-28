@@ -38,6 +38,7 @@ interface ProviderRpcError extends Error {
 // ─── Constants ─────────────────────────────────────────────────
 const STORAGE_KEY = 'gv_paid_status';
 const FREE_LIMIT = 2;
+const OWNER_WALLET = '0xd445e5037ab9c1a6c27179bec43c3061a687b087'.toLowerCase();
 
 // ─── State ─────────────────────────────────────────────────────
 let paymentInProgress = false;
@@ -81,6 +82,33 @@ function isPaid(): boolean {
 
 function shortAddress(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+}
+
+async function attemptOwnerUnlock(addr: string): Promise<void> {
+  try {
+    const response = await fetch('/api/unlock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wallet: addr }),
+    });
+    const data = await response.json();
+    if (data.ok) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          paid: true,
+          wallet: addr.toLowerCase(),
+          chain: 'ethereum',
+          txHash: '',
+          timestamp: Date.now(),
+          ownerUnlock: true,
+        })
+      );
+      applyPaywall();
+    }
+  } catch {
+    /* silently fail — user can retry by reconnecting */
+  }
 }
 
 // ─── Payment Logic ─────────────────────────────────────────────
@@ -233,6 +261,8 @@ function renderWalletPanel(addr: string): void {
   if (!walletArea) return;
 
   const short = shortAddress(addr);
+  const isOwner = addr.toLowerCase() === OWNER_WALLET;
+
   walletArea.innerHTML = `
     <div class="gv-wallet-panel">
       <div class="gv-wallet-info">
@@ -241,12 +271,15 @@ function renderWalletPanel(addr: string): void {
         <button id="btn-disconnect" class="gv-btn-small">Disconnect</button>
       </div>
       <div class="gv-wallet-card-divider"></div>
-      <button id="btn-pay" class="gv-btn-pay">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-        </svg>
-        3 USDC \u3067\u5168\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u30a2\u30f3\u30ed\u30c3\u30af
-      </button>
+      ${isOwner
+        ? `<button id="btn-pay" class="gv-btn-pay">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            \u30aa\u30fc\u30ca\u30fc\u89e3\u9664
+          </button>`
+        : `<p style="color: var(--color-gray-dark); font-size: 0.85rem; text-align: center; padding: 0.5rem 0;">\u3053\u306e\u30a6\u30a9\u30ec\u30c3\u30c8\u306f\u30a2\u30af\u30bb\u30b9\u6a29\u304c\u3042\u308a\u307e\u305b\u3093</p>`
+      }
       <p id="pay-error" class="gv-error" style="display:none;"></p>
     </div>
   `;
@@ -260,9 +293,16 @@ function renderWalletPanel(addr: string): void {
     renderConnectButton();
   });
 
-  document.getElementById('btn-pay')?.addEventListener('click', () => {
-    handlePayment(addr);
-  });
+  const payBtn = document.getElementById('btn-pay');
+  if (payBtn) {
+    payBtn.addEventListener('click', () => {
+      if (isOwner) {
+        attemptOwnerUnlock(addr);
+      } else {
+        handlePayment(addr);
+      }
+    });
+  }
 }
 
 // ─── Wallet Picker (ε.3) ───────────────────────────────────────
@@ -349,6 +389,11 @@ async function connectToWallet(wallet: EIP6963ProviderDetail): Promise<void> {
     currentProvider = wallet.provider as WalletProvider;
     renderWalletPanel(addr);
     setupWalletListeners(wallet.provider as WalletProvider);
+
+    // Auto-unlock for whitelisted owner wallet
+    if (addr.toLowerCase() === OWNER_WALLET && !isPaid()) {
+      attemptOwnerUnlock(addr);
+    }
   } catch (err: unknown) {
     // 4001 = EIP-1193 の「ユーザーが要求を拒否」。拒否は失敗ではないので黙って返す。
     if (err instanceof Error && (err as ProviderRpcError).code !== 4001) {
