@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-08-29",
+  "capturedAt": "2026-08-30",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "GLM-5.3 is now open-weight",
-      "url": "https://huggingface.co/zai-org/GLM-5.3",
-      "score": 745,
-      "date": "2026-08-28"
+      "title": "Debian votes to allow \"responsible use of generative AI\"",
+      "url": "https://lwn.net/Articles/1091231/",
+      "score": 491,
+      "date": "2026-08-29"
     },
     {
       "source": "Hacker News",
-      "title": "Luanti removed from Google Play due to baseless AI copyright notice",
-      "url": "https://blog.luanti.org/2026/08/27/luanti-dmca-tracer-ai/",
-      "score": 496,
-      "date": "2026-08-28"
+      "title": "Good Culture Is the Biggest Productivity Hack, Not AI",
+      "url": "https://newsletter.eng-leadership.com/p/good-culture-is-the-biggest-productivity",
+      "score": 421,
+      "date": "2026-08-29"
     },
     {
       "source": "Hacker News",
       "title": "I accidentally turned LLM memory into program analysis",
       "url": "https://pwning.systems/posts/llm-memory-program-analysis/",
-      "score": 214,
+      "score": 297,
       "date": "2026-08-28"
     },
     {
       "source": "Hacker News",
-      "title": "Please stop flooding our projects with AI slop to furnish your CV",
-      "url": "https://neilalexander.dev/2026/06/30/flooding-contributions",
-      "score": 212,
-      "date": "2026-08-28"
+      "title": "StemDeck, a free, open-source and local AI stem separator",
+      "url": "https://github.com/stemdeckapp/stemdeck",
+      "score": 232,
+      "date": "2026-08-29"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: We built open OpenRouter that turns usage into a better model",
-      "url": "https://github.com/experientiallabs/experiential",
-      "score": 211,
-      "date": "2026-08-27"
+      "title": "No AI Fridays",
+      "url": "https://noaifridays.com/",
+      "score": 118,
+      "date": "2026-08-30"
     },
     {
       "source": "Hacker News",
-      "title": "Debian votes to allow \"responsible use of generative AI\"",
-      "url": "https://lwn.net/Articles/1091231/",
-      "score": 187,
+      "title": "vLLM v0.28.0",
+      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
+      "score": 107,
       "date": "2026-08-29"
     }
   ],
@@ -48,6 +48,7 @@
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
+    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
