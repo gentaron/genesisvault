@@ -1,39 +1,25 @@
 {
-  "capturedAt": "2026-08-30",
+  "capturedAt": "2026-08-31",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Debian votes to allow \"responsible use of generative AI\"",
-      "url": "https://lwn.net/Articles/1091231/",
-      "score": 491,
-      "date": "2026-08-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Good Culture Is the Biggest Productivity Hack, Not AI",
-      "url": "https://newsletter.eng-leadership.com/p/good-culture-is-the-biggest-productivity",
-      "score": 421,
-      "date": "2026-08-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I accidentally turned LLM memory into program analysis",
-      "url": "https://pwning.systems/posts/llm-memory-program-analysis/",
-      "score": 297,
-      "date": "2026-08-28"
-    },
-    {
-      "source": "Hacker News",
-      "title": "StemDeck, a free, open-source and local AI stem separator",
-      "url": "https://github.com/stemdeckapp/stemdeck",
-      "score": 232,
-      "date": "2026-08-29"
-    },
     {
       "source": "Hacker News",
       "title": "No AI Fridays",
       "url": "https://noaifridays.com/",
-      "score": 118,
+      "score": 282,
+      "date": "2026-08-30"
+    },
+    {
+      "source": "Hacker News",
+      "title": "OpenClaw 2.0, Accidentally",
+      "url": "https://openclaw.ai/blog/openclaw-2-accidentally",
+      "score": 136,
+      "date": "2026-08-31"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Continuous Diffusion Language Models (CDLM's)",
+      "url": "https://sander.ai/2026/08/24/continuous-dlms.html",
+      "score": 126,
       "date": "2026-08-30"
     },
     {
@@ -42,13 +28,26 @@
       "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
       "score": 107,
       "date": "2026-08-29"
+    },
+    {
+      "source": "arXiv",
+      "title": "Aero Hand Open: A Simulation-Ready Tendon-Driven Hand for Dexterous Manipulation Learning",
+      "url": "http://arxiv.org/abs/2608.28578v1",
+      "score": null,
+      "date": "2026-08-28"
+    },
+    {
+      "source": "arXiv",
+      "title": "Learning a Size-Weight Frontier for Synthetic-Augmented Inference",
+      "url": "http://arxiv.org/abs/2608.28576v1",
+      "score": null,
+      "date": "2026-08-28"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
-    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
