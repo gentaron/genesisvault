@@ -1,52 +1,54 @@
 {
-  "capturedAt": "2026-08-31",
+  "capturedAt": "2026-09-01",
   "tech": [
     {
-      "source": "Hacker News",
-      "title": "No AI Fridays",
-      "url": "https://noaifridays.com/",
-      "score": 282,
-      "date": "2026-08-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "OpenClaw 2.0, Accidentally",
-      "url": "https://openclaw.ai/blog/openclaw-2-accidentally",
-      "score": 136,
+      "source": "arXiv",
+      "title": "SUN: Persistent Programs For Language-Grounded Control-to-Learning-to-Real Policies",
+      "url": "http://arxiv.org/abs/2608.31167v1",
+      "score": null,
       "date": "2026-08-31"
     },
     {
-      "source": "Hacker News",
-      "title": "Continuous Diffusion Language Models (CDLM's)",
-      "url": "https://sander.ai/2026/08/24/continuous-dlms.html",
-      "score": 126,
-      "date": "2026-08-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "vLLM v0.28.0",
-      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
-      "score": 107,
-      "date": "2026-08-29"
+      "source": "arXiv",
+      "title": "Auditing Anonymous AI Models: A Four-Stage Protocol for Black-Box Identity Verification",
+      "url": "http://arxiv.org/abs/2608.31142v1",
+      "score": null,
+      "date": "2026-08-31"
     },
     {
       "source": "arXiv",
-      "title": "Aero Hand Open: A Simulation-Ready Tendon-Driven Hand for Dexterous Manipulation Learning",
-      "url": "http://arxiv.org/abs/2608.28578v1",
+      "title": "OntoAligner-Ensemble: Voting-Based Fusion across Heterogeneous Ontology Alignment Techniques",
+      "url": "http://arxiv.org/abs/2608.31137v1",
       "score": null,
-      "date": "2026-08-28"
+      "date": "2026-08-31"
     },
     {
       "source": "arXiv",
-      "title": "Learning a Size-Weight Frontier for Synthetic-Augmented Inference",
-      "url": "http://arxiv.org/abs/2608.28576v1",
+      "title": "When Does Bigger Help? A Controlled Study of LLM Scale for Ontology Learning",
+      "url": "http://arxiv.org/abs/2608.31118v1",
       "score": null,
-      "date": "2026-08-28"
+      "date": "2026-08-31"
+    },
+    {
+      "source": "arXiv",
+      "title": "BLOOM-WILT: Logit Tilting for Behaviour Elicitation in Automated LLM Auditing",
+      "url": "http://arxiv.org/abs/2608.31105v1",
+      "score": null,
+      "date": "2026-08-31"
+    },
+    {
+      "source": "arXiv",
+      "title": "LLM Post-Training as Brownfield Maintenance: An Industrial Perspective on Dataware Engineering",
+      "url": "http://arxiv.org/abs/2608.31102v1",
+      "score": null,
+      "date": "2026-08-31"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
+    "Hacker News 取得失敗: AI",
+    "Hacker News 取得失敗: LLM",
     "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
