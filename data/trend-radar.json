@@ -1,55 +1,52 @@
 {
-  "capturedAt": "2026-09-01",
+  "capturedAt": "2026-09-02",
   "tech": [
     {
-      "source": "arXiv",
-      "title": "SUN: Persistent Programs For Language-Grounded Control-to-Learning-to-Real Policies",
-      "url": "http://arxiv.org/abs/2608.31167v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "How accurate have Ed Zitron's AI skeptic predictions been?",
+      "url": "https://danluu.com/zitron/",
+      "score": 812,
+      "date": "2026-09-01"
     },
     {
-      "source": "arXiv",
-      "title": "Auditing Anonymous AI Models: A Four-Stage Protocol for Black-Box Identity Verification",
-      "url": "http://arxiv.org/abs/2608.31142v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "I trained a small transformer in 1.5hrs and it beats many LLMs",
+      "url": "https://mvakde.github.io/blog/44-on-arc-1/",
+      "score": 637,
+      "date": "2026-09-01"
     },
     {
-      "source": "arXiv",
-      "title": "OntoAligner-Ensemble: Voting-Based Fusion across Heterogeneous Ontology Alignment Techniques",
-      "url": "http://arxiv.org/abs/2608.31137v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "Dwarf Fortress' creator says the industry's in shambles over AI",
+      "url": "https://www.pcgamer.com/gaming-industry/dwarf-fortress-creator-says-the-industrys-in-shambles-over-ai-and-layoff-happy-ceos-everyone-i-know-their-bosses-are-slowly-getting-psychosis/",
+      "score": 233,
+      "date": "2026-09-01"
     },
     {
-      "source": "arXiv",
-      "title": "When Does Bigger Help? A Controlled Study of LLM Scale for Ontology Learning",
-      "url": "http://arxiv.org/abs/2608.31118v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "Launch HN: Nori Robotics (YC S26) – A low-cost humanoid robot for development",
+      "url": "https://www.norirobotics.com/",
+      "score": 192,
+      "date": "2026-09-01"
     },
     {
-      "source": "arXiv",
-      "title": "BLOOM-WILT: Logit Tilting for Behaviour Elicitation in Automated LLM Auditing",
-      "url": "http://arxiv.org/abs/2608.31105v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "AI Can Make You Suck Faster Too",
+      "url": "https://www.hermit-tech.com/blog/ai-can-make-you-suck-faster-too",
+      "score": 180,
+      "date": "2026-09-01"
     },
     {
-      "source": "arXiv",
-      "title": "LLM Post-Training as Brownfield Maintenance: An Industrial Perspective on Dataware Engineering",
-      "url": "http://arxiv.org/abs/2608.31102v1",
-      "score": null,
-      "date": "2026-08-31"
+      "source": "Hacker News",
+      "title": "Show HN: Weedout – Safari extension that hides YouTube AI-labeled videos",
+      "url": "https://masteranza.github.io/weedout/",
+      "score": 168,
+      "date": "2026-09-01"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
-    "Hacker News 取得失敗: AI",
-    "Hacker News 取得失敗: LLM",
-    "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
