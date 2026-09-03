@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-02",
+  "capturedAt": "2026-09-03",
   "tech": [
     {
       "source": "Hacker News",
       "title": "How accurate have Ed Zitron's AI skeptic predictions been?",
       "url": "https://danluu.com/zitron/",
-      "score": 812,
+      "score": 856,
       "date": "2026-09-01"
     },
     {
       "source": "Hacker News",
-      "title": "I trained a small transformer in 1.5hrs and it beats many LLMs",
-      "url": "https://mvakde.github.io/blog/44-on-arc-1/",
-      "score": 637,
-      "date": "2026-09-01"
+      "title": "Three sites made 215,128 “best software” pages for AI. Perplexity cites them",
+      "url": "https://trellner.com/reports/manufactured-sources-behind-ai-recommendations/",
+      "score": 486,
+      "date": "2026-09-02"
     },
     {
       "source": "Hacker News",
       "title": "Dwarf Fortress' creator says the industry's in shambles over AI",
       "url": "https://www.pcgamer.com/gaming-industry/dwarf-fortress-creator-says-the-industrys-in-shambles-over-ai-and-layoff-happy-ceos-everyone-i-know-their-bosses-are-slowly-getting-psychosis/",
-      "score": 233,
+      "score": 239,
       "date": "2026-09-01"
     },
     {
       "source": "Hacker News",
       "title": "Launch HN: Nori Robotics (YC S26) – A low-cost humanoid robot for development",
       "url": "https://www.norirobotics.com/",
-      "score": 192,
+      "score": 198,
       "date": "2026-09-01"
     },
     {
       "source": "Hacker News",
-      "title": "AI Can Make You Suck Faster Too",
-      "url": "https://www.hermit-tech.com/blog/ai-can-make-you-suck-faster-too",
-      "score": 180,
-      "date": "2026-09-01"
+      "title": "Mamdani Bans AI in NYC Schools",
+      "url": "https://www.nytimes.com/2026/09/01/nyregion/ai-ban-schools-nyc.html",
+      "score": 197,
+      "date": "2026-09-02"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Weedout – Safari extension that hides YouTube AI-labeled videos",
-      "url": "https://masteranza.github.io/weedout/",
-      "score": 168,
-      "date": "2026-09-01"
+      "title": "Quasar 438B: Europe's Leading AI Model",
+      "url": "https://multiversecomputing.com/resources/introducing-quasar-438b-europe-s-leading-ai-model",
+      "score": 185,
+      "date": "2026-09-02"
     }
   ],
   "market": [],
