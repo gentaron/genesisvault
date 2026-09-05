@@ -14,6 +14,30 @@
 
 ### Added
 
+- **フルPWA対応（ADR-0019）。** manifest（any / maskable アイコン4種・ショートカット）、
+  依存ゼロの Service Worker（ナビゲーションは network-first → `/offline/` フォールバック、
+  `/_astro/*` は cache-first、その他是 stale-while-revalidate）、iOS スタンドアロン対応
+  （apple-touch-icon・スプラッシュ12サイズ）。`/api/*` には一切介入しない —
+  ペイウォール境界（INV-009 / INV-010）はキャッシュ層でも守られる。
+  更新はユーザー主導（waiting 検出時のみ静かなトースト → skipWaiting → reload）、
+  インストール促しは閉じたら90日間黙る
+- **HTML のアクセシビリティ・SEO 強化（ADR-0019）。** WebSite / Person / BlogPosting /
+  BreadcrumbList の JSON-LD、OGP 完全化（og:url / og:locale / article:published_time）、
+  スキップリンク・aria-current・aria-pressed・role=list、
+  viewport に `initial-scale=1` と `viewport-fit=cover`、`color-scheme` の明示
+- **robots.txt / sitemap.xml / rss.xml。** いずれも依存ゼロのハンドロール。
+  RSS は description のみを配信し、ゲート記事の本文は運ばない
+- **e2e に Journey 7（PWA）/ 8（SEO エンドポイント）を追加**
+
+### Changed
+
+- **品質ラチェットを再基準化**（biome 86 → 114 / 型 3 → 19）。bun.lock の依存更新
+  （biome 2.0.x → 2.4.14 など）によりコード変更なしで指摘件数が増え、
+  2026-08-28 以降 CI の verify が赤くなっていた。内訳は整形と SDK 版ずれで
+  実質的な新規問題はない
+
+### Added
+
 - **VE-010 Tessa Brandt (Scout) — トレンド・レーダー（Phase ν）。** 記事を書く前に、
   AI・最先端技術の話題（Hacker News / arXiv）と株式市場の地合い（Stooq 日足で
   S&P500・日経平均・ドル円・BTC）を集め、Nova / Lena / Sophia に「今日の外の景色」を渡す。

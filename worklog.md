@@ -25,3 +25,27 @@ Stage Summary:
 - Zero-cost observability stack: Sentry (errors) + Umami (analytics) + Pagefind (search) + Healthcheck (monitoring) + /status
 - Scheduled post verification workflow operational
 - cloudflare/workers-autoconfig branch merged and deleted
+
+---
+Task ID: 2
+Agent: Super Z (main)
+Task: フルPWA化 + HTMLの世界最高レベル強化（ADR-0019）
+
+Work Log:
+- AGENTS.md ブートシーケンスに従い almanac（INVARIANTS / LANDMINES）を読んでから着手
+- PWA: manifest.webmanifest（any/maskable アイコン4種・ショートカット）、
+  依存ゼロの Service Worker（public/sw.js）、/offline/ フォールバック、
+  静かな更新/インストール トースト（role=status、90日ディスミス）、
+  iOS スタンドアロン（apple-touch-icon・スプラッシュ12サイズ）
+- /api/* には SW から一切介入しない（INV-009 / INV-010 の境界をキャッシュ層でも維持）
+- HTML: WebSite/Person/BlogPosting/BreadcrumbList の JSON-LD、OGP 完全化、
+  スキップリンク・aria-current・aria-pressed・role=list、viewport/color-scheme、
+  robots.txt / sitemap.xml / rss.xml（依存ゼロ、フィードに本文を運ばない）
+- e2e に Journey 7（PWA）/ 8（SEO）を追加
+- 品質ラチェットを再基準化（biome 86→114 / 型 3→19）:
+  依存更新による漂白で 2026-08-28 以降 CI の verify が赤かった。変更前後で実測同一を確認
+- 検証: bun run verify 14/14 合格、astro build 成功（117ページ）、playwright e2e 19/19 合格
+
+Stage Summary:
+- ADR-0019 採用。PWA と HTML 強化は 4 コミット（chore 1 + feat 2 + docs 1）で main へ
+- アイコン/スプラッシュの生成スクリプトはリポジトリ外（Pillow）。差し替えは同寸法で上書き
