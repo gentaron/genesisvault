@@ -302,3 +302,18 @@ JSON なので構文が壊れるうえ、値は `pastArticles.length` から毎�
 Phase ν が決定論的に止めようとしている、まさにその事故。
 遅れて到着した自動生成 PR は、マージせず**作り直す**。
 
+
+---
+
+## LM-016: Playwright の実行成果物が biome のラチェットを爆破する
+
+**症状**: e2e を走らせた直後に `bun run verify` が「Biome lint 3765 件（基準 114 件超過）」で
+落ちる。コードは何も変えていない。
+
+**原因**: `playwright-report/` と `test-results/` は `.gitignore` されているが、
+biome は `vcs` 設定が無い限り gitignore を見ない。HTML レポート内部の JS / JSON が
+lint 対象に入り、数千件の指摘として爆発する。
+
+**回避策**: `biome.json` の `files.includes` に `!playwright-report` と
+`!test-results` を入れた（2026-09-05）。e2e → verify の順で作業するときは
+この順序依存に頼らず、除外設定が効いていることを verify の件数で確認すること。

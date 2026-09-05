@@ -36,7 +36,9 @@
       "!docs",
       "!gensnotes_1.md",
       "!gensnotes_2.md",
-      "!config/pipeline.schema.json"
+      "!config/pipeline.schema.json",
+      "!playwright-report",
+      "!test-results"
     ]
   },
   "overrides": [
