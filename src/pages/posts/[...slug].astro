@@ -22,12 +22,58 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
   day: 'numeric',
   weekday: 'long'
 });
+
+// 記事ページ固有の構造化データ（BlogPosting + BreadcrumbList）
+const pageURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const postJsonLd: Record<string, unknown>[] = Astro.site
+  ? [
+      {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'BlogPosting',
+            '@id': pageURL ? new URL('#article', pageURL).href : undefined,
+            headline: title,
+            ...(description ? { description } : {}),
+            datePublished: date.toISOString(),
+            dateModified: date.toISOString(),
+            ...(pageURL ? { url: pageURL.href, mainEntityOfPage: pageURL.href } : {}),
+            inLanguage: 'ja-JP',
+            author: { '@id': new URL('#person', Astro.site).href },
+            publisher: { '@id': new URL('#person', Astro.site).href },
+            isPartOf: { '@id': new URL('#website', Astro.site).href },
+            ...(keywords.length > 0 ? { keywords: keywords.join(', ') } : {}),
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: Astro.site.href,
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: title,
+                ...(pageURL ? { item: pageURL.href } : {}),
+              },
+            ],
+          },
+        ],
+      },
+    ]
+  : [];
 ---
 
 <BaseLayout
   title={`${title} — Genesis Vault`}
   description={description}
   keywords={keywords}
+  ogType="article"
+  publishedTime={date}
+  jsonLd={postJsonLd}
 >
   <article class="max-w-2xl mx-auto" style="max-width: 42rem; margin: 0 auto;">
     <header style="margin-bottom: 3rem; text-align: center;">

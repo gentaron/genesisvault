@@ -6,12 +6,18 @@ interface Props {
   title: string;
   description?: string;
   keywords?: string[];
+  ogType?: 'website' | 'article';
+  publishedTime?: Date;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title,
   description = 'Genesis Vault — ミナ・エウレカ・エルンストの思考と日常を綴るデジタル日記',
   keywords = [],
+  ogType = 'website',
+  publishedTime,
+  jsonLd,
 } = Astro.props;
 
 // Phase η: Umami analytics configuration (empty string = disabled)
@@ -20,6 +26,44 @@ const umamiHost = import.meta.env.PUBLIC_UMAMI_HOST || 'https://umami.example.co
 
 const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-profile.png';
+
+// ナビゲーションの現在位置（aria-current 用）
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === '/'
+    ? currentPath === '/' || currentPath.startsWith('/posts')
+    : currentPath.startsWith(href);
+
+// サイト全体の構造化データ（WebSite + Person）。ページ固有のものは jsonLd プロップで追加される
+const siteJsonLd: Record<string, unknown>[] = Astro.site
+  ? [
+      {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': new URL('#website', Astro.site).href,
+            url: Astro.site.href,
+            name: 'Genesis Vault',
+            description,
+            inLanguage: 'ja-JP',
+            publisher: { '@id': new URL('#person', Astro.site).href },
+          },
+          {
+            '@type': 'Person',
+            '@id': new URL('#person', Astro.site).href,
+            name: 'Mina Eureka Ernst',
+            url: Astro.site.href,
+            description: '散歩・瞑想・ひとり旅・ジャーナリングをテーマに日記を書く。',
+          },
+        ],
+      },
+    ]
+  : [];
+const jsonLdArray: Record<string, unknown>[] = [
+  ...siteJsonLd,
+  ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []),
+];
 ---
 
 <!doctype html>
@@ -28,7 +72,8 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="author" content="Mina Eureka Ernst" />
     <link rel="icon" type="image/png" href="/mina-profile.png" />
     <meta name="generator" content={Astro.generator} />
@@ -58,13 +103,32 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
     <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-1536x2048.png" />
 
     <!-- Open Graph / Twitter -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Genesis Vault" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="Mina Eureka Ernstのプロフィール画像" />
+    <meta property="og:locale" content="ja_JP" />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+    <!-- RSS フィードの自動検出 -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Genesis Vault"
+      href={Astro.site ? new URL('rss.xml', Astro.site).href : '/rss.xml'}
+    />
+
+    {jsonLdArray.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLdArray)} />
+    )}
 
     <!-- Fonts: preconnect + non-blocking stylesheet (moved out of CSS @import) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -97,22 +161,23 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
     )}
   </head>
   <body>
+    <a href="#main-content" class="skip-link">本文へスキップ</a>
     <header>
-      <nav class="container-custom">
+      <nav class="container-custom" aria-label="グローバルナビゲーション">
         <a href="/" class="site-name">
           Genesis Vault
         </a>
         <div class="nav-links">
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/agents">Agents</a>
-          <a href="/status">Status</a>
-          <button id="search-btn" aria-label="検索" title="記事を検索" style="background:none;border:none;cursor:pointer;color:inherit;padding:0;">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <a href="/" aria-current={isCurrent('/') ? 'page' : undefined}>Home</a>
+          <a href="/about" aria-current={isCurrent('/about') ? 'page' : undefined}>About</a>
+          <a href="/agents" aria-current={isCurrent('/agents') ? 'page' : undefined}>Agents</a>
+          <a href="/status" aria-current={isCurrent('/status') ? 'page' : undefined}>Status</a>
+          <button id="search-btn" type="button" aria-label="検索" aria-haspopup="dialog" title="記事を検索" style="background:none;border:none;cursor:pointer;color:inherit;padding:0;">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </button>
-          <button id="theme-toggle" aria-label="ダークモード切替">
-            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          <button id="theme-toggle" type="button" aria-label="ダークモード切替">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
           </button>
         </div>
       </nav>
@@ -129,7 +194,7 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
       </div>
     </div>
 
-    <main class="container-custom" style="padding-bottom: 5rem;">
+    <main id="main-content" class="container-custom" tabindex="-1" style="padding-bottom: 5rem;">
       <slot />
     </main>
 
@@ -140,9 +205,9 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
     </footer>
 
     <!-- Phase η: Pagefind Search Dialog -->
-    <dialog id="search-dialog" style="width: 80vw; max-width: 720px; padding: 2rem; border: 1px solid var(--color-gray-light, #e0d8cc); border-radius: 0.75rem; background: var(--color-bg, #faf9f7);">
+    <dialog id="search-dialog" aria-labelledby="search-dialog-title" style="width: 80vw; max-width: 720px; padding: 2rem; border: 1px solid var(--color-gray-light, #e0d8cc); border-radius: 0.75rem; background: var(--color-bg, #faf9f7);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-        <h3 style="margin:0;font-size:1.1rem;">記事を検索</h3>
+        <h3 id="search-dialog-title" style="margin:0;font-size:1.1rem;">記事を検索</h3>
         <button id="search-close" aria-label="閉じる" style="background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--color-gray-dark,#888);">&times;</button>
       </div>
       <div id="pagefind-search"></div>
@@ -160,6 +225,11 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
         darkIcon.classList.remove('hidden');
       }
 
+      function syncThemeState() {
+        themeToggle.setAttribute('aria-pressed', document.documentElement.classList.contains('dark') ? 'true' : 'false');
+      }
+      syncThemeState();
+
       themeToggle.addEventListener('click', function() {
         darkIcon.classList.toggle('hidden');
         lightIcon.classList.toggle('hidden');
@@ -171,6 +241,7 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
           document.documentElement.classList.add('dark');
           localStorage.setItem('color-theme', 'dark');
         }
+        syncThemeState();
       });
     </script>
 
@@ -405,7 +476,14 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
           window.addEventListener('online', scheduleUpdateCheck);
 
           var reloading = false;
+          // 初回アクセスでは claim() による controllerchange が発生するが、
+          // これは更新ではないのでリロードしない。更新フローでのみリロードする。
+          var hadController = navigator.serviceWorker.controller !== null;
           navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (!hadController) {
+              hadController = true;
+              return;
+            }
             if (reloading) return;
             reloading = true;
             window.location.reload();

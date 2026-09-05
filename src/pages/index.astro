@@ -47,9 +47,9 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </div>
   </div>
 
-  <div class="grid gap-8" id="post-list">
+  <div class="grid gap-8" id="post-list" role="list">
     {sortedPosts.map((post, index) => (
-      <div class="gv-post-item" data-index={index}>
+      <div class="gv-post-item" data-index={index} role="listitem">
         <PostCard post={post} />
       </div>
     ))}

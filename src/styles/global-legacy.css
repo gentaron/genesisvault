@@ -906,6 +906,33 @@ footer {
   }
 }
 
+/* ── アクセシビリティ (ADR-0019) ───────────────────────────────── */
+
+/* キーボード操作用のスキップリンク。フォーカスされたときだけ現れる */
+.skip-link {
+  position: fixed;
+  top: -4rem;
+  left: 1rem;
+  z-index: 1100;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-charcoal, #2d2d2d);
+  color: #fff;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* スキップリンクの移動先。フォーカス枠は二重になるので抑制する */
+#main-content:focus {
+  outline: none;
+  scroll-margin-top: 1rem;
+}
+
 /* 更新・インストールの静かなトースト */
 .gv-pwa-toast {
   position: fixed;
