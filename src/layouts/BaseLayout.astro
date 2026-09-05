@@ -38,6 +38,25 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
     <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1A1A1A" media="(prefers-color-scheme: dark)" />
 
+    <!-- PWA: Web App Manifest + iOS standalone support (ADR-0019) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Genesis Vault" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1290x2796.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1179x2556.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1284x2778.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1170x2532.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1125x2436.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-828x1792.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-750x1334.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" href="/splash/splash-1242x2208.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-2048x2732.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-1668x2388.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-1668x2224.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" href="/splash/splash-1536x2048.png" />
+
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Genesis Vault" />
@@ -245,5 +264,154 @@ const ogImage = Astro.site ? new URL('/mina-profile.png', Astro.site) : '/mina-p
         });
       })();
     </script>
+
+    <!-- PWA: quiet update / install toast (ADR-0019) -->
+    <div id="gv-pwa-toast" class="gv-pwa-toast" role="status" aria-live="polite" hidden>
+      <p id="gv-pwa-toast-text" class="gv-pwa-toast-text"></p>
+      <div class="gv-pwa-toast-actions">
+        <button id="gv-pwa-toast-action" type="button" class="gv-pwa-toast-btn" hidden></button>
+        <button id="gv-pwa-toast-close" type="button" class="gv-pwa-toast-close" aria-label="閉じる">&times;</button>
+      </div>
+    </div>
+
+    {import.meta.env.PROD && (
+      <script is:inline>
+        (function () {
+          var toast = document.getElementById('gv-pwa-toast');
+          var toastText = document.getElementById('gv-pwa-toast-text');
+          var toastAction = document.getElementById('gv-pwa-toast-action');
+          var toastClose = document.getElementById('gv-pwa-toast-close');
+          var hideTimer = null;
+          var hideDelay = 0;
+          var actionHandler = null;
+          var dismissHandler = null;
+
+          function showPwaToast(text, actionLabel, onAction, onDismiss, autoHideMs) {
+            toastText.textContent = text;
+            if (actionLabel && onAction) {
+              toastAction.textContent = actionLabel;
+              toastAction.hidden = false;
+              actionHandler = onAction;
+            } else {
+              toastAction.hidden = true;
+              actionHandler = null;
+            }
+            dismissHandler = onDismiss || null;
+            toast.hidden = false;
+            requestAnimationFrame(function () {
+              toast.classList.add('is-visible');
+            });
+            if (hideTimer) clearTimeout(hideTimer);
+            hideDelay = autoHideMs || 0;
+            if (hideDelay) {
+              hideTimer = setTimeout(hidePwaToast, hideDelay);
+            }
+          }
+
+          function hidePwaToast() {
+            if (hideTimer) {
+              clearTimeout(hideTimer);
+              hideTimer = null;
+            }
+            if (dismissHandler) {
+              dismissHandler();
+              dismissHandler = null;
+            }
+            toast.classList.remove('is-visible');
+            setTimeout(function () {
+              toast.hidden = true;
+            }, 300);
+          }
+
+          toastAction.addEventListener('click', function () {
+            var handler = actionHandler;
+            actionHandler = null;
+            dismissHandler = null;
+            if (handler) handler();
+            hidePwaToast();
+          });
+          toastClose.addEventListener('click', hidePwaToast);
+
+          // インストール促し（Chromium）。静かに一度だけ。閉じたら90日間黙る。
+          var deferredPrompt = null;
+          window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            var dismissedAt = Number(localStorage.getItem('gv_install_dismissed_at') || 0);
+            if (Date.now() - dismissedAt < 90 * 24 * 60 * 60 * 1000) return;
+            showPwaToast(
+              'ホーム画面に追加できます',
+              '追加',
+              function () {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function () {
+                  deferredPrompt = null;
+                }, function () {
+                  deferredPrompt = null;
+                });
+              },
+              function () {
+                localStorage.setItem('gv_install_dismissed_at', String(Date.now()));
+              },
+              15000
+            );
+          });
+          window.addEventListener('appinstalled', function () {
+            localStorage.removeItem('gv_install_dismissed_at');
+            deferredPrompt = null;
+          });
+
+          if (!('serviceWorker' in navigator)) return;
+
+          var regRef = null;
+
+          function showUpdateToast(worker) {
+            showPwaToast('新しいバージョンがあります', '更新する', function () {
+              worker.postMessage({ type: 'SKIP_WAITING' });
+            }, null, 0);
+          }
+
+          window.addEventListener('load', function () {
+            navigator.serviceWorker
+              .register('/sw.js', { scope: '/' })
+              .then(function (reg) {
+                regRef = reg;
+                if (reg.waiting && navigator.serviceWorker.controller) {
+                  showUpdateToast(reg.waiting);
+                }
+                reg.addEventListener('updatefound', function () {
+                  var installing = reg.installing;
+                  if (!installing) return;
+                  installing.addEventListener('statechange', function () {
+                    if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                      showUpdateToast(installing);
+                    }
+                  });
+                });
+              })
+              .catch(function () {
+                /* SW が動かない環境でもサイトはそのまま動く */
+              });
+          });
+
+          // 再表示・オンライン復帰時に静かに更新を確認する
+          function scheduleUpdateCheck() {
+            if (regRef) regRef.update().catch(function () {});
+          }
+          document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') scheduleUpdateCheck();
+          });
+          window.addEventListener('online', scheduleUpdateCheck);
+
+          var reloading = false;
+          navigator.serviceWorker.addEventListener('controllerchange', function () {
+            if (reloading) return;
+            reloading = true;
+            window.location.reload();
+          });
+        })();
+      </script>
+    )}
   </body>
 </html>
