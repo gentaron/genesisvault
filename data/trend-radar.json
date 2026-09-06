@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-05",
+  "capturedAt": "2026-09-06",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Ask HN: Why were OpenAI, Claude, and Grok simultaneously down?",
-      "url": "https://news.ycombinator.com/item?id=49551096",
-      "score": 397,
-      "date": "2026-09-03"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Google AI Mode shows same products 21.6% more expensive than traditional search",
-      "url": "https://productrise.app/blog/google-ai-mode-prefers-more-expensive-products",
-      "score": 390,
+      "title": "Can AI design circuit boards yet?",
+      "url": "https://eebench.org/blog/can-ai-design-circuit-boards-yet/",
+      "score": 412,
       "date": "2026-09-04"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Porting my 1993 Amiga game to Godot, with an LLM reading the 68000 assembly",
-      "url": "https://babyloniantwins.com/blog/porting-a-1993-amiga-game-to-godot/",
-      "score": 373,
-      "date": "2026-09-03"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: Open-Source eInk Bike Computer",
       "url": "https://opentrailpaper.com",
-      "score": 324,
+      "score": 402,
       "date": "2026-09-04"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI handles incidents, engineers lose touch with their systems",
+      "url": "https://www.sylvainkalache.com/blog/ai-handles-incidents-engineers-lose-touch-with-their-systems",
+      "score": 389,
+      "date": "2026-09-05"
     },
     {
       "source": "Hacker News",
       "title": "Corporate America is getting hooked on open-source AI",
       "url": "https://www.nytimes.com/2026/09/04/technology/open-source-ai-anthropic-openai.html",
-      "score": 305,
+      "score": 329,
       "date": "2026-09-04"
     },
     {
       "source": "Hacker News",
-      "title": "Can AI design circuit boards yet?",
-      "url": "https://eebench.org/blog/can-ai-design-circuit-boards-yet/",
-      "score": 294,
-      "date": "2026-09-04"
+      "title": "Global warming will exceed 1.5-degree limit, UN says",
+      "url": "https://www.pbs.org/newshour/science/global-warming-will-exceed-1-5-degree-limit-un-says-in-report-that-maps-path-back-below-danger-zone",
+      "score": 326,
+      "date": "2026-09-05"
+    },
+    {
+      "source": "Hacker News",
+      "title": "LLMs as a Cognitive Virus",
+      "url": "https://arxiv.org/abs/2609.03344",
+      "score": 323,
+      "date": "2026-09-05"
     }
   ],
   "market": [],
