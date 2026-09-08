@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-07",
+  "capturedAt": "2026-09-08",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Your intellectual fly is open when you use an LLM to author a post (2025)",
-      "url": "https://bcantrill.dtrace.org/2025/12/05/your-intellectual-fly-is-open/",
-      "score": 682,
-      "date": "2026-09-06"
+      "title": "Mistral raises €3B",
+      "url": "https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/",
+      "score": 666,
+      "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
-      "title": "A/I shuts down",
-      "url": "https://keepitfree.ai/announcements/a/i-shuts-down-stay-human/",
-      "score": 608,
-      "date": "2026-09-06"
+      "title": "LibreOffice breaks download records after declaring it has no AI features",
+      "url": "https://manualdousuario.net/en/libreoffice-download-record-no-ai/",
+      "score": 240,
+      "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
-      "title": "LLMs as a Cognitive Virus",
-      "url": "https://arxiv.org/abs/2609.03344",
-      "score": 391,
-      "date": "2026-09-05"
+      "title": "Emacs Bedrock 2.0",
+      "url": "https://lambdaland.org/posts/2026-09-06-bedrock-v2/",
+      "score": 166,
+      "date": "2026-09-07"
     },
     {
       "source": "Hacker News",
-      "title": "Learn Programming with OCaml",
-      "url": "https://usr.lmf.cnrs.fr/lpo/",
-      "score": 312,
-      "date": "2026-09-05"
+      "title": "Speculative Decoding in vLLM on AMD GPUs",
+      "url": "https://vllm.ai/blog/2026-08-23-speculative-decoding-amd-gpus",
+      "score": 141,
+      "date": "2026-09-07"
     },
     {
       "source": "Hacker News",
-      "title": "How I feel about AI",
-      "url": "https://beza1e1.tuxen.de/ai_feelings.html",
-      "score": 161,
-      "date": "2026-09-06"
+      "title": "We Must Return to the Office to Use AI in Person",
+      "url": "https://www.mcsweeneys.net/articles/why-we-must-return-to-the-office-to-use-ai-in-person",
+      "score": 132,
+      "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
-      "title": "AI, Tools and Transformation",
-      "url": "https://www.ben-evans.com/benedictevans/2026/9/3/ai-tools-and-transformation",
-      "score": 153,
-      "date": "2026-09-06"
+      "title": "Tell HN: OpenAI brings back 5 hour limit for plus and business standard users",
+      "url": "https://news.ycombinator.com/item?id=49600233",
+      "score": 127,
+      "date": "2026-09-07"
     }
   ],
   "market": [],
