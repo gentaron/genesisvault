@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-08",
+  "capturedAt": "2026-09-09",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Mistral raises €3B",
-      "url": "https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/",
-      "score": 666,
-      "date": "2026-09-08"
-    },
     {
       "source": "Hacker News",
       "title": "LibreOffice breaks download records after declaring it has no AI features",
       "url": "https://manualdousuario.net/en/libreoffice-download-record-no-ai/",
-      "score": 240,
+      "score": 695,
+      "date": "2026-09-08"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Muse – Meta’s personal AI agent",
+      "url": "https://ai.meta.com/muse/",
+      "score": 585,
+      "date": "2026-09-08"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Tao: Open math problems being non-renewably mined by AI",
+      "url": "https://mathstodon.xyz/@tao/117237320796901560",
+      "score": 437,
+      "date": "2026-09-08"
+    },
+    {
+      "source": "Hacker News",
+      "title": "We Must Return to the Office to Use AI in Person",
+      "url": "https://www.mcsweeneys.net/articles/why-we-must-return-to-the-office-to-use-ai-in-person",
+      "score": 384,
       "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
       "title": "Emacs Bedrock 2.0",
       "url": "https://lambdaland.org/posts/2026-09-06-bedrock-v2/",
-      "score": 166,
+      "score": 188,
       "date": "2026-09-07"
     },
     {
       "source": "Hacker News",
-      "title": "Speculative Decoding in vLLM on AMD GPUs",
-      "url": "https://vllm.ai/blog/2026-08-23-speculative-decoding-amd-gpus",
-      "score": 141,
-      "date": "2026-09-07"
-    },
-    {
-      "source": "Hacker News",
-      "title": "We Must Return to the Office to Use AI in Person",
-      "url": "https://www.mcsweeneys.net/articles/why-we-must-return-to-the-office-to-use-ai-in-person",
-      "score": 132,
-      "date": "2026-09-08"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Tell HN: OpenAI brings back 5 hour limit for plus and business standard users",
-      "url": "https://news.ycombinator.com/item?id=49600233",
-      "score": 127,
-      "date": "2026-09-07"
+      "title": "How An AI math breakthrough ignited a controversy",
+      "url": "https://www.science.org/content/article/how-ai-math-breakthrough-ignited-controversy",
+      "score": 183,
+      "date": "2026-09-09"
     }
   ],
   "market": [],
