@@ -1,45 +1,45 @@
 {
-  "capturedAt": "2026-09-09",
+  "capturedAt": "2026-09-10",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "LibreOffice breaks download records after declaring it has no AI features",
-      "url": "https://manualdousuario.net/en/libreoffice-download-record-no-ai/",
-      "score": 695,
-      "date": "2026-09-08"
-    },
     {
       "source": "Hacker News",
       "title": "Muse – Meta’s personal AI agent",
       "url": "https://ai.meta.com/muse/",
-      "score": 585,
+      "score": 648,
       "date": "2026-09-08"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AirPods 5",
+      "url": "https://www.apple.com/newsroom/2026/09/apple-introduces-airpods-5-with-best-in-class-open-ear-active-noise-cancellation/",
+      "score": 494,
+      "date": "2026-09-09"
     },
     {
       "source": "Hacker News",
       "title": "Tao: Open math problems being non-renewably mined by AI",
       "url": "https://mathstodon.xyz/@tao/117237320796901560",
-      "score": 437,
+      "score": 478,
       "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
-      "title": "We Must Return to the Office to Use AI in Person",
-      "url": "https://www.mcsweeneys.net/articles/why-we-must-return-to-the-office-to-use-ai-in-person",
-      "score": 384,
-      "date": "2026-09-08"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Emacs Bedrock 2.0",
-      "url": "https://lambdaland.org/posts/2026-09-06-bedrock-v2/",
-      "score": 188,
-      "date": "2026-09-07"
+      "title": "No Man's Sky Cosmos",
+      "url": "https://www.nomanssky.com/cosmos-update/",
+      "score": 424,
+      "date": "2026-09-09"
     },
     {
       "source": "Hacker News",
       "title": "How An AI math breakthrough ignited a controversy",
       "url": "https://www.science.org/content/article/how-ai-math-breakthrough-ignited-controversy",
+      "score": 220,
+      "date": "2026-09-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Muse, the band, lost its social media handles to Muse, Meta's new AI agent",
+      "url": "https://www.engadget.com/2254419/muse-the-band-lost-its-social-media-handles-to-muse-meta-s-new-ai-agent/",
       "score": 183,
       "date": "2026-09-09"
     }
