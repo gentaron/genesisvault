@@ -1,40 +1,33 @@
 {
-  "capturedAt": "2026-09-10",
+  "capturedAt": "2026-09-11",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Muse – Meta’s personal AI agent",
-      "url": "https://ai.meta.com/muse/",
-      "score": 648,
-      "date": "2026-09-08"
-    },
     {
       "source": "Hacker News",
       "title": "AirPods 5",
       "url": "https://www.apple.com/newsroom/2026/09/apple-introduces-airpods-5-with-best-in-class-open-ear-active-noise-cancellation/",
-      "score": 494,
+      "score": 507,
       "date": "2026-09-09"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Tao: Open math problems being non-renewably mined by AI",
-      "url": "https://mathstodon.xyz/@tao/117237320796901560",
-      "score": 478,
-      "date": "2026-09-08"
     },
     {
       "source": "Hacker News",
       "title": "No Man's Sky Cosmos",
       "url": "https://www.nomanssky.com/cosmos-update/",
-      "score": 424,
+      "score": 449,
       "date": "2026-09-09"
     },
     {
       "source": "Hacker News",
-      "title": "How An AI math breakthrough ignited a controversy",
-      "url": "https://www.science.org/content/article/how-ai-math-breakthrough-ignited-controversy",
-      "score": 220,
-      "date": "2026-09-09"
+      "title": "Ask HN: Can we please limit the AI news flood?",
+      "url": "https://news.ycombinator.com/item?id=49657850",
+      "score": 417,
+      "date": "2026-09-11"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The Waymo effect: how AI is quietly making research less collaborative",
+      "url": "https://www.researchagenda.news/articles/the-waymo-effect.html",
+      "score": 251,
+      "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
@@ -42,6 +35,13 @@
       "url": "https://www.engadget.com/2254419/muse-the-band-lost-its-social-media-handles-to-muse-meta-s-new-ai-agent/",
       "score": 183,
       "date": "2026-09-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Detecting and countering misuse of AI: September 2026",
+      "url": "https://www.anthropic.com/threat-intelligence-report-september-2026",
+      "score": 157,
+      "date": "2026-09-10"
     }
   ],
   "market": [],
