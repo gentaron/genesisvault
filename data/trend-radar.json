@@ -1,53 +1,52 @@
 {
-  "capturedAt": "2026-09-11",
+  "capturedAt": "2026-09-12",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AirPods 5",
-      "url": "https://www.apple.com/newsroom/2026/09/apple-introduces-airpods-5-with-best-in-class-open-ear-active-noise-cancellation/",
-      "score": 507,
-      "date": "2026-09-09"
-    },
-    {
-      "source": "Hacker News",
-      "title": "No Man's Sky Cosmos",
-      "url": "https://www.nomanssky.com/cosmos-update/",
-      "score": 449,
-      "date": "2026-09-09"
+      "title": "A misalignment of AI in mathematics",
+      "url": "https://mathandai.org/",
+      "score": 1054,
+      "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
       "title": "Ask HN: Can we please limit the AI news flood?",
       "url": "https://news.ycombinator.com/item?id=49657850",
-      "score": 417,
+      "score": 806,
+      "date": "2026-09-11"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I spent $220 on Google app ads and 60% of the installs were robots",
+      "url": "https://dayzlegame.com/blog/google-ads-bot-farm/",
+      "score": 626,
       "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
       "title": "The Waymo effect: how AI is quietly making research less collaborative",
       "url": "https://www.researchagenda.news/articles/the-waymo-effect.html",
-      "score": 251,
+      "score": 326,
       "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
-      "title": "Muse, the band, lost its social media handles to Muse, Meta's new AI agent",
-      "url": "https://www.engadget.com/2254419/muse-the-band-lost-its-social-media-handles-to-muse-meta-s-new-ai-agent/",
-      "score": 183,
-      "date": "2026-09-09"
+      "title": "Show HN: Hacker News, without AI",
+      "url": "https://hcker.news/?ai=exclude",
+      "score": 193,
+      "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
       "title": "Detecting and countering misuse of AI: September 2026",
       "url": "https://www.anthropic.com/threat-intelligence-report-september-2026",
-      "score": 157,
+      "score": 178,
       "date": "2026-09-10"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
