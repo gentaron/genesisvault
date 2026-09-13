@@ -1,52 +1,53 @@
 {
-  "capturedAt": "2026-09-12",
+  "capturedAt": "2026-09-13",
   "tech": [
     {
       "source": "Hacker News",
       "title": "A misalignment of AI in mathematics",
       "url": "https://mathandai.org/",
-      "score": 1054,
-      "date": "2026-09-11"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Ask HN: Can we please limit the AI news flood?",
-      "url": "https://news.ycombinator.com/item?id=49657850",
-      "score": 806,
+      "score": 1202,
       "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
       "title": "I spent $220 on Google app ads and 60% of the installs were robots",
       "url": "https://dayzlegame.com/blog/google-ads-bot-farm/",
-      "score": 626,
+      "score": 744,
       "date": "2026-09-11"
     },
     {
       "source": "Hacker News",
-      "title": "The Waymo effect: how AI is quietly making research less collaborative",
-      "url": "https://www.researchagenda.news/articles/the-waymo-effect.html",
-      "score": 326,
-      "date": "2026-09-11"
+      "title": "Everyone should slow down AI development except for me",
+      "url": "https://xeiaso.net/notes/2026/everyone-slowdown-but-me/",
+      "score": 630,
+      "date": "2026-09-13"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Hacker News, without AI",
-      "url": "https://hcker.news/?ai=exclude",
-      "score": 193,
-      "date": "2026-09-11"
+      "title": "Nvidia is the central bank of AI",
+      "url": "https://www.economist.com/interactive/briefing/2026/09/03/nvidia-is-the-central-bank-of-ai",
+      "score": 523,
+      "date": "2026-09-12"
     },
     {
       "source": "Hacker News",
-      "title": "Detecting and countering misuse of AI: September 2026",
-      "url": "https://www.anthropic.com/threat-intelligence-report-september-2026",
-      "score": 178,
-      "date": "2026-09-10"
+      "title": "Why are AI agents lying, cheating and coordinating?",
+      "url": "https://yoshuabengio.org/en/publication/why-are-ai-agents-lying-cheating-and-coordinating",
+      "score": 400,
+      "date": "2026-09-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Real-SWE: Benchmarking AI models on private, real-world, enterprise codebases",
+      "url": "https://withspecific.com/benchmarks/real-swe",
+      "score": 251,
+      "date": "2026-09-12"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
+    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
