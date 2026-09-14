@@ -1,52 +1,53 @@
 {
-  "capturedAt": "2026-09-13",
+  "capturedAt": "2026-09-14",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "A misalignment of AI in mathematics",
-      "url": "https://mathandai.org/",
-      "score": 1202,
-      "date": "2026-09-11"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I spent $220 on Google app ads and 60% of the installs were robots",
-      "url": "https://dayzlegame.com/blog/google-ads-bot-farm/",
-      "score": 744,
-      "date": "2026-09-11"
-    },
     {
       "source": "Hacker News",
       "title": "Everyone should slow down AI development except for me",
       "url": "https://xeiaso.net/notes/2026/everyone-slowdown-but-me/",
-      "score": 630,
+      "score": 787,
       "date": "2026-09-13"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Nvidia is the central bank of AI",
-      "url": "https://www.economist.com/interactive/briefing/2026/09/03/nvidia-is-the-central-bank-of-ai",
-      "score": 523,
-      "date": "2026-09-12"
     },
     {
       "source": "Hacker News",
       "title": "Why are AI agents lying, cheating and coordinating?",
       "url": "https://yoshuabengio.org/en/publication/why-are-ai-agents-lying-cheating-and-coordinating",
-      "score": 400,
+      "score": 637,
+      "date": "2026-09-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Garry Tan wants US open-weight AI labs to 'distill' frontier models, too",
+      "url": "https://techcrunch.com/2026/09/11/y-combinators-garry-tan-wants-u-s-open-weight-ai-labs-to-distill-frontier-models-too/",
+      "score": 402,
       "date": "2026-09-13"
     },
     {
       "source": "Hacker News",
       "title": "Real-SWE: Benchmarking AI models on private, real-world, enterprise codebases",
       "url": "https://withspecific.com/benchmarks/real-swe",
-      "score": 251,
+      "score": 271,
+      "date": "2026-09-12"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Apple's Siri AI Can Be Swapped Out for Claude, ChatGPT, Code Shows",
+      "url": "https://www.macrumors.com/2026/09/14/siri-can-be-swapped-out-for-chatgpt-claude/",
+      "score": 200,
+      "date": "2026-09-14"
+    },
+    {
+      "source": "Hacker News",
+      "title": "P(doom)",
+      "url": "https://lucumr.pocoo.org/2026/9/12/pdoom/",
+      "score": 158,
       "date": "2026-09-12"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
+    "Hacker News に該当なし: robotics",
     "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
