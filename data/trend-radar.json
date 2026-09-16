@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-15",
+  "capturedAt": "2026-09-16",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Garry Tan wants US open-weight AI labs to 'distill' frontier models, too",
-      "url": "https://techcrunch.com/2026/09/11/y-combinators-garry-tan-wants-u-s-open-weight-ai-labs-to-distill-frontier-models-too/",
-      "score": 411,
-      "date": "2026-09-13"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Apple's Siri AI Can Be Swapped Out for Claude, ChatGPT, Code Shows",
-      "url": "https://www.macrumors.com/2026/09/14/siri-can-be-swapped-out-for-chatgpt-claude/",
-      "score": 224,
-      "date": "2026-09-14"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Ex-FTC boss Khan: break out the handcuffs for AI CEOs, citing 1934 precedent",
-      "url": "https://www.theregister.com/ai-and-ml/2026/09/14/ex-ftc-boss-khan-urges-uncle-sam-to-break-out-the-handcuffs-for-ai-ceos-citing-1934-precedent/5296325",
-      "score": 201,
+      "title": "Show HN: Capsule – Single-file web apps that save their data into SQLite",
+      "url": "https://withcapsule.app/",
+      "score": 358,
       "date": "2026-09-15"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Why I'm still bearish on LLMs after Navier-Stokes",
+      "url": "https://dank.systems/posts/2026-09-15-ai-bear.html",
+      "score": 341,
+      "date": "2026-09-15"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Mistral X Mozilla: Private, Multilingual AI Browsing",
+      "url": "https://mistral.ai/news/mistral-x-mozilla/",
+      "score": 297,
+      "date": "2026-09-16"
     },
     {
       "source": "Hacker News",
       "title": "CSS-Tricks in Limbo",
       "url": "https://vale.rocks/micros/20260915-0135",
-      "score": 175,
+      "score": 257,
       "date": "2026-09-15"
     },
     {
       "source": "Hacker News",
-      "title": "Open-source AI and open models reading list",
-      "url": "https://www.interconnects.ai/p/open-source-ai-reading-list",
-      "score": 155,
-      "date": "2026-09-14"
+      "title": "Ex-FTC boss Khan: break out the handcuffs for AI CEOs, citing 1934 precedent",
+      "url": "https://www.theregister.com/ai-and-ml/2026/09/14/ex-ftc-boss-khan-urges-uncle-sam-to-break-out-the-handcuffs-for-ai-ceos-citing-1934-precedent/5296325",
+      "score": 226,
+      "date": "2026-09-15"
     },
     {
       "source": "Hacker News",
-      "title": "Dropping eBPF CPU Cost by About 90% with Memoization (Not AI Gen)",
-      "url": "https://nathannaveen.dev/posts/dropping-ebpf-cpu-cost-by-90/",
-      "score": 146,
-      "date": "2026-09-14"
+      "title": "There's a 100% Chance AI Agents Are Ruining the Internet",
+      "url": "https://www.404media.co/theres-a-100-chance-ai-agents-are-already-ruining-the-internet/",
+      "score": 225,
+      "date": "2026-09-15"
     }
   ],
   "market": [],
