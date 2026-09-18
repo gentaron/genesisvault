@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-17",
+  "capturedAt": "2026-09-18",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Introducing System One Models and Jev",
-      "url": "https://typesafe.ai/blog/introducing-system-one-models-and-jev",
-      "score": 1838,
-      "date": "2026-09-15"
+      "title": "Microsoft exec called AI scraping 'the largest theft of labor in human history'",
+      "url": "https://techcrunch.com/2026/09/17/microsoft-exec-called-ai-scraping-the-largest-theft-of-labor-in-human-history-new-unredacted-filings-reveal/",
+      "score": 563,
+      "date": "2026-09-18"
     },
     {
       "source": "Hacker News",
-      "title": "Mistral X Mozilla: Private, Multilingual AI Browsing",
-      "url": "https://mistral.ai/news/mistral-x-mozilla/",
-      "score": 575,
+      "title": "Bend – A language that blocks AI mistakes via proof, on CPU and GPU",
+      "url": "https://bend-lang.com/",
+      "score": 548,
+      "date": "2026-09-17"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI safety is mostly a sex cult",
+      "url": "https://skywriter.blue/@segyges.bsky.social/3mvom4b4dn22q",
+      "score": 304,
+      "date": "2026-09-17"
+    },
+    {
+      "source": "Hacker News",
+      "title": "How to Write with an LLM",
+      "url": "https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/",
+      "score": 245,
+      "date": "2026-09-17"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Breaking the 1.58-bit Barrier for Ternary LLMs",
+      "url": "https://arxiv.org/abs/2609.16338",
+      "score": 241,
       "date": "2026-09-16"
     },
     {
       "source": "Hacker News",
-      "title": "Gemini 3.8 Live and 3.8 Live Extended Thinking",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-gemini-3-8-live-extended-thinking/",
-      "score": 485,
-      "date": "2026-09-15"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Why I'm still bearish on LLMs after Navier-Stokes",
-      "url": "https://dank.systems/posts/2026-09-15-ai-bear.html",
-      "score": 479,
-      "date": "2026-09-15"
-    },
-    {
-      "source": "Hacker News",
-      "title": "PS5 Linux lead quits: \"a bunch of noobs using LLMs\" that \"they don't understand\"",
-      "url": "https://frvr.com/blog/news/ps5-linux-lead-quits-as-open-source-projects-have-become-a-bunch-of-noobs-using-llms-that-they-dont-even-understand/",
-      "score": 320,
-      "date": "2026-09-16"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Learning Programming in an Age of LLMs",
-      "url": "https://blog.ploeh.dk/2026/09/16/on-learning-programming-in-an-age-of-llms/",
-      "score": 250,
-      "date": "2026-09-16"
+      "title": "Show HN: Share your AI Setup, Learn from others",
+      "url": "https://mysetup.ai/",
+      "score": 226,
+      "date": "2026-09-17"
     }
   ],
   "market": [],
