@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-09-18",
+  "capturedAt": "2026-09-19",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Microsoft exec called AI scraping 'the largest theft of labor in human history'",
       "url": "https://techcrunch.com/2026/09/17/microsoft-exec-called-ai-scraping-the-largest-theft-of-labor-in-human-history-new-unredacted-filings-reveal/",
-      "score": 563,
+      "score": 901,
       "date": "2026-09-18"
     },
     {
       "source": "Hacker News",
-      "title": "Bend – A language that blocks AI mistakes via proof, on CPU and GPU",
+      "title": "Bend – a language that blocks AI mistakes via proof and runs on GPUs",
       "url": "https://bend-lang.com/",
-      "score": 548,
-      "date": "2026-09-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI safety is mostly a sex cult",
-      "url": "https://skywriter.blue/@segyges.bsky.social/3mvom4b4dn22q",
-      "score": 304,
+      "score": 600,
       "date": "2026-09-17"
     },
     {
       "source": "Hacker News",
       "title": "How to Write with an LLM",
       "url": "https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/",
-      "score": 245,
+      "score": 537,
       "date": "2026-09-17"
     },
     {
       "source": "Hacker News",
-      "title": "Breaking the 1.58-bit Barrier for Ternary LLMs",
-      "url": "https://arxiv.org/abs/2609.16338",
-      "score": 241,
-      "date": "2026-09-16"
+      "title": "AI-generated posters don’t have to be horrible",
+      "url": "https://john.hartnup.uk/2026/06/07/ai-event-posters.html",
+      "score": 534,
+      "date": "2026-09-19"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Share your AI Setup, Learn from others",
-      "url": "https://mysetup.ai/",
-      "score": 226,
+      "title": "US Military had close call after using AI for hallucinated intelligence report",
+      "url": "https://www.cnn.com/2026/09/18/politics/us-military-ai-false-intelligence-china-ship",
+      "score": 473,
+      "date": "2026-09-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Sex, AI, and the Apocalypse",
+      "url": "https://www.iankduncan.com/personal/2026-09-16-sex-ai-and-the-apocalypse/",
+      "score": 221,
       "date": "2026-09-17"
     }
   ],
