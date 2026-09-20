@@ -231,6 +231,41 @@ Generated output passes through a review layer (`src/lib/pipeline/review.ts`,
 - **The judge sees only the brief and the article.** Adding writing
   context turns review into self-assessment.
 
+#### 5.4.1 Jev (TypeSafe System One Model) — Judge-Only Special Path
+
+`typesafe-jev` is declared in `config/pipeline.json` `providers.chain` but
+does **not** implement the Vercel AI SDK's `LanguageModel` interface — it
+is a System One Model that returns typed probabilistic decisions, not
+strings. So:
+
+- **`providers.ts buildProviderChain()` skips it.** It never becomes a
+  `LanguageModel` instance and cannot be used by the writer, editor, or
+  any string-generating agent. The `SDK_CLIENTS['typesafe']` factory
+  throws with a clear message if anyone tries.
+- **`review.ts judgeArticle()` calls it first via
+  `src/lib/ai/typesafe.ts`**, before falling through to the LLM chain.
+  This is the only code path that uses Jev.
+- **Fail-soft, not fail-closed.** Unlike the LLM chain (which fails
+  closed when no provider is reachable), a Jev outage or missing
+  `TYPESAFE_API_KEY` falls through to the existing chain. Jev is an
+  enhancement, not a dependency.
+- **Jev is not free.** Input $0.042/MTok, output free, 70–500 ms latency.
+  Early access via waitlist as of Sep 2026. The endpoint and model id
+  are overridable via `TYPESAFE_API_BASE_URL` and `TYPESAFE_MODEL` so the
+  integration can be activated by env change alone when the stable API
+  ships.
+- **Judge-only by architecture.** Adding `typesafe` to any agent's
+  `preferredProviders` is a config error. The integrity check does not
+  yet enforce this — when it does, the test will live in
+  `tests/pipeline-config.test.ts`.
+
+When you touch the Jev integration — config, client, mapping — verify:
+
+```bash
+bun run verify:quick    # config + schema integrity (no API key needed)
+bun run gate:eval       # measures what the reviewer catches and misses
+```
+
 When you touch the gate — model, rubric, thresholds — run:
 
 ```bash

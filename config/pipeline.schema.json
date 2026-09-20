@@ -81,7 +81,8 @@
                   "groq",
                   "cerebras",
                   "openrouter",
-                  "huggingface"
+                  "huggingface",
+                  "typesafe"
                 ]
               },
               "model": {

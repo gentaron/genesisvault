@@ -43,10 +43,25 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { ProviderEntry } from '../ai/providers.js';
 import { buildProviderChain } from '../ai/providers.js';
+import {
+  buildJudgeDecisionSpec,
+  callTypeSafe,
+  coerceList,
+  coerceScore,
+  coerceString,
+  loadTypeSafeConfig,
+  type TypeSafeResponse,
+} from '../ai/typesafe.js';
 import type { RubricCriterion } from './config.js';
 import { PIPELINE_CONFIG } from './config.js';
 
 const REVIEW = PIPELINE_CONFIG.review;
+
+/**
+ * Name used in `providerUsed` and `skipProvider` for the Jev path.
+ * Also the configured `name` of the TypeSafe entry in `providers.chain`.
+ */
+const TYPESAFE_PROVIDER_NAME = 'typesafe-jev';
 
 // ─── What the judge is allowed to return ────────────────────────
 
@@ -375,6 +390,100 @@ export interface JudgeRun {
   providerUsed: string;
   attempts: number;
   latencyMs: number;
+  /**
+   * Calibrated confidence reported by Jev, when Jev was the provider.
+   * Undefined for the LLM-chain path. Lower confidence means the model
+   * itself is less sure — useful for surfacing borderline verdicts.
+   */
+  confidence?: number;
+}
+
+// ─── Jev (TypeSafe System One Model) path ─────────────────────────
+
+/**
+ * Convert a Jev response into the same `JudgeOutput` shape the LLM path
+ * produces, so `computeVerdict()` can aggregate both paths identically.
+ *
+ * Jev does not generate strings; it returns typed decisions with
+ * calibrated probabilities. We read the per-criterion score, finding, and
+ * evidence fields the request asked for, plus the four free-text fields.
+ */
+function mapTypeSafeResponseToJudgeOutput(
+  response: TypeSafeResponse,
+  criteria: RubricCriterion[],
+): JudgeOutput {
+  const observations: Observation[] = criteria.map((c) => {
+    const scoreVal = response.decisions[`crit_${c.id}_score`]?.value;
+    const findingVal = response.decisions[`crit_${c.id}_finding`]?.value;
+    const evidenceVal = response.decisions[`crit_${c.id}_evidence`]?.value;
+    return {
+      criterionId: c.id,
+      score: coerceScore(scoreVal),
+      finding: coerceString(findingVal),
+      evidence: coerceString(evidenceVal),
+    };
+  });
+
+  return {
+    observations,
+    missing: coerceList(response.decisions.missing?.value),
+    violations: coerceList(response.decisions.violations?.value),
+    drift: coerceString(response.decisions.drift?.value),
+    revision: coerceString(response.decisions.revision?.value),
+  };
+}
+
+/**
+ * Try Jev first. Returns null when Jev is unavailable or errored — the
+ * caller MUST fall back to the LLM chain, never to a positive verdict.
+ *
+ * `skipProvider === TYPESAFE_PROVIDER_NAME` disables this path so the
+ * second opinion can fall through to a different model.
+ */
+async function judgeWithTypeSafe(opts: {
+  spec: string;
+  article: string;
+  hasBrief: boolean;
+  skipProvider?: string;
+  minScore?: number;
+}): Promise<JudgeRun | null> {
+  const cfg = loadTypeSafeConfig();
+  if (!cfg) return null;
+  if (opts.skipProvider === TYPESAFE_PROVIDER_NAME) return null;
+
+  const started = Date.now();
+  try {
+    const criteria = activeCriteria(opts.hasBrief);
+    const spec = buildJudgeDecisionSpec(criteria.map((c) => c.id));
+    const state = buildJudgePrompt({
+      spec: opts.spec,
+      article: opts.article,
+      hasBrief: opts.hasBrief,
+    });
+
+    const response = await callTypeSafe(cfg, state, spec);
+    const output = mapTypeSafeResponseToJudgeOutput(response, criteria);
+
+    const verdict = computeVerdict({
+      output,
+      article: opts.article,
+      hasBrief: opts.hasBrief,
+      minScore: opts.minScore,
+    });
+
+    return {
+      verdict,
+      providerUsed: TYPESAFE_PROVIDER_NAME,
+      attempts: 1,
+      latencyMs: Date.now() - started,
+      confidence: response.confidence,
+    };
+  } catch (_err) {
+    // Fail-soft: a Jev outage is not a verdict. The LLM chain below gets
+    // its chance. We surface the error via telemetry if needed, but never
+    // convert this into a positive (or negative) verdict on its own.
+    return null;
+  }
 }
 
 /**
@@ -393,6 +502,19 @@ export async function judgeArticle(opts: {
   providers?: ProviderEntry[];
 }): Promise<JudgeRun> {
   const started = Date.now();
+
+  // Jev first: when configured, the System One Model is the strongest
+  // judge we have (no hallucinated quotes, calibrated probabilities).
+  // Fail-soft: any error or missing key falls through to the LLM chain.
+  const jevRun = await judgeWithTypeSafe({
+    spec: opts.spec,
+    article: opts.article,
+    hasBrief: opts.hasBrief,
+    skipProvider: opts.skipProvider,
+    minScore: opts.minScore,
+  });
+  if (jevRun) return jevRun;
+
   const chain = orderJudgeProviders(opts.providers ?? buildProviderChain()).filter(
     (p) => p.name !== opts.skipProvider,
   );

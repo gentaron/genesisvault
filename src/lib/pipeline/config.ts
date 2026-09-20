@@ -45,7 +45,7 @@ export const AgentDefSchema = z.object({
 
 export const ProviderDefSchema = z.object({
   name: z.string().min(1),
-  sdk: z.enum(['google', 'groq', 'cerebras', 'openrouter', 'huggingface']),
+  sdk: z.enum(['google', 'groq', 'cerebras', 'openrouter', 'huggingface', 'typesafe']),
   model: z.string().min(1),
   envKey: z.string().min(1),
   rpm: z.number().int().positive(),

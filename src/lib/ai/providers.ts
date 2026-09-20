@@ -20,14 +20,14 @@
  * ADR-0010 (provider diversification).
  */
 
+import { createCerebras } from '@ai-sdk/cerebras';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
-import { createCerebras } from '@ai-sdk/cerebras';
-import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { createHuggingFace } from '@ai-sdk/huggingface';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import type { LanguageModel } from 'ai';
-import { PIPELINE_CONFIG } from '../pipeline/config.js';
 import type { ProviderDef } from '../pipeline/config.js';
+import { PIPELINE_CONFIG } from '../pipeline/config.js';
 
 export interface ProviderEntry {
   name: string;
@@ -52,6 +52,11 @@ type ModelClient = (model: string) => LanguageModel;
  * One constructor per SDK named in `config/pipeline.json`. Keyed by the
  * `sdk` enum so adding a provider to the config without wiring an SDK
  * here is a compile error rather than a runtime surprise.
+ *
+ * `typesafe` is special: Jev is a System One Model that does not generate
+ * strings and therefore cannot implement `LanguageModel`. The factory
+ * throws with a clear message so any misuse is loud. The intended path is
+ * in `src/lib/pipeline/review.ts` via `src/lib/ai/typesafe.ts`.
  */
 const SDK_CLIENTS: Record<ProviderDef['sdk'], (apiKey: string) => ModelClient> = {
   google: (apiKey) => createGoogleGenerativeAI({ apiKey }),
@@ -59,6 +64,12 @@ const SDK_CLIENTS: Record<ProviderDef['sdk'], (apiKey: string) => ModelClient> =
   cerebras: (apiKey) => createCerebras({ apiKey }),
   openrouter: (apiKey) => createOpenRouter({ apiKey }),
   huggingface: (apiKey) => createHuggingFace({ apiKey }),
+  typesafe: () => {
+    throw new Error(
+      'TypeSafe Jev is a System One Model and cannot be used as a LanguageModel. ' +
+        'It is judge-only and handled in src/lib/pipeline/review.ts via src/lib/ai/typesafe.ts.',
+    );
+  },
 };
 
 /**
@@ -84,12 +95,17 @@ function makeModelFactory(): (def: ProviderDef, apiKey: string) => LanguageModel
  * API key is absent from the environment. An empty environment yields
  * an empty chain — the pipeline then falls back to templates rather
  * than failing (see AGENTS.md §10.4).
+ *
+ * `typesafe` entries are skipped here: Jev does not implement
+ * `LanguageModel`, so it cannot live in this chain. The Jev-specific
+ * judge path in `review.ts` reads the TypeSafe config separately.
  */
 export function buildProviderChain(): ProviderEntry[] {
   const toModel = makeModelFactory();
   const providers: ProviderEntry[] = [];
 
   for (const def of PIPELINE_CONFIG.providers.chain) {
+    if (def.sdk === 'typesafe') continue; // handled in review.ts
     const apiKey = process.env[def.envKey];
     if (!apiKey) continue;
     providers.push({
@@ -101,4 +117,28 @@ export function buildProviderChain(): ProviderEntry[] {
   }
 
   return providers;
+}
+
+/**
+ * Whether the Jev (TypeSafe System One Model) path is configured. This
+ * is true only when a provider with `sdk: "typesafe"` is declared in the
+ * chain AND its `envKey` is present in the environment. Used by callers
+ * that want to surface the Jev status without importing the typesafe
+ * client directly.
+ */
+export function isTypeSafeConfigured(): boolean {
+  for (const def of PIPELINE_CONFIG.providers.chain) {
+    if (def.sdk !== 'typesafe') continue;
+    if (process.env[def.envKey]) return true;
+  }
+  return false;
+}
+
+/** The configured `name` of the TypeSafe entry, or null when absent. */
+export function getTypeSafeProviderName(): string | null {
+  for (const def of PIPELINE_CONFIG.providers.chain) {
+    if (def.sdk !== 'typesafe') continue;
+    return def.name;
+  }
+  return null;
 }

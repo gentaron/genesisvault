@@ -321,7 +321,13 @@ describe('Phase λ — Enclosure: judge provider ordering', () => {
 
   it('puts the configured judge models first', () => {
     const ordered = orderJudgeProviders(chain);
-    expect(ordered[0].name).toBe(PIPELINE_CONFIG.review.judgeProviders[0]);
+    // typesafe-jev lives in a separate code path (it cannot implement
+    // LanguageModel), so the LLM chain head is the first non-typesafe
+    // entry in judgeProviders.
+    const firstLlmJudge = PIPELINE_CONFIG.review.judgeProviders.find(
+      (name) => name !== 'typesafe-jev',
+    );
+    expect(ordered[0].name).toBe(firstLlmJudge);
   });
 
   it('keeps the remaining providers as fallbacks', () => {

@@ -160,6 +160,15 @@
         "envKey": "HF_TOKEN",
         "rpm": 10,
         "rpd": 500
+      },
+      {
+        "name": "typesafe-jev",
+        "sdk": "typesafe",
+        "model": "jev",
+        "envKey": "TYPESAFE_API_KEY",
+        "rpm": 60,
+        "rpd": 10000,
+        "comment": "TypeSafe AI Jev (System One Model). 文字列を生成せず構造化された確率判定のみ返すため LanguageModel にはならず、providers.ts の buildProviderChain からはスキップされる。審査パス(src/lib/pipeline/review.ts)が src/lib/ai/typesafe.ts 経由で直接呼ぶ。envKey 未設定なら自動的に既存のLLMチェーンへフォールバック（fail-soft）。入力$0.042/MTok・出力無料・70-500ms。早期アクセス中のため TYPESAFE_API_BASE_URL/TYPESAFE_MODEL は env で上書き可能。"
       }
     ]
   },
@@ -272,7 +281,7 @@
     "requireEvidence": true,
     "quarantineDir": ".gate-quarantine",
     "auditLogDir": "docs/gate-runs",
-    "judgeProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+    "judgeProviders": ["typesafe-jev", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
     "rubric": [
       {
         "id": "brief_coverage",
