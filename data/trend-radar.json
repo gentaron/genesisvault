@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-19",
+  "capturedAt": "2026-09-20",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Microsoft exec called AI scraping 'the largest theft of labor in human history'",
-      "url": "https://techcrunch.com/2026/09/17/microsoft-exec-called-ai-scraping-the-largest-theft-of-labor-in-human-history-new-unredacted-filings-reveal/",
-      "score": 901,
-      "date": "2026-09-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Bend – a language that blocks AI mistakes via proof and runs on GPUs",
-      "url": "https://bend-lang.com/",
-      "score": 600,
-      "date": "2026-09-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "How to Write with an LLM",
-      "url": "https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/",
-      "score": 537,
-      "date": "2026-09-17"
-    },
     {
       "source": "Hacker News",
       "title": "AI-generated posters don’t have to be horrible",
       "url": "https://john.hartnup.uk/2026/06/07/ai-event-posters.html",
-      "score": 534,
+      "score": 1689,
       "date": "2026-09-19"
     },
     {
       "source": "Hacker News",
       "title": "US Military had close call after using AI for hallucinated intelligence report",
       "url": "https://www.cnn.com/2026/09/18/politics/us-military-ai-false-intelligence-china-ship",
-      "score": 473,
+      "score": 507,
       "date": "2026-09-18"
     },
     {
       "source": "Hacker News",
-      "title": "Sex, AI, and the Apocalypse",
-      "url": "https://www.iankduncan.com/personal/2026-09-16-sex-ai-and-the-apocalypse/",
-      "score": 221,
-      "date": "2026-09-17"
+      "title": "I think you should almost never use AI to write",
+      "url": "https://erichgrunewald.substack.com/p/why-you-should-almost-never-use-ai",
+      "score": 316,
+      "date": "2026-09-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "How OpenAI Used Its Own LLMs to Design Its Jalapeño Chip",
+      "url": "https://spectrum.ieee.org/llms-for-chip-design",
+      "score": 201,
+      "date": "2026-09-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI and the Destruction of the Creative Commons",
+      "url": "https://www.chesterwisniewski.com/post/2026-09-13-ai-is-destroying-the-creative-commons/",
+      "score": 193,
+      "date": "2026-09-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Microsoft director: AI scraping 'the largest theft of labor in human history'",
+      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/microsoft-director-called-ai-scraping-the-largest-theft-of-labor-in-human-history-while-openai-head-brands-chatgpt-an-existential-threat-to-publishers-revelations-come-from-legal-briefs-filed-in-nyt-lawsuit",
+      "score": 173,
+      "date": "2026-09-19"
     }
   ],
   "market": [],
