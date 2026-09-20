@@ -56,6 +56,8 @@ bun run verify:quick   # 設定と記事リントのみ（数秒）
 | 審査役（judge） | 指示への追従・具体性・テーマのすり替え・整合 | 必要 | `bun run gate:eval` |
 | 人間 | 最終マージ | — | PR |
 
+審査役には **TypeSafe Jev（System One Model）を優先**し、失敗・未設定時は既存のLLMチェーン（Gemini等）にフォールバックします。Jev は文字列を生成しない構造化判定モデルで、構成されたスキーマ以外の型エラーを原理的に起こせず、ハルシネーションした引用を生成する余地がないため、審査層の信頼性を一段上げます（詳細は下記「審査役と Jev」）。
+
 ### 審査役の5つの防御
 
 1. **審査役には書き手と同等以上のモデルを配る** — 弱い審査役の見逃しは表示されない。設定チェックで機械的に禁止（INV-011）
@@ -86,6 +88,26 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 何を落としたかだけ記録しても、見逃しは見つからないためです。
 
 詳細は [ADR-0016](./docs/adr/0016-the-enclosure.md)。
+
+### 審査役と Jev（TypeSafe System One Model）
+
+2026/9/15 に TypeSafe AI が公開した **Jev** は、文字列を生成しない「System One Model」です。
+`unstructured state in, typed probabilistic decisions out` — 入力文を食べて、構造化された型安全な判定と確信度だけを返します。ハルシネーション原理上、存在しない引用を捏造する余地がありません（[TypeSafe AI ブログ](https://typesafe.ai/blog/introducing-system-one-models-and-jev)）。
+
+この性質は審査役にうってつけなので、Jev は `providers.chain` に `typesafe-jev` として宣言しつつ、Vercel AI SDK の `LanguageModel` には**ならない**ように実装されています。審査パス（`src/lib/pipeline/review.ts`）だけが `src/lib/ai/typesafe.ts` 経由で直接呼び、書き手・編集者・他の文字列生成エージェントは既存のLLMチェーンのままです。
+
+| 項目 | 値 |
+|------|------|
+| エンドポイント | `https://api.typesafe.ai/v1/decisions`（env `TYPESAFE_API_BASE_URL` で上書き可能） |
+| モデルID | `jev`（env `TYPESAFE_MODEL` で上書き可能） |
+| 料金 | 入力 $0.042 / MTok / **出力無料** |
+| レイテンシ | 70–500ms |
+| ステータス | 早期アクセス（waitlist） |
+| envKey 未設定時 | 既存のLLMチェーンへ自動フォールバック（fail-soft） |
+
+**なぜ fail-soft なのか**: Jev は拡張であり依存ではないため。`TYPESAFE_API_KEY` が無ければこれまで通り Gemini が審査し、waitlist が通って鍵を置けば次の実行から Jev が優先されます。コード変更は不要で env 追加だけで切り替わります。
+
+**judge-only 制約**: Jev を書き手や編集者の `preferredProviders` に入れると構造上のカテゴリエラーです（文字列を返せないため）。`providers.ts` の `SDK_CLIENTS['typesafe']` は呼ばれたら明確なエラーを投げ、`buildProviderChain()` は `typesafe` をスキップします。これらは `bun run verify:quick` で検証されます。
 
 ---
 
@@ -179,13 +201,14 @@ VE-010 Tessa が、記事を書く前に外で何が起きているかを集め�
 - `gensnotes_1.md` / `gensnotes_2.md` — 旧ブログ「旧Gens Notes」（レガシー）
 - `gensnotes_3.md` / `gensnotes_4.md` / `gensnotes_5.md` — 現行ブログ「Genesis Vault - ミナ・エウレカ」（**現時点の最新参照源**）
 
-**利用可能な無料プロバイダー**（APIキーが設定されたものだけがチェーンに入る）:
-- `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD
-- `gemini-2.5-flash` — 10 RPM / 250 RPD
+**利用可能なプロバイダー**（APIキーが設定されたものだけがチェーンに入る。`typesafe-jev` だけは審査パス専用でLLMチェーンには入りません）:
+- `gemini-2.5-flash-lite` — 15 RPM / 1000 RPD（無料ティア）
+- `gemini-2.5-flash` — 10 RPM / 250 RPD（無料ティア）
 - `groq-llama-3.3-70b` — Groq 無料ティア
 - `cerebras-llama-3.3-70b` — Cerebras 無料ティア
-- `openrouter-free` — OpenRouter 無料モデル
+- `openrouter-free` — OpenRouter 無料モデル（3モデル分散）
 - `huggingface` — HuggingFace Inference API
+- `typesafe-jev` — TypeSafe Jev（審査パス専用 / 入力 $0.042/MTok / 出力無料 / 早期アクセス）
 
 **ティア制ルーティング（Phase ι）**: エージェントの役割ごとに最適なプロバイダー順・temperature・トークン上限を割り当てます。ルーティング表は `config/pipeline.json` の `routing.byAgent` に、各設定の理由（`why`）付きで宣言されています（実装は `src/lib/ai/routing.ts`、詳細は `docs/adr/0014-tiered-agent-routing.md`）。
 
@@ -211,6 +234,7 @@ GitHub Actions により **毎日 19:30 MYT（UTC 11:30）** に自動で新記�
 - `CEREBRAS_API_KEY` — Cerebras API キー（任意）
 - `OPENROUTER_API_KEY` — OpenRouter API キー（任意）
 - `HF_TOKEN` — HuggingFace API トークン（任意）
+- `TYPESAFE_API_KEY` — TypeSafe Jev キー（任意・審査パス専用 / 未設定ならLLMチェーンへフォールバック）
 - `PAYWALL_SECRET` — ペイウォール HMAC 署名鍵
 - `ALCHEMY_API_KEY` — Ethereum RPC（ペイウォール検証用、任意）
 - `RECEIVE_WALLET` — USDC 受取ウォレットアドレス（任意）
@@ -271,13 +295,14 @@ GEMINI_API_KEY=your_key bun run auto-post
 | [Cerebras](https://cerebras.ai/) | `@ai-sdk/cerebras`。`llama-3.3-70b`。30 RPM 無料ティア |
 | [OpenRouter](https://openrouter.ai/) | `@openrouter/ai-sdk-provider`。無料モデル3種を順に試行: `meta-llama/llama-3.3-70b-instruct:free` → `qwen/qwen-2.5-72b-instruct:free` → `deepseek/deepseek-chat:free`（ADR-0010）|
 | [HuggingFace](https://huggingface.co/) | `@ai-sdk/huggingface`。`Llama-3.3-70B-Instruct`。サーバーレス無料ティア |
+| [TypeSafe Jev](https://typesafe.ai/) | System One Model。文字列を生成せず構造化判定のみ返す。審査パス専用で `LanguageModel` にはならず、`src/lib/ai/typesafe.ts` 経由で `review.ts` が直接呼ぶ。未設定時は既存LLMチェーンへフォールバック（fail-soft） |
 | Multi-Agent Pipeline | 9エージェント順次実行（Tessa → Vera → Nova → Lena → Chloe → Sophia → Iris → Edda → Mira）。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/runners.ts` |
 | Trend Radar | VE-010 Tessa が Hacker News / arXiv / Stooq から AI・技術の話題と相場の地合いを収集し、企画と執筆に渡す。API キー不要・fail-soft（ADR-0018） |
 | Continuity Gate | 金額・継続日数・年数・冊数の逆行を決定論的に検出。原稿・校正後・テンプレートの3箇所で確認し、逆行は公開しない（ADR-0018 / INV-019） |
 | Declarative Config | `config/pipeline.json` が設定の唯一のソース。Zod 検証＋参照整合性チェック（ADR-0015） |
 | Article → Video Handoff | VE-009 Runa が記事を動画ブリーフに変換し Linear へ起票。VAIZ が拾って動画にする。境界は Linear のみ（ADR-0017） |
 | Structured Outputs | Nova/Lena/Chloe は `generateObject` + Zod スキーマ検証。Sophia/Iris は `generateTextWithFallback` |
-| Multi-Provider Fallback | 6プロバイダ8モデルチェーン（OpenRouter内は3モデル分散） + ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
+| Multi-Provider Fallback | 7プロバイダ9モデルチェーン（OpenRouter内は3モデル分散）+ TypeSafe Jev 審査パス（judge-only）+ ダイレクト Gemini REST フォールバック。~99.99% 稼働率 |
 | Agent Telemetry | `logs/agent-runs.jsonl` にプロバイダ名・試行回数・レイテンシ・成功/失敗を記録 |
 | Dry Run Mode | `bun run gen:dry` でファイル書き込みなしのパイプラインテスト |
 | Idempotency | 同日の重複ポスト生成を防止。`.pipeline-state.json` でステート管理 |
