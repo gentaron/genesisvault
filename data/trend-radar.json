@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-09-20",
+  "capturedAt": "2026-09-21",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AI-generated posters don’t have to be horrible",
-      "url": "https://john.hartnup.uk/2026/06/07/ai-event-posters.html",
-      "score": 1689,
-      "date": "2026-09-19"
+      "title": "ChatGPT now knows what you do on other websites via ad collector",
+      "url": "https://www.buchodi.com/chatgpt-now-knows-what-you-do-on-other-websites-via-ad-collector/",
+      "score": 739,
+      "date": "2026-09-20"
     },
     {
       "source": "Hacker News",
-      "title": "US Military had close call after using AI for hallucinated intelligence report",
-      "url": "https://www.cnn.com/2026/09/18/politics/us-military-ai-false-intelligence-china-ship",
-      "score": 507,
-      "date": "2026-09-18"
+      "title": "Pirate Face Rescues LLM Models from Deletion",
+      "url": "https://pirateface.co/",
+      "score": 544,
+      "date": "2026-09-20"
     },
     {
       "source": "Hacker News",
-      "title": "I think you should almost never use AI to write",
-      "url": "https://erichgrunewald.substack.com/p/why-you-should-almost-never-use-ai",
-      "score": 316,
-      "date": "2026-09-19"
-    },
-    {
-      "source": "Hacker News",
-      "title": "How OpenAI Used Its Own LLMs to Design Its Jalapeño Chip",
-      "url": "https://spectrum.ieee.org/llms-for-chip-design",
-      "score": 201,
-      "date": "2026-09-18"
+      "title": "US Revokes Limits on Power Plants' Climate Pollution",
+      "url": "https://text.hrw.org/news/2026/09/17/us-revokes-limits-on-power-plants-climate-pollution",
+      "score": 251,
+      "date": "2026-09-20"
     },
     {
       "source": "Hacker News",
       "title": "AI and the Destruction of the Creative Commons",
       "url": "https://www.chesterwisniewski.com/post/2026-09-13-ai-is-destroying-the-creative-commons/",
-      "score": 193,
+      "score": 232,
+      "date": "2026-09-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The LLMentalist Effect (2023)",
+      "url": "https://softwarecrisis.dev/letters/llmentalist/",
+      "score": 217,
       "date": "2026-09-20"
     },
     {
       "source": "Hacker News",
       "title": "Microsoft director: AI scraping 'the largest theft of labor in human history'",
       "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/microsoft-director-called-ai-scraping-the-largest-theft-of-labor-in-human-history-while-openai-head-brands-chatgpt-an-existential-threat-to-publishers-revelations-come-from-legal-briefs-filed-in-nyt-lawsuit",
-      "score": 173,
+      "score": 187,
       "date": "2026-09-19"
     }
   ],
