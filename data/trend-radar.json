@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-21",
+  "capturedAt": "2026-09-22",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "ChatGPT now knows what you do on other websites via ad collector",
-      "url": "https://www.buchodi.com/chatgpt-now-knows-what-you-do-on-other-websites-via-ad-collector/",
-      "score": 739,
-      "date": "2026-09-20"
+      "title": "Can gzip be a language model?",
+      "url": "https://nathan.rs/posts/gzip-lm/",
+      "score": 300,
+      "date": "2026-09-22"
     },
     {
       "source": "Hacker News",
-      "title": "Pirate Face Rescues LLM Models from Deletion",
-      "url": "https://pirateface.co/",
-      "score": 544,
-      "date": "2026-09-20"
+      "title": "AI Has No Wisdom and Neither Will You",
+      "url": "https://alexn.org/blog/2026/09/22/ai-has-no-wisdom-and-neither-will-you/",
+      "score": 294,
+      "date": "2026-09-22"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI coding has made CI a bottleneck, so we reworked ours to keep up",
+      "url": "https://linear.app/now/ci-bottleneck-reworked",
+      "score": 290,
+      "date": "2026-09-21"
     },
     {
       "source": "Hacker News",
       "title": "US Revokes Limits on Power Plants' Climate Pollution",
       "url": "https://text.hrw.org/news/2026/09/17/us-revokes-limits-on-power-plants-climate-pollution",
-      "score": 251,
+      "score": 258,
       "date": "2026-09-20"
     },
     {
       "source": "Hacker News",
-      "title": "AI and the Destruction of the Creative Commons",
-      "url": "https://www.chesterwisniewski.com/post/2026-09-13-ai-is-destroying-the-creative-commons/",
-      "score": 232,
-      "date": "2026-09-20"
+      "title": "macOS 27: Workaround to avoid downloading AI models and save storage",
+      "url": "https://www.reddit.com/r/MacOSBeta/comments/1vlnf13/workaround_to_avoid_downloading_ai_models_and/",
+      "score": 235,
+      "date": "2026-09-21"
     },
     {
       "source": "Hacker News",
-      "title": "The LLMentalist Effect (2023)",
-      "url": "https://softwarecrisis.dev/letters/llmentalist/",
-      "score": 217,
-      "date": "2026-09-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Microsoft director: AI scraping 'the largest theft of labor in human history'",
-      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/microsoft-director-called-ai-scraping-the-largest-theft-of-labor-in-human-history-while-openai-head-brands-chatgpt-an-existential-threat-to-publishers-revelations-come-from-legal-briefs-filed-in-nyt-lawsuit",
-      "score": 187,
-      "date": "2026-09-19"
+      "title": "US halts flights at busy East Coast airports, says fiber line cut",
+      "url": "https://www.reuters.com/world/us/faa-halts-some-us-east-coast-flights-due-communication-issues-2026-09-21/",
+      "score": 228,
+      "date": "2026-09-21"
     }
   ],
   "market": [],
