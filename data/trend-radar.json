@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-09-22",
+  "capturedAt": "2026-09-23",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "Pentagon says overreliance on AI contributed to missile strike on Iran school",
+      "url": "https://www.bloomberg.com/graphics/2026-iran-school-attack/",
+      "score": 790,
+      "date": "2026-09-22"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Microsoft killed FoxPro in 2007. Anyway, here's FoxPro revived",
+      "url": "https://foxscript.org/",
+      "score": 411,
+      "date": "2026-09-22"
+    },
     {
       "source": "Hacker News",
       "title": "Can gzip be a language model?",
       "url": "https://nathan.rs/posts/gzip-lm/",
-      "score": 300,
+      "score": 395,
       "date": "2026-09-22"
     },
     {
       "source": "Hacker News",
       "title": "AI Has No Wisdom and Neither Will You",
       "url": "https://alexn.org/blog/2026/09/22/ai-has-no-wisdom-and-neither-will-you/",
-      "score": 294,
+      "score": 382,
       "date": "2026-09-22"
     },
     {
       "source": "Hacker News",
       "title": "AI coding has made CI a bottleneck, so we reworked ours to keep up",
       "url": "https://linear.app/now/ci-bottleneck-reworked",
-      "score": 290,
-      "date": "2026-09-21"
-    },
-    {
-      "source": "Hacker News",
-      "title": "US Revokes Limits on Power Plants' Climate Pollution",
-      "url": "https://text.hrw.org/news/2026/09/17/us-revokes-limits-on-power-plants-climate-pollution",
-      "score": 258,
-      "date": "2026-09-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "macOS 27: Workaround to avoid downloading AI models and save storage",
-      "url": "https://www.reddit.com/r/MacOSBeta/comments/1vlnf13/workaround_to_avoid_downloading_ai_models_and/",
-      "score": 235,
+      "score": 311,
       "date": "2026-09-21"
     },
     {
       "source": "Hacker News",
       "title": "US halts flights at busy East Coast airports, says fiber line cut",
       "url": "https://www.reuters.com/world/us/faa-halts-some-us-east-coast-flights-due-communication-issues-2026-09-21/",
-      "score": 228,
+      "score": 236,
       "date": "2026-09-21"
     }
   ],
