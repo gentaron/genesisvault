@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-09-24",
+  "capturedAt": "2026-09-25",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Pentagon says overreliance on AI contributed to missile strike on Iran school",
-      "url": "https://www.bloomberg.com/graphics/2026-iran-school-attack/",
-      "score": 935,
-      "date": "2026-09-22"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Jev in 25 Lines of Python",
-      "url": "https://www.nobodywho.ai/posts/jev-in-25-lines/",
-      "score": 661,
-      "date": "2026-09-23"
-    },
     {
       "source": "Hacker News",
       "title": "Meta takes down a critical video about meta AI Glasses after filming at Meta",
       "url": "https://www.reddit.com/r/facebook/comments/1wotwrk/meta_takes_down_a_critical_video_about_meta_ai/",
-      "score": 503,
+      "score": 619,
       "date": "2026-09-24"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Microsoft killed FoxPro in 2007. Anyway, here's FoxPro revived",
-      "url": "https://foxscript.org/",
-      "score": 478,
-      "date": "2026-09-22"
     },
     {
       "source": "Hacker News",
       "title": "Feds Target AI Critics as \"Foreign Agents\"",
       "url": "https://www.kenklippenstein.com/p/feds-think-ai-critics-are-foreign",
-      "score": 342,
+      "score": 384,
+      "date": "2026-09-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Show HN: Whiteboard (YC W26) – An open-source IDE for thoughtful software design",
+      "url": "https://github.com/devdotfast/whiteboard",
+      "score": 359,
       "date": "2026-09-24"
     },
     {
       "source": "Hacker News",
       "title": "Early rogue AI agent activity and attempts to hack found on urlquery.net",
       "url": "https://transluce.org/agent-activity",
-      "score": 199,
+      "score": 262,
+      "date": "2026-09-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "'That's so AI ' What gen Alpha's biggest insult tells us",
+      "url": "https://www.theguardian.com/society/2026/sep/24/thats-so-ai-what-gen-alphas-biggest-insult-tells-us",
+      "score": 182,
+      "date": "2026-09-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Best LLM for every budget, updated daily",
+      "url": "https://bestmodelforyourbudget.terrydjony.com/",
+      "score": 178,
       "date": "2026-09-24"
     }
   ],
