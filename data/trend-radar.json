@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-25",
+  "capturedAt": "2026-09-26",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Meta takes down a critical video about meta AI Glasses after filming at Meta",
-      "url": "https://www.reddit.com/r/facebook/comments/1wotwrk/meta_takes_down_a_critical_video_about_meta_ai/",
-      "score": 619,
-      "date": "2026-09-24"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Feds Target AI Critics as \"Foreign Agents\"",
-      "url": "https://www.kenklippenstein.com/p/feds-think-ai-critics-are-foreign",
-      "score": 384,
-      "date": "2026-09-24"
-    },
     {
       "source": "Hacker News",
       "title": "Show HN: Whiteboard (YC W26) – An open-source IDE for thoughtful software design",
       "url": "https://github.com/devdotfast/whiteboard",
-      "score": 359,
+      "score": 403,
       "date": "2026-09-24"
     },
     {
       "source": "Hacker News",
-      "title": "Early rogue AI agent activity and attempts to hack found on urlquery.net",
-      "url": "https://transluce.org/agent-activity",
-      "score": 262,
+      "title": "Classified estimates show the NSA is paying billions to test AI models",
+      "url": "https://www.washingtonsun.com/technology/classified-estimates-nsa-paying-billions-to-test-ai-models",
+      "score": 171,
+      "date": "2026-09-25"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Using LLMs to trace alchemical knowledge and decode 17th century letters",
+      "url": "https://resobscura.substack.com/p/ai-labs-need-to-start-funding-historical",
+      "score": 167,
       "date": "2026-09-24"
     },
     {
       "source": "Hacker News",
-      "title": "'That's so AI ' What gen Alpha's biggest insult tells us",
-      "url": "https://www.theguardian.com/society/2026/sep/24/thats-so-ai-what-gen-alphas-biggest-insult-tells-us",
-      "score": 182,
+      "title": "Alan Kay: Shannon gave us a way of dealing with noisy channels [video]",
+      "url": "https://www.youtube.com/watch?v=Cjntrqhn8pk",
+      "score": 140,
+      "date": "2026-09-25"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Tutoring company tells parents to save their money and 'use AI instead'",
+      "url": "https://www.afr.com/policy/health-and-education/tutoring-company-tell-parents-to-save-their-money-and-use-ai-instead-20260923-p60z0r",
+      "score": 137,
       "date": "2026-09-24"
     },
     {
       "source": "Hacker News",
-      "title": "Best LLM for every budget, updated daily",
-      "url": "https://bestmodelforyourbudget.terrydjony.com/",
-      "score": 178,
-      "date": "2026-09-24"
+      "title": "Microsoft abandons personal AI chatbot race with Copilot reboot",
+      "url": "https://www.bloomberg.com/news/articles/2026-09-25/microsoft-abandons-personal-ai-chatbot-race-with-copilot-reboot",
+      "score": 130,
+      "date": "2026-09-25"
     }
   ],
   "market": [],
