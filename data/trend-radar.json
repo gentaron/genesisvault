@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-09-26",
+  "capturedAt": "2026-09-27",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Show HN: Whiteboard (YC W26) – An open-source IDE for thoughtful software design",
-      "url": "https://github.com/devdotfast/whiteboard",
-      "score": 403,
-      "date": "2026-09-24"
+      "title": "How to keep enjoying programming in a world of LLMs",
+      "url": "https://discourse.haskell.org/t/how-to-keep-enjoying-programming-in-a-world-of-llms/14705",
+      "score": 295,
+      "date": "2026-09-26"
     },
     {
       "source": "Hacker News",
-      "title": "Classified estimates show the NSA is paying billions to test AI models",
-      "url": "https://www.washingtonsun.com/technology/classified-estimates-nsa-paying-billions-to-test-ai-models",
-      "score": 171,
-      "date": "2026-09-25"
+      "title": "One Month Without AI",
+      "url": "https://blog.bustikiller.com/2026/09/25/one-month-without-ai.html",
+      "score": 178,
+      "date": "2026-09-26"
     },
     {
       "source": "Hacker News",
-      "title": "Using LLMs to trace alchemical knowledge and decode 17th century letters",
-      "url": "https://resobscura.substack.com/p/ai-labs-need-to-start-funding-historical",
-      "score": 167,
-      "date": "2026-09-24"
+      "title": "A single function Jev-like wrapper for LLMs, including vision models",
+      "url": "http://allanrbo.blogspot.com/2026/09/a-jev-like-wrapper-for-llms-including.html",
+      "score": 147,
+      "date": "2026-09-26"
     },
     {
       "source": "Hacker News",
       "title": "Alan Kay: Shannon gave us a way of dealing with noisy channels [video]",
       "url": "https://www.youtube.com/watch?v=Cjntrqhn8pk",
-      "score": 140,
+      "score": 145,
       "date": "2026-09-25"
     },
     {
       "source": "Hacker News",
-      "title": "Tutoring company tells parents to save their money and 'use AI instead'",
-      "url": "https://www.afr.com/policy/health-and-education/tutoring-company-tell-parents-to-save-their-money-and-use-ai-instead-20260923-p60z0r",
-      "score": 137,
-      "date": "2026-09-24"
+      "title": "Turning GLM-5.3-Flash into a Jev-like decision model",
+      "url": "https://www.privatemode.ai/blog/system-one-from-glm-flash",
+      "score": 120,
+      "date": "2026-09-26"
     },
     {
       "source": "Hacker News",
-      "title": "Microsoft abandons personal AI chatbot race with Copilot reboot",
-      "url": "https://www.bloomberg.com/news/articles/2026-09-25/microsoft-abandons-personal-ai-chatbot-race-with-copilot-reboot",
-      "score": 130,
+      "title": "Too AI; Didn't Read",
+      "url": "https://www.tai-dr.com/",
+      "score": 111,
       "date": "2026-09-25"
     }
   ],
