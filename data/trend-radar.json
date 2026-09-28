@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-27",
+  "capturedAt": "2026-09-28",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "How to keep enjoying programming in a world of LLMs",
-      "url": "https://discourse.haskell.org/t/how-to-keep-enjoying-programming-in-a-world-of-llms/14705",
-      "score": 295,
-      "date": "2026-09-26"
+      "title": "Ember-1",
+      "url": "https://fireworks.ai/blog/ember-1",
+      "score": 566,
+      "date": "2026-09-27"
     },
     {
       "source": "Hacker News",
-      "title": "One Month Without AI",
-      "url": "https://blog.bustikiller.com/2026/09/25/one-month-without-ai.html",
-      "score": 178,
-      "date": "2026-09-26"
+      "title": "AI companies in race to demonstrate their model most threatening to humanity",
+      "url": "https://thecivilian.co.nz/2026/09/27/ai-companies-in-fierce-arms-race-to-demonstrate-their-model-is-the-most-existentially-threatening-to-humanity/",
+      "score": 414,
+      "date": "2026-09-28"
     },
     {
       "source": "Hacker News",
-      "title": "A single function Jev-like wrapper for LLMs, including vision models",
-      "url": "http://allanrbo.blogspot.com/2026/09/a-jev-like-wrapper-for-llms-including.html",
-      "score": 147,
-      "date": "2026-09-26"
+      "title": "There are no \"rogue\" AI agents",
+      "url": "https://eoinhiggins.substack.com/p/there-are-no-rogue-ai-agents",
+      "score": 385,
+      "date": "2026-09-27"
     },
     {
       "source": "Hacker News",
-      "title": "Alan Kay: Shannon gave us a way of dealing with noisy channels [video]",
-      "url": "https://www.youtube.com/watch?v=Cjntrqhn8pk",
-      "score": 145,
-      "date": "2026-09-25"
+      "title": "The problem is not AI code, but not knowing about system architecture or intent",
+      "url": "https://www.ssp.sh/brain/the-problem-is-not-the-ai-code-but-nobody-knows-anything-anymore/",
+      "score": 279,
+      "date": "2026-09-28"
     },
     {
       "source": "Hacker News",
-      "title": "Turning GLM-5.3-Flash into a Jev-like decision model",
-      "url": "https://www.privatemode.ai/blog/system-one-from-glm-flash",
-      "score": 120,
-      "date": "2026-09-26"
+      "title": "Thinking fast and slow in AI: The role of metacognition (2021)",
+      "url": "https://arxiv.org/abs/2110.01834",
+      "score": 166,
+      "date": "2026-09-28"
     },
     {
       "source": "Hacker News",
-      "title": "Too AI; Didn't Read",
-      "url": "https://www.tai-dr.com/",
-      "score": 111,
-      "date": "2026-09-25"
+      "title": "Show HN: TinyAIArena watch AI agents battle it out",
+      "url": "https://tinyaiarena.com/",
+      "score": 117,
+      "date": "2026-09-27"
     }
   ],
   "market": [],
