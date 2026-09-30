@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-09-29",
+  "capturedAt": "2026-09-30",
   "tech": [
     {
       "source": "Hacker News",
       "title": "It's Time to Investigate the AI Labs",
       "url": "https://calnewport.com/its-time-to-investigate-the-ai-labs/",
-      "score": 572,
+      "score": 616,
       "date": "2026-09-28"
     },
     {
       "source": "Hacker News",
-      "title": "AI companies in race to demonstrate their model most threatening to humanity",
-      "url": "https://thecivilian.co.nz/2026/09/27/ai-companies-in-fierce-arms-race-to-demonstrate-their-model-is-the-most-existentially-threatening-to-humanity/",
-      "score": 434,
-      "date": "2026-09-28"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The problem is not AI code, but not knowing about system architecture or intent",
-      "url": "https://www.ssp.sh/brain/the-problem-is-not-the-ai-code-but-nobody-knows-anything-anymore/",
-      "score": 376,
-      "date": "2026-09-28"
+      "title": "DraftKings is using AI to behaviorally target chronic gamblers",
+      "url": "https://www.eff.org/deeplinks/2026/09/draftkings-using-ai-supercharge-harms-online-behavioral-advertising",
+      "score": 551,
+      "date": "2026-09-29"
     },
     {
       "source": "Hacker News",
       "title": "A Privacy Analysis of Web and Mobile Conversational AI Agents [pdf]",
       "url": "https://jorgegarciaherrero.com/wp-content/interactivos/20260916-Prompt-like-a-butterfly-sting-like-a-tracker-(clean).pdf",
-      "score": 363,
+      "score": 420,
       "date": "2026-09-29"
     },
     {
       "source": "Hacker News",
       "title": "MicroLLM Lab – Try 7 tiny LLM's in the browser",
       "url": "https://stateofutopia.com/experiments/microllmlab/",
-      "score": 271,
+      "score": 278,
       "date": "2026-09-28"
     },
     {
       "source": "Hacker News",
-      "title": "Nvidia wants to put a watchdog chip next to every AI agent",
-      "url": "https://www.cnbc.com/2026/09/28/nvidia-releases.html",
-      "score": 216,
-      "date": "2026-09-28"
+      "title": "The AI Race Just Got Awkward",
+      "url": "https://insufferable.dev/posts/the-ai-race-just-got-awkward/",
+      "score": 240,
+      "date": "2026-09-30"
+    },
+    {
+      "source": "Hacker News",
+      "title": "GLM-5.3 and the spread of advanced cyber capabilities",
+      "url": "https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities",
+      "score": 239,
+      "date": "2026-09-29"
     }
   ],
   "market": [],
