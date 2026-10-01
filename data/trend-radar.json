@@ -1,53 +1,54 @@
 {
-  "capturedAt": "2026-09-30",
+  "capturedAt": "2026-10-01",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "It's Time to Investigate the AI Labs",
-      "url": "https://calnewport.com/its-time-to-investigate-the-ai-labs/",
-      "score": 616,
-      "date": "2026-09-28"
-    },
-    {
-      "source": "Hacker News",
-      "title": "DraftKings is using AI to behaviorally target chronic gamblers",
-      "url": "https://www.eff.org/deeplinks/2026/09/draftkings-using-ai-supercharge-harms-online-behavioral-advertising",
-      "score": 551,
-      "date": "2026-09-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "A Privacy Analysis of Web and Mobile Conversational AI Agents [pdf]",
-      "url": "https://jorgegarciaherrero.com/wp-content/interactivos/20260916-Prompt-like-a-butterfly-sting-like-a-tracker-(clean).pdf",
-      "score": 420,
-      "date": "2026-09-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "MicroLLM Lab – Try 7 tiny LLM's in the browser",
-      "url": "https://stateofutopia.com/experiments/microllmlab/",
-      "score": 278,
-      "date": "2026-09-28"
+      "title": "Gemini 4 Argon",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/",
+      "score": 1584,
+      "date": "2026-09-30"
     },
     {
       "source": "Hacker News",
       "title": "The AI Race Just Got Awkward",
       "url": "https://insufferable.dev/posts/the-ai-race-just-got-awkward/",
-      "score": 240,
+      "score": 396,
       "date": "2026-09-30"
     },
     {
       "source": "Hacker News",
       "title": "GLM-5.3 and the spread of advanced cyber capabilities",
       "url": "https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities",
-      "score": 239,
+      "score": 248,
       "date": "2026-09-29"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI needs $6T in annual revenue to justify data centre boom",
+      "url": "https://www.thenationalnews.com/future/technology/2026/09/29/ai-industry-needs-to-earn-6-trillion-by-2031-to-justify-data-centres/",
+      "score": 221,
+      "date": "2026-09-29"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents",
+      "url": "https://github.com/magnitudedev/magnitude",
+      "score": 187,
+      "date": "2026-09-30"
+    },
+    {
+      "source": "Hacker News",
+      "title": "FTC is investigating OpenAI, Anthropic and other AI companies over product risks",
+      "url": "https://www.cnbc.com/2026/09/30/ftc-ai-probe-openai-anthropic.html",
+      "score": 146,
+      "date": "2026-10-01"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
+    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
