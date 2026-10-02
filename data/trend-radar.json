@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-01",
+  "capturedAt": "2026-10-02",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Gemini 4 Argon",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/",
-      "score": 1584,
-      "date": "2026-09-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The AI Race Just Got Awkward",
-      "url": "https://insufferable.dev/posts/the-ai-race-just-got-awkward/",
-      "score": 396,
-      "date": "2026-09-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "GLM-5.3 and the spread of advanced cyber capabilities",
-      "url": "https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities",
+      "title": "Ask HN: Who is hiring? (October 2026)",
+      "url": "https://news.ycombinator.com/item?id=49922569",
       "score": 248,
-      "date": "2026-09-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI needs $6T in annual revenue to justify data centre boom",
-      "url": "https://www.thenationalnews.com/future/technology/2026/09/29/ai-industry-needs-to-earn-6-trillion-by-2031-to-justify-data-centres/",
-      "score": 221,
-      "date": "2026-09-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents",
-      "url": "https://github.com/magnitudedev/magnitude",
-      "score": 187,
-      "date": "2026-09-30"
+      "date": "2026-10-01"
     },
     {
       "source": "Hacker News",
       "title": "FTC is investigating OpenAI, Anthropic and other AI companies over product risks",
       "url": "https://www.cnbc.com/2026/09/30/ftc-ai-probe-openai-anthropic.html",
-      "score": 146,
+      "score": 205,
+      "date": "2026-10-01"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents",
+      "url": "https://github.com/magnitudedev/magnitude",
+      "score": 194,
+      "date": "2026-09-30"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Vote on which of Hacker News' challenges for AI have been met",
+      "url": "https://stoppels.ch/goalposts/",
+      "score": 190,
+      "date": "2026-10-01"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI Makes Me Sad",
+      "url": "https://mondobe.com/ai-makes-me-sad",
+      "score": 144,
+      "date": "2026-10-02"
+    },
+    {
+      "source": "Hacker News",
+      "title": "ArXiv's Updated Rate Limit Policy",
+      "url": "https://blog.arxiv.org/2026/10/01/updated-rate-limit-policy/",
+      "score": 140,
       "date": "2026-10-01"
     }
   ],
@@ -48,7 +48,6 @@
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
-    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
