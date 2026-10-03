@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-10-02",
+  "capturedAt": "2026-10-03",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Ask HN: Who is hiring? (October 2026)",
-      "url": "https://news.ycombinator.com/item?id=49922569",
-      "score": 248,
+      "title": "Frog and Toad and the Increasingly Capable Machines",
+      "url": "https://www.frogandtoad.ai/",
+      "score": 557,
       "date": "2026-10-01"
     },
     {
       "source": "Hacker News",
-      "title": "FTC is investigating OpenAI, Anthropic and other AI companies over product risks",
-      "url": "https://www.cnbc.com/2026/09/30/ftc-ai-probe-openai-anthropic.html",
-      "score": 205,
-      "date": "2026-10-01"
+      "title": "From the creator of Redis; run LLM locally with ds4",
+      "url": "https://dwarfstar.sh/",
+      "score": 292,
+      "date": "2026-10-02"
     },
     {
       "source": "Hacker News",
-      "title": "Launch HN: Magnitude (YC S25) – Self-optimizing inference engine for agents",
-      "url": "https://github.com/magnitudedev/magnitude",
-      "score": 194,
-      "date": "2026-09-30"
+      "title": "Greg Kroah-Hartman – Security in the LLM Age [video]",
+      "url": "https://www.youtube.com/watch?v=NnV_cWeoo5Q",
+      "score": 277,
+      "date": "2026-10-02"
+    },
+    {
+      "source": "Hacker News",
+      "title": "With most information hidden, the game Stratego had stumped AI until now",
+      "url": "https://arstechnica.com/science/2026/10/ai-finally-beat-the-best-stratego-player-in-history-and-did-it-on-a-budget/",
+      "score": 253,
+      "date": "2026-10-02"
     },
     {
       "source": "Hacker News",
       "title": "Vote on which of Hacker News' challenges for AI have been met",
       "url": "https://stoppels.ch/goalposts/",
-      "score": 190,
+      "score": 198,
       "date": "2026-10-01"
     },
     {
       "source": "Hacker News",
-      "title": "AI Makes Me Sad",
-      "url": "https://mondobe.com/ai-makes-me-sad",
-      "score": 144,
+      "title": "One month coding with GLM 5.3 Flash",
+      "url": "https://wagtail.org/blog/one-month-on-glm-53-flash/",
+      "score": 195,
       "date": "2026-10-02"
-    },
-    {
-      "source": "Hacker News",
-      "title": "ArXiv's Updated Rate Limit Policy",
-      "url": "https://blog.arxiv.org/2026/10/01/updated-rate-limit-policy/",
-      "score": 140,
-      "date": "2026-10-01"
     }
   ],
   "market": [],
