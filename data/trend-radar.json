@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-10-05",
+  "capturedAt": "2026-10-06",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "Mistral Large 4",
+      "url": "https://mistral.ai/news/mistral-large-4/\\",
+      "score": 931,
+      "date": "2026-10-06"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Beam: Reflection's 501B open-weight model",
+      "url": "https://reflection.ai/blog/introducing-beam",
+      "score": 513,
+      "date": "2026-10-05"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Mistral Large 4: \"Le Chonk\"",
+      "url": "https://mistral.ai/news/mistral-large-4/",
+      "score": 511,
+      "date": "2026-10-06"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Opus 5.5 agents discover two room-temperature magnetic semiconductor candidates",
+      "url": "https://www.vals.ai/blogs/room-temperature-magnetic-semiconductors",
+      "score": 444,
+      "date": "2026-10-05"
+    },
     {
       "source": "Hacker News",
       "title": "Germany’s RobCo hits $1B valuation",
       "url": "https://techfundingnews.com/europes-new-robotics-unicorn-germanys-robco-hits-1b-valuation/",
-      "score": 323,
+      "score": 343,
       "date": "2026-10-05"
     },
     {
       "source": "Hacker News",
-      "title": "Powerless F1 drivers frustrated by Bahrain F1 software glitch",
-      "url": "https://www.motorsport.com/f1/news/horrible-totally-unacceptable-powerless-f1-drivers-frustrated-by-bahrain-f1-software-glitch/10861968/",
-      "score": 277,
+      "title": "The lamps in my house",
+      "url": "https://arslan.io/2026/10/05/the-lamps-in-my-house/",
+      "score": 291,
       "date": "2026-10-05"
-    },
-    {
-      "source": "Hacker News",
-      "title": "OpenAI safety leader quits, warning AI company's culture is 'broken'",
-      "url": "https://www.theguardian.com/technology/2026/oct/03/openai-safety-leader-quits-warning-ai-companys-culture-is-broken",
-      "score": 267,
-      "date": "2026-10-03"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Religious scholars met with Anthropic",
-      "url": "https://www.nytimes.com/2026/09/29/us/anthropic-claude-morals-ai.html",
-      "score": 165,
-      "date": "2026-10-04"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: AI search for every photo and every frame of video on macOS",
-      "url": "https://github.com/allenv0/SCM",
-      "score": 161,
-      "date": "2026-10-04"
-    },
-    {
-      "source": "arXiv",
-      "title": "Less Decoder is More Encoder: Geometric Representation Learning from Novel View Synthesis",
-      "url": "http://arxiv.org/abs/2610.03717v1",
-      "score": null,
-      "date": "2026-10-02"
     }
   ],
   "market": [],
