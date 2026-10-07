@@ -1,52 +1,53 @@
 {
-  "capturedAt": "2026-10-06",
+  "capturedAt": "2026-10-07",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Mistral Large 4",
       "url": "https://mistral.ai/news/mistral-large-4/\\",
-      "score": 931,
+      "score": 1970,
       "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "Beam: Reflection's 501B open-weight model",
-      "url": "https://reflection.ai/blog/introducing-beam",
-      "score": 513,
-      "date": "2026-10-05"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Mistral Large 4: \"Le Chonk\"",
-      "url": "https://mistral.ai/news/mistral-large-4/",
-      "score": 511,
+      "title": "Sharing AI progress in mathematics",
+      "url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
+      "score": 1157,
       "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "Opus 5.5 agents discover two room-temperature magnetic semiconductor candidates",
-      "url": "https://www.vals.ai/blogs/room-temperature-magnetic-semiconductors",
-      "score": 444,
-      "date": "2026-10-05"
+      "title": "OpenTPU – An open-source AI accelerator, developed by AI",
+      "url": "https://github.com/FeSens/openTPU",
+      "score": 331,
+      "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "Germany’s RobCo hits $1B valuation",
-      "url": "https://techfundingnews.com/europes-new-robotics-unicorn-germanys-robco-hits-1b-valuation/",
-      "score": 343,
-      "date": "2026-10-05"
+      "title": "Penguin Mail – open-source Rust email client for Linux with AI",
+      "url": "https://penguin-mail.com/",
+      "score": 229,
+      "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "The lamps in my house",
-      "url": "https://arslan.io/2026/10/05/the-lamps-in-my-house/",
-      "score": 291,
-      "date": "2026-10-05"
+      "title": "Utah to let AI examine patients and prescribe medication without human oversight",
+      "url": "https://www.techspot.com/news/114111-utah-become-first-state-ai-examine-patients-prescribe.html",
+      "score": 134,
+      "date": "2026-10-06"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Erdosproblems.com Succumbs to the AI Onslaught",
+      "url": "https://www.erdosproblems.com/forum/thread/blog:9",
+      "score": 114,
+      "date": "2026-10-06"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
+    "Hacker News に該当なし: robotics",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
