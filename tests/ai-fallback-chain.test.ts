@@ -163,7 +163,13 @@ describe('Phase γ — Agent Zod Schemas', () => {
     });
 
     it('contains expected themes', () => {
-      expect(ALL_THEMES).toContain('貯金・節約');
+      expect(ALL_THEMES).toContain('AI・手元で動くAI');
+      expect(ALL_THEMES).toContain('AI・判断するAI');
+      expect(ALL_THEMES).toContain('AI・ひとりで回す仕組み');
+      expect(ALL_THEMES).toContain('AI×市場分析');
+      expect(ALL_THEMES).toContain('AIと暮らし');
+      // 貯金は qualityGate.forbiddenTopics で本文に書けないので、テーマからも外した
+      expect(ALL_THEMES).not.toContain('貯金・節約');
       expect(ALL_THEMES).toContain('投資・資産形成');
       expect(ALL_THEMES).toContain('ひとり旅');
       expect(ALL_THEMES).toContain('読書');
@@ -218,9 +224,9 @@ describe('Phase γ — Fallback Chain Logic', () => {
 
 describe('Phase γ — Theme Balance Analysis', () => {
   it('categorizes posts correctly', () => {
-    const titles = ['貯金100万円達成', 'ETF積立3年目', '鎌倉散歩記'];
+    const titles = ['ビットコイン100万円達成', 'ETF積立3年目', '鎌倉散歩記'];
     const counts = categorizeByTheme(titles);
-    expect(counts['貯金・節約']).toBe(1);
+    expect(counts['暗号資産']).toBe(1);
     expect(counts['投資・資産形成']).toBe(1);
     expect(counts['散歩・日常']).toBe(1);
   });
@@ -229,7 +235,7 @@ describe('Phase γ — Theme Balance Analysis', () => {
     const titles = ['ETF積立を始めよう'];
     const counts = categorizeByTheme(titles);
     expect(counts['投資・資産形成']).toBe(1);
-    expect(counts['貯金・節約']).toBe(0);
+    expect(counts['暗号資産']).toBe(0);
   });
 
   it('returns zero for truly uncategorized content', () => {
@@ -246,26 +252,35 @@ describe('Phase γ — Theme Balance Analysis', () => {
     expect(counts['散歩・日常']).toBe(1);
   });
 
-  it('builds priority list sorted by score ascending', () => {
+  it('builds priority list sorted by deficit against the target share', () => {
     const themeBalance = {
-      gensnotesCount: { '貯金・節約': 5, '投資・資産形成': 0, ひとり旅: 2 },
-      recentCount: { '貯金・節約': 3, '投資・資産形成': 1, ひとり旅: 0 },
+      // 旧ブログの累計は選定に使わない（4,000本超の累計が支配して AI が選ばれなくなったため）
+      gensnotesCount: { AIと暮らし: 500, '投資・資産形成': 0, ひとり旅: 2 },
+      recentCount: { 'AI・判断するAI': 1, '投資・資産形成': 1, ひとり旅: 0 },
       recentPostTitles: [],
     };
-    const list = buildThemePriorityList(themeBalance);
-    // buildThemePriorityList iterates ALL 9 themes from THEME_KEYWORDS.
-    // Themes not in the input default to score 0.
-    // Among non-zero: 投資=3, ひとり旅=2, 貯金=14
-    // Verify the list is sorted (non-decreasing scores).
+    const targets = { 'AI・判断するAI': 0.5, '投資・資産形成': 0.25, ひとり旅: 0.25 };
+    const list = buildThemePriorityList(themeBalance, targets, 4);
     const scores = list.map((p) => p.score);
     for (let i = 1; i < scores.length; i++) {
       expect(scores[i]).toBeGreaterThanOrEqual(scores[i - 1]);
     }
-    // Verify specific themes have correct scores
     const themeScores = Object.fromEntries(list.map((p) => [p.theme, p.score]));
-    expect(themeScores['投資・資産形成']).toBe(3);
-    expect(themeScores['ひとり旅']).toBe(2);
-    expect(themeScores['貯金・節約']).toBe(14);
+    expect(themeScores['AI・判断するAI']).toBe(-1); // 1 − 0.5×4
+    expect(themeScores['ひとり旅']).toBe(-1); // 0 − 0.25×4
+    expect(themeScores['投資・資産形成']).toBe(0); // 1 − 0.25×4
+    expect(themeScores['AIと暮らし']).toBe(0); // 目標なし・直近なし（累計500は無視）
+    // 同点は目標比率の高いほうが先
+    expect(list[0].theme).toBe('AI・判断するAI');
+  });
+
+  it('puts AI themes first on an empty history with the shipped targets', () => {
+    const list = buildThemePriorityList({
+      gensnotesCount: {},
+      recentCount: {},
+      recentPostTitles: [],
+    });
+    expect(list[0].theme.startsWith('AI')).toBe(true);
   });
 });
 
@@ -293,13 +308,13 @@ describe('Phase γ — Fallback Post Generation', () => {
 
   it('prefers the least-used theme', () => {
     const themeBalance = {
-      gensnotesCount: { '貯金・節約': 10, '投資・資産形成': 0 },
-      recentCount: { '貯金・節約': 5, '投資・資産形成': 0 },
+      gensnotesCount: {},
+      recentCount: { 'AI・判断するAI': 5, ひとり旅: 3, '投資・資産形成': 0 },
       recentPostTitles: [],
     };
     const post = generateFallbackPost(themeBalance);
-    // 投資・資産形成 has lowest score (0), so it should be preferred
-    // if a fallback body exists for it
+    // テンプレートがあるのは AI・判断するAI / 投資 / ひとり旅 の3テーマ。
+    // 判断AI(5−3=2)とひとり旅(3−1=2)は足りているので、投資(0−0.6)が選ばれる
     expect(post.ceoPlan.theme).toBe('投資・資産形成');
   });
 

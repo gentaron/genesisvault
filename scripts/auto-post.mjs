@@ -68,7 +68,9 @@ import {
   buildTrendBrief,
   saveTrendRadar,
 } from '../src/lib/agents/trends.ts';
+import { buildEditorialBrief, fetchIdeazSlots } from '../src/lib/agents/editorial.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
+import { EDITORIAL_CONFIG } from '../src/lib/pipeline/config.ts';
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
 // ─── Phase η: Sentry for script errors (optional) ────────────
@@ -352,12 +354,14 @@ async function main() {
 
   // Analyze theme balance (gensnotes + recent local posts)
   console.log('⚖️  Analyzing theme balance...');
-  const themeBalance = await analyzeThemeBalance(20);
+  // 直近 windowPosts 本の実績と editorial.themeTargets の差で並べる（足りないテーマが先頭）
+  const themeBalance = await analyzeThemeBalance(EDITORIAL_CONFIG.windowPosts);
   const priorityList = buildThemePriorityList(themeBalance);
-  console.log('  Theme priority (least-used first):');
+  console.log(`  Theme priority (直近${EDITORIAL_CONFIG.windowPosts}本 − 目標, 不足が先頭):`);
   priorityList.forEach((p, i) => {
-    const bar = '█'.repeat(Math.min(p.score, 20));
-    console.log(`    ${i + 1}. ${p.theme.padEnd(18)} score=${p.score} ${bar}`);
+    const recent = themeBalance.recentCount[p.theme] || 0;
+    const bar = '█'.repeat(Math.min(recent, 20));
+    console.log(`    ${i + 1}. ${p.theme.padEnd(18)} score=${p.score} recent=${recent} ${bar}`);
   });
   console.log('');
 
@@ -381,6 +385,17 @@ async function main() {
   }
   const trendBrief = buildTrendBrief(trendRadar);
   if (trendBrief) console.log(`  📡 トレンド・ブリーフを執筆陣へ注入します（${trendBrief.length}字）`);
+
+  // ── 編集方針: IDEAZ の今日の角度 / edutext の世界観 / QAIZ の近況 ──────
+  // fail-soft: IDEAZ が読めなければ角度なしで続ける（軸・世界観・近況は設定から出る）。
+  let ideazSlots = [];
+  try {
+    ideazSlots = await fetchIdeazSlots();
+    console.log(`  🧭 IDEAZ: 今日の枠 ${ideazSlots.length}件`);
+  } catch (err) {
+    console.warn(`  ⚠️  IDEAZ 取得失敗: ${err.message?.substring(0, 120)}`);
+  }
+  const novaBrief = [trendBrief, buildEditorialBrief(ideazSlots, null)].filter(Boolean).join('\n\n');
   console.log('');
 
   // ── Continuity subsystem (過去記事整合性) ──────────────────────
@@ -440,8 +455,12 @@ async function main() {
     // ── Agent 0: Balancer (Nova) ──────────────────────────
     const assignedTheme = process.env.GV_THEME
       ? process.env.GV_THEME
-      : await runNova(themeBalance, themeBalance.recentPostTitles, trendBrief);
+      : await runNova(themeBalance, themeBalance.recentPostTitles, novaBrief);
     logAgent('VE-005', 'Nova Harmon', 'theme_selected', assignedTheme);
+    // テーマが決まってから、そのテーマに要る材料だけを書き手側へ足す
+    const writerBrief = [trendBrief, buildEditorialBrief(ideazSlots, assignedTheme)]
+      .filter(Boolean)
+      .join('\n\n');
     await savePipelineState({ step: 'balancer', data: { assignedTheme }, date: todayISO() });
     console.log('');
 
@@ -461,7 +480,7 @@ async function main() {
     let titleRetries = 0;
     let titleFeedback = '';
     do {
-      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, trendBrief, titleFeedback);
+      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, writerBrief, titleFeedback);
       titleFeedback = checkTitleDup(ceoPlan.title) || '';
       titleRetries++;
     } while (titleFeedback && titleRetries < 3);
@@ -491,7 +510,7 @@ async function main() {
     // 継続性の逆行だけは、書き直させれば直る種類の不合格なので、ここで
     // 1度だけ差し戻す。ブリーフに「逆行するな」と書いてあっても、守られた
     // かどうかは誰も確認しない限り分からない — 指示ではなく検査で担保する。
-    let draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief, trendBrief);
+    let draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief, writerBrief);
     if (!draft) throw new Error('Writer Agent returned empty');
 
     let regressions = findRegressions(ceoPlan.title, draft);
@@ -507,7 +526,7 @@ async function main() {
         seoData,
         styleSamples,
         continuityBrief,
-        trendBrief,
+        writerBrief,
         feedback,
       );
       if (rewritten) {

@@ -47,7 +47,7 @@ export async function runNova(
     .map((p) => {
       const recent = recentCount[p.theme] || 0;
       const gensnotes = gensnotesCount[p.theme] || 0;
-      return `  - ${p.theme}：直近${recent}回 / gensnotes${gensnotes}件 / スコア${p.score}`;
+      return `  - ${p.theme}：直近${recent}回 / gensnotes${gensnotes}件（参考） / 目標との差${p.score}`;
     })
     .join('\n');
 
@@ -71,16 +71,17 @@ Genesis Vault ブログの編集部で、話題の多様性とバランスを管
 ## 選択可能なテーマ一覧
 ${themeListText}
 
-## テーマ別の使用データ（スコアが低いほど最近使われていない）
+## テーマ別の使用データ（「目標との差」がマイナスに大きいほど、目標比率に対して足りていない）
+Genesis Vault は AI が主軸のブログです。AI 系テーマの目標比率が高く設定されています。
 ${balanceTable}
 
 ## 直近の記事タイトル（時系列順、新しい順）
-${recentTitlesList}${trendBrief ? `\n\n## 今日の外の景色（参考）\n${trendBrief}` : ''}
+${recentTitlesList}${trendBrief ? `\n\n## 今日の外の景色と編集の軸（参考）\n${trendBrief}` : ''}
 
 ## 選定基準（優先度順）
-1. **偏り解消**: スコアが低い（= 最近使われていない）テーマを優先する
+1. **目標比率への追従**: 「目標との差」が小さい（= 足りていない）テーマを優先する
 2. **連続回避**: 直近の記事タイトルを見て、同じジャンルが2回以上続かないようにする
-3. **gensnotes との補完**: gensnotes で少ないテーマは新鮮味があるので加点する
+3. **AI 主軸**: 迷ったら AI 系テーマ。上の「今日の角度（IDEAZ）」に合う AI テーマがあれば、それを選んでよい
 4. **季節感**: 今日は ${todayISO()} です。季節に合うテーマがあれば考慮する
 5. **読者の飽き防止**: 似たようなテーマが短期間に集中しないようにする
 6. **時事性**: 上の「外の景色」に強い動きがあれば、それに触れやすいテーマを少しだけ優先してよい。ただし 1〜2 を覆すほどではない（偏り解消のほうが上位）

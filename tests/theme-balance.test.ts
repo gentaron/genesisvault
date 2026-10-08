@@ -17,24 +17,24 @@ describe('Theme Balance Module', () => {
 
     it('prioritizes least-used themes', () => {
       const articles = [
-        { title: '貯金100万円達成', tags: ['貯金'] },
-        { title: '貯金のコツ', tags: ['貯金'] },
+        { title: 'ビットコイン100万円達成', tags: ['ビットコイン'] },
+        { title: 'ビットコインのコツ', tags: ['ビットコイン'] },
       ];
       const weights = calculateThemeWeights(articles);
-      const savingsScore = weights.find((w) => w.theme === '貯金・節約')?.score;
-      const otherScore = weights.find((w) => w.theme !== '貯金・節約')?.score;
-      expect(savingsScore).toBeGreaterThan(otherScore!);
+      const cryptoScore = weights.find((w) => w.theme === '暗号資産')?.score;
+      const otherScore = weights.find((w) => w.theme !== '暗号資産')?.score;
+      expect(cryptoScore).toBeGreaterThan(otherScore!);
     });
 
     it('counts gensnotes articles', () => {
-      const gensnotes = ['貯金の話', '投資の話', '投資の話'];
+      const gensnotes = ['ビットコインの話', '投資の話', '投資の話'];
       const weights = calculateThemeWeights([], gensnotes);
       const investmentScore = weights.find((w) => w.theme === '投資・資産形成')?.score;
-      const savingsScore = weights.find((w) => w.theme === '貯金・節約')?.score;
+      const cryptoScore = weights.find((w) => w.theme === '暗号資産')?.score;
       // gensnotes has 2 investment + 1 savings
       // gensnotes weight = 1, recent weight = 3
       expect(investmentScore).toBe(2); // 2 * 1 (gensnotes only)
-      expect(savingsScore).toBe(1); // 1 * 1 (gensnotes only)
+      expect(cryptoScore).toBe(1); // 1 * 1 (gensnotes only)
     });
 
     it('combines recent and gensnotes with correct weighting', () => {
@@ -53,11 +53,11 @@ describe('Theme Balance Module', () => {
     });
 
     it('handles single category dominance', () => {
-      const articles = Array(10).fill({ title: '貯金', tags: ['貯金'] });
+      const articles = Array(10).fill({ title: 'ビットコイン', tags: ['ビットコイン'] });
       const weights = calculateThemeWeights(articles);
-      const savingsScore = weights.find((w) => w.theme === '貯金・節約')?.score;
-      expect(savingsScore).toBe(30); // 10 * 3
-      expect(weights[0].theme).not.toBe('貯金・節約'); // least used first
+      const cryptoScore = weights.find((w) => w.theme === '暗号資産')?.score;
+      expect(cryptoScore).toBe(30); // 10 * 3
+      expect(weights[0].theme).not.toBe('暗号資産'); // least used first
     });
 
     it('uses tags for classification', () => {
@@ -68,15 +68,15 @@ describe('Theme Balance Module', () => {
     });
 
     it('handles multi-theme articles (first match wins)', () => {
-      // Title contains both 貯金 and 投資 keywords, but only counts once
-      const articles = [{ title: '貯金と投資の話' }];
+      // Title contains both ビットコイン and 投資 keywords, but only counts once
+      const articles = [{ title: 'ビットコインと投資の話' }];
       const weights = calculateThemeWeights(articles);
-      const savingsScore = weights.find((w) => w.theme === '貯金・節約')?.score;
+      const cryptoScore = weights.find((w) => w.theme === '暗号資産')?.score;
       const investmentScore = weights.find((w) => w.theme === '投資・資産形成')?.score;
-      // Only one theme counted (貯金 comes first in keywords check)
-      expect(savingsScore).toBeDefined();
+      // Only one theme counted (投資 comes first in keywords check)
+      expect(cryptoScore).toBeDefined();
       expect(investmentScore).toBeDefined();
-      expect((savingsScore ?? 0) + (investmentScore ?? 0)).toBe(3); // 1 * 3
+      expect((cryptoScore ?? 0) + (investmentScore ?? 0)).toBe(3); // 1 * 3
     });
   });
 
@@ -88,7 +88,7 @@ describe('Theme Balance Module', () => {
     });
 
     it('shows bars for used themes', () => {
-      const articles = [{ title: '貯金の話' }];
+      const articles = [{ title: 'ビットコインの話' }];
       const dist = getThemeDistribution(articles);
       expect(dist).toContain('█');
     });

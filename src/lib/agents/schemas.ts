@@ -74,7 +74,11 @@ export type RunaOutput = z.infer<typeof RunaOutputSchema>;
 // バランス計算に出てこないテーマを Nova が選んだりする。
 // `tests/theme-balance.test.ts` が両者の一致を検証している。
 export const ALL_THEMES = [
-  '貯金・節約',
+  'AI・手元で動くAI',
+  'AI・判断するAI',
+  'AI・ひとりで回す仕組み',
+  'AI×市場分析',
+  'AIと暮らし',
   '投資・資産形成',
   'ひとり旅',
   '読書',
@@ -83,7 +87,6 @@ export const ALL_THEMES = [
   '散歩・日常',
   '暗号資産',
   '自己成長',
-  'AI・テクノロジー',
 ] as const;
 
 export type Theme = (typeof ALL_THEMES)[number];

@@ -183,6 +183,52 @@ export const TrendsConfigSchema = z.object({
   }),
 });
 
+/**
+ * 編集方針（テーマ選定）。AI を主軸にし、IDEAZ / edutext / QAIZ を参照源にする。
+ * 目標比率は合計 1 にする（足りていない分だけ Nova が優先する）。
+ */
+export const EditorialConfigSchema = z.object({
+  comment: z.string().optional(),
+  /** 書く対象の軸（IDEAZ memory/canon.md と同じ一文）。 */
+  axis: z.string().min(1),
+  /** 書く前に埋める関門の一文。 */
+  gate: z.string().min(1),
+  /** 比率を数える直近の記事本数。 */
+  windowPosts: z.number().int().positive(),
+  /** テーマ → 目標比率（0〜1）。 */
+  themeTargets: z
+    .record(z.string(), z.number().min(0).max(1))
+    .refine((t) => Math.abs(Object.values(t).reduce((a, b) => a + b, 0) - 1) < 0.001, {
+      message: 'themeTargets の合計は 1 にすること',
+    }),
+  ideaz: z.object({
+    comment: z.string().optional(),
+    endpoint: z.string().url(),
+    /** ブリーフに載せる枠の上限。 */
+    maxSlots: z.number().int().positive(),
+  }),
+  lore: z.object({
+    comment: z.string().optional(),
+    source: z.string().url(),
+    facts: z.array(z.string().min(1)).min(1),
+    usage: z.string().min(1),
+  }),
+  workshop: z.object({
+    comment: z.string().optional(),
+    /** 手で更新した日付（YYYY-MM-DD）。 */
+    asOf: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    items: z.array(
+      z.object({
+        name: z.string().min(1),
+        what: z.string().min(1),
+        latest: z.string().min(1),
+        angles: z.array(z.string().min(1)).min(1),
+      }),
+    ),
+    usage: z.string().min(1),
+  }),
+});
+
 export const PipelineConfigSchema = z.object({
   $schema: z.string().optional(),
   version: z.string(),
@@ -206,6 +252,7 @@ export const PipelineConfigSchema = z.object({
   review: ReviewConfigSchema,
   videoBrief: VideoBriefConfigSchema,
   trends: TrendsConfigSchema,
+  editorial: EditorialConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -417,3 +464,5 @@ export function getAgent(agentId: string): AgentDef | undefined {
 
 export const VIDEO_BRIEF_CONFIG: VideoBriefConfig = PIPELINE_CONFIG.videoBrief;
 export const TRENDS_CONFIG: TrendsConfig = PIPELINE_CONFIG.trends;
+export type EditorialConfig = z.infer<typeof EditorialConfigSchema>;
+export const EDITORIAL_CONFIG: EditorialConfig = PIPELINE_CONFIG.editorial;
