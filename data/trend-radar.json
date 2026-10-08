@@ -1,56 +1,56 @@
 {
-  "capturedAt": "2026-10-07",
+  "capturedAt": "2026-10-08",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Mistral Large 4",
-      "url": "https://mistral.ai/news/mistral-large-4/\\",
-      "score": 1970,
-      "date": "2026-10-06"
-    },
     {
       "source": "Hacker News",
       "title": "Sharing AI progress in mathematics",
       "url": "https://openai.com/index/sharing-ai-progress-in-mathematics/",
-      "score": 1157,
+      "score": 1311,
       "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "OpenTPU – An open-source AI accelerator, developed by AI",
-      "url": "https://github.com/FeSens/openTPU",
-      "score": 331,
+      "title": "Tell HN: GitHub refuses to remove cracked copies of my software after a month",
+      "url": "https://news.ycombinator.com/item?id=49982498",
+      "score": 555,
       "date": "2026-10-06"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Meta and Microsoft take steps to reduce employee usage of Claude AI",
+      "url": "https://www.rswebsols.com/news/meta-and-microsoft-take-steps-to-reduce-employee-usage-of-claude-ai/",
+      "score": 359,
+      "date": "2026-10-07"
     },
     {
       "source": "Hacker News",
       "title": "Penguin Mail – open-source Rust email client for Linux with AI",
       "url": "https://penguin-mail.com/",
-      "score": 229,
+      "score": 238,
       "date": "2026-10-06"
     },
     {
       "source": "Hacker News",
-      "title": "Utah to let AI examine patients and prescribe medication without human oversight",
-      "url": "https://www.techspot.com/news/114111-utah-become-first-state-ai-examine-patients-prescribe.html",
-      "score": 134,
-      "date": "2026-10-06"
+      "title": "Push ifs up and fors down: The idiom, its algebra, and its limits",
+      "url": "https://debasishg.github.io/blog/push-ifs-up-fors-down/",
+      "score": 173,
+      "date": "2026-10-07"
     },
     {
       "source": "Hacker News",
-      "title": "Erdosproblems.com Succumbs to the AI Onslaught",
-      "url": "https://www.erdosproblems.com/forum/thread/blog:9",
-      "score": 114,
-      "date": "2026-10-06"
+      "title": "SynthID Detector",
+      "url": "https://synthid.com/",
+      "score": 123,
+      "date": "2026-10-07"
     }
   ],
   "market": [],
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
-    "相場データが空: S&P500",
-    "相場データが空: 日経平均",
-    "相場データが空: ドル円",
-    "相場データが空: ビットコイン"
+    "相場データ取得失敗: S&P500",
+    "相場データ取得失敗: 日経平均",
+    "相場データ取得失敗: ドル円",
+    "相場データ取得失敗: ビットコイン"
   ]
 }
