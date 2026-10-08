@@ -317,3 +317,20 @@ lint 対象に入り、数千件の指摘として爆発する。
 **回避策**: `biome.json` の `files.includes` に `!playwright-report` と
 `!test-results` を入れた（2026-09-05）。e2e → verify の順で作業するときは
 この順序依存に頼らず、除外設定が効いていることを verify の件数で確認すること。
+
+---
+
+## LM-017: 例外は「成功のまま」テンプレートに化ける
+
+**症状**: 2026-09 中旬から毎日の記事が「朝5時の家計簿タイム」と「知らない駅で降りてみた」の
+交互になった。Actions は全部緑、`verify:quick` も通過、Linear にも動画ブリーフが届く。
+ログには `❌ Agent Pipeline Error: toISOString is not defined` が 1 行だけ出ていた。
+
+**原因**: `detectDuplicateTitle()`（`src/lib/agents/continuity.ts`）に
+`new Date();toISOString()` という未使用の 1 行が紛れ込み、Lena の直後で毎回
+ReferenceError を投げていた。`auto-post.mjs` はパイプライン全体を 1 つの try で囲い、
+catch でテンプレートに落とすので、**どんな例外も「記事は出た」に変換される**。
+関数にテストが無く、CI では一度も実行されていなかった。
+
+**回避策**: 行を削除し、`tests/title-dedup.test.ts` で「投げないこと」を固定した（2026-10-08）。
+テンプレート記事が連続していたら、まず Actions ログの `Agent Pipeline Error` を見ること。

@@ -913,7 +913,6 @@ export function detectDuplicateTitle(
   articles: PastArticle[],
   windowDays = 90,
 ): { title: string; date: string; similarity: number } | null {
-  const cutoff = new Date();toISOString().slice(0, 10).replace(/\d{2}$/, '00');
   const windowStart = new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10);
 
   const recent = articles.filter((a) => a.date >= windowStart);
