@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-10-09",
+  "capturedAt": "2026-10-10",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "OpenAI annualised revenues $20B less than previously signalled",
-      "url": "https://www.cnbc.com/2026/10/08/open-ai-revenue-nvidia-oracle-coreweave.html",
+      "title": "Typesafe AI raises $870M at $7.5B",
+      "url": "https://typesafe.ai/blog/series-ai",
       "score": 413,
-      "date": "2026-10-08"
+      "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
-      "title": "Meta and Microsoft take steps to reduce employee usage of Claude AI",
-      "url": "https://www.rswebsols.com/news/meta-and-microsoft-take-steps-to-reduce-employee-usage-of-claude-ai/",
-      "score": 373,
-      "date": "2026-10-07"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Let your AI agents paint big arrows, boxes and text on your screen",
+      "title": "Show HN: Let your AI agents paint big arrows, boxes and text on your screen",
       "url": "https://github.com/franzenzenhofer/big-arrow-on-the-screen",
-      "score": 291,
+      "score": 403,
       "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
-      "title": "Push ifs up and fors down: The idiom, its algebra, and its limits",
-      "url": "https://debasishg.github.io/blog/push-ifs-up-fors-down/",
-      "score": 188,
-      "date": "2026-10-07"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Iranian campaign planted fake articles in real U.S. publications using ChatGPT",
-      "url": "https://www.washingtonpost.com/technology/2026/10/09/chatgpt-users-iran-planted-ai-generated-articles-us-news-media/",
-      "score": 144,
+      "title": "Germany transforms former coal mines into Europe's largest lake landscape",
+      "url": "https://www.euronews.com/2026/04/14/almost-like-lake-como-germany-transforms-former-coal-mines-into-europes-largest-lake-lands",
+      "score": 205,
       "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
-      "title": "AI-ready biological data: $1.8B global commitment",
-      "url": "https://biohub.org/news/virtual-biology-initiative-expansion/",
-      "score": 140,
-      "date": "2026-10-08"
+      "title": "Anthropic AI model submits false tip on unsolved Philly murder, police say",
+      "url": "https://www.nbcphiladelphia.com/news/local/anthropic-ai-model-submits-false-tip-on-unsolved-philly-murder-police-say/4477051/",
+      "score": 195,
+      "date": "2026-10-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Pointing AI at archives found a forgotten meteorite, lost rhinos, and more",
+      "url": "https://jessewaites.com/blog/post/i-pointed-ai-at-400-years-of-archives/",
+      "score": 175,
+      "date": "2026-10-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "What mathematicians should know about the Lean Theorem Prover: reliability & AI",
+      "url": "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/",
+      "score": 165,
+      "date": "2026-10-09"
     }
   ],
   "market": [],
