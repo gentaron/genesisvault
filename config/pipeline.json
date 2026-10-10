@@ -13,12 +13,21 @@
       "promptDir": "tessa"
     },
     {
+      "id": "VE-011",
+      "name": "Kaia Brennan",
+      "shortName": "Kaia",
+      "role": "treasurer",
+      "roleJa": "QAIZ（相場の地形）と assetlog（資産推移）を毎日読み、変化率と記号の事実に落とす（財務パルス）",
+      "step": 2,
+      "promptDir": "kaia"
+    },
+    {
       "id": "VE-004",
       "name": "Vera Holt",
       "shortName": "Vera",
       "role": "researcher",
       "roleJa": "過去記事から確定事実を抽出（継続性）",
-      "step": 2,
+      "step": 3,
       "promptDir": "vera"
     },
     {
@@ -27,8 +36,17 @@
       "shortName": "Nova",
       "role": "balancer",
       "roleJa": "テーマバランス分析・ジャンル選定",
-      "step": 3,
+      "step": 4,
       "promptDir": "nova"
+    },
+    {
+      "id": "VE-012",
+      "name": "Juno Albrecht",
+      "shortName": "Juno",
+      "role": "arbiter",
+      "roleJa": "候補テーマを記号規則で絞り、Jev（判断AI）の確率と融合して今日の1本を決める（ニューロシンボリック選定）",
+      "step": 5,
+      "promptDir": "juno"
     },
     {
       "id": "VE-001",
@@ -36,7 +54,7 @@
       "shortName": "Lena",
       "role": "ceo",
       "roleJa": "トピック・切り口・タイトルの決定",
-      "step": 4,
+      "step": 6,
       "promptDir": "lena"
     },
     {
@@ -45,7 +63,7 @@
       "shortName": "Chloe",
       "role": "seo",
       "roleJa": "タグ・キーワード・メタディスクリプション生成",
-      "step": 5,
+      "step": 7,
       "promptDir": "chloe"
     },
     {
@@ -54,7 +72,7 @@
       "shortName": "Sophia",
       "role": "writer",
       "roleJa": "本文執筆（1,000〜2,000字・日記体）",
-      "step": 6,
+      "step": 8,
       "promptDir": "sophia"
     },
     {
@@ -63,7 +81,7 @@
       "shortName": "Iris",
       "role": "editor",
       "roleJa": "校正・品質チェック・ペルソナ一貫性確認",
-      "step": 7,
+      "step": 9,
       "promptDir": "iris"
     },
     {
@@ -72,7 +90,7 @@
       "shortName": "Edda",
       "role": "summarizer",
       "roleJa": "抽出事実を継続性台帳へ統合・逆行禁止ブリーフ生成",
-      "step": 8,
+      "step": 10,
       "promptDir": "edda"
     },
     {
@@ -81,7 +99,7 @@
       "shortName": "Mira",
       "role": "recorder",
       "roleJa": "投稿記事の確定事実を台帳へ記録・更新",
-      "step": 9,
+      "step": 11,
       "promptDir": "mira"
     },
     {
@@ -90,12 +108,12 @@
       "shortName": "Runa",
       "role": "briefer",
       "roleJa": "公開記事から短尺動画のブリーフを起こし Linear へ渡す",
-      "step": 10,
+      "step": 12,
       "promptDir": "runa"
     }
   ],
   "providers": {
-    "comment": "チェーン順＝フォールバック順。envKey が未設定のプロバイダーは自動的にチェーンから外れる（設定不要で縮退する）。すべて無料ティア。",
+    "comment": "チェーン順＝フォールバック順。envKey が未設定のプロバイダーは自動的にチェーンから外れる（設定不要で縮退する）。すべて無料ティア。 GitHub Models は鍵の登録すら要らない無料枠（GITHUB_TOKEN）。Workers AI の無料枠（1日 10,000 Neurons）は Jev の選定に全部回すため、文字を書くチェーンには入れない。",
     "chain": [
       {
         "name": "gemini-2.5-flash-lite",
@@ -112,6 +130,24 @@
         "envKey": "GEMINI_API_KEY",
         "rpm": 10,
         "rpd": 250
+      },
+      {
+        "name": "github-models-gpt-4.1",
+        "sdk": "github-models",
+        "model": "openai/gpt-4.1",
+        "envKey": "GITHUB_TOKEN",
+        "rpm": 10,
+        "rpd": 50,
+        "comment": "GitHub Models の無料枠。Actions では最初から入っている GITHUB_TOKEN（permissions: models: read）だけで呼べるので、登録する鍵が無い。1日の回数が少ないので Gemini の後ろに置く。"
+      },
+      {
+        "name": "github-models-gpt-4.1-mini",
+        "sdk": "github-models",
+        "model": "openai/gpt-4.1-mini",
+        "envKey": "GITHUB_TOKEN",
+        "rpm": 15,
+        "rpd": 150,
+        "comment": "同じ無料枠の軽量側。分類・JSON 系の逃げ先。"
       },
       {
         "name": "groq-llama-3.3-70b",
@@ -194,7 +230,11 @@
       },
       "VE-001": {
         "tier": "creative",
-        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
+        "preferredProviders": [
+          "gemini-2.5-flash",
+          "gemini-2.5-flash-lite",
+          "groq-llama-3.3-70b"
+        ],
         "temperature": 0.9,
         "maxOutputTokens": 1024,
         "why": "日本語の企画・タイトル。創造性が要るので最強モデル＋高温度。"
@@ -212,36 +252,65 @@
       },
       "VE-002": {
         "tier": "heavy",
-        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+        "preferredProviders": [
+          "gemini-2.5-flash",
+          "gemini-2.5-flash-lite",
+          "github-models-gpt-4.1"
+        ],
         "temperature": 0.85,
-        "maxOutputTokens": 4096,
-        "why": "1,000〜2,000字の日本語日記。品質のボトルネックなので最強モデルを最優先。"
+        "maxOutputTokens": 8192,
+        "why": "IDEAZ の型で 2,500〜4,800字の日本語。品質のボトルネックなので最強モデルを最優先。Gemini が尽きた日は GitHub Models の無料枠で書く。"
       },
       "VE-006": {
         "tier": "judge",
-        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite"],
+        "preferredProviders": [
+          "gemini-2.5-flash",
+          "gemini-2.5-flash-lite",
+          "github-models-gpt-4.1"
+        ],
         "temperature": 0.2,
-        "maxOutputTokens": 4096,
+        "maxOutputTokens": 8192,
         "why": "審査役には最も強いモデルを置く。書き手が雑でも審査が厳しければ差し戻して直せるが、審査が甘いと雑なものがそのまま外に出て、出た後は誰も止められない。弱いモデルの見逃しは画面に何も表示されないまま全部緑で通るため、ここを削るのが最も高くつく。温度は 0.2 — 校正者が創造的に書き換えないよう固定。"
       },
       "VE-009": {
         "tier": "creative",
-        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
+        "preferredProviders": [
+          "gemini-2.5-flash",
+          "gemini-2.5-flash-lite",
+          "groq-llama-3.3-70b"
+        ],
         "temperature": 0.6,
         "maxOutputTokens": 1024,
         "why": "記事から動画の切り口・トーン・ビジュアル方向性を起こす日本語の企画仕事。ブリーフの骨格（見出し・想定尺）は video-brief.ts が決めるので、モデルが返すのは中身だけ。テーマがすり替わると別テーマの動画が出来上がり、それを止める仕組みは下流に無いので温度は控えめ。"
+      },
+      "VE-012": {
+        "tier": "light",
+        "preferredProviders": [
+          "gemini-2.5-flash-lite",
+          "github-models-gpt-4.1-mini",
+          "groq-llama-3.3-70b"
+        ],
+        "temperature": 0,
+        "maxOutputTokens": 512,
+        "why": "Jev が使えない日の代役。選ぶだけの小さな JSON なので軽い無料枠。選定は再現させたいので温度 0。選べる値は候補 ID の enum に縛る。"
       }
     }
   },
   "qualityGate": {
-    "comment": "生成後の決定論的チェック。LLM を使わずここで落とせるものは全部ここで落とす。error は不合格（テンプレートへフォールバック）、warning は減点のみ。",
+    "comment": "生成後の決定論的チェック。LLM を使わずここで落とせるものは全部ここで落とす。error は不合格（テンプレートへフォールバック）、warning は減点のみ。 minH2Headings=0 は IDEAZ の型（見出し記号を使わず、ふつうの文章と改行だけで書く）に合わせたもの。",
     "minBodyLength": 400,
     "maxBodyLength": 5000,
-    "minH2Headings": 1,
+    "minH2Headings": 0,
     "binaryContrastLimit": 3,
     "forbiddenTopics": {
       "comment": "これらのキーワードを本文に複数含む記事は生成を禁止する（シンボリックガードで検出）",
-      "terms": ["貯金", "貯蓄", "家計簿", "貯める", "貯金額"],
+      "terms": [
+        "貯金",
+        "貯蓄",
+        "家計簿",
+        "貯める",
+        "貯金額"
+      ],
       "maxHitCount": 0
     },
     "penalty": {
@@ -265,12 +334,24 @@
       "大切なこと",
       "という(選択|生き方)"
     ],
-    "clicheVocabulary": ["真理", "美学", "境地", "本質"]
+    "clicheVocabulary": [
+      "真理",
+      "美学",
+      "境地",
+      "本質"
+    ]
   },
   "references": {
     "comment": "文体・テーマ・継続性の参照源。current が正典（整合性チェックの基準）、legacy は文体サンプルのみ。",
-    "legacy": ["gensnotes_1.md", "gensnotes_2.md"],
-    "current": ["gensnotes_3.md", "gensnotes_4.md", "gensnotes_5.md"]
+    "legacy": [
+      "gensnotes_1.md",
+      "gensnotes_2.md"
+    ],
+    "current": [
+      "gensnotes_3.md",
+      "gensnotes_4.md",
+      "gensnotes_5.md"
+    ]
   },
   "review": {
     "comment": "囲い（審査層）の設定。設計原則は4つ。(1) 審査役には最強モデルを置く。(2) 審査は執筆と別の呼び出しで行い、審査側には仕様と成果物しか渡さない（書き手の自己評価にしない）。(3) モデルには観察だけをさせ、合否はコード側で決定論的に集計する（甘い採点を防ぐ）。(4) 審査できなかったときは通さない（fail-closed）。",
@@ -281,7 +362,11 @@
     "requireEvidence": true,
     "quarantineDir": ".gate-quarantine",
     "auditLogDir": "docs/gate-runs",
-    "judgeProviders": ["typesafe-jev", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+    "judgeProviders": [
+      "typesafe-jev",
+      "gemini-2.5-flash",
+      "gemini-2.5-flash-lite"
+    ],
     "rubric": [
       {
         "id": "brief_coverage",
@@ -357,8 +442,14 @@
     "tech": {
       "hnEndpoint": "https://hn.algolia.com/api/v1/search",
       "arxivEndpoint": "https://export.arxiv.org/api/query",
-      "queries": ["AI", "LLM", "robotics"],
-      "arxivCategories": ["cs.AI"],
+      "queries": [
+        "AI",
+        "LLM",
+        "robotics"
+      ],
+      "arxivCategories": [
+        "cs.AI"
+      ],
       "maxSignals": 6,
       "minPoints": 100,
       "lookbackHours": 48
@@ -368,10 +459,22 @@
       "lookbackDays": 45,
       "flatBandPct": 1.5,
       "symbols": [
-        { "symbol": "^spx", "label": "S&P500" },
-        { "symbol": "^nkx", "label": "日経平均" },
-        { "symbol": "usdjpy", "label": "ドル円" },
-        { "symbol": "btcusd", "label": "ビットコイン" }
+        {
+          "symbol": "^spx",
+          "label": "S&P500"
+        },
+        {
+          "symbol": "^nkx",
+          "label": "日経平均"
+        },
+        {
+          "symbol": "usdjpy",
+          "label": "ドル円"
+        },
+        {
+          "symbol": "btcusd",
+          "label": "ビットコイン"
+        }
       ]
     }
   },
@@ -384,7 +487,10 @@
         "sdk": "huggingface",
         "envKey": "HF_TOKEN",
         "context": 1000000,
-        "useFor": ["writer", "editor"],
+        "useFor": [
+          "writer",
+          "editor"
+        ],
         "temperature": 0.85,
         "maxOutputTokens": 4096
       },
@@ -394,13 +500,20 @@
         "sdk": "openrouter",
         "envKey": "OPENROUTER_API_KEY",
         "context": 128000,
-        "useFor": ["balancer", "summarizer", "recorder"],
+        "useFor": [
+          "balancer",
+          "summarizer",
+          "recorder"
+        ],
         "temperature": 0.3,
         "maxOutputTokens": 2048
       },
       "local_verification": {
         "comment": "Local symbolic guard — deterministic, zero-cost, zero-latency. Runs before LLM judge to filter 90% of violations without API calls.",
-        "useFor": ["symbolic_guard", "provenance_checker"],
+        "useFor": [
+          "symbolic_guard",
+          "provenance_checker"
+        ],
         "enabled": true
       }
     },
@@ -424,5 +537,62 @@
       "enabled": true,
       "verifyOnJudge": true
     }
+  },
+  "finance": {
+    "comment": "VE-011 Kaia の財務パルス。QAIZ（地域×セクターの地形・レジーム）と assetlog（ミナの資産推移の公開シート）を毎朝読む。鍵の要らない口だけ。公開リポジトリと公開記事に出すのは変化率と向きだけで、金額は書かない（disclosure=relative）。取れない日は degraded として記事を書き続ける（fail-soft）。verify からは呼ばない（INV-004）。",
+    "enabled": true,
+    "timeoutMs": 10000,
+    "cacheFile": "data/finance-pulse.json",
+    "maxCacheAgeDays": 3,
+    "disclosure": "relative",
+    "assetlog": {
+      "spreadsheetId": "1aI6fooaWdDw9Z8D9_O7JKNGdZ9kBwBX7EgHE7Wjir9k",
+      "sheets": [
+        "sheet=logs",
+        "gid=1467211041",
+        "sheet=Index2"
+      ]
+    },
+    "qaiz": {
+      "baseUrlEnv": "QAIZ_BASE_URL",
+      "endpoint": "/api/overview"
+    },
+    "thresholds": {
+      "bigMovePct": 1.5,
+      "drawdownPct": 5,
+      "nearHighPct": 1
+    }
+  },
+  "selection": {
+    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。Jev は Cloudflare Workers AI の無料枠（1日 10,000 Neurons）を最優先、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
+    "enabled": true,
+    "maxCandidates": 12,
+    "themeCooldownDays": 2,
+    "maxTitleSimilarity": 0.6,
+    "jev": {
+      "transports": [
+        "workers-ai",
+        "typesafe"
+      ],
+      "workersAiModel": "@cf/typesafe/jev",
+      "accountIdEnv": "CLOUDFLARE_ACCOUNT_ID",
+      "tokenEnv": "CLOUDFLARE_API_TOKEN",
+      "timeoutMs": 8000,
+      "minConfidence": 0.55
+    },
+    "weights": {
+      "symbolic": 0.45,
+      "neural": 0.55
+    },
+    "llmFallback": true,
+    "auditLogDir": "docs/selection-runs"
+  },
+  "format": {
+    "comment": "書き方の型。ideaz は gentaron/IDEAZ の memory/ を正本にする（関門の一文・シグナル5つ・ノイズ6つ・タイトル規格・出力の形・文体・読みやすさ・永久禁止）。prompts/ideaz/ に写しを置き、scripts/sync-ideaz.mjs で取り寄せ直す。取れない日は写しのまま書く。",
+    "profile": "ideaz",
+    "dir": "prompts/ideaz",
+    "upstream": "https://raw.githubusercontent.com/gentaron/IDEAZ/main/memory/",
+    "minChars": 2500,
+    "maxChars": 4800
   }
 }

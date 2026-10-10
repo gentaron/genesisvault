@@ -913,7 +913,6 @@ export function detectDuplicateTitle(
   articles: PastArticle[],
   windowDays = 90,
 ): { title: string; date: string; similarity: number } | null {
-  const cutoff = new Date();toISOString().slice(0, 10).replace(/\d{2}$/, '00');
   const windowStart = new Date(Date.now() - windowDays * 86400000).toISOString().slice(0, 10);
 
   const recent = articles.filter((a) => a.date >= windowStart);
@@ -940,7 +939,7 @@ export function detectDuplicateTitle(
 /**
  * 2つの文字列間の bigram 類似度（0〜1）を計算する。
  */
-function bigramSimilarity(a: string, b: string): number {
+export function bigramSimilarity(a: string, b: string): number {
   if (a.length < 2 || b.length < 2) return 0;
 
   const bigramsA = new Set<string>();

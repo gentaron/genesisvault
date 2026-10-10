@@ -82,7 +82,9 @@
                   "cerebras",
                   "openrouter",
                   "huggingface",
-                  "typesafe"
+                  "typesafe",
+                  "github-models",
+                  "workers-ai"
                 ]
               },
               "model": {
@@ -620,6 +622,253 @@
         "tech",
         "market"
       ]
+    },
+    "finance": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "cacheFile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maxCacheAgeDays": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "disclosure": {
+          "type": "string",
+          "enum": [
+            "relative"
+          ]
+        },
+        "assetlog": {
+          "type": "object",
+          "properties": {
+            "spreadsheetId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sheets": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "spreadsheetId",
+            "sheets"
+          ]
+        },
+        "qaiz": {
+          "type": "object",
+          "properties": {
+            "baseUrlEnv": {
+              "type": "string",
+              "minLength": 1
+            },
+            "endpoint": {
+              "type": "string",
+              "pattern": "^\\/.*"
+            }
+          },
+          "required": [
+            "baseUrlEnv",
+            "endpoint"
+          ]
+        },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "bigMovePct": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "drawdownPct": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "nearHighPct": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "bigMovePct",
+            "drawdownPct",
+            "nearHighPct"
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "timeoutMs",
+        "cacheFile",
+        "maxCacheAgeDays",
+        "disclosure",
+        "assetlog",
+        "qaiz",
+        "thresholds"
+      ]
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "maxCandidates": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 255
+        },
+        "themeCooldownDays": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxTitleSimilarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "jev": {
+          "type": "object",
+          "properties": {
+            "transports": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "workers-ai",
+                  "typesafe"
+                ]
+              }
+            },
+            "workersAiModel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "accountIdEnv": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tokenEnv": {
+              "type": "string",
+              "minLength": 1
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "minConfidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "transports",
+            "workersAiModel",
+            "accountIdEnv",
+            "tokenEnv",
+            "timeoutMs",
+            "minConfidence"
+          ]
+        },
+        "weights": {
+          "type": "object",
+          "properties": {
+            "symbolic": {
+              "type": "number",
+              "minimum": 0
+            },
+            "neural": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "symbolic",
+            "neural"
+          ]
+        },
+        "llmFallback": {
+          "type": "boolean"
+        },
+        "auditLogDir": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "enabled",
+        "maxCandidates",
+        "themeCooldownDays",
+        "maxTitleSimilarity",
+        "jev",
+        "weights",
+        "llmFallback",
+        "auditLogDir"
+      ]
+    },
+    "format": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "ideaz",
+            "diary"
+          ]
+        },
+        "dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "upstream": {
+          "type": "string",
+          "format": "uri"
+        },
+        "minChars": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxChars": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "profile",
+        "dir",
+        "upstream",
+        "minChars",
+        "maxChars"
+      ]
     }
   },
   "required": [
@@ -631,6 +880,9 @@
     "references",
     "review",
     "videoBrief",
-    "trends"
+    "trends",
+    "finance",
+    "selection",
+    "format"
   ]
 }

@@ -14,6 +14,9 @@ const postsCollection = defineCollection({
         gated: z.boolean().default(true),
         // Multi-agent metadata
         agents: z.object({
+            scout: z.string().optional(),
+            treasurer: z.string().optional(),
+            arbiter: z.string().optional(),
             researcher: z.string().optional(),
             balancer: z.string().optional(),
             ceo: z.string().optional(),

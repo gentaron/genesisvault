@@ -69,6 +69,21 @@ import {
   saveTrendRadar,
 } from '../src/lib/agents/trends.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
+import {
+  runKaia,
+  buildFinanceBrief,
+  saveFinancePulse,
+} from '../src/lib/finance/pulse.ts';
+import { generateCandidates, reviewCandidates } from '../src/lib/selection/candidates.ts';
+import { runJuno, buildSelectionBrief, appendSelectionLog } from '../src/lib/selection/select.ts';
+import {
+  isIdeazFormat,
+  buildIdeazWriterBrief,
+  buildIdeazTitleRules,
+  buildIdeazEditorRules,
+} from '../src/lib/format/ideaz.ts';
+import { SELECTION_CONFIG } from '../src/lib/pipeline/config.ts';
+import rawPipelineConfig from '../config/pipeline.json' with { type: 'json' };
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
 // ─── Phase η: Sentry for script errors (optional) ────────────
@@ -95,6 +110,8 @@ const WEATHERS = ['☀️', '☁️', '🌧️', '🌤️', '⛅', '🌈', '❄�
 // ─── Phase η: Agent Telemetry Summary ─────────────────────────
 const AGENT_NAMES = {
   'VE-010': 'Tessa',
+  'VE-011': 'Kaia',
+  'VE-012': 'Juno',
   'VE-004': 'Vera',
   'VE-005': 'Nova',
   'VE-001': 'Lena',
@@ -379,8 +396,24 @@ async function main() {
   } catch (err) {
     console.warn(`  ⚠️  Scout failed: ${err.message?.substring(0, 120)}`);
   }
-  const trendBrief = buildTrendBrief(trendRadar);
-  if (trendBrief) console.log(`  📡 トレンド・ブリーフを執筆陣へ注入します（${trendBrief.length}字）`);
+  // ── VE-011 Kaia (Treasurer): QAIZ と assetlog の財務パルス ────────
+  // 金額は持たず、変化率と記号の事実だけ。fail-soft（取れなければ無しで書く）。
+  let financePulse = null;
+  try {
+    financePulse = await runKaia(ROOT_DIR);
+    if (financePulse && !DRY_RUN) await saveFinancePulse(ROOT_DIR, financePulse);
+    if (financePulse) {
+      logAgent('VE-011', 'Kaia Brennan', 'pulse_collected', financePulse.predicates.join(',') || 'none');
+    }
+  } catch (err) {
+    console.warn(`  ⚠️  Treasurer failed: ${err.message?.substring(0, 120)}`);
+  }
+  const financeBrief = buildFinanceBrief(financePulse);
+
+  const trendBrief = [buildTrendBrief(trendRadar), financeBrief ? `【今日のお金の景色】\n${financeBrief}` : '']
+    .filter(Boolean)
+    .join('\n\n');
+  if (trendBrief) console.log(`  📡 トレンド・財務ブリーフを執筆陣へ注入します（${trendBrief.length}字）`);
   console.log('');
 
   // ── Continuity subsystem (過去記事整合性) ──────────────────────
@@ -436,11 +469,70 @@ async function main() {
 
   let ceoPlan, seoData, finalBody;
 
+  // ── VE-012 Juno (Arbiter): ニューロシンボリックなテーマ選定 ────────
+  //
+  // 記号側が候補を作って規則で落とし、Jev が生き残りの中からだけ選ぶ。
+  // Jev が無い日は無料 LLM、それも無い日は記号の順位で決める。
+  // GV_THEME で手動指定された日は選定しない（人間の指示が最優先）。
+  let selection = null;
+  if (!process.env.GV_THEME && SELECTION_CONFIG.enabled) {
+    try {
+      let publishedTitles = [];
+      try {
+        const db = JSON.parse(await fs.readFile(path.join(ROOT_DIR, 'data', 'published-titles.json'), 'utf-8'));
+        publishedTitles = db.titles ?? [];
+      } catch { /* 既出見出しの写しが無くても選定は続ける */ }
+
+      const candidates = generateCandidates(financePulse, trendRadar, priorityList, SELECTION_CONFIG.maxCandidates);
+      const { accepted, rejected } = reviewCandidates(candidates, {
+        priority: priorityList,
+        recentPosts: [...pastArticles]
+          .sort((a, b) => b.date.localeCompare(a.date))
+          .map(a => ({ date: a.date, title: a.title })),
+        publishedTitles,
+        // qualityGate.forbiddenTopics はスキーマ未宣言で PIPELINE_CONFIG からは落ちる（LM-018）。
+        // 選定では生の JSON から読んで、禁止語を含む候補を記号側で落とす。
+        forbiddenTerms: rawPipelineConfig.qualityGate?.forbiddenTopics?.terms ?? [],
+        themeCooldownDays: SELECTION_CONFIG.themeCooldownDays,
+        maxTitleSimilarity: SELECTION_CONFIG.maxTitleSimilarity,
+        today: todayISO(),
+      });
+      console.log(`  🔣 記号の規則: 候補 ${candidates.length}件 → 通過 ${accepted.length}件 / 落選 ${rejected.length}件`);
+      selection = await runJuno(todayISO(), accepted, rejected, trendBrief);
+      if (selection) {
+        logAgent('VE-012', 'Juno Albrecht', `selected_by_${selection.method}`, `${selection.winner.theme} | ${selection.winner.hook}`);
+        if (!DRY_RUN) await appendSelectionLog(ROOT_DIR, todayISO(), selection);
+      }
+    } catch (err) {
+      console.warn(`  ⚠️  Arbiter failed: ${err.message?.substring(0, 120)} — Nova の選定に戻します`);
+    }
+  }
+  const selectionBrief = buildSelectionBrief(selection);
+
+  // ── IDEAZ の型 ─────────────────────────────────────────────────
+  let format = { writer: '', title: '', editor: '' };
+  if (isIdeazFormat()) {
+    try {
+      const isTech = (selection?.winner.theme ?? process.env.GV_THEME) === 'AI・テクノロジー';
+      format = {
+        writer: buildIdeazWriterBrief({ isTech }),
+        title: buildIdeazTitleRules(),
+        editor: buildIdeazEditorRules(),
+      };
+      console.log(`  📐 IDEAZ の型を執筆陣へ渡します（${format.writer.length}字）`);
+    } catch (err) {
+      console.warn(`  ⚠️  IDEAZ の型を読めませんでした: ${err.message?.substring(0, 120)} — 既定の日記体で書きます`);
+    }
+  }
+
   try {
     // ── Agent 0: Balancer (Nova) ──────────────────────────
+    // Juno が選んだ日は Juno のテーマ。選べなかった日だけ Nova に戻る。
     const assignedTheme = process.env.GV_THEME
       ? process.env.GV_THEME
-      : await runNova(themeBalance, themeBalance.recentPostTitles, trendBrief);
+      : selection
+        ? selection.winner.theme
+        : await runNova(themeBalance, themeBalance.recentPostTitles, trendBrief);
     logAgent('VE-005', 'Nova Harmon', 'theme_selected', assignedTheme);
     await savePipelineState({ step: 'balancer', data: { assignedTheme }, date: todayISO() });
     console.log('');
@@ -449,7 +541,8 @@ async function main() {
     // Phase κ: 同テーマの過去記事を検索し、トピック継続性ブリーフを追加
     const relatedArticles = findRelatedArticles(pastArticles, assignedTheme, assignedTheme);
     const topicBrief = buildTopicContinuityBrief(relatedArticles, assignedTheme);
-    const enhancedContinuityBrief = [continuityBrief, topicBrief].filter(Boolean).join('\n\n');
+    const selectionSection = selectionBrief ? `【今回の企画指示・最優先】\n${selectionBrief}` : '';
+    const enhancedContinuityBrief = [selectionSection, continuityBrief, topicBrief].filter(Boolean).join('\n\n');
     if (topicBrief) {
       console.log(`  🔗 同テーマの過去記事${relatedArticles.length}件を参照:`);
       for (const a of relatedArticles.slice(0, 3)) {
@@ -461,7 +554,7 @@ async function main() {
     let titleRetries = 0;
     let titleFeedback = '';
     do {
-      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, trendBrief, titleFeedback);
+      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, trendBrief, titleFeedback, format.title);
       titleFeedback = checkTitleDup(ceoPlan.title) || '';
       titleRetries++;
     } while (titleFeedback && titleRetries < 3);
@@ -491,7 +584,8 @@ async function main() {
     // 継続性の逆行だけは、書き直させれば直る種類の不合格なので、ここで
     // 1度だけ差し戻す。ブリーフに「逆行するな」と書いてあっても、守られた
     // かどうかは誰も確認しない限り分からない — 指示ではなく検査で担保する。
-    let draft = await runSophia(ceoPlan, seoData, styleSamples, continuityBrief, trendBrief);
+    const writerBrief = [selectionSection, continuityBrief].filter(Boolean).join('\n\n');
+    let draft = await runSophia(ceoPlan, seoData, styleSamples, writerBrief, trendBrief, '', format.writer);
     if (!draft) throw new Error('Writer Agent returned empty');
 
     let regressions = findRegressions(ceoPlan.title, draft);
@@ -506,9 +600,10 @@ async function main() {
         ceoPlan,
         seoData,
         styleSamples,
-        continuityBrief,
+        writerBrief,
         trendBrief,
         feedback,
+        format.writer,
       );
       if (rewritten) {
         const remaining = findRegressions(ceoPlan.title, rewritten);
@@ -526,7 +621,7 @@ async function main() {
     console.log('');
 
     // ── Agent 4: Editor (Iris) ─────────────────────────────
-    const edited = await runIris(ceoPlan, seoData, draft);
+    const edited = await runIris(ceoPlan, seoData, draft, format.editor);
     finalBody = edited || draft; // If editor fails, use the draft
     logAgent('VE-006', 'Iris Koenig', 'editing_complete', `${finalBody.length} chars`);
     console.log('');
@@ -631,6 +726,8 @@ description: "${escapedDesc}"
 keywords: [${seoData.keywords.map(k => `"${k}"`).join(', ')}]
 agents:
   scout: "VE-010 Tessa Brandt"
+  treasurer: "VE-011 Kaia Brennan"
+  arbiter: "VE-012 Juno Albrecht"
   researcher: "VE-004 Vera Holt"
   balancer: "VE-005 Nova Harmon"
   ceo: "VE-001 Lena Strauss"
@@ -689,6 +786,8 @@ ${cleanBody}
   console.log('');
   console.log('Agent Pipeline:');
   console.log(`  VE-010 Tessa Brandt     (Scout)    → トレンド収集 ${trendRadar ? '✅' : '⏭️'}`);
+  console.log(`  VE-011 Kaia Brennan     (Treasurer)→ 財務パルス   ${financePulse ? '✅' : '⏭️'}`);
+  console.log(`  VE-012 Juno Albrecht    (Arbiter)  → テーマ選定   ${selection ? `✅ ${selection.method}` : '⏭️ Nova'}`);
   console.log('  VE-004 Vera Holt        (Researcher)→ 過去事実抽出 ✅');
   console.log('  VE-005 Nova Harmon      (Balancer) → ジャンル選定 ✅');
   console.log('  VE-001 Lena Strauss     (CEO)      → トピック決定 ✅');

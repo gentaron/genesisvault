@@ -45,7 +45,16 @@ export const AgentDefSchema = z.object({
 
 export const ProviderDefSchema = z.object({
   name: z.string().min(1),
-  sdk: z.enum(['google', 'groq', 'cerebras', 'openrouter', 'huggingface', 'typesafe']),
+  sdk: z.enum([
+    'google',
+    'groq',
+    'cerebras',
+    'openrouter',
+    'huggingface',
+    'typesafe',
+    'github-models',
+    'workers-ai',
+  ]),
   model: z.string().min(1),
   envKey: z.string().min(1),
   rpm: z.number().int().positive(),
@@ -183,6 +192,93 @@ export const TrendsConfigSchema = z.object({
   }),
 });
 
+/**
+ * 財務パルス（VE-011 Kaia）の設定。
+ *
+ * QAIZ（相場の地形）と assetlog（ミナ自身の資産推移）を毎朝読んで、
+ * 企画の材料にする。どちらも鍵の要らない口だけを使う（INV-003 と同じ理由）。
+ *
+ * `disclosure` は公開リポジトリと公開記事に出してよい粒度。`relative` では
+ * 変化率と向きだけを残し、金額そのものは台帳にもブリーフにも書かない。
+ * 継続性台帳は「総資産額は逆行しない」を前提にしているので、実際に上下する
+ * 実額を記事に流すと、相場が下がった日に台帳と現実が衝突する。
+ */
+export const FinanceConfigSchema = z.object({
+  comment: z.string().optional(),
+  enabled: z.boolean(),
+  timeoutMs: z.number().int().positive(),
+  cacheFile: z.string().min(1),
+  maxCacheAgeDays: z.number().int().min(0),
+  disclosure: z.enum(['relative']),
+  assetlog: z.object({
+    spreadsheetId: z.string().min(1),
+    /** 上から順に試すシート指定（gviz の sheet= / gid=）。 */
+    sheets: z.array(z.string().min(1)).min(1),
+  }),
+  qaiz: z.object({
+    /** QAIZ をデプロイした URL を入れる env 名。未設定なら QAIZ は読まない。 */
+    baseUrlEnv: z.string().min(1),
+    endpoint: z.string().startsWith('/'),
+  }),
+  thresholds: z.object({
+    /** 1日でこれ以上動いたら「大きく動いた日」（%）。 */
+    bigMovePct: z.number().positive(),
+    /** 高値からこれ以上離れたら「押している」（%）。 */
+    drawdownPct: z.number().positive(),
+    /** 高値からこの幅以内なら「高値圏」（%）。 */
+    nearHighPct: z.number().positive(),
+  }),
+});
+
+/**
+ * テーマ選定（VE-012 Juno）の設定 — ニューロシンボリック。
+ *
+ * 記号側（決定論）が候補を作って、通らないものを落とし、特徴量を付ける。
+ * 神経側（Jev）は、生き残った候補の中からしか選べない — Choice 型の選択肢に
+ * 落ちた候補を入れないので、型の上で規則違反を選べない。
+ */
+export const SelectionConfigSchema = z.object({
+  comment: z.string().optional(),
+  enabled: z.boolean(),
+  /** Jev に見せる候補の上限（Choice は 255 択まで。多すぎると入力料金が増える）。 */
+  maxCandidates: z.number().int().min(2).max(255),
+  /** 直近この日数に使ったテーマは候補から落とす（記号の硬い規則）。 */
+  themeCooldownDays: z.number().int().min(0),
+  /** 既出タイトルとの類似度がこれ以上の候補は落とす。 */
+  maxTitleSimilarity: z.number().min(0).max(1),
+  jev: z.object({
+    /** 上から順に試す経路。`workers-ai` は Cloudflare の無料枠（1日 10,000 Neurons）。 */
+    transports: z.array(z.enum(['workers-ai', 'typesafe'])).min(1),
+    workersAiModel: z.string().min(1),
+    accountIdEnv: z.string().min(1),
+    tokenEnv: z.string().min(1),
+    timeoutMs: z.number().int().positive(),
+    /** これ未満の確信度なら Jev は棄権扱いにして、記号側の順位で決める。 */
+    minConfidence: z.number().min(0).max(1),
+  }),
+  weights: z.object({
+    symbolic: z.number().min(0),
+    neural: z.number().min(0),
+  }),
+  /** Jev が使えない日に、無料の LLM チェーンで選び直すか。 */
+  llmFallback: z.boolean(),
+  auditLogDir: z.string().min(1),
+});
+
+/**
+ * 書き方の型。`ideaz` は IDEAZ の memory/ を正本にした型（関門の一文・
+ * シグナル5つ・ノイズ6つ・タイトル規格・文体・読みやすさ）を使う。
+ */
+export const FormatConfigSchema = z.object({
+  comment: z.string().optional(),
+  profile: z.enum(['ideaz', 'diary']),
+  dir: z.string().min(1),
+  /** 正本の取り寄せ元（`scripts/sync-ideaz.mjs` が使う）。 */
+  upstream: z.string().url(),
+  minChars: z.number().int().positive(),
+  maxChars: z.number().int().positive(),
+});
+
 export const PipelineConfigSchema = z.object({
   $schema: z.string().optional(),
   version: z.string(),
@@ -206,6 +302,9 @@ export const PipelineConfigSchema = z.object({
   review: ReviewConfigSchema,
   videoBrief: VideoBriefConfigSchema,
   trends: TrendsConfigSchema,
+  finance: FinanceConfigSchema,
+  selection: SelectionConfigSchema,
+  format: FormatConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -218,6 +317,9 @@ export type ReviewConfig = z.infer<typeof ReviewConfigSchema>;
 export type RubricCriterion = z.infer<typeof RubricCriterionSchema>;
 export type VideoBriefConfig = z.infer<typeof VideoBriefConfigSchema>;
 export type TrendsConfig = z.infer<typeof TrendsConfigSchema>;
+export type FinanceConfig = z.infer<typeof FinanceConfigSchema>;
+export type SelectionConfig = z.infer<typeof SelectionConfigSchema>;
+export type FormatConfig = z.infer<typeof FormatConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -381,6 +483,35 @@ export function checkConfigIntegrity(config: PipelineConfig): string[] {
     );
   }
 
+  // ─── Finance / Selection / Format ─────────────────────────────
+
+  const fin = config.finance;
+  if (fin.thresholds.nearHighPct >= fin.thresholds.drawdownPct) {
+    problems.push(
+      'finance.thresholds.nearHighPct は drawdownPct より小さい必要があります（高値圏と押し目が重なります）',
+    );
+  }
+
+  const sel = config.selection;
+  if (sel.weights.symbolic + sel.weights.neural <= 0) {
+    problems.push('selection.weights の合計が 0 です（どちらの層も選定に効きません）');
+  }
+  if (sel.weights.symbolic === 0) {
+    problems.push(
+      'selection.weights.symbolic が 0 です。記号側の特徴量が順位に効かず、Jev の確信度だけで決まります',
+    );
+  }
+
+  const fmt = config.format;
+  if (fmt.minChars >= fmt.maxChars) {
+    problems.push('format.minChars は maxChars より小さい必要があります');
+  }
+  if (fmt.maxChars > config.qualityGate.maxBodyLength) {
+    problems.push(
+      `format.maxChars (${fmt.maxChars}) が qualityGate.maxBodyLength (${config.qualityGate.maxBodyLength}) を超えています。型どおりに書くと品質ゲートで落ちます`,
+    );
+  }
+
   return problems;
 }
 
@@ -417,3 +548,6 @@ export function getAgent(agentId: string): AgentDef | undefined {
 
 export const VIDEO_BRIEF_CONFIG: VideoBriefConfig = PIPELINE_CONFIG.videoBrief;
 export const TRENDS_CONFIG: TrendsConfig = PIPELINE_CONFIG.trends;
+export const FINANCE_CONFIG: FinanceConfig = PIPELINE_CONFIG.finance;
+export const SELECTION_CONFIG: SelectionConfig = PIPELINE_CONFIG.selection;
+export const FORMAT_CONFIG: FormatConfig = PIPELINE_CONFIG.format;

@@ -24,6 +24,7 @@ import { createCerebras } from '@ai-sdk/cerebras';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createHuggingFace } from '@ai-sdk/huggingface';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import type { LanguageModel } from 'ai';
 import type { ProviderDef } from '../pipeline/config.js';
@@ -64,6 +65,22 @@ const SDK_CLIENTS: Record<ProviderDef['sdk'], (apiKey: string) => ModelClient> =
   cerebras: (apiKey) => createCerebras({ apiKey }),
   openrouter: (apiKey) => createOpenRouter({ apiKey }),
   huggingface: (apiKey) => createHuggingFace({ apiKey }),
+  // GitHub Models: OpenAI 互換の推論口。Actions の GITHUB_TOKEN（models: read）で
+  // そのまま呼べる無料枠なので、登録する鍵が1本も増えない。
+  'github-models': (apiKey) =>
+    createOpenAICompatible({
+      name: 'github-models',
+      apiKey,
+      baseURL: process.env.GITHUB_MODELS_BASE_URL ?? 'https://models.github.ai/inference',
+    }),
+  // Workers AI: OpenAI 互換口。無料枠（1日 10,000 Neurons）は既定では Jev の選定に
+  // 回すので chain には載せていないが、載せたくなったら JSON の追記だけで済む。
+  'workers-ai': (apiKey) =>
+    createOpenAICompatible({
+      name: 'workers-ai',
+      apiKey,
+      baseURL: `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID ?? ''}/ai/v1`,
+    }),
   typesafe: () => {
     throw new Error(
       'TypeSafe Jev is a System One Model and cannot be used as a LanguageModel. ' +

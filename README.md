@@ -111,6 +111,36 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 
 ---
 
+## お金の景色 × 判断AI × IDEAZ の型（ADR-0020）
+
+毎朝、書く前にこう流れます。**課金される口は1つもありません。**
+
+```
+VE-010 Tessa   外の景色（HN / arXiv / Stooq）
+VE-011 Kaia    お金の景色 ── assetlog（自分の資産推移・公開シート） + QAIZ（地域×セクターの地形）
+               → 変化率だけ（金額は持たない）＋ 記号の事実（portfolio.drawdown, market.risk_off …）
+VE-012 Juno    ニューロシンボリック選定
+                 記号: 候補を作る → 禁止語・テーマの冷却・既出との類似で落とす → 特徴量
+                 神経: Jev（判断AI）が生き残りの候補 ID から Choice、関門の一文を Noul で判定
+                 融合: 0.45·記号 + 0.55·Jev（確信度 < 0.55 なら Jev は棄権、記号の順位で決める）
+VE-001 Lena    IDEAZ のタイトル規格で企画
+VE-002 Sophia  IDEAZ の型（関門の一文・シグナル5つ・ノイズ6つ・文体・読みやすさ）で本文
+VE-006 Iris    型を壊さずに校正
+```
+
+| 何を | どこで | 鍵 |
+|------|-------|-----|
+| 資産推移 | assetlog の公開スプレッドシート（gviz） | 不要 |
+| 相場の地形 | QAIZ の `/api/overview`（Workers 無料プラン） | 不要（`QAIZ_BASE_URL` を Variables に） |
+| テーマ選定 | **Jev on Cloudflare Workers AI 無料枠**（1日 10,000 Neurons） | `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` |
+| 選定の代役 | GitHub Models 無料枠 → Gemini / Groq 無料枠 | Actions の `GITHUB_TOKEN`（登録不要） |
+| 執筆 | Gemini 無料枠 → GitHub Models 無料枠 → Groq / Cerebras / OpenRouter `:free` | 既存の Secrets |
+| 型 | `prompts/ideaz/`（IDEAZ の memory/ の写し。`bun scripts/sync-ideaz.mjs` で取り寄せ） | 不要 |
+
+どの口が落ちても記事は止まりません。Jev が無ければ LLM、LLM も無ければ記号の順位で選び、
+財務が取れなければ財務なしで書きます。選定の記録（負けた候補・落とした候補も）は
+`docs/selection-runs/YYYY-MM.md` に残ります。
+
 ## Multi-Agent AI パイプライン
 
 記事生成は以下の9エージェントが順番に担当します：
