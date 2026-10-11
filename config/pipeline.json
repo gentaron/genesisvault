@@ -564,7 +564,7 @@
     }
   },
   "selection": {
-    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。Jev は Cloudflare Workers AI の無料枠（1日 10,000 Neurons）を最優先、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
+    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。判断モデルは Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef（Cloudflare 製・Jev と同じ System One 形式）を最優先。Workers AI 上の typesafe/jev は Unified Billing のクレジット課金になるという報告があるため既定に入れない、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
     "enabled": true,
     "maxCandidates": 12,
     "themeCooldownDays": 2,
@@ -574,7 +574,10 @@
         "workers-ai",
         "typesafe"
       ],
-      "workersAiModel": "@cf/typesafe/jev",
+      "workersAiModels": [
+        "@cf/cloudflare/clef",
+        "@cf/cloudflare/clef-flash"
+      ],
       "accountIdEnv": "CLOUDFLARE_ACCOUNT_ID",
       "tokenEnv": "CLOUDFLARE_API_TOKEN",
       "timeoutMs": 8000,

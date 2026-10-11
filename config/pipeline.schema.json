@@ -762,9 +762,13 @@
                 ]
               }
             },
-            "workersAiModel": {
-              "type": "string",
-              "minLength": 1
+            "workersAiModels": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             },
             "accountIdEnv": {
               "type": "string",
@@ -787,7 +791,7 @@
           },
           "required": [
             "transports",
-            "workersAiModel",
+            "workersAiModels",
             "accountIdEnv",
             "tokenEnv",
             "timeoutMs",

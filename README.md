@@ -247,12 +247,14 @@ Jev は「型エラーは原理的に起きない」と主張していますが�
 
 経路は上から順に試します。
 
-1. **Cloudflare Workers AI**（`@cf/typesafe/jev`、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`
+1. **Cloudflare Workers AI**（`@cf/cloudflare/clef` → `@cf/cloudflare/clef-flash`、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`。Clef は Cloudflare 製の判断モデルで、Jev と同じ System One 形式（state + 型の決まった質問 → 確率）で答える
 2. **TypeSafe の直接 API**（`/v1/decisions`）— `TYPESAFE_API_KEY` があるときだけ
 3. **無料 LLM チェーン** — 同じ候補 ID の enum で選ばせる
 4. **記号の順位だけ** — 何も無くても選定は止まらない
 
-モデル ID は `JEV_WORKERS_AI_MODEL`、TypeSafe 直のベース URL は `TYPESAFE_API_BASE_URL` で差し替えられます。
+モデルは `selection.jev.workersAiModels` で並べ替えられます。`JEV_WORKERS_AI_MODEL` で1つに固定もできます。TypeSafe 直のベース URL は `TYPESAFE_API_BASE_URL` で差し替えられます。
+
+> **なぜ Workers AI では Jev 本体ではなく Clef なのか。** Workers AI 上の `typesafe/jev` は、無料の Neurons 枠ではなく Unified Billing のクレジット課金になるという報告があります。「無料枠だけで回す」方針なので、既定は Cloudflare 自身の Clef にしています。Jev 本体を使うなら、TypeSafe の鍵（`TYPESAFE_API_KEY`）を入れるか、課金を承知で `workersAiModels` に `typesafe/jev` を足してください。
 設定は `config/pipeline.json` の `selection` にあります。詳細は [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md)。
 
 ---
@@ -500,7 +502,7 @@ API キーが入っているものだけがチェーンに入ります。チェ�
 | [Vercel AI SDK](https://sdk.vercel.ai/) | v5。`generateObject`（構造化出力）と `generateText`（自由テキスト） |
 | [Google Gemini API](https://ai.google.dev/) | `@ai-sdk/google`。`gemini-2.5-flash`（執筆・審査）＋ `gemini-2.5-flash-lite` |
 | [GitHub Models](https://docs.github.com/en/github-models) | `@ai-sdk/openai-compatible`。`openai/gpt-4.1` / `gpt-4.1-mini`。Actions の `GITHUB_TOKEN` だけで使える無料枠 |
-| [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) | Jev（`@cf/typesafe/jev`）でテーマを選ぶ。無料枠 1日 10,000 Neurons |
+| [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) | 判断モデル Clef（`@cf/cloudflare/clef` / `clef-flash`。Jev と同じ System One 形式）でテーマを選ぶ。無料枠 1日 10,000 Neurons |
 | [TypeSafe Jev](https://typesafe.ai/) | System One Model。文字列を生成せず、型の決まった判定と確率だけを返す。選定と審査の2か所で使う |
 | [Groq](https://groq.com/) / [Cerebras](https://cerebras.ai/) | `llama-3.3-70b`。無料枠の予備 |
 | [OpenRouter](https://openrouter.ai/) | `:free` モデル3種を順に試す（ADR-0010） |
@@ -644,7 +646,7 @@ bunx biome check --write <実際に変更したファイル>
 | CI の `Unit Tests + Coverage` が赤い | テストは全件通過。カバレッジのしきい値（行 85% / 分岐 75%）に届いていない。main では 9/5 以前から赤い。主な原因は `typesafe.ts`・`symbolic-guard.ts`・`review.ts`・`state.ts` のテスト不足 | — |
 | 品質ゲートの禁止語チェックが走っていない | `qualityGate.forbiddenTopics` がスキーマ未宣言で、Zod に落とされている。有効にするとゴールデン事例の「正常な記事」が落ちるので、禁止語の範囲を決め直すまで保留。テーマ選定だけは生の JSON から読んで候補を落としている | [LM-018](./docs/almanac/LANDMINES.md) |
 | `tierOmega` が読まれていない | 同じ理由で、どのコードからも参照されていない | [LM-018](./docs/almanac/LANDMINES.md) |
-| Jev のリクエスト形状 | 公開情報から組んだもの。本番の初回ログ（`method=jev` が出るか）で確認する。合わなくても選定は記号の順位で続く | [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md) |
+| 判断モデルのリクエスト形状 | 2026-10-11 の初回本番は配列形式で送って HTTP 400。名前付き `questions` + `instructions` + `criteria` の System One 形式に直した（次の本番ログで `method=jev` を確認する）。合わなくても選定は代役 LLM → 記号の順位で続く | [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md) |
 
 ---
 

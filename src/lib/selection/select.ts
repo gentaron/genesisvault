@@ -70,6 +70,7 @@ export function buildQuestions(candidates: ScoredCandidate[]): JevQuestion[] {
       type: 'choice',
       prompt: '今日書く1本として、最も読者の役に立ち、事実で約束を支えられる候補はどれか。',
       options: candidates.map((c) => c.id),
+      descriptions: Object.fromEntries(candidates.map((c) => [c.id, `[${c.theme}] ${c.hook}`])),
     },
     ...candidates.slice(0, GATE_QUESTIONS).map(
       (c): JevQuestion => ({

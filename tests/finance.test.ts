@@ -108,15 +108,15 @@ describe('QAIZ — parseQaizOverview', () => {
     regime: { trend: 'bull', volatility: 'elevated', riskAppetite: 'risk-off' },
     breadth: [{ scope: 'us', label: 'narrow-rally' }],
     sectors: [
-      { nameJa: 'テクノロジー', region: 'us', r1w: 0.032 },
-      { nameJa: '公益', region: 'jp', r1w: -0.021 },
-      { nameJa: '金融', region: 'eu', r1w: 0.004 },
-      { nameJa: '不明', region: 'us', r1w: null },
+      { nameJa: 'テクノロジー', region: 'US', r1w: 0.032 },
+      { nameJa: '公益', region: 'JP', r1w: -0.021 },
+      { nameJa: '金融', region: 'EU', r1w: 0.004 },
+      { nameJa: '不明', region: 'US', r1w: null },
     ],
     rotation: [
       {
         name: '半導体',
-        region: 'us',
+        region: 'US',
         quadrant: 'leading',
         trail: [
           { rsRatio: 98, rsMomentum: 103 },
@@ -125,7 +125,7 @@ describe('QAIZ — parseQaizOverview', () => {
       },
       {
         name: '素材',
-        region: 'jp',
+        region: 'JP',
         quadrant: 'lagging',
         trail: [
           { rsRatio: 97, rsMomentum: 98 },
@@ -317,5 +317,16 @@ describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
     expect(isPulseFresh(snap, now)).toBe(true);
     expect(isPulseFresh({ ...snap, capturedAt: '2026-09-01' }, now)).toBe(false);
     expect((await runKaia(dir, now))?.predicates).toEqual(['market.bull']);
+  });
+});
+
+describe('region labels', () => {
+  it('maps QAIZ region codes and never doubles the region name', async () => {
+    const { labelWithRegion, regionJa } = await import('../src/lib/finance/qaiz');
+    expect(regionJa('GLOBAL')).toBe('');
+    expect(regionJa('BR')).toBe('ブラジル');
+    expect(labelWithRegion(regionJa('GLOBAL'), 'ビットコイン')).toBe('ビットコイン');
+    expect(labelWithRegion(regionJa('US'), '米国 情報技術')).toBe('米国 情報技術');
+    expect(labelWithRegion(regionJa('JP'), 'ソフトウェア')).toBe('日本のソフトウェア');
   });
 });

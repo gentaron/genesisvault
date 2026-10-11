@@ -46,7 +46,38 @@ interface OverviewPayload {
     | null;
 }
 
-const REGION_JA: Record<string, string> = { us: '米国', jp: '日本', eu: '欧州', asia: 'アジア' };
+/**
+ * QAIZ の RegionId（src/types.ts）→ 日本語。GLOBAL は地域名を付けない。
+ * 初回本番で地域コードがそのまま本文に出た（「GLOBALビットコイン」「US米国 情報技術」）ので、
+ * 大文字のコードを正本にし、名前にすでに地域名が入っているときは重ねない。
+ */
+const REGION_JA: Record<string, string> = {
+  US: '米国',
+  JP: '日本',
+  EU: '欧州',
+  UK: '英国',
+  CN: '中国',
+  HK: '香港',
+  IN: 'インド',
+  KR: '韓国',
+  TW: '台湾',
+  AU: '豪州',
+  CA: 'カナダ',
+  BR: 'ブラジル',
+  EM: '新興国',
+  GLOBAL: '',
+};
+
+export function regionJa(region: unknown): string {
+  const key = String(region ?? '').toUpperCase();
+  return key in REGION_JA ? REGION_JA[key] : String(region ?? '');
+}
+
+/** 「米国」+「米国 情報技術」→「米国 情報技術」、「」+「ビットコイン」→「ビットコイン」 */
+export function labelWithRegion(region: string, name: string): string {
+  if (!region || name.startsWith(region)) return name;
+  return `${region}の${name}`;
+}
 
 function oneOf<T extends string>(value: unknown, allowed: readonly T[]): T | null {
   return typeof value === 'string' && (allowed as readonly string[]).includes(value)
@@ -77,7 +108,7 @@ export function parseQaizOverview(body: string): MarketTerrain | null {
     .filter((s) => typeof s.r1w === 'number' && Number.isFinite(s.r1w) && s.nameJa)
     .map((s) => ({
       name: String(s.nameJa),
-      region: REGION_JA[String(s.region)] ?? String(s.region ?? ''),
+      region: regionJa(s.region),
       r1wPct: toPct(s.r1w as number),
     }))
     .sort((a, b) => b.r1wPct - a.r1wPct);
@@ -92,7 +123,7 @@ export function parseQaizOverview(body: string): MarketTerrain | null {
     if (from !== to) {
       rotations.push({
         name: r.name,
-        region: REGION_JA[String(r.region)] ?? String(r.region ?? ''),
+        region: regionJa(r.region),
         from,
         to,
       });
