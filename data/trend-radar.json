@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-10",
+  "capturedAt": "2026-10-11",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Typesafe AI raises $870M at $7.5B",
       "url": "https://typesafe.ai/blog/series-ai",
-      "score": 413,
+      "score": 432,
       "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: Let your AI agents paint big arrows, boxes and text on your screen",
       "url": "https://github.com/franzenzenhofer/big-arrow-on-the-screen",
-      "score": 403,
+      "score": 412,
       "date": "2026-10-09"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Talorys – A self-hosted personal AI agent on Cloudflare's free tier",
+      "url": "https://github.com/rociiu/talorys",
+      "score": 264,
+      "date": "2026-10-10"
     },
     {
       "source": "Hacker News",
       "title": "Germany transforms former coal mines into Europe's largest lake landscape",
       "url": "https://www.euronews.com/2026/04/14/almost-like-lake-como-germany-transforms-former-coal-mines-into-europes-largest-lake-lands",
-      "score": 205,
+      "score": 209,
       "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
       "title": "Anthropic AI model submits false tip on unsolved Philly murder, police say",
       "url": "https://www.nbcphiladelphia.com/news/local/anthropic-ai-model-submits-false-tip-on-unsolved-philly-murder-police-say/4477051/",
-      "score": 195,
-      "date": "2026-10-09"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Pointing AI at archives found a forgotten meteorite, lost rhinos, and more",
-      "url": "https://jessewaites.com/blog/post/i-pointed-ai-at-400-years-of-archives/",
-      "score": 175,
+      "score": 208,
       "date": "2026-10-09"
     },
     {
       "source": "Hacker News",
       "title": "What mathematicians should know about the Lean Theorem Prover: reliability & AI",
       "url": "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/",
-      "score": 165,
+      "score": 196,
       "date": "2026-10-09"
     }
   ],
@@ -48,6 +48,7 @@
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
+    "arXiv 取得失敗: cs.AI",
     "相場データが空: S&P500",
     "相場データが空: 日経平均",
     "相場データが空: ドル円",
