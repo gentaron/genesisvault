@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  # GitHub Models の無料枠を GITHUB_TOKEN だけで呼ぶため（登録する鍵が増えない）
+  models: read
 
 jobs:
   create-post:
@@ -31,8 +33,21 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Run Multi-Agent Pipeline (VE-005 → VE-001 → VE-003 → VE-002 → VE-006)
+      # IDEAZ の型（memory/）と公開済み見出しを取り寄せ直す。取れなければ写しのまま。
+      - name: Sync IDEAZ format
+        continue-on-error: true
+        run: bun scripts/sync-ideaz.mjs
+
+      - name: Run Multi-Agent Pipeline (Tessa → Kaia → Juno[Jev] → Lena → Sophia[IDEAZ] → Iris)
         env:
+          # GitHub Models（無料）。Actions に最初からある token。
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Jev（判断AI）を Cloudflare Workers AI の無料枠で。無ければ選定は LLM → 記号へ縮退。
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          # QAIZ をデプロイした URL（例: https://qaiz.<account>.workers.dev）。秘密ではないので Variables 側。
+          QAIZ_BASE_URL: ${{ vars.QAIZ_BASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
@@ -58,6 +73,11 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Mina Eureka Ernst [Bot]"
           git add src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
+          # 財務パルス（変化率のみ）・選定ログ・IDEAZ の型の写しも。ランナーは毎回まっさらなので押さないと消える（LM-013）。
+          # 1つでも無いパスがあると git add 全体が失敗するので、在るものだけを1つずつ。
+          for p in data/finance-pulse.json data/published-titles.json docs/selection-runs prompts/ideaz; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
           git diff --quiet && git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)
 
       # ── Phase μ — hand the article to VAIZ through Linear ──────

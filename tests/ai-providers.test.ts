@@ -12,6 +12,8 @@ describe('AI Providers — buildProviderChain', () => {
     delete process.env.CEREBRAS_API_KEY;
     delete process.env.OPENROUTER_API_KEY;
     delete process.env.HF_TOKEN;
+    delete process.env.GITHUB_TOKEN;
+    delete process.env.CLOUDFLARE_API_TOKEN;
   });
 
   afterEach(() => {
@@ -34,6 +36,13 @@ describe('AI Providers — buildProviderChain', () => {
     expect(chain[1].name).toBe('gemini-2.5-flash');
     expect(chain[0].rpm).toBe(15);
     expect(chain[1].rpm).toBe(10);
+  });
+
+  it('includes the GitHub Models free tier when GITHUB_TOKEN is set', async () => {
+    process.env.GITHUB_TOKEN = 'test-gh-token';
+    const { buildProviderChain } = await import('../src/lib/ai/providers');
+    const chain = buildProviderChain();
+    expect(chain.map((p) => p.name)).toEqual(['github-models-gpt-4.1', 'github-models-gpt-4.1-mini']);
   });
 
   it('includes Groq provider when GROQ_API_KEY is set', async () => {

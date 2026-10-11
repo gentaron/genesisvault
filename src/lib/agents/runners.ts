@@ -151,6 +151,7 @@ export async function runLena(
   continuityBrief = '',
   trendBrief = '',
   feedback = '',
+  titleRules = '',
 ): Promise<CEOPlan> {
   console.log('\n🎯 [VE-001] Lena Strauss (CEO): トピック決定中…');
 
@@ -216,11 +217,18 @@ ${sampleTexts}
 - 「お金と向き合う日々」（何も伝わらない）
 - 「ひとり旅が教えてくれたもの」（テンプレ的）
 
+${
+  titleRules
+    ? `\n## タイトル規格（IDEAZ の型。上の「15文字以内」より優先する）
+${titleRules}
+タイトルは50字以内。約束を一つに絞り、読者の何が変わるかを即座に分からせること。\n`
+    : ''
+}
 以下の JSON 形式で出力してください（他の文は書かないで）:
 {
   "topic": "具体的なトピック（「${assignedTheme}」に直接関連する内容）",
   "angle": "切り口・ユニークな視点の説明（1〜2文）",
-  "title": "上記ルールに従った具体的で魅力的なタイトル（15〜20文字以内）",
+  "title": "${titleRules ? 'IDEAZ のタイトル規格に従ったタイトル（50字以内）' : '上記ルールに従った具体的で魅力的なタイトル（15〜20文字以内）'}",
   "mood_hint": "この記事の雰囲気（静寂、思索、平和、発見、情熱、充実、自由 のいずれか）"
 }`;
 
@@ -339,6 +347,7 @@ export async function runSophia(
   continuityBrief = '',
   trendBrief = '',
   feedback = '',
+  formatBrief = '',
 ): Promise<string | null> {
   console.log('✍️  [VE-002] Sophia Nightingale (Writer): 本文執筆中…');
 
@@ -377,7 +386,19 @@ ${seoData.keywords.join(', ')}
 ## 過去の文体サンプル（参考スタイル）
 ${sampleTexts}
 
-## 執筆ルール
+${
+  formatBrief
+    ? `## 書き方の型（IDEAZ。下の執筆ルールと食い違うところは、すべてこちらを優先する）
+${formatBrief}
+
+## 継続性と数値の扱い（型より優先）
+- 今回のテーマ「${ceoPlan.theme}」に集中する
+- 数値（金額・継続日数・年数・冊数）は継続性ブリーフの到達点以上。低い数値は回想のときだけ、過去の話だと本文で明示する
+- 自分の資産の金額は書かない。変化率と向きだけ`
+    : ''
+}
+
+## 執筆ルール${formatBrief ? '（型が無い日の既定。型があるときは型を優先）' : ''}
 1. 文字数: 1,000〜2,000字（厳守）
 2. 文体: 柔らかい日記調（「です・ます」ではなく「だ・である・と思う」体）
 3. 構成: 導入 → 本題（2〜3セクション）→ まとめ
@@ -424,6 +445,7 @@ export async function runIris(
   ceoPlan: CEOPlan,
   seoData: SEOData,
   draft: string,
+  editorRules = '',
 ): Promise<string | null> {
   console.log('📝 [VE-006] Iris Koenig (Editor): 校正・品質チェック中…');
 
@@ -450,11 +472,18 @@ ${draft}
    - 「AではなくBだ」という二項対立のレトリックを繰り返し使っていないか（1記事で2回まで）
    - 「――」のような装飾的な全角ダッシュや、本文中に残った Markdown の \`**太字**\` がないか
 
+${
+  editorRules
+    ? `\n## 書き方の型（IDEAZ。上のチェック項目と食い違うところは、すべてこちらを優先する）
+${editorRules}
+文字数・見出し・箇条書きについては型に従う。見出し記号や箇条書きを足さない。短くしすぎない。\n`
+    : ''
+}
 ## 出力ルール
 - 校正済みの本文のみを出力してください
 - タイトルやfrontmatterは含めないでください
 - 修正理由のコメントは不要です
-- Markdown形式で出力してください`;
+- ${editorRules ? '記号を使わない、ふつうの文章と改行だけで出力してください' : 'Markdown形式で出力してください'}`;
 
   try {
     // Editing is precision work — the routing table pins VE-006 to a

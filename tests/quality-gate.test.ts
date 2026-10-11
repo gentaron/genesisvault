@@ -1,8 +1,13 @@
 /**
  * Phase θ tests — Quality Gate
  */
-import { describe, it, expect } from 'vitest';
-import { runQualityGate, validateFrontmatter, detectAiSlop } from '../src/lib/pipeline/quality-gate.js';
+import { describe, expect, it } from 'vitest';
+import { PIPELINE_CONFIG } from '../src/lib/pipeline/config';
+import {
+  detectAiSlop,
+  runQualityGate,
+  validateFrontmatter,
+} from '../src/lib/pipeline/quality-gate.js';
 
 describe('Quality Gate', () => {
   describe('runQualityGate', () => {
@@ -39,7 +44,7 @@ describe('Quality Gate', () => {
       const body = `## 導入\n\n[TODO] ここに本文を書く\n\n## まとめ\n\n完了。`;
       const report = runQualityGate(body);
       expect(report.passed).toBe(false);
-      const placeholderCheck = report.checks.find(c => c.name === 'no_placeholders');
+      const placeholderCheck = report.checks.find((c) => c.name === 'no_placeholders');
       expect(placeholderCheck?.passed).toBe(false);
     });
 
@@ -52,7 +57,7 @@ describe('Quality Gate', () => {
       const body = '```\n## test\n\nsome content here\n```\n';
       const report = runQualityGate(body);
       expect(report.passed).toBe(false);
-      const fenceCheck = report.checks.find(c => c.name === 'no_code_fences');
+      const fenceCheck = report.checks.find((c) => c.name === 'no_code_fences');
       expect(fenceCheck?.passed).toBe(false);
     });
 
@@ -72,7 +77,7 @@ describe('Quality Gate', () => {
         '明日はどこへ行こうかな。',
       ].join('\n');
       const report = runQualityGate(body);
-      const aiCheck = report.checks.find(c => c.name === 'no_ai_disclaimer');
+      const aiCheck = report.checks.find((c) => c.name === 'no_ai_disclaimer');
       expect(aiCheck?.passed).toBe(false);
     });
 
@@ -80,8 +85,9 @@ describe('Quality Gate', () => {
       const body = `今日は散歩に行った。とても楽しかった。新しいカフェを見つけた。美味しいコーヒーを飲んだ。`;
       const report = runQualityGate(body);
       // Should pass overall (only warning, not error) but check exists
-      const structureCheck = report.checks.find(c => c.name === 'markdown_structure');
-      expect(structureCheck?.passed).toBe(false);
+      const structureCheck = report.checks.find((c) => c.name === 'markdown_structure');
+      // IDEAZ の型（見出し記号を使わない）では minH2Headings=0 で、見出しが無くても減点しない。
+      expect(structureCheck?.passed).toBe(PIPELINE_CONFIG.qualityGate.minH2Headings === 0);
       expect(structureCheck?.severity).toBe('warning');
     });
   });
@@ -142,7 +148,7 @@ describe('Quality Gate', () => {
         'それではなく、これでもなく、あれでもなかった。'.repeat(10),
       ].join('\n');
       const report = runQualityGate(body);
-      const headingCheck = report.checks.find(c => c.name === 'no_grandiose_headings');
+      const headingCheck = report.checks.find((c) => c.name === 'no_grandiose_headings');
       expect(headingCheck?.passed).toBe(false);
       expect(headingCheck?.severity).toBe('warning');
       // Warnings alone must not flip `passed` to false.
@@ -159,28 +165,32 @@ describe('Quality Gate', () => {
         description: 'これはテスト記事の説明です。',
         keywords: ['テスト'],
       });
-      expect(checks.every(c => c.passed)).toBe(true);
+      expect(checks.every((c) => c.passed)).toBe(true);
     });
 
     it('fails for missing title', () => {
       const checks = validateFrontmatter({ date: '2026-05-06' });
-      expect(checks.find(c => c.name === 'fm_title')?.passed).toBe(false);
+      expect(checks.find((c) => c.name === 'fm_title')?.passed).toBe(false);
     });
 
     it('fails for missing date', () => {
       const checks = validateFrontmatter({ title: 'Test' });
-      expect(checks.find(c => c.name === 'fm_date')?.passed).toBe(false);
+      expect(checks.find((c) => c.name === 'fm_date')?.passed).toBe(false);
     });
 
     it('warns for missing tags', () => {
       const checks = validateFrontmatter({ title: 'Test', date: '2026-05-06' });
-      expect(checks.find(c => c.name === 'fm_tags')?.passed).toBe(false);
-      expect(checks.find(c => c.name === 'fm_tags')?.severity).toBe('warning');
+      expect(checks.find((c) => c.name === 'fm_tags')?.passed).toBe(false);
+      expect(checks.find((c) => c.name === 'fm_tags')?.severity).toBe('warning');
     });
 
     it('warns for short description', () => {
-      const checks = validateFrontmatter({ title: 'Test', date: '2026-05-06', description: '短い' });
-      expect(checks.find(c => c.name === 'fm_description')?.passed).toBe(false);
+      const checks = validateFrontmatter({
+        title: 'Test',
+        date: '2026-05-06',
+        description: '短い',
+      });
+      expect(checks.find((c) => c.name === 'fm_description')?.passed).toBe(false);
     });
   });
 });

@@ -455,3 +455,20 @@ describe('ledger persistence and diary loading', () => {
     }
   });
 });
+
+// ─── 回帰: detectDuplicateTitle が毎回例外を投げていた（LM-017） ──────
+//
+// `new Date();toISOString()` の打ち間違いで、この関数は呼ばれるたびに
+// ReferenceError を投げていた。auto-post はそれを「AI が全滅した」と同じ
+// catch で受けるので、2026-09-16 以降の記事はすべてテンプレートに落ちていた。
+// 例外にならず、毎日「記事は出ている」ので、誰も気づかなかった。
+describe('detectDuplicateTitle (regression)', () => {
+  it('does not throw and finds an exact duplicate inside the window', async () => {
+    const { detectDuplicateTitle } = await import('../src/lib/agents/continuity');
+    const today = new Date().toISOString().slice(0, 10);
+    const articles = [{ title: '朝5時の家計簿タイム', text: '', date: today }];
+    expect(() => detectDuplicateTitle('新しいタイトル', articles)).not.toThrow();
+    expect(detectDuplicateTitle('朝5時の家計簿タイム', articles)?.similarity).toBe(1);
+    expect(detectDuplicateTitle('まったく別の話をする', articles)).toBeNull();
+  });
+});

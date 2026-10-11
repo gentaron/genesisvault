@@ -36,6 +36,7 @@
     "@ai-sdk/google": "^2.0.0",
     "@ai-sdk/groq": "^2.0.0",
     "@ai-sdk/huggingface": "^1.0.48",
+    "@ai-sdk/openai-compatible": "^1.0.58",
     "@astrojs/check": "^0.9.0",
     "@astrojs/mdx": "^4.0.0",
     "@openrouter/ai-sdk-provider": "^2.9.0",
