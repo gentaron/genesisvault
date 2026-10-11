@@ -1,0 +1,95 @@
+{
+  "capturedAt": "2026-10-11",
+  "portfolio": {
+    "asOf": "2026-10-11",
+    "d1Pct": 0.05,
+    "d7Pct": -2.28,
+    "d30Pct": -1.68,
+    "fromHighPct": -3.05,
+    "atHigh": false,
+    "vol30Pct": 11,
+    "streak": 1,
+    "days": 512
+  },
+  "market": {
+    "generatedAt": "2026-10-11T04:01:11.321Z",
+    "trend": "bull",
+    "volatility": "normal",
+    "riskAppetite": "neutral",
+    "breadth": "broad-rally",
+    "strongest": [
+      {
+        "name": "市場全体",
+        "region": "BR",
+        "r1wPct": 14
+      },
+      {
+        "name": "ソフトウェア",
+        "region": "JP",
+        "r1wPct": 6.4
+      },
+      {
+        "name": "エネルギー",
+        "region": "UK",
+        "r1wPct": 5.5
+      }
+    ],
+    "weakest": [
+      {
+        "name": "半導体",
+        "region": "US",
+        "r1wPct": -4.3
+      },
+      {
+        "name": "暗号資産",
+        "region": "GLOBAL",
+        "r1wPct": -3.6
+      },
+      {
+        "name": "銀行",
+        "region": "UK",
+        "r1wPct": -3.2
+      }
+    ],
+    "rotations": [
+      {
+        "name": "ビットコイン",
+        "region": "GLOBAL",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 情報技術",
+        "region": "US",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 半導体",
+        "region": "US",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 生活必需品",
+        "region": "US",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
+        "name": "米国 エネルギー",
+        "region": "US",
+        "from": "weakening",
+        "to": "leading"
+      }
+    ]
+  },
+  "predicates": [
+    "divergence.market_up_me_down",
+    "market.bull",
+    "market.rotation_new_leader",
+    "portfolio.quiet_day"
+  ],
+  "degraded": false,
+  "notes": []
+}
