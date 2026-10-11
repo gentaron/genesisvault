@@ -350,3 +350,18 @@ lint 対象に入り、数千件の指摘として爆発する。
 
 **同じ形の罠**: `tierOmega` セクションも同じ理由で Zod から落ちていて、
 どのコードからも読まれていない。設定を足すときは、スキーマにも足したかを確かめること。
+
+## LM-019: 記事を書かなかった日に、コミットの手順だけが失敗する
+
+**症状**: その日の記事がすでにある日に daily-post を手動で再実行すると、
+パイプラインは「Skipping」で正常終了するのに、`Commit and push` が exit 1 で赤くなる（#246）。
+
+**原因**: 2つ重なっていた。
+1. `setup-bun` が `bun-version: '1'` で最新の 1.x（1.4.3）を入れ、`bun install` が `bun.lock` を書き換える
+2. コミット条件が `git diff --quiet && git diff --staged --quiet || git commit` で、**未ステージ**の
+   `bun.lock` の変更を「変更あり」と判定し、ステージが空のまま `git commit` を叩いていた
+
+記事がある日はステージに記事が入るので必ずコミットが通り、表に出なかった。
+
+**回避策**（2026-10-11）: コミット条件をステージ済みの差分だけにした（`git diff --staged --quiet || ...`）。
+`setup-bun` は `bun-version-file: package.json` で `packageManager` の版に固定した。
