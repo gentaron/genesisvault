@@ -25,7 +25,7 @@ import {
   parseGvizLogs,
   summarizePortfolio,
 } from './assetlog.js';
-import { type MarketTerrain, parseQaizOverview } from './qaiz.js';
+import { labelWithRegion, type MarketTerrain, parseQaizOverview } from './qaiz.js';
 
 export interface FinancePulse {
   /** 取得日（YYYY-MM-DD, UTC）。 */
@@ -137,16 +137,18 @@ export function buildFinanceBrief(pulse: FinancePulse | null): string {
     if (terrain.length) lines.push(`外の地形（QAIZ）: ${terrain.join('、')}`);
     if (m.strongest.length) {
       lines.push(
-        `  1週間で強かった: ${m.strongest.map((s) => `${s.region}${s.name} ${signed(s.r1wPct)}`).join('、')}`,
+        `  1週間で強かった: ${m.strongest.map((s) => `${labelWithRegion(s.region, s.name)} ${signed(s.r1wPct)}`).join('、')}`,
       );
     }
     if (m.weakest.length) {
       lines.push(
-        `  1週間で弱かった: ${m.weakest.map((s) => `${s.region}${s.name} ${signed(s.r1wPct)}`).join('、')}`,
+        `  1週間で弱かった: ${m.weakest.map((s) => `${labelWithRegion(s.region, s.name)} ${signed(s.r1wPct)}`).join('、')}`,
       );
     }
     for (const r of m.rotations.slice(0, 2)) {
-      lines.push(`  ${r.region}${r.name}が「${QUAD_JA[r.from]}」から「${QUAD_JA[r.to]}」へ`);
+      lines.push(
+        `  ${labelWithRegion(r.region, r.name)}が「${QUAD_JA[r.from]}」から「${QUAD_JA[r.to]}」へ`,
+      );
     }
   }
 

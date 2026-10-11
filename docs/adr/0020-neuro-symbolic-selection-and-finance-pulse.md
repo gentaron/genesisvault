@@ -68,3 +68,20 @@ Workers AI の Neurons は Jev に全部回すため、文字を書くチェー�
   `JEV_WORKERS_AI_MODEL`、TypeSafe 直のベース URL は `TYPESAFE_API_BASE_URL` で差し替えられ、
   応答の読み取りは複数の形を受け付ける。読めなければ記号の順位で決まり、記事は止まらない
 - `QAIZ_BASE_URL` が未設定なら QAIZ は読まない（assetlog だけで動く）
+
+## 追記（2026-10-11）: 初回本番の結果と、Workers AI のモデルを Clef にした理由
+
+初回の本番実行（workflow_dispatch #245）で、Workers AI の判断モデル呼び出しは **HTTP 400** だった。
+選定は代役の LLM（`method=llm`、確信度 0.90）で決まり、記事は品質ゲート 100 点で公開された。
+
+- **400 の原因**: リクエストの形。`questions` を配列で、質問文を `question`、選択肢を `options` で送っていた。
+  System One の形式は、名前をキーにした `questions` オブジェクトで、質問文が `instructions`、
+  choice の選択肢が `criteria`（ID → 説明のマップ）。応答は `answers.<名前>.noul` / `.choice` で返る。
+  形を直し、失敗時は応答本文の先頭 300 字をログに残すようにした（次に外れても、ログ1回で直せるように）
+- **モデル**: Workers AI 上の `typesafe/jev` は Neurons の無料枠ではなく Unified Billing のクレジット課金になる、という
+  報告がある。「無料枠だけ」の方針と衝突するので、Workers AI の既定は Cloudflare 自身の判断モデル
+  **Clef**（`@cf/cloudflare/clef` → `@cf/cloudflare/clef-flash`）にした。Jev と同じ System One 形式で答える。
+  Jev 本体は TypeSafe の鍵があれば TypeSafe 直で使われる。Workers AI の Jev を使いたいなら
+  `selection.jev.workersAiModels` に足すか `JEV_WORKERS_AI_MODEL` で固定する（課金は承知の上で）
+- 同じ回で、QAIZ の地域コード（`GLOBAL` / `US`）がそのまま本文に出ていた。大文字のコードを日本語に直し、
+  名前にすでに地域名が入っているときは重ねないようにした

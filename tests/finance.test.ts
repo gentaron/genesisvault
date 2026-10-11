@@ -9,7 +9,10 @@
  * ネットワークには触らない。
  */
 
-import { describe, expect, it } from 'vitest';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   type LogPoint,
   parseGvizDate,
@@ -17,7 +20,16 @@ import {
   summarizePortfolio,
   toDailyCloses,
 } from '../src/lib/finance/assetlog';
-import { buildFinanceBrief, derivePredicates, type FinancePulse } from '../src/lib/finance/pulse';
+import {
+  buildFinanceBrief,
+  collectFinancePulse,
+  derivePredicates,
+  type FinancePulse,
+  isPulseFresh,
+  loadFinancePulse,
+  runKaia,
+  saveFinancePulse,
+} from '../src/lib/finance/pulse';
 import { parseQaizOverview, quadrantOf } from '../src/lib/finance/qaiz';
 
 const DAY = 86_400_000;
@@ -96,15 +108,15 @@ describe('QAIZ — parseQaizOverview', () => {
     regime: { trend: 'bull', volatility: 'elevated', riskAppetite: 'risk-off' },
     breadth: [{ scope: 'us', label: 'narrow-rally' }],
     sectors: [
-      { nameJa: 'テクノロジー', region: 'us', r1w: 0.032 },
-      { nameJa: '公益', region: 'jp', r1w: -0.021 },
-      { nameJa: '金融', region: 'eu', r1w: 0.004 },
-      { nameJa: '不明', region: 'us', r1w: null },
+      { nameJa: 'テクノロジー', region: 'US', r1w: 0.032 },
+      { nameJa: '公益', region: 'JP', r1w: -0.021 },
+      { nameJa: '金融', region: 'EU', r1w: 0.004 },
+      { nameJa: '不明', region: 'US', r1w: null },
     ],
     rotation: [
       {
         name: '半導体',
-        region: 'us',
+        region: 'US',
         quadrant: 'leading',
         trail: [
           { rsRatio: 98, rsMomentum: 103 },
@@ -113,7 +125,7 @@ describe('QAIZ — parseQaizOverview', () => {
       },
       {
         name: '素材',
-        region: 'jp',
+        region: 'JP',
         quadrant: 'lagging',
         trail: [
           { rsRatio: 97, rsMomentum: 98 },
@@ -226,5 +238,95 @@ describe('buildFinanceBrief', () => {
 
   it('is empty without data', () => {
     expect(buildFinanceBrief(null)).toBe('');
+  });
+});
+
+describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
+  const logsBody = `x(${JSON.stringify({
+    table: {
+      rows: [
+        { c: [{ v: 'Date(2026,9,8,12,0,0)' }, { v: 100 }] },
+        { c: [{ v: 'Date(2026,9,9,12,0,0)' }, { v: 103 }] },
+      ],
+    },
+  })})`;
+  const overviewBody = JSON.stringify({
+    regime: { trend: 'bear', riskAppetite: 'risk-off' },
+    sectors: [],
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  it('reads assetlog and QAIZ and derives predicates', async () => {
+    vi.stubEnv('QAIZ_BASE_URL', 'https://qaiz.example.workers.dev/');
+    const fetchMock = vi.fn(
+      async (url: string) =>
+        new Response(String(url).includes('qaiz') ? overviewBody : logsBody, { status: 200 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const pulse = await collectFinancePulse(new Date('2026-10-10T00:00:00Z'));
+    expect(pulse.portfolio?.d1Pct).toBe(3);
+    expect(pulse.market?.trend).toBe('bear');
+    expect(pulse.predicates).toContain('market.risk_off');
+    expect(pulse.predicates).toContain('portfolio.big_up_day');
+    // 2日ぶんしか無いので1週間の変化率は出ない → 「ずれ」の記号も出ない
+    expect(pulse.predicates).not.toContain('divergence.market_down_me_up');
+    expect(pulse.degraded).toBe(false);
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) => String(u) === 'https://qaiz.example.workers.dev/api/overview',
+      ),
+    ).toBe(true);
+  });
+
+  it('notes a missing QAIZ_BASE_URL and keeps going', async () => {
+    vi.stubEnv('QAIZ_BASE_URL', '');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(logsBody, { status: 200 })),
+    );
+    const pulse = await collectFinancePulse();
+    expect(pulse.market).toBeNull();
+    expect(pulse.degraded).toBe(true);
+    expect(pulse.notes.join()).toContain('QAIZ_BASE_URL');
+  });
+
+  it('falls back to a fresh snapshot, then to null', async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'gv-fin-'));
+    vi.stubEnv('QAIZ_BASE_URL', '');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('', { status: 500 })),
+    );
+    const now = new Date('2026-10-10T12:00:00Z');
+    expect(await runKaia(dir, now)).toBeNull();
+
+    const snap: FinancePulse = {
+      capturedAt: '2026-10-09',
+      portfolio: null,
+      market: null,
+      predicates: ['market.bull'],
+      degraded: true,
+      notes: [],
+    };
+    await saveFinancePulse(dir, snap);
+    expect(await loadFinancePulse(dir)).toEqual(snap);
+    expect(isPulseFresh(snap, now)).toBe(true);
+    expect(isPulseFresh({ ...snap, capturedAt: '2026-09-01' }, now)).toBe(false);
+    expect((await runKaia(dir, now))?.predicates).toEqual(['market.bull']);
+  });
+});
+
+describe('region labels', () => {
+  it('maps QAIZ region codes and never doubles the region name', async () => {
+    const { labelWithRegion, regionJa } = await import('../src/lib/finance/qaiz');
+    expect(regionJa('GLOBAL')).toBe('');
+    expect(regionJa('BR')).toBe('ブラジル');
+    expect(labelWithRegion(regionJa('GLOBAL'), 'ビットコイン')).toBe('ビットコイン');
+    expect(labelWithRegion(regionJa('US'), '米国 情報技術')).toBe('米国 情報技術');
+    expect(labelWithRegion(regionJa('JP'), 'ソフトウェア')).toBe('日本のソフトウェア');
   });
 });

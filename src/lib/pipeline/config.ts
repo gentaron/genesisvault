@@ -249,7 +249,13 @@ export const SelectionConfigSchema = z.object({
   jev: z.object({
     /** 上から順に試す経路。`workers-ai` は Cloudflare の無料枠（1日 10,000 Neurons）。 */
     transports: z.array(z.enum(['workers-ai', 'typesafe'])).min(1),
-    workersAiModel: z.string().min(1),
+    /**
+     * 上から順に試す Workers AI のモデル。既定は Cloudflare 自身の判断モデル Clef
+     * （Jev と同じ System One 形式・Neurons の無料枠で動く）。`typesafe/jev` を
+     * Workers AI で呼ぶと Unified Billing のクレジット課金になるという報告があるため、
+     * 無料枠だけで回す方針では既定に入れない（入れるならこの配列に足す）。
+     */
+    workersAiModels: z.array(z.string().min(1)).min(1),
     accountIdEnv: z.string().min(1),
     tokenEnv: z.string().min(1),
     timeoutMs: z.number().int().positive(),

@@ -27,7 +27,14 @@ import { SELECTION_CONFIG } from '../pipeline/config.js';
 // ─── Question / answer types ────────────────────────────────────
 
 export type JevQuestion =
-  | { name: string; type: 'choice'; prompt: string; options: string[] }
+  | {
+      name: string;
+      type: 'choice';
+      prompt: string;
+      options: string[];
+      /** 選択肢ごとの説明（Workers AI の `criteria` マップに入る）。無ければ ID をそのまま使う。 */
+      descriptions?: Record<string, string>;
+    }
   | { name: string; type: 'score'; prompt: string }
   | { name: string; type: 'noul'; prompt: string };
 
@@ -62,13 +69,15 @@ export function resolveEndpoints(env: NodeJS.ProcessEnv = process.env): Endpoint
       const account = env[cfg.accountIdEnv];
       const token = env[cfg.tokenEnv];
       if (!account || !token) continue;
-      const model = env.JEV_WORKERS_AI_MODEL ?? cfg.workersAiModel;
-      out.push({
-        transport,
-        model,
-        url: `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`,
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const models = env.JEV_WORKERS_AI_MODEL ? [env.JEV_WORKERS_AI_MODEL] : cfg.workersAiModels;
+      for (const model of models) {
+        out.push({
+          transport,
+          model,
+          url: `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
     } else {
       const key = env.TYPESAFE_API_KEY;
       if (!key) continue;
@@ -91,16 +100,34 @@ export function isJevAvailable(env: NodeJS.ProcessEnv = process.env): boolean {
 
 // ─── Request body ───────────────────────────────────────────────
 
+/**
+ * System One のリクエスト形（Workers AI の Clef / Jev、TypeSafe 直で共通）:
+ *
+ *   { model: "clef", state: "…",
+ *     questions: {
+ *       pick:     { type: "choice", instructions: "…", criteria: { c01: "説明", c02: "説明" } },
+ *       gate_c01: { type: "noul",   instructions: "…" } } }
+ *
+ * `questions` は名前をキーにしたオブジェクトで、質問文は `instructions`。
+ * 2026-10-11 の初回本番で、配列 + `question` / `options` の形は HTTP 400 で拒否された。
+ * `model` はパスのモデル ID の末尾（`@cf/cloudflare/clef` → `clef`）。
+ */
+export function bodyModelName(model: string): string {
+  return model.split('/').pop() ?? model;
+}
+
 export function buildRequestBody(model: string, state: string, questions: JevQuestion[]) {
-  return {
-    model,
-    state,
-    questions: questions.map((q) =>
-      q.type === 'choice'
-        ? { name: q.name, type: 'choice', question: q.prompt, options: q.options }
-        : { name: q.name, type: q.type, question: q.prompt },
-    ),
-  };
+  const qs: Record<string, Record<string, unknown>> = {};
+  for (const q of questions) {
+    if (q.type === 'choice') {
+      const criteria: Record<string, string> = {};
+      for (const opt of q.options) criteria[opt] = q.descriptions?.[opt] ?? opt;
+      qs[q.name] = { type: 'choice', instructions: q.prompt, criteria };
+    } else {
+      qs[q.name] = { type: q.type, instructions: q.prompt };
+    }
+  }
+  return { model: bodyModelName(model), state, questions: qs };
 }
 
 // ─── Response normalization ─────────────────────────────────────
@@ -161,7 +188,11 @@ export function normalizeAnswers(
 
     if (q.type === 'choice') {
       const distribution: Record<string, number> = {};
-      const probs = asRecord(a.probabilities) ?? asRecord(a.distribution);
+      const probs =
+        asRecord(a.probabilities) ??
+        asRecord(a.distribution) ??
+        asRecord(a.choice) ??
+        asRecord(a.criteria);
       if (probs) {
         for (const [opt, p] of Object.entries(probs)) {
           const pp = prob(p);
@@ -181,9 +212,10 @@ export function normalizeAnswers(
       out[q.name] = { type: 'choice', value, probability: p, distribution };
     } else if (q.type === 'score') {
       const v = prob(a.score ?? a.value ?? a.answer);
+      // score は「0 が最低レベル」の確率加重値で返ることがある（0〜1 に収まらない値は捨てる）
       if (v != null) out[q.name] = { type: 'score', value: v };
     } else {
-      const v = prob(a.probability ?? a.p ?? a.value ?? a.answer);
+      const v = prob(a.noul ?? a.probability ?? a.p ?? a.value ?? a.answer);
       if (v != null) out[q.name] = { type: 'noul', probability: v };
     }
   }
@@ -220,17 +252,21 @@ export async function askJev(
         body: JSON.stringify(buildRequestBody(ep.model, state, questions)),
       });
       if (!res.ok) {
-        notes.push(`jev(${ep.transport}): HTTP ${res.status}`);
+        // 400 の理由が分からないと、次の本番まで直せない。本文の先頭だけ残す（鍵は含まれない）。
+        const detail = (await res.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 300);
+        notes.push(
+          `jev(${ep.transport}:${ep.model}): HTTP ${res.status}${detail ? ` ${detail}` : ''}`,
+        );
         continue;
       }
       const answers = normalizeAnswers(await res.json(), questions);
       if (Object.keys(answers).length === 0) {
-        notes.push(`jev(${ep.transport}): 型どおりの答えが1つも無かった`);
+        notes.push(`jev(${ep.transport}:${ep.model}): 型どおりの答えが1つも無かった`);
         continue;
       }
       return { transport: ep.transport, model: ep.model, answers, latencyMs: Date.now() - started };
     } catch (err) {
-      notes.push(`jev(${ep.transport}): ${(err as Error).message?.substring(0, 80)}`);
+      notes.push(`jev(${ep.transport}:${ep.model}): ${(err as Error).message?.substring(0, 80)}`);
     }
   }
   return null;

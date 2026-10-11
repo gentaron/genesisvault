@@ -158,27 +158,73 @@ describe('Jev client — type checking on our side', () => {
     expect(answers).toEqual({});
   });
 
-  it('resolves Workers AI first, TypeSafe second, nothing without keys', () => {
+  it('resolves Workers AI (Clef, then Clef-flash) first, TypeSafe second, nothing without keys', () => {
     expect(resolveEndpoints({})).toEqual([]);
     const eps = resolveEndpoints({
       CLOUDFLARE_ACCOUNT_ID: 'acc',
       CLOUDFLARE_API_TOKEN: 'tok',
       TYPESAFE_API_KEY: 'k',
     });
-    expect(eps.map((e) => e.transport)).toEqual(['workers-ai', 'typesafe']);
+    expect(eps.map((e) => `${e.transport}:${e.model}`)).toEqual([
+      'workers-ai:@cf/cloudflare/clef',
+      'workers-ai:@cf/cloudflare/clef-flash',
+      'typesafe:jev',
+    ]);
     expect(eps[0].url).toBe(
-      'https://api.cloudflare.com/client/v4/accounts/acc/ai/run/@cf/typesafe/jev',
+      'https://api.cloudflare.com/client/v4/accounts/acc/ai/run/@cf/cloudflare/clef',
     );
   });
 
-  it('declares choices as the candidate id enum only', () => {
-    const body = buildRequestBody('jev', 'state', questions);
-    expect(body.questions[0]).toEqual({
-      name: 'pick',
-      type: 'choice',
-      question: 'p',
-      options: ['c01', 'c02'],
+  it('lets JEV_WORKERS_AI_MODEL pin a single model (e.g. Jev itself)', () => {
+    const eps = resolveEndpoints({
+      CLOUDFLARE_ACCOUNT_ID: 'acc',
+      CLOUDFLARE_API_TOKEN: 'tok',
+      JEV_WORKERS_AI_MODEL: 'typesafe/jev',
     });
+    expect(eps.map((e) => e.model)).toEqual(['typesafe/jev']);
+  });
+
+  it('builds the System One body: keyed questions, instructions, criteria map', () => {
+    const body = buildRequestBody('@cf/cloudflare/clef', 'state', [
+      {
+        name: 'pick',
+        type: 'choice',
+        prompt: 'p',
+        options: ['c01', 'c02'],
+        descriptions: { c01: '[読書] a' },
+      },
+      { name: 'gate_c01', type: 'noul', prompt: 'g' },
+    ]);
+    expect(body).toEqual({
+      model: 'clef',
+      state: 'state',
+      questions: {
+        pick: { type: 'choice', instructions: 'p', criteria: { c01: '[読書] a', c02: 'c02' } },
+        gate_c01: { type: 'noul', instructions: 'g' },
+      },
+    });
+  });
+
+  it('reads the Workers AI answer shape (answers.x.noul / answers.x.choice map)', () => {
+    const answers = normalizeAnswers(
+      {
+        result: {
+          answers: {
+            pick: { choice: { c01: 0.25, c02: 0.75 } },
+            gate_c01: { noul: 0.62 },
+          },
+        },
+        success: true,
+      },
+      questions,
+    );
+    expect(answers.pick).toEqual({
+      type: 'choice',
+      value: 'c02',
+      probability: 0.75,
+      distribution: { c01: 0.25, c02: 0.75 },
+    });
+    expect(answers.gate_c01).toEqual({ type: 'noul', probability: 0.62 });
   });
 });
 
@@ -269,5 +315,50 @@ describe('runJuno', () => {
 
   it('returns null when the symbolic layer rejected everything', async () => {
     expect(await runJuno('2026-10-10', [], rejected, '')).toBeNull();
+  });
+});
+
+describe('appendSelectionLog / buildState', () => {
+  it('records the winner, the losers and the rejected candidates', async () => {
+    const fs = await import('node:fs/promises');
+    const os = await import('node:os');
+    const path = await import('node:path');
+    const { appendSelectionLog, buildState } = await import('../src/lib/selection/select');
+    const { accepted, rejected } = reviewCandidates(
+      generateCandidates(pulse, null, priority, 12),
+      ctx(),
+    );
+    for (const k of [
+      'CLOUDFLARE_ACCOUNT_ID',
+      'CLOUDFLARE_API_TOKEN',
+      'TYPESAFE_API_KEY',
+      'GEMINI_API_KEY',
+      'GROQ_API_KEY',
+      'CEREBRAS_API_KEY',
+      'OPENROUTER_API_KEY',
+      'HF_TOKEN',
+      'GITHUB_TOKEN',
+    ]) {
+      vi.stubEnv(k, '');
+    }
+    const result = await runJuno('2026-10-10', accepted, rejected, '');
+    if (!result) throw new Error('expected a selection');
+
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'gv-sel-'));
+    await appendSelectionLog(dir, '2026-10-10', result);
+    await appendSelectionLog(dir, '2026-10-11', result);
+    const log = await fs.readFile(path.join(dir, 'docs/selection-runs/2026-10.md'), 'utf-8');
+    expect(log.match(/^# テーマ選定ログ/gm)).toHaveLength(1);
+    expect(log).toContain('## 2026-10-10 — symbolic');
+    expect(log).toContain('落とした候補:');
+    expect(log).toContain('theme_cooldown');
+
+    const state = buildState('2026-10-10', accepted, '【今日のお金の景色】');
+    expect(state).toContain(accepted[0].id);
+    expect(state).toContain('【今日のお金の景色】');
+  });
+
+  it('returns no brief without a selection', () => {
+    expect(buildSelectionBrief(null)).toBe('');
   });
 });
