@@ -23,7 +23,15 @@ import { askJev, type JevQuestion } from '../ai/jev.js';
 import { SELECTION_CONFIG } from '../pipeline/config.js';
 import type { Rejection, ScoredCandidate } from './candidates.js';
 
-export type SelectionMethod = 'jev' | 'llm' | 'symbolic';
+/**
+ * どの係が決めたか。System One 形式のモデルでも、Jev 本体と Clef は分けて記録する
+ * （「Jev が選んだ」と書いてあるのに実際は Clef だった、を起こさないため）。
+ */
+export type SelectionMethod = 'jev' | 'clef' | 'llm' | 'symbolic';
+
+export function systemOneMethod(model: string): 'jev' | 'clef' {
+  return /jev/i.test(model) ? 'jev' : 'clef';
+}
 
 export interface RankedCandidate extends ScoredCandidate {
   neural: number | null;
@@ -185,7 +193,7 @@ export async function runJuno(
           if (g?.type === 'noul') gates[c.id] = g.probability;
         }
         neural = neuralScores(pool, pick, gates);
-        method = 'jev';
+        method = systemOneMethod(jev.model);
       } else {
         abstained = true;
         notes.push(`jev: 確信度 ${pick.probability.toFixed(2)} < ${minConf} のため棄権扱い`);

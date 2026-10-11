@@ -11,7 +11,7 @@
  *   1. `workers-ai` — Cloudflare Workers AI の無料枠（1日 10,000 Neurons）。
  *      CLOUDFLARE_ACCOUNT_ID と CLOUDFLARE_API_TOKEN だけで叩ける。課金は発生しない
  *      （無料枠を超えた分は Workers 無料プランでは単にエラーになる）。
- *   2. `typesafe`   — TypeSafe の直接 API（早期アクセス。鍵があるときだけ）。
+ *   2. `typesafe`   — TypeSafe の直接 API `POST /v1/systemone`（モデル `jev-latest`。鍵があるときだけ）。
  *
  * 応答は**こちらで型検査し直す**。宣言に無い選択肢・範囲外の数値・欠けた答えは
  * 「答えなし」として捨てる。Jev が「型エラーを原理的に起こさない」と主張して
@@ -82,11 +82,11 @@ export function resolveEndpoints(env: NodeJS.ProcessEnv = process.env): Endpoint
       const key = env.TYPESAFE_API_KEY;
       if (!key) continue;
       const base = (env.TYPESAFE_API_BASE_URL ?? 'https://api.typesafe.ai').replace(/\/$/, '');
-      const model = env.TYPESAFE_MODEL ?? 'jev';
+      const model = env.TYPESAFE_MODEL ?? 'jev-latest';
       out.push({
         transport,
         model,
-        url: `${base}/v1/decisions`,
+        url: `${base}/v1/systemone`,
         headers: { Authorization: `Bearer ${key}`, 'X-Typesafe-Model': model },
       });
     }

@@ -93,7 +93,7 @@ AI が全滅した日だけはテンプレート記事が出ます。
 | 自分の資産推移 | assetlog の公開スプレッドシート（gviz） | 無料 | 不要 |
 | 相場の地形 | [QAIZ](https://github.com/gentaron/QAIZ) の `/api/overview`（Cloudflare Workers 無料プラン） | 無料 | 不要（URL だけ） |
 | 外の景色 | Hacker News / arXiv / Stooq | 無料 | 不要 |
-| テーマ選定 | **Jev on Cloudflare Workers AI**（無料枠 1日 10,000 Neurons） | 無料 | Cloudflare のトークン |
+| テーマ選定 | **Jev 本体（TypeSafe）** → 無ければ **Clef on Cloudflare Workers AI**（無料枠 1日 10,000 Neurons） | Jev: 入力 $0.042/100万トークン・出力無料（1日の選定は数千トークン）／Clef: 無料 | `TYPESAFE_API_KEY`／Cloudflare のトークン |
 | 選定の代役 | Gemini / GitHub Models / Groq の無料枠 | 無料 | 下の表 |
 | 執筆・校正 | Gemini 無料枠 → **GitHub Models 無料枠** → Groq / Cerebras / OpenRouter `:free` / HuggingFace | 無料 | 下の表 |
 | 書き方の型 | [IDEAZ](https://github.com/gentaron/IDEAZ) の memory/（raw.githubusercontent） | 無料 | 不要 |
@@ -122,7 +122,7 @@ Workers AI の無料枠は、Jev の選定にすべて回すため、文章を�
 | Secret | `CEREBRAS_API_KEY` | 任意 | Cerebras の無料キー | 同上 |
 | Secret | `OPENROUTER_API_KEY` | 任意 | OpenRouter のキー（`:free` モデルだけを使う） | 同上 |
 | Secret | `HF_TOKEN` | 任意 | HuggingFace のトークン | 同上 |
-| Secret | `TYPESAFE_API_KEY` | 任意 | TypeSafe の早期アクセスキー（waitlist） | 審査役は Gemini が担当。選定の Jev は Cloudflare 経由で動くので影響なし |
+| Secret | `TYPESAFE_API_KEY` | **Jev 本体を使うなら必須** | TypeSafe の API キー（[docs.typesafe.ai](https://docs.typesafe.ai/api)） | テーマ選定は Jev ではなく Clef（Cloudflare）が担当する |
 | Secret | `LINEAR_API_KEY` | 任意 | Linear の API キー | 動画ブリーフが起票されない |
 | Secret | `VAIZ_DISPATCH_TOKEN` | 任意 | VAIZ を起こすための GitHub トークン | VAIZ は翌朝の定時に拾う |
 | Secret | `PUBLIC_SENTRY_DSN` / `SENTRY_AUTH_TOKEN` | 任意 | Sentry | エラー通知が来ない |
@@ -147,8 +147,9 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 
 | ログに出る文字 | 意味 |
 |---|---|
-| `method=jev` | Jev がテーマを選んだ |
-| `method=llm` / `method=symbolic` | Jev が使えず、代役が選んだ（`ℹ️ jev: ...` の行に理由が出る） |
+| `method=jev` | **Jev 本体**（TypeSafe）がテーマを選んだ |
+| `method=clef` | Jev が使えず、Cloudflare の Clef（同じ System One 形式）が選んだ |
+| `method=llm` / `method=symbolic` | 判断モデルが使えず、代役が選んだ（`ℹ️ jev(...)` の行に理由が出る） |
 | `✅ 記号の事実: ...` | assetlog（と QAIZ）が読めた |
 | `📐 IDEAZ の型を執筆陣へ渡します` | 型が書き手に渡った |
 | `📋 Falling back to template...` | **テンプレートに落ちた。2日続いたら障害** |
@@ -247,14 +248,14 @@ Jev は「型エラーは原理的に起きない」と主張していますが�
 
 経路は上から順に試します。
 
-1. **Cloudflare Workers AI**（`@cf/cloudflare/clef` → `@cf/cloudflare/clef-flash`、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`。Clef は Cloudflare 製の判断モデルで、Jev と同じ System One 形式（state + 型の決まった質問 → 確率）で答える
-2. **TypeSafe の直接 API**（`/v1/decisions`）— `TYPESAFE_API_KEY` があるときだけ
+1. **Jev 本体**（TypeSafe 公式 `POST https://api.typesafe.ai/v1/systemone`、モデル `jev-latest`）— `TYPESAFE_API_KEY` があるときだけ。ログは `method=jev`
+2. **Clef on Cloudflare Workers AI**（`@cf/cloudflare/clef` → `@cf/cloudflare/clef-flash`、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`。Clef は Cloudflare 製の判断モデルで、Jev と同じ System One 形式（state + 型の決まった質問 → 確率）で答える。ログは `method=clef`
 3. **無料 LLM チェーン** — 同じ候補 ID の enum で選ばせる
 4. **記号の順位だけ** — 何も無くても選定は止まらない
 
 モデルは `selection.jev.workersAiModels` で並べ替えられます。`JEV_WORKERS_AI_MODEL` で1つに固定もできます。TypeSafe 直のベース URL は `TYPESAFE_API_BASE_URL` で差し替えられます。
 
-> **なぜ Workers AI では Jev 本体ではなく Clef なのか。** Workers AI 上の `typesafe/jev` は、無料の Neurons 枠ではなく Unified Billing のクレジット課金になるという報告があります。「無料枠だけで回す」方針なので、既定は Cloudflare 自身の Clef にしています。Jev 本体を使うなら、TypeSafe の鍵（`TYPESAFE_API_KEY`）を入れるか、課金を承知で `workersAiModels` に `typesafe/jev` を足してください。
+> **Jev 本体の料金と、Workers AI で Clef を使う理由。** TypeSafe 直の Jev は入力 100万トークンあたり $0.042・出力無料で、1日1回の選定は数千トークンなので月に1セント未満ですが、無料枠ではありません。 Workers AI 上の `typesafe/jev` は、無料の Neurons 枠ではなく Unified Billing のクレジット課金になるという報告があります。「無料枠だけで回す」方針なので、既定は Cloudflare 自身の Clef にしています。Jev 本体を使うなら、TypeSafe の鍵（`TYPESAFE_API_KEY`）を入れるか、課金を承知で `workersAiModels` に `typesafe/jev` を足してください。
 設定は `config/pipeline.json` の `selection` にあります。詳細は [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md)。
 
 ---
@@ -334,8 +335,8 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 
 | 使い道 | どこで | 経路 | 鍵が無いとき |
 |-------|-------|------|-------------|
-| **テーマ選定** | `src/lib/selection/select.ts` → `src/lib/ai/jev.ts` | Workers AI 無料枠 → TypeSafe 直 | 無料 LLM → 記号の順位 |
-| **審査役** | `src/lib/pipeline/review.ts` → `src/lib/ai/typesafe.ts` | TypeSafe 直（`/v1/decisions`） | Gemini 等の LLM チェーンが審査 |
+| **テーマ選定** | `src/lib/selection/select.ts` → `src/lib/ai/jev.ts` | TypeSafe 直（`/v1/systemone`・`jev-latest`）→ Workers AI の Clef | 無料 LLM → 記号の順位 |
+| **審査役** | `src/lib/pipeline/review.ts` → `src/lib/ai/typesafe.ts` | TypeSafe 直（旧形式 `/v1/decisions`。**現状は機能しない**、下の既知の問題） | Gemini 等の LLM チェーンが審査 |
 
 | 項目 | 値 |
 |------|------|
@@ -435,7 +436,7 @@ API キーが入っているものだけがチェーンに入ります。チェ�
 | `cerebras-llama-3.3-70b` | Cerebras `llama-3.3-70b` | `CEREBRAS_API_KEY` | 30 RPM / 14,400 RPD |
 | `openrouter-llama` / `-qwen` / `-deepseek` | OpenRouter の `:free` モデル3種 | `OPENROUTER_API_KEY` | 20 RPM / 200 RPD |
 | `huggingface` | HF `Llama-3.3-70B-Instruct` | `HF_TOKEN` | 10 RPM / 500 RPD |
-| `typesafe-jev` | TypeSafe Jev（**審査専用**。LLM チェーンには入らない） | `TYPESAFE_API_KEY` | — |
+| `typesafe-jev` | TypeSafe Jev（**判断専用**。テーマ選定と審査。LLM チェーンには入らない） | `TYPESAFE_API_KEY` | 有料（入力 $0.042/MTok・出力無料） |
 
 テーマ選定の Jev（Workers AI 経由）は、このチェーンとは別の経路です（上の「テーマ選定」を参照）。
 
@@ -645,8 +646,9 @@ bunx biome check --write <実際に変更したファイル>
 |------|------|------|
 | CI の `Unit Tests + Coverage` が赤い | テストは全件通過。カバレッジのしきい値（行 85% / 分岐 75%）に届いていない。main では 9/5 以前から赤い。主な原因は `typesafe.ts`・`symbolic-guard.ts`・`review.ts`・`state.ts` のテスト不足 | — |
 | 品質ゲートの禁止語チェックが走っていない | `qualityGate.forbiddenTopics` がスキーマ未宣言で、Zod に落とされている。有効にするとゴールデン事例の「正常な記事」が落ちるので、禁止語の範囲を決め直すまで保留。テーマ選定だけは生の JSON から読んで候補を落としている | [LM-018](./docs/almanac/LANDMINES.md) |
+| 審査役の Jev（`typesafe.ts`）が機能しない | 旧形式（`/v1/decisions`、答えに文字列の所見や引用を要求）のまま。Jev は文字列を返さないので、この形では構造的に答えられない。審査は毎日の自動投稿にも組み込まれていない（`bun run gate` で手動実行）。Jev で審査するなら、所見を「選択肢と確率」に置き換える設計変更が要る | [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md) |
 | `tierOmega` が読まれていない | 同じ理由で、どのコードからも参照されていない | [LM-018](./docs/almanac/LANDMINES.md) |
-| 判断モデルのリクエスト形状 | 2026-10-11 の初回本番は配列形式で送って HTTP 400。名前付き `questions` + `instructions` + `criteria` の System One 形式に直した（次の本番ログで `method=jev` を確認する）。合わなくても選定は代役 LLM → 記号の順位で続く | [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md) |
+| 判断モデルの本番確認 | 2026-10-11 の初回本番は配列形式で送って HTTP 400。名前付き `questions` + `instructions` + `criteria` の System One 形式に直し、TypeSafe 直の接続先を公式の `/v1/systemone`・`jev-latest` にした。実 API での成功（`method=jev` / `method=clef`）はまだ確認していない | [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md) |
 
 ---
 

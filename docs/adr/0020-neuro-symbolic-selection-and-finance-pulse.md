@@ -85,3 +85,14 @@ Workers AI の Neurons は Jev に全部回すため、文字を書くチェー�
   `selection.jev.workersAiModels` に足すか `JEV_WORKERS_AI_MODEL` で固定する（課金は承知の上で）
 - 同じ回で、QAIZ の地域コード（`GLOBAL` / `US`）がそのまま本文に出ていた。大文字のコードを日本語に直し、
   名前にすでに地域名が入っているときは重ねないようにした
+
+## 追記2（2026-10-11）: Jev 本体を最優先にし、公式エンドポイントに合わせる
+
+- TypeSafe の公式 API は `POST https://api.typesafe.ai/v1/systemone`、モデル `jev-latest`（[API reference](https://docs.typesafe.ai/api)）。
+  選定のクライアントは `/v1/decisions`・`jev` を叩いていたので直した
+- 経路の順を **Jev 本体（TypeSafe 直）→ Clef（Workers AI 無料枠）** にした。Jev 本体は無料枠ではない
+  （入力 $0.042/MTok・出力無料。1日1回の選定なら月1セント未満）。鍵が無ければ Clef で動く
+- ログの `method` を `jev` / `clef` / `llm` / `symbolic` に分けた。System One 形式で答えたのが Jev 本体か Clef かを区別しないと、
+  「Jev が選んだ」と記録されているのに実際は Clef だった、が起きる
+- 審査役の Jev（`typesafe.ts`）は旧形式のままで、答えに文字列（所見・逐語引用）を求めている。Jev は文字列を返さないので
+  この形では構造的に機能しない。審査を Jev に任せるなら、所見を「選択肢 × 確率」に置き換える設計変更が要る（未着手）

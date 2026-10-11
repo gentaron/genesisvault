@@ -166,11 +166,12 @@ describe('Jev client — type checking on our side', () => {
       TYPESAFE_API_KEY: 'k',
     });
     expect(eps.map((e) => `${e.transport}:${e.model}`)).toEqual([
+      'typesafe:jev-latest',
       'workers-ai:@cf/cloudflare/clef',
       'workers-ai:@cf/cloudflare/clef-flash',
-      'typesafe:jev',
     ]);
-    expect(eps[0].url).toBe(
+    expect(eps[0].url).toBe('https://api.typesafe.ai/v1/systemone');
+    expect(eps[1].url).toBe(
       'https://api.cloudflare.com/client/v4/accounts/acc/ai/run/@cf/cloudflare/clef',
     );
   });
@@ -277,7 +278,8 @@ describe('runJuno', () => {
     });
     const result = await runJuno('2026-10-10', accepted, rejected, '');
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(result?.method).toBe('jev');
+    // Workers AI の既定は Clef。Jev 本体と区別して記録する
+    expect(result?.method).toBe('clef');
     expect(result?.winner.id).toBe(pickId);
   });
 
@@ -360,5 +362,14 @@ describe('appendSelectionLog / buildState', () => {
 
   it('returns no brief without a selection', () => {
     expect(buildSelectionBrief(null)).toBe('');
+  });
+});
+
+describe('method label', () => {
+  it('records Jev itself and Clef separately', async () => {
+    const { systemOneMethod } = await import('../src/lib/selection/select');
+    expect(systemOneMethod('jev-latest')).toBe('jev');
+    expect(systemOneMethod('typesafe/jev')).toBe('jev');
+    expect(systemOneMethod('@cf/cloudflare/clef')).toBe('clef');
   });
 });

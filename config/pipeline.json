@@ -204,7 +204,7 @@
         "envKey": "TYPESAFE_API_KEY",
         "rpm": 60,
         "rpd": 10000,
-        "comment": "TypeSafe AI Jev (System One Model). 文字列を生成せず構造化された確率判定のみ返すため LanguageModel にはならず、providers.ts の buildProviderChain からはスキップされる。審査パス(src/lib/pipeline/review.ts)が src/lib/ai/typesafe.ts 経由で直接呼ぶ。envKey 未設定なら自動的に既存のLLMチェーンへフォールバック（fail-soft）。入力$0.042/MTok・出力無料・70-500ms。早期アクセス中のため TYPESAFE_API_BASE_URL/TYPESAFE_MODEL は env で上書き可能。"
+        "comment": "TypeSafe AI Jev (System One Model). 文字列を生成せず構造化された確率判定のみ返すため LanguageModel にはならず、providers.ts の buildProviderChain からはスキップされる。審査パス(src/lib/pipeline/review.ts)が src/lib/ai/typesafe.ts 経由で直接呼ぶ。envKey 未設定なら自動的に既存のLLMチェーンへフォールバック（fail-soft）。入力$0.042/MTok・出力無料・70-500ms。公式エンドポイントは POST https://api.typesafe.ai/v1/systemone（モデル jev-latest）。テーマ選定（src/lib/ai/jev.ts）はこの形で呼ぶ。審査パスの typesafe.ts は旧形式（/v1/decisions・文字列の答え）のままで、Jev は文字列を返さないため現状は機能しない（README の既知の問題）。TYPESAFE_API_BASE_URL/TYPESAFE_MODEL は env で上書き可能。"
       }
     ]
   },
@@ -564,15 +564,15 @@
     }
   },
   "selection": {
-    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。判断モデルは Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef（Cloudflare 製・Jev と同じ System One 形式）を最優先。Workers AI 上の typesafe/jev は Unified Billing のクレジット課金になるという報告があるため既定に入れない、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
+    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。判断モデルは TypeSafe の Jev 本体（POST /v1/systemone・jev-latest。TYPESAFE_API_KEY があるとき）を最優先し、無ければ Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef（Cloudflare 製・Jev と同じ System One 形式）。Workers AI 上の typesafe/jev は Unified Billing のクレジット課金になるという報告があるため既定に入れない。ログの method は jev / clef / llm / symbolic で、実際に決めたモデルを区別する、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
     "enabled": true,
     "maxCandidates": 12,
     "themeCooldownDays": 2,
     "maxTitleSimilarity": 0.6,
     "jev": {
       "transports": [
-        "workers-ai",
-        "typesafe"
+        "typesafe",
+        "workers-ai"
       ],
       "workersAiModels": [
         "@cf/cloudflare/clef",
