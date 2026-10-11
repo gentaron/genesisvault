@@ -271,3 +271,48 @@ describe('runJuno', () => {
     expect(await runJuno('2026-10-10', [], rejected, '')).toBeNull();
   });
 });
+
+describe('appendSelectionLog / buildState', () => {
+  it('records the winner, the losers and the rejected candidates', async () => {
+    const fs = await import('node:fs/promises');
+    const os = await import('node:os');
+    const path = await import('node:path');
+    const { appendSelectionLog, buildState } = await import('../src/lib/selection/select');
+    const { accepted, rejected } = reviewCandidates(
+      generateCandidates(pulse, null, priority, 12),
+      ctx(),
+    );
+    for (const k of [
+      'CLOUDFLARE_ACCOUNT_ID',
+      'CLOUDFLARE_API_TOKEN',
+      'TYPESAFE_API_KEY',
+      'GEMINI_API_KEY',
+      'GROQ_API_KEY',
+      'CEREBRAS_API_KEY',
+      'OPENROUTER_API_KEY',
+      'HF_TOKEN',
+      'GITHUB_TOKEN',
+    ]) {
+      vi.stubEnv(k, '');
+    }
+    const result = await runJuno('2026-10-10', accepted, rejected, '');
+    if (!result) throw new Error('expected a selection');
+
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'gv-sel-'));
+    await appendSelectionLog(dir, '2026-10-10', result);
+    await appendSelectionLog(dir, '2026-10-11', result);
+    const log = await fs.readFile(path.join(dir, 'docs/selection-runs/2026-10.md'), 'utf-8');
+    expect(log.match(/^# テーマ選定ログ/gm)).toHaveLength(1);
+    expect(log).toContain('## 2026-10-10 — symbolic');
+    expect(log).toContain('落とした候補:');
+    expect(log).toContain('theme_cooldown');
+
+    const state = buildState('2026-10-10', accepted, '【今日のお金の景色】');
+    expect(state).toContain(accepted[0].id);
+    expect(state).toContain('【今日のお金の景色】');
+  });
+
+  it('returns no brief without a selection', () => {
+    expect(buildSelectionBrief(null)).toBe('');
+  });
+});
