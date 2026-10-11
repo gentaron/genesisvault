@@ -16,7 +16,7 @@ Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト�
 
 1. **外を見る。** AI の話題と相場の地合いを集める
 2. **お金を見る。** QAIZ（相場の地形）と assetlog（自分の資産推移）を読む
-3. **テーマを決める。** 判断AI の **Jev** と決定論の規則を組み合わせて、今日の1本を選ぶ（ニューロシンボリック）
+3. **テーマを決める。** 判断モデルの **Clef**（Jev と同じ形式の Cloudflare 製モデル）と決定論の規則を組み合わせて、今日の1本を選ぶ（ニューロシンボリック）。書いた原稿も Clef が審査する
 4. **書く。** IDEAZ の型で書いて、決定論の検査と審査役を通ったものだけを公開する
 
 **課金される口は1つもありません。** API の無料枠と、鍵の要らない公開データだけで回ります。
@@ -63,7 +63,7 @@ flowchart TD
   T[VE-010 Tessa<br/>外の景色<br/>HN / arXiv / Stooq] --> K
   K[VE-011 Kaia<br/>お金の景色<br/>assetlog + QAIZ] --> V
   V[VE-004 Vera → VE-007 Edda<br/>継続性台帳] --> J
-  J{VE-012 Juno<br/>ニューロシンボリック選定<br/>記号の規則 × Jev}
+  J{VE-012 Juno<br/>ニューロシンボリック選定<br/>記号の規則 + EmbeddingGemma × Clef}
   J -->|選べなかった日だけ| N[VE-005 Nova<br/>テーマ残高で選ぶ]
   J --> L
   N --> L
@@ -72,13 +72,14 @@ flowchart TD
   W --> G1[継続性ゲート<br/>逆行なら1度だけ書き直し]
   G1 --> I[VE-006 Iris<br/>校正]
   I --> G2[品質ゲート + 継続性ゲート<br/>決定論]
-  G2 -->|合格| P[公開・コミット<br/>VE-008 Mira が台帳を更新]
+  G2 -->|合格| CR{Clef 審査<br/>yes/no と読みやすさ<br/>不合格なら1度だけ書き直し}
+  CR --> P[公開・コミット<br/>VE-008 Mira が台帳を更新]
   G2 -->|不合格| F[テンプレート記事]
   P --> R[VE-009 Runa<br/>動画ブリーフを Linear へ]
 ```
 
 どの段が落ちても記事は止まりません。財務が取れなければ財務なしで書きます。
-Jev が使えなければ無料 LLM が選び、それも無ければ記号の順位だけで選びます。
+Clef が使えなければ無料 LLM が選び、それも無ければ記号の順位だけで選びます。
 AI が全滅した日だけはテンプレート記事が出ます。
 
 > **テンプレート記事が2日続いたら障害です。** テンプレートは止まらないための保険で、毎日の出力ではありません。
@@ -93,7 +94,8 @@ AI が全滅した日だけはテンプレート記事が出ます。
 | 自分の資産推移 | assetlog の公開スプレッドシート（gviz） | 無料 | 不要 |
 | 相場の地形 | [QAIZ](https://github.com/gentaron/QAIZ) の `/api/overview`（Cloudflare Workers 無料プラン） | 無料 | 不要（URL だけ） |
 | 外の景色 | Hacker News / arXiv / Stooq | 無料 | 不要 |
-| テーマ選定 | **Jev 本体（TypeSafe）** → 無ければ **Clef on Cloudflare Workers AI**（無料枠 1日 10,000 Neurons） | Jev: 入力 $0.042/100万トークン・出力無料（1日の選定は数千トークン）／Clef: 無料 | `TYPESAFE_API_KEY`／Cloudflare のトークン |
+| テーマ選定・原稿審査 | **Clef on Cloudflare Workers AI**（Cloudflare 製の判断モデル。Jev と同じ System One 形式） | 無料（Workers AI の無料枠 1日 10,000 Neurons。Workers Free は超過しても課金されずエラーになるだけ） | Cloudflare のトークン |
+| 既出の言い換えチェック | **EmbeddingGemma on Workers AI**（`@cf/google/embeddinggemma-300m`） | 無料（同じ無料枠） | Cloudflare のトークン |
 | 選定の代役 | Gemini / GitHub Models / Groq の無料枠 | 無料 | 下の表 |
 | 執筆・校正 | Gemini 無料枠 → **GitHub Models 無料枠** → Groq / Cerebras / OpenRouter `:free` / HuggingFace | 無料 | 下の表 |
 | 書き方の型 | [IDEAZ](https://github.com/gentaron/IDEAZ) の memory/（raw.githubusercontent） | 無料 | 不要 |
@@ -101,7 +103,7 @@ AI が全滅した日だけはテンプレート記事が出ます。
 
 GitHub Models は、Actions に最初からある `GITHUB_TOKEN` だけで呼べます（ワークフローに `models: read` を付けてあります）。登録する鍵は増えません。
 
-Workers AI の無料枠は、Jev の選定にすべて回すため、文章を書くチェーンには入れていません。
+Workers AI の無料枠は、Clef（選定・審査）と EmbeddingGemma（既出チェック）に回すため、文章を書くチェーンには入れていません。
 `workers-ai` の SDK は配線済みなので、載せたくなったら `config/pipeline.json` に追記するだけで済みます。
 
 ---
@@ -115,14 +117,14 @@ Workers AI の無料枠は、Jev の選定にすべて回すため、文章を�
 | 種類 | Name | 必須度 | 中身 | 無いとどうなる |
 |------|------|--------|------|---------------|
 | Secret | `GEMINI_API_KEY` | **ほぼ必須** | [Google AI Studio](https://aistudio.google.com) の無料キー | メインの書き手が使えない |
-| Secret | `CLOUDFLARE_ACCOUNT_ID` | **推奨** | Cloudflare の Account ID（Workers & Pages の画面右側） | Jev が呼ばれない（選定は LLM か記号の順位になる） |
+| Secret | `CLOUDFLARE_ACCOUNT_ID` | **推奨** | Cloudflare の Account ID（Workers & Pages の画面右側） | Clef が呼ばれない（選定は LLM か記号の順位、審査なし、既出チェックは字面だけ） |
 | Secret | `CLOUDFLARE_API_TOKEN` | **推奨** | My Profile → API Tokens → テンプレート「Workers AI」で作成 | 同上 |
 | Variable | `QAIZ_BASE_URL` | 推奨 | `https://qaiz.〇〇.workers.dev`（末尾の `/` なし） | QAIZ を読まない（assetlog だけで動く） |
 | Secret | `GROQ_API_KEY` | 任意 | Groq の無料キー | 書き手の予備が減る |
 | Secret | `CEREBRAS_API_KEY` | 任意 | Cerebras の無料キー | 同上 |
 | Secret | `OPENROUTER_API_KEY` | 任意 | OpenRouter のキー（`:free` モデルだけを使う） | 同上 |
 | Secret | `HF_TOKEN` | 任意 | HuggingFace のトークン | 同上 |
-| Secret | `TYPESAFE_API_KEY` | **Jev 本体を使うなら必須** | TypeSafe の API キー（[docs.typesafe.ai](https://docs.typesafe.ai/api)） | テーマ選定は Jev ではなく Clef（Cloudflare）が担当する |
+| Secret | `TYPESAFE_API_KEY` | **不要（入れない）** | TypeSafe の Jev 本体のキー。Jev 本体は有料（入力 $0.042/MTok）なので、完全無料の構成では使わない | — |
 | Secret | `LINEAR_API_KEY` | 任意 | Linear の API キー | 動画ブリーフが起票されない |
 | Secret | `VAIZ_DISPATCH_TOKEN` | 任意 | VAIZ を起こすための GitHub トークン | VAIZ は翌朝の定時に拾う |
 | Secret | `PUBLIC_SENTRY_DSN` / `SENTRY_AUTH_TOKEN` | 任意 | Sentry | エラー通知が来ない |
@@ -147,11 +149,13 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 
 | ログに出る文字 | 意味 |
 |---|---|
-| `method=jev` | **Jev 本体**（TypeSafe）がテーマを選んだ |
-| `method=clef` | Jev が使えず、Cloudflare の Clef（同じ System One 形式）が選んだ |
+| `method=clef` | **Clef**（判断モデル）がテーマを選んだ。これが正常 |
+| `method=jev` | Jev 本体が選んだ（有料経路を明示的に足したときだけ） |
 | `method=llm` / `method=symbolic` | 判断モデルが使えず、代役が選んだ（`ℹ️ jev(...)` の行に理由が出る） |
 | `✅ 記号の事実: ...` | assetlog（と QAIZ）が読めた |
 | `📐 IDEAZ の型を執筆陣へ渡します` | 型が書き手に渡った |
+| `🧬 意味の既出チェック（EmbeddingGemma）: ✅` | 言い換えの既出チェックが動いた |
+| `⚖️  Clef Review:` の下の ✅ / ❌ | Clef が原稿を審査した（記録は `docs/gate-runs/YYYY-MM.md`） |
 | `📋 Falling back to template...` | **テンプレートに落ちた。2日続いたら障害** |
 
 その日の記事がすでにあるときは、実行しても最初の段階で止まります（冪等）。
@@ -168,7 +172,7 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 | 2 | VE-011 | **Kaia Brennan** (Treasurer) | QAIZ と assetlog を読み、変化率と記号の事実に落とす（財務パルス） |
 | 3 | VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（金額・継続日数・年数・冊数）を抜き出す |
 | 4 | VE-005 | **Nova Harmon** (Balancer) | テーマ残高を分析する。Juno が選べなかった日だけテーマを選ぶ |
-| 5 | VE-012 | **Juno Albrecht** (Arbiter) | 記号の規則と Jev を組み合わせて、今日の1本を決める（ニューロシンボリック選定） |
+| 5 | VE-012 | **Juno Albrecht** (Arbiter) | 記号の規則（EmbeddingGemma の意味チェック込み）と Clef を組み合わせて、今日の1本を決める（ニューロシンボリック選定） |
 | 6 | VE-001 | **Lena Strauss** (CEO) | トピック・切り口・タイトルを決める（IDEAZ のタイトル規格） |
 | 7 | VE-003 | **Chloe Verdant** (SEO) | タグ・キーワード・メタディスクリプションを作る |
 | 8 | VE-002 | **Sophia Nightingale** (Writer) | 本文を書く（IDEAZ の型・2,500〜4,800字） |
@@ -216,13 +220,13 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 
 ---
 
-## テーマ選定（VE-012 Juno × Jev）— ニューロシンボリック
+## テーマ選定（VE-012 Juno × Clef）— ニューロシンボリック
 
 文章を生成する LLM に選ばせると、規則違反の候補を選んでも、それらしい理由を書けてしまいます。
 選定は判断であって文章ではありません。だから「規則を守る部分」はコードに、「どれが良いかの判断」は判断専用のモデルに分けています。
 
 ```
-記号側（決定論・LLM なし）                     神経側（Jev）
+記号側（決定論・LLM なし）                     神経側（Clef）
 ─────────────────────────                    ─────────────────────────
 1. 候補を作る                                  4. Choice: 生き残った候補 ID の中から1つ選ぶ
    財務の記号 / 技術の話題 / テーマ残高              （選択肢に無い ID は返せない）
@@ -231,31 +235,31 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 3. 特徴量
    不足度 0.4 / 顕著さ 0.35 / 新しさ 0.25
                     ╲                         ╱
-                     6. 融合: final = 0.45·記号 + 0.55·Jev
-                        Jev の確信度が 0.55 未満なら棄権扱い → 記号の順位で決める
+                     6. 融合: final = 0.45·記号 + 0.55·Clef
+                        Clef の確信度が 0.55 未満なら棄権扱い → 記号の順位で決める
 ```
 
 | 段 | 中身 | 実装 |
 |----|------|------|
 | 候補生成 | 財務の記号ごとの企画（`FINANCE_RULES`）、トレンドの技術トピック最大3件、テーマ残高の不足上位4件 | `src/lib/selection/candidates.ts` |
 | 硬い規則 | 未知のテーマ／禁止語（`qualityGate.forbiddenTopics`）／直近2日に使ったテーマ／既出見出し（このブログと note の公開済み867本）との bigram 類似度 0.6 以上／同じ企画の重複 | 同上 |
-| 神経 | Jev に Choice（どれを書くか）と Noul（関門を埋められるか）を問う | `src/lib/ai/jev.ts` |
-| 融合 | 加重和。確信度が低い Jev は棄権扱い（選択的予測） | `src/lib/selection/select.ts` |
+| 神経 | Clef に Choice（どれを書くか）と Noul（関門を埋められるか）を問う | `src/lib/ai/jev.ts` |
+| 融合 | 加重和。確信度が低い Clef は棄権扱い（選択的予測） | `src/lib/selection/select.ts` |
 | 記録 | 採用・負けた候補・落とした候補を全部残す | `docs/selection-runs/YYYY-MM.md` |
 
-Jev の答えは、そのままは信じません。受け取る側で型検査をやり直します。宣言に無い選択肢や範囲外の確率は捨てます。
-Jev は「型エラーは原理的に起きない」と主張していますが、それを確かめるのは受け取る側の仕事です（INV-013 と同じ考え方）。
+判断モデルの答えは、そのままは信じません。受け取る側で型検査をやり直します。宣言に無い選択肢や範囲外の確率は捨てます。
+Clef / Jev は「型エラーは原理的に起きない」と主張していますが、それを確かめるのは受け取る側の仕事です（INV-013 と同じ考え方）。
 
 経路は上から順に試します。
 
-1. **Jev 本体**（TypeSafe 公式 `POST https://api.typesafe.ai/v1/systemone`、モデル `jev-latest`）— `TYPESAFE_API_KEY` があるときだけ。ログは `method=jev`
-2. **Clef on Cloudflare Workers AI**（`@cf/cloudflare/clef` → `@cf/cloudflare/clef-flash`、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`。Clef は Cloudflare 製の判断モデルで、Jev と同じ System One 形式（state + 型の決まった質問 → 確率）で答える。ログは `method=clef`
+1. **Clef on Cloudflare Workers AI**（`@cf/cloudflare/clef` 27B → `@cf/cloudflare/clef-flash` 9B、無料枠）— `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_API_TOKEN`。Clef は Cloudflare 製の判断モデルで、Jev と同じ System One 形式（state + 型の決まった質問 → 確率）で答える。ログは `method=clef`
+2. （任意・有料）**Jev 本体**（TypeSafe `POST /v1/systemone`、`jev-latest`）— 既定では使わない。足すなら `selection.jev.transports` に `typesafe` を明示する
 3. **無料 LLM チェーン** — 同じ候補 ID の enum で選ばせる
 4. **記号の順位だけ** — 何も無くても選定は止まらない
 
 モデルは `selection.jev.workersAiModels` で並べ替えられます。`JEV_WORKERS_AI_MODEL` で1つに固定もできます。TypeSafe 直のベース URL は `TYPESAFE_API_BASE_URL` で差し替えられます。
 
-> **Jev 本体の料金と、Workers AI で Clef を使う理由。** TypeSafe 直の Jev は入力 100万トークンあたり $0.042・出力無料で、1日1回の選定は数千トークンなので月に1セント未満ですが、無料枠ではありません。 Workers AI 上の `typesafe/jev` は、無料の Neurons 枠ではなく Unified Billing のクレジット課金になるという報告があります。「無料枠だけで回す」方針なので、既定は Cloudflare 自身の Clef にしています。Jev 本体を使うなら、TypeSafe の鍵（`TYPESAFE_API_KEY`）を入れるか、課金を承知で `workersAiModels` に `typesafe/jev` を足してください。
+> **完全無料にするため、判断モデルは Clef。** TypeSafe の Jev 本体は入力 100万トークンあたり $0.042（出力無料）で、無料枠がありません。 Workers AI 上の `typesafe/jev` は、無料の Neurons 枠ではなく Unified Billing のクレジット課金になるという報告があります。「無料枠だけで回す」方針なので、既定は Cloudflare 自身の Clef にしています。Jev 本体を使うなら、TypeSafe の鍵（`TYPESAFE_API_KEY`）を入れるか、課金を承知で `workersAiModels` に `typesafe/jev` を足してください。
 設定は `config/pipeline.json` の `selection` にあります。詳細は [ADR-0020](./docs/adr/0020-neuro-symbolic-selection-and-finance-pulse.md)。
 
 ---
@@ -327,16 +331,16 @@ bun run gate             # 実際の原稿を審査（差し戻し時は .gate-q
 
 詳細は [ADR-0016](./docs/adr/0016-the-enclosure.md)。
 
-### Jev の2つの使い道
+### 判断モデル（Clef / Jev）の使い道
 
-2026/9/15 に TypeSafe AI が公開した **Jev** は、文字列を生成しない「System One Model」です。
-入力の文章を読んで、構造化された型安全な判定と確信度だけを返します（[TypeSafe AI ブログ](https://typesafe.ai/blog/introducing-system-one-models-and-jev)）。
-このリポジトリでは、判断が要る2か所でだけ使います。
+2026/9/15 に TypeSafe AI が公開した **Jev** は、文字列を生成しない「System One Model」です。入力の文章を読んで、型の決まった判定と確信度だけを返します（[TypeSafe AI ブログ](https://typesafe.ai/blog/introducing-system-one-models-and-jev)）。
+2026/10/1 に Cloudflare が、同じ形式で答えるオープンな判断モデル **Clef**（27B）と **Clef-flash**（9B）を Workers AI に載せました。このリポジトリは、無料枠で動く **Clef** を判断が要る場面で使います。
 
 | 使い道 | どこで | 経路 | 鍵が無いとき |
 |-------|-------|------|-------------|
-| **テーマ選定** | `src/lib/selection/select.ts` → `src/lib/ai/jev.ts` | TypeSafe 直（`/v1/systemone`・`jev-latest`）→ Workers AI の Clef | 無料 LLM → 記号の順位 |
-| **審査役** | `src/lib/pipeline/review.ts` → `src/lib/ai/typesafe.ts` | TypeSafe 直（旧形式 `/v1/decisions`。**現状は機能しない**、下の既知の問題） | Gemini 等の LLM チェーンが審査 |
+| **テーマ選定** | `src/lib/selection/select.ts` → `src/lib/ai/jev.ts` | Clef（Workers AI 無料枠） | 無料 LLM → 記号の順位 |
+| **原稿審査（毎日）** | `src/lib/pipeline/clef-review.ts` | Clef（Workers AI 無料枠）。yes/no 5問 + 読みやすさ1問 | 審査なしとして記録し、公開は続ける |
+| 審査役（手動の `bun run gate`） | `src/lib/pipeline/review.ts` → `src/lib/ai/typesafe.ts` | 旧形式（`/v1/decisions`）のまま。**判断モデルでは機能しない** | Gemini 等の LLM チェーンが審査 |
 
 | 項目 | 値 |
 |------|------|
@@ -438,7 +442,7 @@ API キーが入っているものだけがチェーンに入ります。チェ�
 | `huggingface` | HF `Llama-3.3-70B-Instruct` | `HF_TOKEN` | 10 RPM / 500 RPD |
 | `typesafe-jev` | TypeSafe Jev（**判断専用**。テーマ選定と審査。LLM チェーンには入らない） | `TYPESAFE_API_KEY` | 有料（入力 $0.042/MTok・出力無料） |
 
-テーマ選定の Jev（Workers AI 経由）は、このチェーンとは別の経路です（上の「テーマ選定」を参照）。
+テーマ選定と原稿審査の Clef（Workers AI 経由）は、このチェーンとは別の経路です（上の「テーマ選定」を参照）。
 
 **役割ごとのルーティング**（`config/pipeline.json` の `routing.byAgent`。各行の理由は `why` に書いてあります）
 
@@ -510,7 +514,7 @@ API キーが入っているものだけがチェーンに入ります。チェ�
 | [HuggingFace](https://huggingface.co/) | `Llama-3.3-70B-Instruct`。サーバーレス無料枠 |
 | Multi-Agent Pipeline | 12エージェント。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/` |
 | Finance Pulse | VE-011 Kaia。assetlog（gviz）と QAIZ を読み、変化率と記号の事実を出す。金額は持たない（ADR-0020） |
-| Neuro-Symbolic Selection | VE-012 Juno。記号の規則で候補を絞り、Jev の Choice / Noul と融合する。確信度が低ければ棄権扱い（ADR-0020） |
+| Neuro-Symbolic Selection | VE-012 Juno。記号の規則（字面と EmbeddingGemma の意味）で候補を絞り、Clef の Choice / Noul と融合する。確信度が低ければ棄権扱い（ADR-0020） |
 | IDEAZ Format | `prompts/ideaz/` の型を見出し単位で組み立てて、Lena / Sophia / Iris に渡す |
 | Trend Radar | VE-010 Tessa。HN / arXiv / Stooq。API キー不要・fail-soft（ADR-0018） |
 | Continuity Gate | 金額・継続日数・年数・冊数の逆行を決定論で検出する。原稿・校正後・テンプレートの3か所で確認（ADR-0018） |

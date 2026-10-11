@@ -4,14 +4,15 @@
  * Jev は文字列を生成しない。状態（state）を読んで、こちらが先に宣言した型の
  * 質問にだけ答える。プリミティブは3つ:
  *   - choice … 宣言した選択肢（最大255）のどれか + 各選択肢の確率
- *   - score  … 0〜1 の連続値
+ *   - score  … 順序つきレベルのどこにいるか（こちらで 0〜1 に正規化する）
  *   - noul   … yes/no が真である確率
  *
- * 経路は2本。上から順に試す（config の selection.jev.transports）:
- *   1. `workers-ai` — Cloudflare Workers AI の無料枠（1日 10,000 Neurons）。
+ * 経路は2本。上から順に試す（config の selection.jev.transports。既定は `workers-ai` だけ）:
+ *   1. `workers-ai` — Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef。
  *      CLOUDFLARE_ACCOUNT_ID と CLOUDFLARE_API_TOKEN だけで叩ける。課金は発生しない
  *      （無料枠を超えた分は Workers 無料プランでは単にエラーになる）。
- *   2. `typesafe`   — TypeSafe の直接 API `POST /v1/systemone`（モデル `jev-latest`。鍵があるときだけ）。
+ *   2. `typesafe`   — TypeSafe の Jev 本体 `POST /v1/systemone`（モデル `jev-latest`）。**有料**
+ *      （入力 $0.042/MTok）なので既定の transports には入れていない。足すときは config に明示する。
  *
  * 応答は**こちらで型検査し直す**。宣言に無い選択肢・範囲外の数値・欠けた答えは
  * 「答えなし」として捨てる。Jev が「型エラーを原理的に起こさない」と主張して
@@ -35,7 +36,13 @@ export type JevQuestion =
       /** 選択肢ごとの説明（Workers AI の `criteria` マップに入る）。無ければ ID をそのまま使う。 */
       descriptions?: Record<string, string>;
     }
-  | { name: string; type: 'score'; prompt: string }
+  | {
+      name: string;
+      type: 'score';
+      prompt: string;
+      /** 低い順のレベル名（`criteria` の配列に入る）。答えは 0〜1 に正規化して返す。 */
+      levels?: string[];
+    }
   | { name: string; type: 'noul'; prompt: string };
 
 export type JevAnswer =
@@ -123,6 +130,8 @@ export function buildRequestBody(model: string, state: string, questions: JevQue
       const criteria: Record<string, string> = {};
       for (const opt of q.options) criteria[opt] = q.descriptions?.[opt] ?? opt;
       qs[q.name] = { type: 'choice', instructions: q.prompt, criteria };
+    } else if (q.type === 'score' && q.levels?.length) {
+      qs[q.name] = { type: 'score', instructions: q.prompt, criteria: q.levels };
     } else {
       qs[q.name] = { type: q.type, instructions: q.prompt };
     }
@@ -211,9 +220,15 @@ export function normalizeAnswers(
       if (p == null) continue;
       out[q.name] = { type: 'choice', value, probability: p, distribution };
     } else if (q.type === 'score') {
-      const v = prob(a.score ?? a.value ?? a.answer);
-      // score は「0 が最低レベル」の確率加重値で返ることがある（0〜1 に収まらない値は捨てる）
-      if (v != null) out[q.name] = { type: 'score', value: v };
+      // score は「0 が最低レベル」の確率加重値（0〜レベル数-1）で返る。レベル数で 0〜1 に直す。
+      const raw = Number(a.score ?? a.value ?? a.answer);
+      const top = (q.levels?.length ?? 0) - 1;
+      let v: number | null = null;
+      if (Number.isFinite(raw)) {
+        if (top > 0 && raw >= 0 && raw <= top) v = raw / top;
+        else v = prob(raw);
+      }
+      if (v != null) out[q.name] = { type: 'score', value: Math.round(v * 1000) / 1000 };
     } else {
       const v = prob(a.noul ?? a.probability ?? a.p ?? a.value ?? a.answer);
       if (v != null) out[q.name] = { type: 'noul', probability: v };
@@ -237,7 +252,7 @@ export async function askJev(
   const endpoints = resolveEndpoints(env);
   if (endpoints.length === 0) {
     notes.push(
-      'jev: 経路の鍵が未設定（CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN か TYPESAFE_API_KEY）',
+      'jev: 判断モデルの鍵が未設定（Clef なら CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN）',
     );
     return null;
   }

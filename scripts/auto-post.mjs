@@ -76,13 +76,19 @@ import {
 } from '../src/lib/finance/pulse.ts';
 import { generateCandidates, reviewCandidates } from '../src/lib/selection/candidates.ts';
 import { runJuno, buildSelectionBrief, appendSelectionLog } from '../src/lib/selection/select.ts';
+import { semanticNearest } from '../src/lib/selection/semantic.ts';
+import {
+  runClefReview,
+  buildClefFeedback,
+  appendClefReviewLog,
+} from '../src/lib/pipeline/clef-review.ts';
 import {
   isIdeazFormat,
   buildIdeazWriterBrief,
   buildIdeazTitleRules,
   buildIdeazEditorRules,
 } from '../src/lib/format/ideaz.ts';
-import { SELECTION_CONFIG } from '../src/lib/pipeline/config.ts';
+import { SELECTION_CONFIG, CLEF_REVIEW_CONFIG } from '../src/lib/pipeline/config.ts';
 import rawPipelineConfig from '../config/pipeline.json' with { type: 'json' };
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
@@ -468,6 +474,7 @@ async function main() {
   const filename = `${todayISO()}-${slug}.md`;
 
   let ceoPlan, seoData, finalBody;
+  const clefVerdicts = [];
 
   // ── VE-012 Juno (Arbiter): ニューロシンボリックなテーマ選定 ────────
   //
@@ -484,11 +491,24 @@ async function main() {
       } catch { /* 既出見出しの写しが無くても選定は続ける */ }
 
       const candidates = generateCandidates(financePulse, trendRadar, priorityList, SELECTION_CONFIG.maxCandidates);
+      const recentPosts = [...pastArticles]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map(a => ({ date: a.date, title: a.title }));
+
+      // EmbeddingGemma（Workers AI 無料枠）で、言い換えの既出を意味で見分ける。取れなければ字面だけで続ける。
+      const semanticNotes = [];
+      const semantic = await semanticNearest(
+        candidates,
+        [...recentPosts.map(p => p.title), ...publishedTitles],
+        semanticNotes,
+      );
+      console.log(`  🧬 意味の既出チェック（EmbeddingGemma）: ${semantic ? '✅' : `⏭️ ${semanticNotes.join(' / ') || '無効'}`}`);
+
       const { accepted, rejected } = reviewCandidates(candidates, {
         priority: priorityList,
-        recentPosts: [...pastArticles]
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map(a => ({ date: a.date, title: a.title })),
+        recentPosts,
+        semantic: semantic ?? undefined,
+        maxSemanticSimilarity: SELECTION_CONFIG.semantic.maxSimilarity,
         publishedTitles,
         // qualityGate.forbiddenTopics はスキーマ未宣言で PIPELINE_CONFIG からは落ちる（LM-018）。
         // 選定では生の JSON から読んで、禁止語を含む候補を記号側で落とす。
@@ -673,6 +693,52 @@ async function main() {
     logAgent('SYSTEM', 'ContinuityGate', 'passed', `${ledger?.facts.length ?? 0} canon facts checked`);
     console.log('');
 
+    // ── Clef 審査（判断モデル・Workers AI 無料枠） ─────────────────
+    //
+    // yes/no の確率と順序レベルだけで審査し、合否は閾値が決める。不合格なら
+    // 落ちた項目だけを指摘して1度だけ書き直させ、書き直しも決定論ゲートを通す。
+    const reviewBrief = [
+      selectionBrief,
+      `テーマ: ${ceoPlan.theme}\nトピック: ${ceoPlan.topic}\n切り口: ${ceoPlan.angle}`,
+    ].filter(Boolean).join('\n');
+    console.log('⚖️  Clef Review: 判断モデルで原稿を審査しています…');
+    let verdict = await runClefReview(reviewBrief, ceoPlan.title, finalBody);
+    clefVerdicts.push(verdict);
+    const failedCount = v => v.checks.filter(c => !c.passed).length;
+    if (!verdict.available) {
+      console.log(`   ⏭️  審査なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）`);
+    } else {
+      for (const c of verdict.checks) {
+        console.log(`   ${c.passed ? '✅' : '❌'} ${c.label}: ${c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
+      }
+      if (!verdict.passed) {
+        console.warn('   ⚠️  Clef 審査で不合格。落ちた項目だけを指摘して書き直します');
+        const rewritten = await runSophia(
+          ceoPlan,
+          seoData,
+          styleSamples,
+          [selectionSection, continuityBrief].filter(Boolean).join('\n\n'),
+          trendBrief,
+          buildClefFeedback(verdict),
+          format.writer,
+        );
+        if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0) {
+          const second = await runClefReview(reviewBrief, ceoPlan.title, rewritten);
+          clefVerdicts.push(second);
+          if (second.passed || (second.available && failedCount(second) < failedCount(verdict))) {
+            finalBody = rewritten;
+            verdict = second;
+            console.log(`   ↩️  書き直し版を採用（${second.passed ? '合格' : '不合格項目が減った'}）`);
+          }
+        }
+      }
+      logAgent('SYSTEM', 'ClefReview', verdict.passed ? 'passed' : 'failed', verdict.checks.filter(c => !c.passed).map(c => c.id).join(','));
+      if (!verdict.passed && CLEF_REVIEW_CONFIG.mode === 'enforce') {
+        throw new Error(`Clef review failed: ${verdict.checks.filter(c => !c.passed).map(c => c.id).join(', ')}`);
+      }
+    }
+    console.log('');
+
   } catch (err) {
     logAgent('SYSTEM', 'Pipeline', 'error', undefined, err.message);
     console.error(`❌ Agent Pipeline Error: ${err.message}`);
@@ -759,6 +825,11 @@ ${cleanBody}
 
   // Phase η: Append agent telemetry summary to public log
   await appendTelemetrySummary(`${todayISO()}-${slug}`);
+  if (clefVerdicts.length > 0) {
+    try {
+      await appendClefReviewLog(ROOT_DIR, todayISO(), ceoPlan.title, clefVerdicts);
+    } catch { /* 記録の失敗で公開は止めない */ }
+  }
 
   // ── VE-008 Mira (Recorder): 投稿した記事の確定事実を台帳へ記録・更新 ──
   if (ledger) {

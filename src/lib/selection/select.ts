@@ -163,7 +163,9 @@ export async function runJuno(
   rejected: Rejection[],
   context: string,
 ): Promise<SelectionResult | null> {
-  console.log('\n⚖️  [VE-012] Juno Albrecht (Arbiter): 記号で絞った候補を Jev に判定させています…');
+  console.log(
+    '\n⚖️  [VE-012] Juno Albrecht (Arbiter): 記号で絞った候補を判断モデル（Clef / Jev）に判定させています…',
+  );
   const notes: string[] = [];
   if (accepted.length === 0) {
     console.log(`  ⚠️  記号の規則を通った候補がありません（落ちた候補 ${rejected.length}件）`);

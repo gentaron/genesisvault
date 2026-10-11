@@ -186,9 +186,7 @@ export const TrendsConfigSchema = z.object({
     lookbackDays: z.number().int().positive(),
     /** 変化率がこの幅の内側なら「横ばい」と呼ぶ（%）。 */
     flatBandPct: z.number().positive(),
-    symbols: z
-      .array(z.object({ symbol: z.string().min(1), label: z.string().min(1) }))
-      .min(1),
+    symbols: z.array(z.object({ symbol: z.string().min(1), label: z.string().min(1) })).min(1),
   }),
 });
 
@@ -266,6 +264,17 @@ export const SelectionConfigSchema = z.object({
     symbolic: z.number().min(0),
     neural: z.number().min(0),
   }),
+  /** EmbeddingGemma（Workers AI）で、言い換えの既出を意味で見分ける。 */
+  semantic: z.object({
+    enabled: z.boolean(),
+    model: z.string().min(1),
+    /** 1回の要求に入れる文の数。 */
+    batchSize: z.number().int().min(1).max(100),
+    /** 比べる既出見出しの上限（新しい順）。無料枠の Neurons を食べすぎないため。 */
+    maxPastTitles: z.number().int().min(1),
+    /** これ以上意味が近い候補は落とす（0〜1）。 */
+    maxSimilarity: z.number().min(0).max(1),
+  }),
   /** Jev が使えない日に、無料の LLM チェーンで選び直すか。 */
   llmFallback: z.boolean(),
   auditLogDir: z.string().min(1),
@@ -275,6 +284,28 @@ export const SelectionConfigSchema = z.object({
  * 書き方の型。`ideaz` は IDEAZ の memory/ を正本にした型（関門の一文・
  * シグナル5つ・ノイズ6つ・タイトル規格・文体・読みやすさ）を使う。
  */
+/**
+ * Clef 審査（src/lib/pipeline/clef-review.ts）。判断モデルに yes/no と順序レベルだけで
+ * 原稿を審査させ、合否はここの閾値で決める。
+ */
+export const ClefReviewConfigSchema = z.object({
+  comment: z.string().optional(),
+  enabled: z.boolean(),
+  /** advisory: 1回書き直し、だめでも記録して公開 / enforce: だめなら公開しない */
+  mode: z.enum(['advisory', 'enforce']),
+  thresholds: z.object({
+    /** veto 項目（題材・投資助言・実額）の最低確率。 */
+    veto: z.number().min(0).max(1),
+    /** その他の yes/no 項目の最低確率。 */
+    noul: z.number().min(0).max(1),
+    /** score 項目（0〜1 に正規化）の最低値。 */
+    score: z.number().min(0).max(1),
+    /** veto 以外で、いくつまで落ちても合格にするか。 */
+    maxSoftFailures: z.number().int().min(0),
+  }),
+  auditLogDir: z.string().min(1),
+});
+
 export const FormatConfigSchema = z.object({
   comment: z.string().optional(),
   profile: z.enum(['ideaz', 'diary']),
@@ -311,6 +342,7 @@ export const PipelineConfigSchema = z.object({
   finance: FinanceConfigSchema,
   selection: SelectionConfigSchema,
   format: FormatConfigSchema,
+  clefReview: ClefReviewConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -326,6 +358,7 @@ export type TrendsConfig = z.infer<typeof TrendsConfigSchema>;
 export type FinanceConfig = z.infer<typeof FinanceConfigSchema>;
 export type SelectionConfig = z.infer<typeof SelectionConfigSchema>;
 export type FormatConfig = z.infer<typeof FormatConfigSchema>;
+export type ClefReviewConfig = z.infer<typeof ClefReviewConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -481,7 +514,8 @@ export function checkConfigIntegrity(config: PipelineConfig): string[] {
     seenSymbols.add(entry.symbol);
   }
   // 日次ジョブの中で走るので、上限時間 × ソース数が現実的な範囲に収まること。
-  const sourceCount = tr.tech.queries.length + tr.tech.arxivCategories.length + tr.market.symbols.length;
+  const sourceCount =
+    tr.tech.queries.length + tr.tech.arxivCategories.length + tr.market.symbols.length;
   if (tr.timeoutMs * sourceCount > 120_000) {
     problems.push(
       `trends の最悪待ち時間が ${Math.round((tr.timeoutMs * sourceCount) / 1000)}秒 になります。` +
@@ -557,3 +591,4 @@ export const TRENDS_CONFIG: TrendsConfig = PIPELINE_CONFIG.trends;
 export const FINANCE_CONFIG: FinanceConfig = PIPELINE_CONFIG.finance;
 export const SELECTION_CONFIG: SelectionConfig = PIPELINE_CONFIG.selection;
 export const FORMAT_CONFIG: FormatConfig = PIPELINE_CONFIG.format;
+export const CLEF_REVIEW_CONFIG: ClefReviewConfig = PIPELINE_CONFIG.clefReview;

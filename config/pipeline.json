@@ -564,14 +564,13 @@
     }
   },
   "selection": {
-    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。判断モデルは TypeSafe の Jev 本体（POST /v1/systemone・jev-latest。TYPESAFE_API_KEY があるとき）を最優先し、無ければ Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef（Cloudflare 製・Jev と同じ System One 形式）。Workers AI 上の typesafe/jev は Unified Billing のクレジット課金になるという報告があるため既定に入れない。ログの method は jev / clef / llm / symbolic で、実際に決めたモデルを区別する、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
+    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの字面の類似・EmbeddingGemma で測った意味の類似・禁止語）で落とし、特徴量を付ける。神経側は判断モデル Clef（Cloudflare 製・Jev と同じ System One 形式）が、生き残った候補の Choice / Noul にだけ答える。融合は weights の加重和で、確信度が minConfidence 未満なら棄権扱い。すべて Cloudflare Workers AI の無料枠（1日 10,000 Neurons。Workers Free は超過しても課金されずエラーになるだけ）で動く。TypeSafe の Jev 本体は有料（入力 $0.042/MTok）なので transports の既定に入れない。Clef が使えなければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める。ログの method は jev / clef / llm / symbolic で、実際に決めたモデルを区別する。",
     "enabled": true,
     "maxCandidates": 12,
     "themeCooldownDays": 2,
     "maxTitleSimilarity": 0.6,
     "jev": {
       "transports": [
-        "typesafe",
         "workers-ai"
       ],
       "workersAiModels": [
@@ -587,6 +586,13 @@
       "symbolic": 0.45,
       "neural": 0.55
     },
+    "semantic": {
+      "enabled": true,
+      "model": "@cf/google/embeddinggemma-300m",
+      "batchSize": 50,
+      "maxPastTitles": 200,
+      "maxSimilarity": 0.9
+    },
     "llmFallback": true,
     "auditLogDir": "docs/selection-runs"
   },
@@ -597,5 +603,17 @@
     "upstream": "https://raw.githubusercontent.com/gentaron/IDEAZ/main/memory/",
     "minChars": 2500,
     "maxChars": 4800
+  },
+  "clefReview": {
+    "comment": "Clef 審査。既存の審査役（review.ts）は所見の文章と逐語引用を求めるため、文字列を返さない判断モデル（Jev / Clef）では答えられない。ここでは yes/no の確率と順序レベルだけで問い、合否は閾値で決める（INV-013）。veto（題材のすり替え・投資助言・実額）は加重しない。advisory は1回書き直して、それでも不合格なら記録して公開を続ける。enforce は公開しない。Clef が使えない日は『審査なし』として記録し、公開は止めない。",
+    "enabled": true,
+    "mode": "advisory",
+    "thresholds": {
+      "veto": 0.5,
+      "noul": 0.5,
+      "score": 0.5,
+      "maxSoftFailures": 1
+    },
+    "auditLogDir": "docs/gate-runs"
   }
 }
