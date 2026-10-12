@@ -40,7 +40,10 @@ jobs:
         continue-on-error: true
         run: bun scripts/sync-ideaz.mjs
 
-      - name: Run Multi-Agent Pipeline (Tessa → Kaia → Juno[Jev] → Lena → Sophia[IDEAZ] → Iris)
+      # 今日の記事が既にある日（手動実行の後など）も 0 秒で抜けない。二重投稿だけを止め、
+      # Tessa・Kaia・台帳・Juno の選定・Clef の事後審査は毎回通す（観測モード）。
+      # 全工程の ✅/⚠️/❌/⏭️ と理由は Job Summary に表で出る。
+      - name: Run Multi-Agent Pipeline (Tessa → Kaia → Juno[Clef] → Lena → Sophia[IDEAZ] → Iris → Clef審査)
         env:
           # GitHub Models（無料）。Actions に最初からある token。
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -83,7 +86,19 @@ jobs:
           # 見るのはステージ済みの差分だけ。未ステージの変更（bun install が書き換えた
           # bun.lock など）で「変更あり」と判断すると、記事を書かなかった日に空の
           # git commit が走って失敗する（2026-10-11 の手動再実行 #246 で発生）。
-          git diff --staged --quiet || (git commit -m "New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline" && git push)
+          if git diff --staged --quiet; then
+            echo "変更なし — コミットしません"
+          else
+            # 観測モードの日は記事を書いていない。コミット名で区別する。
+            if git diff --staged --name-only | grep -q '^src/content/posts/'; then
+              msg="New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline"
+            else
+              msg="chore: 観測ログ $(date +'%Y-%m-%d') — 財務パルス・選定・Clef 審査"
+            fi
+            git commit -m "$msg"
+            # 同時刻に別の実行が押していても落ちないよう、1回だけ取り込み直して押す。
+            git push || (git pull --rebase && git push)
+          fi
 
       # ── Phase μ — hand the article to VAIZ through Linear ──────
       #
@@ -129,6 +144,20 @@ jobs:
       # UTC cron. Without VAIZ_DISPATCH_TOKEN this step is skipped and the
       # cron still picks the brief up — the nudge is an optimisation, not
       # a dependency.
+      # 黙って skipped にしない。飛ばした理由を Job Summary に書く。
+      - name: Explain why VAIZ nudge is skipped
+        if: steps.brief.outputs.created != 'true' || env.VAIZ_DISPATCH_TOKEN == ''
+        env:
+          CREATED: ${{ steps.brief.outputs.created }}
+        run: |
+          if [ "$CREATED" != "true" ]; then
+            reason="新しい動画ブリーフが無い（既に Linear へ送信済み、または今日は記事を書いていない）"
+          else
+            reason="VAIZ_DISPATCH_TOKEN が未設定（VAIZ は 22:00 UTC の定期実行で拾うので実害なし）"
+          fi
+          echo "⏭️ VAIZ への即時通知: $reason"
+          echo "- ⏭️ VAIZ への即時通知: $reason" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Nudge VAIZ to pick it up now
         if: steps.brief.outputs.created == 'true' && env.VAIZ_DISPATCH_TOKEN != ''
         run: |

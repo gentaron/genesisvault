@@ -186,7 +186,18 @@ export const TrendsConfigSchema = z.object({
     lookbackDays: z.number().int().positive(),
     /** 変化率がこの幅の内側なら「横ばい」と呼ぶ（%）。 */
     flatBandPct: z.number().positive(),
-    symbols: z.array(z.object({ symbol: z.string().min(1), label: z.string().min(1) })).min(1),
+    /** Stooq が空の日の代替（Yahoo Finance chart API、鍵不要）。 */
+    fallbackEndpoint: z.string().url().optional(),
+    symbols: z
+      .array(
+        z.object({
+          symbol: z.string().min(1),
+          label: z.string().min(1),
+          /** fallbackEndpoint 側のシンボル（例 ^GSPC）。無ければ代替しない。 */
+          yahoo: z.string().min(1).optional(),
+        }),
+      )
+      .min(1),
   }),
 });
 

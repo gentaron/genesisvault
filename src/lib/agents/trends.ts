@@ -186,6 +186,35 @@ export function parseStooqCsv(csv: string): DailyBar[] {
   return bars.sort((a, b) => a.date.localeCompare(b.date));
 }
 
+/**
+ * Yahoo Finance の chart API（`/v8/finance/chart/{symbol}`、鍵不要）を終値の系列にする。
+ * Stooq が空の本文を返す日（2026-10 時点で毎日）の代替。終値が null の日（休場・未確定）は捨てる。
+ */
+export function parseYahooChart(body: string): DailyBar[] {
+  let parsed: {
+    chart?: {
+      result?: { timestamp?: number[]; indicators?: { quote?: { close?: (number | null)[] }[] } }[];
+    };
+  };
+  try {
+    parsed = JSON.parse(body);
+  } catch {
+    return [];
+  }
+  const r = parsed.chart?.result?.[0];
+  const ts = r?.timestamp ?? [];
+  const closes = r?.indicators?.quote?.[0]?.close ?? [];
+  const bars: DailyBar[] = [];
+  ts.forEach((t, i) => {
+    const value = closes[i];
+    if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return;
+    bars.push({ date: new Date(t * 1000).toISOString().slice(0, 10), close: value });
+  });
+  // 同じ日付が2本来ることがある（場中の最新値）。後のほうを残す。
+  const byDate = new Map(bars.map((b) => [b.date, b]));
+  return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
 function pctChange(from: number, to: number): number | null {
   if (!Number.isFinite(from) || from === 0) return null;
   return Math.round(((to - from) / from) * 1000) / 10; // 小数第1位まで
@@ -256,8 +285,14 @@ function dedupeByTitle(signals: TechSignal[]): TechSignal[] {
  * AI・最先端技術の話題を集める。
  * ソースごとに独立して失敗させる（片方が落ちても、もう片方は使う）。
  */
+export interface CollectOptions {
+  /** arXiv の再試行までの待ち（既定 3 秒。arXiv の利用規約の間隔）。テストでは 0。 */
+  retryDelayMs?: number;
+}
+
 export async function collectTechSignals(
   now = new Date(),
+  opts: CollectOptions = {},
 ): Promise<{ signals: TechSignal[]; notes: string[] }> {
   const cfg = TRENDS_CONFIG;
   const notes: string[] = [];
@@ -283,7 +318,13 @@ export async function collectTechSignals(
     const url =
       `${cfg.tech.arxivEndpoint}?search_query=cat:${encodeURIComponent(category)}` +
       `&sortBy=submittedDate&sortOrder=descending&max_results=${cfg.tech.maxSignals}`;
-    const body = await fetchText(url, cfg.timeoutMs);
+    // arXiv は遅く、連続アクセスに 3 秒の間隔を求める。長めに待ち、1回だけ間を空けて再試行する。
+    const arxivTimeout = Math.max(cfg.timeoutMs, 20_000);
+    let body = await fetchText(url, arxivTimeout);
+    if (body === null) {
+      await new Promise((r) => setTimeout(r, opts.retryDelayMs ?? 3_000));
+      body = await fetchText(url, arxivTimeout);
+    }
     if (body === null) {
       notes.push(`arXiv 取得失敗: ${category}`);
       continue;
@@ -312,18 +353,19 @@ export async function collectMarketSignals(
       `${cfg.market.endpoint}?s=${encodeURIComponent(entry.symbol)}&i=d` +
       `&d1=${compact(from)}&d2=${compact(now)}`;
     const body = await fetchText(url, cfg.timeoutMs);
-    if (body === null) {
-      notes.push(`相場データ取得失敗: ${entry.label}`);
-      continue;
+    let bars = body === null ? [] : parseStooqCsv(body);
+    // Stooq が空なら Yahoo Finance の chart API（鍵不要）で取り直す。
+    if (bars.length === 0 && entry.yahoo && cfg.market.fallbackEndpoint) {
+      const yUrl = `${cfg.market.fallbackEndpoint.replace(/\/$/, '')}/${encodeURIComponent(entry.yahoo)}?range=3mo&interval=1d`;
+      const yBody = await fetchText(yUrl, cfg.timeoutMs);
+      bars = yBody === null ? [] : parseYahooChart(yBody);
+      if (bars.length > 0) notes.push(`相場データは Yahoo で代替: ${entry.label}`);
     }
-    const summary = summarizeSeries(
-      entry.symbol,
-      entry.label,
-      parseStooqCsv(body),
-      cfg.market.flatBandPct,
-    );
+    const summary = summarizeSeries(entry.symbol, entry.label, bars, cfg.market.flatBandPct);
     if (summary === null) {
-      notes.push(`相場データが空: ${entry.label}`);
+      notes.push(
+        `相場データ取得失敗: ${entry.label}（Stooq${entry.yahoo ? '・Yahoo' : ''}とも空）`,
+      );
       continue;
     }
     signals.push(summary);
@@ -335,15 +377,21 @@ export async function collectMarketSignals(
 /**
  * レーダー1回ぶん。片方でも取れなかったら degraded を立てるが、例外は投げない。
  */
-export async function collectTrendRadar(now = new Date()): Promise<TrendRadar> {
-  const tech = await collectTechSignals(now);
+export async function collectTrendRadar(
+  now = new Date(),
+  opts: CollectOptions = {},
+): Promise<TrendRadar> {
+  const tech = await collectTechSignals(now, opts);
   const market = await collectMarketSignals(now);
   const notes = [...tech.notes, ...market.notes];
   return {
     capturedAt: isoDate(now),
     tech: tech.signals,
     market: market.signals,
-    degraded: tech.signals.length === 0 || market.signals.length === 0 || notes.length > 0,
+    degraded:
+      tech.signals.length === 0 ||
+      market.signals.length === 0 ||
+      notes.some((n) => !n.includes('で代替')),
     notes,
   };
 }

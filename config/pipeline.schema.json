@@ -584,6 +584,10 @@
               "type": "number",
               "exclusiveMinimum": 0
             },
+            "fallbackEndpoint": {
+              "type": "string",
+              "format": "uri"
+            },
             "symbols": {
               "minItems": 1,
               "type": "array",
@@ -595,6 +599,10 @@
                     "minLength": 1
                   },
                   "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "yahoo": {
                     "type": "string",
                     "minLength": 1
                   }

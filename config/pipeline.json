@@ -434,7 +434,7 @@
     "ledgerFile": "data/video-briefs.json"
   },
   "trends": {
-    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
+    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足、空なら Yahoo Finance chart API で代替。どちらも鍵不要）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
     "enabled": true,
     "timeoutMs": 8000,
     "cacheFile": "data/trend-radar.json",
@@ -461,21 +461,26 @@
       "symbols": [
         {
           "symbol": "^spx",
-          "label": "S&P500"
+          "label": "S&P500",
+          "yahoo": "^GSPC"
         },
         {
           "symbol": "^nkx",
-          "label": "日経平均"
+          "label": "日経平均",
+          "yahoo": "^N225"
         },
         {
           "symbol": "usdjpy",
-          "label": "ドル円"
+          "label": "ドル円",
+          "yahoo": "JPY=X"
         },
         {
           "symbol": "btcusd",
-          "label": "ビットコイン"
+          "label": "ビットコイン",
+          "yahoo": "BTC-USD"
         }
-      ]
+      ],
+      "fallbackEndpoint": "https://query1.finance.yahoo.com/v8/finance/chart"
     }
   },
   "tierOmega": {

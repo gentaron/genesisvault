@@ -248,12 +248,14 @@ export async function appendSelectionLog(
   rootDir: string,
   today: string,
   result: SelectionResult,
+  /** 見出しに添える注記（例: 観測モードの「観測のみ」）。 */
+  label = '',
 ): Promise<void> {
   const dir = path.join(rootDir, SELECTION_CONFIG.auditLogDir);
   const file = path.join(dir, `${today.slice(0, 7)}.md`);
   const lines = [
     '',
-    `## ${today} — ${result.method}${result.abstained ? '（神経側は棄権）' : ''}`,
+    `## ${today} — ${result.method}${result.abstained ? '（神経側は棄権）' : ''}${label ? ` [${label}]` : ''}`,
     '',
     `- 採用: ${result.winner.id} [${result.winner.theme}] ${result.winner.hook}`,
     `- 確信度: ${result.confidence == null ? '—' : result.confidence.toFixed(2)} / 経路: ${result.transport ?? '—'}`,

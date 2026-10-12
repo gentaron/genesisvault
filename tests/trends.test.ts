@@ -26,6 +26,7 @@ import {
   parseArxiv,
   parseHackerNews,
   parseStooqCsv,
+  parseYahooChart,
   saveTrendRadar,
   summarizeSeries,
   type TrendRadar,
@@ -172,7 +173,7 @@ describe('fetchText', () => {
 describe('collection is fail-soft', () => {
   it('records a note per dead source and never throws', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
-    const radar = await collectTrendRadar(new Date('2026-08-05T00:00:00Z'));
+    const radar = await collectTrendRadar(new Date('2026-08-05T00:00:00Z'), { retryDelayMs: 0 });
     expect(radar.tech).toEqual([]);
     expect(radar.market).toEqual([]);
     expect(radar.degraded).toBe(true);
@@ -189,7 +190,7 @@ describe('collection is fail-soft', () => {
     );
     const market = await collectMarketSignals(new Date('2026-08-05T00:00:00Z'));
     expect(market.signals.length).toBeGreaterThan(0);
-    const tech = await collectTechSignals(new Date('2026-08-05T00:00:00Z'));
+    const tech = await collectTechSignals(new Date('2026-08-05T00:00:00Z'), { retryDelayMs: 0 });
     expect(tech.signals).toEqual([]);
     expect(tech.notes.length).toBeGreaterThan(0);
   });
@@ -273,5 +274,73 @@ describe('radar snapshot', () => {
     expect(isRadarFresh({ ...RADAR, capturedAt: '2026-07-01' }, now)).toBe(false);
     expect(isRadarFresh(null, now)).toBe(false);
     expect(isRadarFresh({ ...RADAR, capturedAt: 'nonsense' }, now)).toBe(false);
+  });
+});
+
+// ─── Yahoo fallback / arXiv retry ───────────────────────────────
+
+const YAHOO = JSON.stringify({
+  chart: {
+    result: [
+      {
+        timestamp: Array.from({ length: 25 }, (_, i) => Date.UTC(2026, 6, i + 1, 20) / 1000),
+        indicators: {
+          quote: [{ close: Array.from({ length: 25 }, (_, i) => (i === 3 ? null : 200 + i)) }],
+        },
+      },
+    ],
+  },
+});
+
+describe('parseYahooChart', () => {
+  it('reads closes, drops null (holiday) bars and sorts by date', () => {
+    const bars = parseYahooChart(YAHOO);
+    expect(bars).toHaveLength(24);
+    expect(bars[0]).toEqual({ date: '2026-07-01', close: 200 });
+    expect(bars.at(-1)).toEqual({ date: '2026-07-25', close: 224 });
+  });
+
+  it('returns nothing for a broken body', () => {
+    expect(parseYahooChart('not json')).toEqual([]);
+    expect(parseYahooChart('{"chart":{"result":null}}')).toEqual([]);
+  });
+});
+
+describe('market falls back to Yahoo when Stooq is empty', () => {
+  it('uses Yahoo for every symbol and does not mark the radar degraded for it', async () => {
+    const urls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        urls.push(url);
+        if (url.includes('stooq')) return { ok: true, text: async () => '' }; // 2026-10 の実際の挙動
+        if (url.includes('yahoo')) return { ok: true, text: async () => YAHOO };
+        return { ok: false, text: async () => '' };
+      }),
+    );
+    const market = await collectMarketSignals(new Date('2026-08-05T00:00:00Z'));
+    expect(market.signals.length).toBe(4);
+    expect(market.notes.every((n) => n.includes('Yahoo で代替'))).toBe(true);
+    expect(urls.some((u) => u.includes('%5EGSPC'))).toBe(true);
+  });
+});
+
+describe('arXiv is retried once', () => {
+  it('succeeds on the second attempt', async () => {
+    let arxivCalls = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.includes('arxiv')) {
+          arxivCalls += 1;
+          if (arxivCalls === 1) throw new Error('ETIMEDOUT');
+          return { ok: true, text: async () => '<feed></feed>' };
+        }
+        return { ok: false, text: async () => '' };
+      }),
+    );
+    const tech = await collectTechSignals(new Date('2026-08-05T00:00:00Z'), { retryDelayMs: 0 });
+    expect(arxivCalls).toBe(2);
+    expect(tech.notes.some((n) => n.includes('arXiv 取得失敗'))).toBe(false);
   });
 });
