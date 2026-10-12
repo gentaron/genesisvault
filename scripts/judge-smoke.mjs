@@ -26,7 +26,7 @@ const withImage = process.argv.includes('--with-image');
 const summary = [];
 const row = (ok, name, detail) => {
   summary.push(
-    `| ${ok === true ? '✅' : ok === false ? '❌' : '⚠️'} | ${name} | ${String(detail).replace(/\|/g, '\\|').replace(/\n/g, ' ').slice(0, 300)} |`,
+    `| ${ok === true ? '✅' : ok === false ? '❌' : '⚠️'} | ${name} | ${String(detail).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ').slice(0, 300)} |`,
   );
   console.log(`${ok === true ? '✅' : ok === false ? '❌' : '⚠️'} ${name}: ${detail}`);
 };

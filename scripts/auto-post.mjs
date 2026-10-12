@@ -433,7 +433,8 @@ async function reportStages(mode) {
 
   const summaryFile = process.env.GITHUB_STEP_SUMMARY;
   if (!summaryFile) return;
-  const esc = t => t.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  // 表のセルに入れる文字列。先にバックスラッシュ、次に | をエスケープする（順番を逆にすると \| が壊れる）。
+  const esc = t => t.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
   const md = [
     `## 🧾 Genesis Vault — ${todayISO()}（${label}）`,
     '',
