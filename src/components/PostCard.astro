@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { transitionName } from '../lib/art/resolve';
+import PostArt from './PostArt.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -12,19 +14,20 @@ const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
-  weekday: 'short'
+  weekday: 'short',
 });
 ---
 
 <article class="card-hover">
   <a href={`/posts/${post.slug}`} class="block">
+    <PostArt slug={post.slug} title={title} tags={tags} variant="card" />
     <div class="post-meta">
       <time datetime={date.toISOString()}>{formattedDate}</time>
       {mood && <span class="text-lg">{mood}</span>}
       {weather && <span class="text-lg">{weather}</span>}
     </div>
 
-    <h2 class="post-title">
+    <h2 class="post-title" style={`view-transition-name: ${transitionName('title', post.slug)};`}>
       {title}
     </h2>
 

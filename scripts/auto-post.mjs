@@ -77,6 +77,7 @@ import {
 import { generateCandidates, reviewCandidates } from '../src/lib/selection/candidates.ts';
 import { runJuno, buildSelectionBrief, appendSelectionLog } from '../src/lib/selection/select.ts';
 import { semanticNearest } from '../src/lib/selection/semantic.ts';
+import { generateIllustration } from '../src/lib/art/illustrate.ts';
 import {
   runClefReview,
   buildClefFeedback,
@@ -395,6 +396,29 @@ async function auditExistingPost(filePath, dryRun) {
   }
 }
 
+/**
+ * 挿絵（Workers AI 無料枠の FLUX.1 schnell）。既にあれば描かない。失敗してもビルド時の
+ * SVG カバー絵が出るので、ここは何が起きても止めない。
+ */
+async function illustrate(slug, title, tags, dryRun) {
+  if (dryRun) {
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'skip', 'DRY_RUN');
+    return;
+  }
+  const notes = [];
+  console.log('🎨 挿絵: Workers AI（FLUX.1 schnell）で1枚描いています…');
+  const art = await generateIllustration(ROOT_DIR, slug, title, tags, notes);
+  if (art) {
+    console.log(`   ✅ ${art.url}（${Math.round(art.bytes / 1024)}KB）`);
+    logAgent('SYSTEM', 'Illustrator', 'drawn', art.url);
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'ok', `${art.url}（${Math.round(art.bytes / 1024)}KB）`);
+  } else {
+    const already = notes.includes('挿絵は既にある');
+    console.log(`   ⏭️  ${notes.join(' / ')} — SVG のカバー絵を使います`);
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', already ? 'skip' : 'warn', `${notes.join(' / ')}（SVG のカバー絵で表示）`);
+  }
+}
+
 async function reportStages(mode) {
   const label = { publish: '新規投稿', observe: '観測（記事は既にあり）', 'dry-run': 'DRY RUN' }[mode] ?? mode;
   console.log('');
@@ -667,6 +691,14 @@ async function main() {
   // ── 観測モード: 書かない日も、公開済みの今日の記事を Clef で事後審査して終える ──
   if (observeOnly) {
     await auditExistingPost(path.join(POSTS_DIR, existingPost), DRY_RUN);
+    try {
+      const raw = await fs.readFile(path.join(POSTS_DIR, existingPost), 'utf-8');
+      const title = raw.match(/^title:\s*"?(.*?)"?\s*$/m)?.[1]?.replace(/\\"/g, '"') ?? '';
+      const tags = [...(raw.match(/^tags:\s*\[(.*)\]\s*$/m)?.[1] ?? '').matchAll(/"([^"]+)"/g)].map(m => m[1]);
+      await illustrate(existingPost.replace(/\.md$/, ''), title, tags, DRY_RUN);
+    } catch (err) {
+      stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'warn', `記事を読めない: ${err.message?.substring(0, 80)}`);
+    }
     stage('VE-005〜006 Nova→Iris', '執筆・品質ゲート・継続性ゲート', 'skip', `今日の記事は既にある（${existingPost}）。二重投稿しない`);
     stage('VE-008 Mira', '台帳更新', 'skip', '新しい記事なし');
     await reportStages('observe');
@@ -966,6 +998,7 @@ ${cleanBody}
     console.log(cleanBody.substring(0, 300) + '...');
     console.log('═══════════════════════════════════════════════════');
     stage('保存', '記事ファイル', 'skip', 'DRY_RUN');
+    await illustrate('dry-run', ceoPlan.title, seoData.tags, true);
     await reportStages('dry-run');
     return;
   }
@@ -976,6 +1009,7 @@ ${cleanBody}
 
   // Phase η: Append agent telemetry summary to public log
   await appendTelemetrySummary(`${todayISO()}-${slug}`);
+  await illustrate(`${todayISO()}-${slug}`, ceoPlan.title, seoData.tags, false);
   if (clefVerdicts.length > 0) {
     try {
       await appendClefReviewLog(ROOT_DIR, todayISO(), ceoPlan.title, clefVerdicts);

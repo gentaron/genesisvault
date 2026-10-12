@@ -317,6 +317,27 @@ export const ClefReviewConfigSchema = z.object({
   auditLogDir: z.string().min(1),
 });
 
+/**
+ * 記事の挿絵（src/lib/art/）。SVG のカバー絵はビルド時に決定論で必ず作る。
+ * AI の挿絵は Workers AI の無料枠（FLUX.1 schnell）で日次パイプラインが1枚だけ作り、
+ * 取れた記事ではそちらを優先する。取れなくても何も止めない。
+ */
+export const ArtConfigSchema = z.object({
+  comment: z.string().optional(),
+  ai: z.object({
+    enabled: z.boolean(),
+    /** Workers AI のモデル ID。 */
+    model: z.string().min(1),
+    /** FLUX.1 schnell は 1〜8。少ないほど Neurons が減る。 */
+    steps: z.number().int().min(1).max(8),
+    timeoutMs: z.number().int().positive(),
+    /** public/ 配下の保存先。`<dir>/<slug>.jpg` になる。 */
+    dir: z.string().min(1),
+    /** これより大きい画像は保存しない（リポジトリを太らせない）。 */
+    maxBytes: z.number().int().positive(),
+  }),
+});
+
 export const FormatConfigSchema = z.object({
   comment: z.string().optional(),
   profile: z.enum(['ideaz', 'diary']),
@@ -354,6 +375,7 @@ export const PipelineConfigSchema = z.object({
   selection: SelectionConfigSchema,
   format: FormatConfigSchema,
   clefReview: ClefReviewConfigSchema,
+  art: ArtConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -370,6 +392,7 @@ export type FinanceConfig = z.infer<typeof FinanceConfigSchema>;
 export type SelectionConfig = z.infer<typeof SelectionConfigSchema>;
 export type FormatConfig = z.infer<typeof FormatConfigSchema>;
 export type ClefReviewConfig = z.infer<typeof ClefReviewConfigSchema>;
+export type ArtConfig = z.infer<typeof ArtConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -603,3 +626,4 @@ export const FINANCE_CONFIG: FinanceConfig = PIPELINE_CONFIG.finance;
 export const SELECTION_CONFIG: SelectionConfig = PIPELINE_CONFIG.selection;
 export const FORMAT_CONFIG: FormatConfig = PIPELINE_CONFIG.format;
 export const CLEF_REVIEW_CONFIG: ClefReviewConfig = PIPELINE_CONFIG.clefReview;
+export const ART_CONFIG: ArtConfig = PIPELINE_CONFIG.art;

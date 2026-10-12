@@ -1,0 +1,41 @@
+---
+/**
+ * 記事の挿絵。AI の挿絵（public/art/<slug>.jpg）があればそれを、無ければ
+ * slug から決定論で作る SVG のカバー絵を出す。
+ *   - card: 画像ファイルとして遅延読み込み（一覧の HTML を太らせない）
+ *   - hero: SVG はインラインで、線が描かれていく動きつき
+ * どちらも同じ view-transition-name を持たせ、一覧のカードから記事へ移るときに
+ * 同じ絵が拡大して移動する（Magic Move）。
+ */
+import { buildCoverSvg } from '../lib/art/cover';
+import { findIllustration, transitionName } from '../lib/art/resolve';
+
+interface Props {
+  slug: string;
+  title: string;
+  tags?: string[];
+  variant?: 'card' | 'hero';
+}
+
+const { slug, title, tags = [], variant = 'card' } = Astro.props;
+const image = findIllustration(slug);
+const inlineSvg = !image && variant === 'hero' ? buildCoverSvg({ slug, title, tags }) : '';
+const src = image ?? `/art/${slug}.svg`;
+const vt = transitionName('art', slug);
+---
+
+<figure class={`gv-art gv-art--${variant}`} style={`view-transition-name: ${vt};`}>
+  {inlineSvg ? (
+    <Fragment set:html={inlineSvg} />
+  ) : (
+    <img
+      src={src}
+      alt={`「${title}」の挿絵`}
+      width="1200"
+      height="630"
+      loading={variant === 'hero' ? 'eager' : 'lazy'}
+      decoding="async"
+      fetchpriority={variant === 'hero' ? 'high' : 'auto'}
+    />
+  )}
+</figure>

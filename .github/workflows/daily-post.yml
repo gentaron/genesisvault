@@ -80,7 +80,7 @@ jobs:
           git add src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
           # 財務パルス（変化率のみ）・選定ログ・IDEAZ の型の写しも。ランナーは毎回まっさらなので押さないと消える（LM-013）。
           # 1つでも無いパスがあると git add 全体が失敗するので、在るものだけを1つずつ。
-          for p in data/finance-pulse.json data/published-titles.json docs/selection-runs docs/gate-runs prompts/ideaz; do
+          for p in data/finance-pulse.json data/published-titles.json docs/selection-runs docs/gate-runs prompts/ideaz public/art; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           # 見るのはステージ済みの差分だけ。未ステージの変更（bun install が書き換えた
@@ -93,7 +93,7 @@ jobs:
             if git diff --staged --name-only | grep -q '^src/content/posts/'; then
               msg="New post: $(date +'%Y-%m-%d') — Multi-Agent AI Pipeline"
             else
-              msg="chore: 観測ログ $(date +'%Y-%m-%d') — 財務パルス・選定・Clef 審査"
+              msg="chore: 観測ログ $(date +'%Y-%m-%d') — 財務パルス・選定・Clef 審査・挿絵"
             fi
             git commit -m "$msg"
             # 同時刻に別の実行が押していても落ちないよう、1回だけ取り込み直して押す。

@@ -73,10 +73,14 @@ flowchart TD
   G1 --> I[VE-006 Iris<br/>校正]
   I --> G2[品質ゲート + 継続性ゲート<br/>決定論]
   G2 -->|合格| CR{Clef 審査<br/>yes/no と読みやすさ<br/>不合格なら1度だけ書き直し}
-  CR --> P[公開・コミット<br/>VE-008 Mira が台帳を更新]
+  CR --> P[公開・コミット<br/>VE-008 Mira が台帳を更新<br/>FLUX.1 schnell で挿絵]
   G2 -->|不合格| F[テンプレート記事]
   P --> R[VE-009 Runa<br/>動画ブリーフを Linear へ]
 ```
+
+今日の記事が既にある日（手動実行の後など）は**観測モード**です。二重投稿だけを止め、
+Tessa・Kaia・台帳・Juno の選定（記録は「観測のみ」）・公開済み記事への Clef 事後審査・挿絵は毎回通します。
+全工程の ✅/⚠️/❌/⏭️ と理由は、Actions の実行画面の **Summary** に表で出ます（[LM-020](./docs/almanac/LANDMINES.md)）。
 
 どの段が落ちても記事は止まりません。財務が取れなければ財務なしで書きます。
 Clef が使えなければ無料 LLM が選び、それも無ければ記号の順位だけで選びます。
@@ -93,9 +97,11 @@ AI が全滅した日だけはテンプレート記事が出ます。
 |------|-------|------|-----|
 | 自分の資産推移 | assetlog の公開スプレッドシート（gviz） | 無料 | 不要 |
 | 相場の地形 | [QAIZ](https://github.com/gentaron/QAIZ) の `/api/overview`（Cloudflare Workers 無料プラン） | 無料 | 不要（URL だけ） |
-| 外の景色 | Hacker News / arXiv / Stooq | 無料 | 不要 |
+| 外の景色 | Hacker News / arXiv / Stooq（空なら Yahoo Finance chart API） | 無料 | 不要 |
 | テーマ選定・原稿審査 | **Clef on Cloudflare Workers AI**（Cloudflare 製の判断モデル。Jev と同じ System One 形式） | 無料（Workers AI の無料枠 1日 10,000 Neurons。Workers Free は超過しても課金されずエラーになるだけ） | Cloudflare のトークン |
 | 既出の言い換えチェック | **EmbeddingGemma on Workers AI**（`@cf/google/embeddinggemma-300m`） | 無料（同じ無料枠） | Cloudflare のトークン |
+| 挿絵 | **FLUX.1 schnell on Workers AI**（新しい記事に1枚）。取れない記事は slug から作る SVG のカバー絵 | 無料（同じ無料枠。SVG は 0） | Cloudflare のトークン（SVG は不要） |
+| 動き | CSS だけ（View Transitions の Magic Move + スクロール連動 12 種）。[ADR-0021](./docs/adr/0021-cover-art-and-magic-move.md) | 無料 | 不要 |
 | 選定の代役 | Gemini / GitHub Models / Groq の無料枠 | 無料 | 下の表 |
 | 執筆・校正 | Gemini 無料枠 → **GitHub Models 無料枠** → Groq / Cerebras / OpenRouter `:free` / HuggingFace | 無料 | 下の表 |
 | 書き方の型 | [IDEAZ](https://github.com/gentaron/IDEAZ) の memory/（raw.githubusercontent） | 無料 | 不要 |

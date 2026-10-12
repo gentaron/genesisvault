@@ -620,5 +620,16 @@
       "maxSoftFailures": 1
     },
     "auditLogDir": "docs/gate-runs"
+  },
+  "art": {
+    "comment": "記事の挿絵。SVG のカバー絵（src/lib/art/cover.ts）はビルド時に slug から決定論で作るので、鍵もネットワークも要らず必ず出る。AI の挿絵は Workers AI 無料枠の FLUX.1 schnell（1枚およそ数十 Neurons、Clef と同じ 1日 10,000 の枠）で新しい記事に1枚だけ作り、取れたらそちらを優先する。人物は描かせない（ミナの見た目が毎回変わるため）・文字も描かせない。失敗・画像として壊れている・大きすぎる場合は保存せず SVG のまま。",
+    "ai": {
+      "enabled": true,
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "steps": 4,
+      "timeoutMs": 60000,
+      "dir": "public/art",
+      "maxBytes": 600000
+    }
   }
 }

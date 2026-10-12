@@ -1,6 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import PostArt from '../../components/PostArt.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { findIllustration, transitionName } from '../../lib/art/resolve';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => data.draft !== true);
@@ -16,11 +18,15 @@ const { title, date, mood, weather, tags, description, keywords, agents } = post
 
 const { Content } = await post.render();
 
+// AI の挿絵がある記事は、それを共有画像（OGP）にも使う。無ければ従来のプロフィール画像。
+const illustration = findIllustration(post.slug);
+const ogImage = illustration && Astro.site ? new URL(illustration, Astro.site).href : undefined;
+
 const formattedDate = new Date(date).toLocaleDateString('ja-JP', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
-  weekday: 'long'
+  weekday: 'long',
 });
 
 // 記事ページ固有の構造化データ（BlogPosting + BreadcrumbList）
@@ -74,14 +80,16 @@ const postJsonLd: Record<string, unknown>[] = Astro.site
   ogType="article"
   publishedTime={date}
   jsonLd={postJsonLd}
+  ogImage={ogImage}
 >
+  <div class="gv-progress" aria-hidden="true"></div>
   <article class="max-w-2xl mx-auto" style="max-width: 42rem; margin: 0 auto;">
     <header style="margin-bottom: 3rem; text-align: center;">
       <time datetime={date.toISOString()} class="text-sm" style="color: var(--color-gray-dark); display: block; margin-bottom: 1rem;">
         {formattedDate}
       </time>
 
-      <h1 class="page-title" style="margin-bottom: 1.5rem;">
+      <h1 class="page-title" style={`margin-bottom: 1.5rem; view-transition-name: ${transitionName('title', post.slug)};`}>
         {title}
       </h1>
 
@@ -100,6 +108,8 @@ const postJsonLd: Record<string, unknown>[] = Astro.site
         </div>
       )}
     </header>
+
+    <PostArt slug={post.slug} title={title} tags={tags} variant="hero" />
 
     <div id="post-content" data-post-index={postIndex} data-pagefind-body>
       <div class="prose-custom">

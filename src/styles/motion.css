@@ -1,0 +1,290 @@
+/*
+ * Genesis Vault — motion
+ *
+ * 使いこなせるものだけ 12 種に絞った動き + ページ間の Magic Move。
+ * すべて CSS だけで、JavaScript は1行も使わない（壊れる経路を作らない）。
+ *
+ *   Magic Move … 一覧カードの絵とタイトルが、記事ページの同じ要素へ拡大移動する。
+ *                クロスドキュメントの View Transitions（@view-transition）。対応していない
+ *                ブラウザでは、いつもどおり普通に画面が切り替わるだけ。
+ *
+ *   12 種（gv-m-* は本文・カード用、gv-art-* は挿絵の SVG 用）
+ *     1 fade-up     2 fade-in     3 slide-left   4 slide-right
+ *     5 scale-in    6 blur-in     7 clip-reveal  8 progress（読了バー）
+ *     9 art-draw   10 art-rise   11 art-float   12 art-pulse
+ *
+ * 安全策
+ *   - 動きはすべて `screen and (prefers-reduced-motion: no-preference)` の中だけで付ける。
+ *     「動きを減らす」設定の人と印刷では、最初から何も動かない（!important で止めるのではなく、
+ *     そもそも付けない）
+ *   - スクロール連動（animation-timeline）は @supports の中だけ。非対応ブラウザでは
+ *     最初から全部が見えている（「隠れたまま出てこない」を起こさない）
+ */
+
+/* ─── キーフレーム ───────────────────────────────────────────── */
+
+@keyframes gv-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gv-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes gv-slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gv-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gv-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gv-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+@keyframes gv-clip-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes gv-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes gv-art-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.2;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+@keyframes gv-art-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes gv-art-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes gv-art-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+/* ─── 挿絵 ──────────────────────────────────────────────────── */
+
+.gv-art {
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-soft-beige, #f5f1e8);
+  contain: paint;
+}
+.gv-art svg,
+.gv-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gv-art--card {
+  aspect-ratio: 1200 / 630;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+.gv-art--hero {
+  aspect-ratio: 1200 / 630;
+  border-radius: 1rem;
+  margin: 0 0 2.5rem;
+  box-shadow: 0 10px 30px -18px rgba(45, 45, 45, 0.35);
+}
+
+/* ─── 読了バー ───────────────────────────────────────────────── */
+
+.gv-progress {
+  display: none;
+}
+
+@media print {
+  .gv-progress,
+  .gv-art--card {
+    display: none;
+  }
+}
+
+/* ─── ここから下は「動いてよい」画面だけ ──────────────────────────── */
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* ─── Magic Move（ページ間） ───────────────────────────────────── */
+
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+  }
+
+  .gv-art :is(.gv-art-rise, .gv-art-float, .gv-art-pulse) {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .gv-art .gv-art-draw {
+    animation: gv-art-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  .gv-art .gv-art-rise {
+    animation: gv-art-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .gv-art .gv-art-float {
+    animation: gv-art-float 6s ease-in-out infinite;
+  }
+  .gv-art .gv-art-pulse {
+    animation: gv-art-pulse 3.2s ease-in-out infinite;
+  }
+  /* 一覧では繰り返しの動きを止める（148 枚が同時に揺れると落ち着かない）。 */
+  .gv-art--card :is(.gv-art-float, .gv-art-pulse) {
+    animation: none;
+  }
+
+  /* ─── 汎用クラス（テンプレート用。文字だけ差し替えて使う） ──────────── */
+
+  .gv-m-fade-up {
+    animation: gv-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .gv-m-fade-in {
+    animation: gv-fade-in 0.6s ease both;
+  }
+  .gv-m-slide-left {
+    animation: gv-slide-left 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .gv-m-slide-right {
+    animation: gv-slide-right 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .gv-m-scale-in {
+    animation: gv-scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .gv-m-blur-in {
+    animation: gv-blur-in 0.7s ease both;
+  }
+  .gv-m-clip-reveal {
+    animation: gv-clip-reveal 0.8s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  /* ─── スクロール連動（対応ブラウザだけ） ─────────────────────────── */
+
+  @supports (animation-timeline: view()) {
+    .prose-custom > :is(p, ul, ol, blockquote, figure, table) {
+      animation: gv-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    .prose-custom > :is(h2, h3) {
+      animation: gv-clip-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+    .gv-post-item {
+      animation: gv-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .gv-art--card .gv-art-draw,
+    .gv-art--card .gv-art-rise {
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+      animation-duration: auto;
+      animation-timing-function: linear;
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .gv-progress {
+      display: block;
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 3px;
+      z-index: 60;
+      background: linear-gradient(
+        90deg,
+        var(--color-gentle-green, #a8c5a3),
+        var(--color-lavender-mist, #c8b8db)
+      );
+      transform-origin: 0 50%;
+      animation: gv-progress linear both;
+      animation-timeline: scroll(root block);
+      pointer-events: none;
+    }
+  }
+}
