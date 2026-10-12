@@ -1,0 +1,42 @@
+# 判断 AI（Clef on Workers AI）が本番の鍵で本当に答えるかを確かめる。
+# 判断モデル周りを触った PR と、手動実行で走る。Neurons は1回あたり数十〜数百（無料枠 1日 10,000）。
+name: Judge AI smoke test (Clef / EmbeddingGemma / FLUX)
+
+on:
+  workflow_dispatch:
+    inputs:
+      with_image:
+        description: 'FLUX.1 schnell でも1枚描いて確かめる'
+        type: boolean
+        default: true
+  pull_request:
+    paths:
+      - 'src/lib/ai/jev.ts'
+      - 'src/lib/selection/**'
+      - 'src/lib/pipeline/clef-review.ts'
+      - 'src/lib/art/illustrate.ts'
+      - 'config/pipeline.json'
+      - 'scripts/judge-smoke.mjs'
+      - '.github/workflows/judge-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    # フォークからの PR には鍵が渡らないので走らせない
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile || bun install
+      - name: Ask Clef for real
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          WITH_IMAGE: ${{ github.event_name == 'pull_request' || inputs.with_image }}
+        run: bun scripts/judge-smoke.mjs $([ "$WITH_IMAGE" = "true" ] && echo --with-image)
