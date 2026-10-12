@@ -1,57 +1,101 @@
 {
-  "capturedAt": "2026-10-11",
+  "capturedAt": "2026-10-12",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Typesafe AI raises $870M at $7.5B",
-      "url": "https://typesafe.ai/blog/series-ai",
-      "score": 432,
-      "date": "2026-10-09"
+      "title": "The gap in shared understanding of LLM capability is widening",
+      "url": "https://twitter.com/karpathy/status/2109361546505966046",
+      "score": 662,
+      "date": "2026-10-11"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Let your AI agents paint big arrows, boxes and text on your screen",
-      "url": "https://github.com/franzenzenhofer/big-arrow-on-the-screen",
-      "score": 412,
-      "date": "2026-10-09"
+      "title": "QGIS enacts moratorium on AI assisted contributions",
+      "url": "https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387",
+      "score": 344,
+      "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
-      "title": "Talorys – A self-hosted personal AI agent on Cloudflare's free tier",
-      "url": "https://github.com/rociiu/talorys",
-      "score": 264,
-      "date": "2026-10-10"
+      "title": "GLM-Legal",
+      "url": "https://z.ai/blog/glm-legal",
+      "score": 309,
+      "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
-      "title": "Germany transforms former coal mines into Europe's largest lake landscape",
-      "url": "https://www.euronews.com/2026/04/14/almost-like-lake-como-germany-transforms-former-coal-mines-into-europes-largest-lake-lands",
-      "score": 209,
-      "date": "2026-10-09"
+      "title": "Why aren't AI companies being charged for hacking?",
+      "url": "https://mortoray.com/why-arent-ai-companies-being-charged-for-hacking/",
+      "score": 295,
+      "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
-      "title": "Anthropic AI model submits false tip on unsolved Philly murder, police say",
-      "url": "https://www.nbcphiladelphia.com/news/local/anthropic-ai-model-submits-false-tip-on-unsolved-philly-murder-police-say/4477051/",
-      "score": 208,
-      "date": "2026-10-09"
+      "title": "500B tokens later: Letting AI agents decompile a first-person shooter",
+      "url": "https://momo5502.com/posts/2026-10-09-game-decompilation/",
+      "score": 206,
+      "date": "2026-10-11"
     },
     {
       "source": "Hacker News",
-      "title": "What mathematicians should know about the Lean Theorem Prover: reliability & AI",
-      "url": "https://terrytao.wordpress.com/2026/10/09/what-mathematicians-should-know-about-the-lean-theorem-proverquestions-of-reliability-and-ai/",
-      "score": 196,
-      "date": "2026-10-09"
+      "title": "AI coding agents generate more code, but not more software",
+      "url": "https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/",
+      "score": 188,
+      "date": "2026-10-12"
     }
   ],
-  "market": [],
+  "market": [
+    {
+      "symbol": "^spx",
+      "label": "S&P500",
+      "close": 7807.240234375,
+      "changePct1d": -0.1,
+      "changePct5d": 0.4,
+      "sma20": 7714.14,
+      "aboveSma20": true,
+      "direction": "横ばい",
+      "asOf": "2026-10-12"
+    },
+    {
+      "symbol": "^nkx",
+      "label": "日経平均",
+      "close": 69030.921875,
+      "changePct1d": 0,
+      "changePct5d": 1.1,
+      "sma20": 66523.85,
+      "aboveSma20": true,
+      "direction": "横ばい",
+      "asOf": "2026-10-09"
+    },
+    {
+      "symbol": "usdjpy",
+      "label": "ドル円",
+      "close": 158.63999938964844,
+      "changePct1d": 0.4,
+      "changePct5d": 0.6,
+      "sma20": 157.36,
+      "aboveSma20": true,
+      "direction": "横ばい",
+      "asOf": "2026-10-12"
+    },
+    {
+      "symbol": "btcusd",
+      "label": "ビットコイン",
+      "close": 82962.953125,
+      "changePct1d": -0.9,
+      "changePct5d": -0.4,
+      "sma20": 84066.6,
+      "aboveSma20": false,
+      "direction": "横ばい",
+      "asOf": "2026-10-12"
+    }
+  ],
   "degraded": true,
   "notes": [
     "Hacker News に該当なし: robotics",
-    "arXiv 取得失敗: cs.AI",
-    "相場データが空: S&P500",
-    "相場データが空: 日経平均",
-    "相場データが空: ドル円",
-    "相場データが空: ビットコイン"
+    "相場データは Yahoo で代替: S&P500",
+    "相場データは Yahoo で代替: 日経平均",
+    "相場データは Yahoo で代替: ドル円",
+    "相場データは Yahoo で代替: ビットコイン"
   ]
 }

@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-10-11",
+  "capturedAt": "2026-10-12",
   "portfolio": {
-    "asOf": "2026-10-11",
-    "d1Pct": 0.05,
-    "d7Pct": -2.28,
-    "d30Pct": -1.68,
-    "fromHighPct": -3.05,
+    "asOf": "2026-10-13",
+    "d1Pct": -0.22,
+    "d7Pct": -2.61,
+    "d30Pct": -2.68,
+    "fromHighPct": -3.16,
     "atHigh": false,
-    "vol30Pct": 11,
-    "streak": 1,
-    "days": 512
+    "vol30Pct": 10.6,
+    "streak": -1,
+    "days": 514
   },
   "market": {
-    "generatedAt": "2026-10-11T04:01:11.321Z",
+    "generatedAt": "2026-10-12T20:16:05.626Z",
     "trend": "bull",
     "volatility": "normal",
-    "riskAppetite": "neutral",
+    "riskAppetite": "risk-on",
     "breadth": "broad-rally",
     "strongest": [
       {
-        "name": "市場全体",
-        "region": "BR",
-        "r1wPct": 14
-      },
-      {
         "name": "ソフトウェア",
-        "region": "JP",
+        "region": "日本",
         "r1wPct": 6.4
       },
       {
         "name": "エネルギー",
-        "region": "UK",
-        "r1wPct": 5.5
+        "region": "英国",
+        "r1wPct": 5.6
+      },
+      {
+        "name": "生活必需品",
+        "region": "英国",
+        "r1wPct": 5.3
       }
     ],
     "weakest": [
       {
         "name": "半導体",
-        "region": "US",
-        "r1wPct": -4.3
+        "region": "米国",
+        "r1wPct": -6.8
       },
       {
-        "name": "暗号資産",
-        "region": "GLOBAL",
-        "r1wPct": -3.6
+        "name": "半導体",
+        "region": "欧州",
+        "r1wPct": -4.8
       },
       {
-        "name": "銀行",
-        "region": "UK",
-        "r1wPct": -3.2
+        "name": "市場全体",
+        "region": "新興国",
+        "r1wPct": -3.7
       }
     ],
     "rotations": [
       {
-        "name": "ビットコイン",
-        "region": "GLOBAL",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
         "name": "米国 情報技術",
-        "region": "US",
+        "region": "米国",
         "from": "leading",
         "to": "weakening"
       },
       {
         "name": "米国 半導体",
-        "region": "US",
+        "region": "米国",
         "from": "leading",
-        "to": "weakening"
+        "to": "lagging"
       },
       {
         "name": "米国 生活必需品",
-        "region": "US",
+        "region": "米国",
         "from": "lagging",
         "to": "improving"
       },
       {
-        "name": "米国 エネルギー",
-        "region": "US",
+        "name": "米国 金融",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
+        "name": "米国 バイオテク",
+        "region": "米国",
         "from": "weakening",
-        "to": "leading"
+        "to": "lagging"
       }
     ]
   },
   "predicates": [
     "divergence.market_up_me_down",
     "market.bull",
-    "market.rotation_new_leader",
+    "market.risk_on",
     "portfolio.quiet_day"
   ],
   "degraded": false,
