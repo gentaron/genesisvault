@@ -76,13 +76,20 @@ import {
 } from '../src/lib/finance/pulse.ts';
 import { generateCandidates, reviewCandidates } from '../src/lib/selection/candidates.ts';
 import { runJuno, buildSelectionBrief, appendSelectionLog } from '../src/lib/selection/select.ts';
+import { semanticNearest } from '../src/lib/selection/semantic.ts';
+import { generateIllustration } from '../src/lib/art/illustrate.ts';
+import {
+  runClefReview,
+  buildClefFeedback,
+  appendClefReviewLog,
+} from '../src/lib/pipeline/clef-review.ts';
 import {
   isIdeazFormat,
   buildIdeazWriterBrief,
   buildIdeazTitleRules,
   buildIdeazEditorRules,
 } from '../src/lib/format/ideaz.ts';
-import { SELECTION_CONFIG } from '../src/lib/pipeline/config.ts';
+import { SELECTION_CONFIG, CLEF_REVIEW_CONFIG } from '../src/lib/pipeline/config.ts';
 import rawPipelineConfig from '../config/pipeline.json' with { type: 'json' };
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
@@ -325,6 +332,124 @@ async function analyzeThemeBalance(recentPostsLimit = 20) {
 // ═══════════════════════════════════════════════════════════════
 // Main Pipeline
 // ═══════════════════════════════════════════════════════════════
+// ─── 工程の記録 ─────────────────────────────────────────────────
+//
+// どの日も、全工程を ✅（通った）/ ⚠️（劣化して通った）/ ❌（失敗）/ ⏭️（理由つきで飛ばした）
+// のどれかで残す。「何も言わずに飛ばす」を構造的に起こさないため、工程は必ず stage() を通る。
+// 最後に表にして標準出力と GitHub の Job Summary（$GITHUB_STEP_SUMMARY）へ出す。
+const stages = [];
+const STAGE_ICON = { ok: '✅', warn: '⚠️', fail: '❌', skip: '⏭️' };
+function stage(id, name, status, detail = '') {
+  stages.push({ id, name, status, detail: String(detail ?? '') });
+}
+
+function summarizeChecks(verdict) {
+  return verdict.checks.map(c => `${c.passed ? '✓' : '✗'}${c.id}${c.value == null ? '' : ` ${Math.round(c.value * 100)}%`}`).join(' ');
+}
+
+/** 監査ログのディレクトリ内の今月のファイルに、marker で始まる見出しがもうあるか。 */
+async function hasLogEntry(dir, marker) {
+  try {
+    const text = await fs.readFile(path.join(dir, `${todayISO().slice(0, 7)}.md`), 'utf-8');
+    return text.includes(marker);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 観測モード: 公開済みの今日の記事を Clef で事後審査する。書き直しはしない（公開済みのため）。
+ * 同じ記事を同じ日に何度も審査しない（gate-runs に記録があれば ⏭️）。
+ */
+async function auditExistingPost(filePath, dryRun) {
+  let raw;
+  try {
+    raw = await fs.readFile(filePath, 'utf-8');
+  } catch (err) {
+    stage('Clef 審査', '公開済み記事の事後審査', 'warn', `記事を読めない: ${err.message?.substring(0, 80)}`);
+    return;
+  }
+  const fm = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+  const title = fm?.[1].match(/^title:\s*"?(.*?)"?\s*$/m)?.[1]?.replace(/\\"/g, '"') ?? path.basename(filePath);
+  const body = fm ? raw.slice(fm[0].length).trim() : raw;
+  const marker = `## ${todayISO()} Clef 審査 —「${title}」`;
+  if (await hasLogEntry(path.join(ROOT_DIR, CLEF_REVIEW_CONFIG.auditLogDir), marker)) {
+    stage('Clef 審査', '公開済み記事の事後審査', 'skip', `「${title}」は今日すでに審査済み（${CLEF_REVIEW_CONFIG.auditLogDir}）`);
+    return;
+  }
+  console.log(`⚖️  Clef Review（事後）: 公開済みの「${title}」を審査しています…`);
+  const verdict = await runClefReview(`題材: ${title}（公開済み記事の事後審査）`, title, body);
+  if (!verdict.available) {
+    console.log(`   ⏭️  審査なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）`);
+    stage('Clef 審査', '公開済み記事の事後審査', CLEF_REVIEW_CONFIG.enabled ? 'warn' : 'skip', verdict.notes.join(' / ') || '判断モデルが使えない');
+    return;
+  }
+  for (const c of verdict.checks) {
+    console.log(`   ${c.passed ? '✅' : '❌'} ${c.label}: ${c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
+  }
+  logAgent('SYSTEM', 'ClefReview', verdict.passed ? 'audit_passed' : 'audit_failed', summarizeChecks(verdict));
+  stage('Clef 審査', '公開済み記事の事後審査', verdict.passed ? 'ok' : 'fail', `${verdict.model} / ${summarizeChecks(verdict)}`);
+  if (!dryRun) {
+    try {
+      await appendClefReviewLog(ROOT_DIR, todayISO(), title, [verdict]);
+    } catch { /* 記録の失敗で止めない */ }
+  }
+}
+
+/**
+ * 挿絵（Workers AI 無料枠の FLUX.1 schnell）。既にあれば描かない。失敗してもビルド時の
+ * SVG カバー絵が出るので、ここは何が起きても止めない。
+ */
+async function illustrate(slug, title, tags, dryRun) {
+  if (dryRun) {
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'skip', 'DRY_RUN');
+    return;
+  }
+  const notes = [];
+  console.log('🎨 挿絵: Workers AI（FLUX.1 schnell）で1枚描いています…');
+  const art = await generateIllustration(ROOT_DIR, slug, title, tags, notes);
+  if (art) {
+    console.log(`   ✅ ${art.url}（${Math.round(art.bytes / 1024)}KB）`);
+    logAgent('SYSTEM', 'Illustrator', 'drawn', art.url);
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'ok', `${art.url}（${Math.round(art.bytes / 1024)}KB）`);
+  } else {
+    const already = notes.includes('挿絵は既にある');
+    console.log(`   ⏭️  ${notes.join(' / ')} — SVG のカバー絵を使います`);
+    stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', already ? 'skip' : 'warn', `${notes.join(' / ')}（SVG のカバー絵で表示）`);
+  }
+}
+
+async function reportStages(mode) {
+  const label = { publish: '新規投稿', observe: '観測（記事は既にあり）', 'dry-run': 'DRY RUN' }[mode] ?? mode;
+  console.log('');
+  console.log('═══════════════════════════════════════════════════');
+  console.log(`🧾 工程の記録 — ${todayISO()} / ${label}`);
+  for (const s of stages) {
+    console.log(`  ${STAGE_ICON[s.status]} ${s.id.padEnd(22)} ${s.name}${s.detail ? ` — ${s.detail}` : ''}`);
+  }
+  const count = st => stages.filter(s => s.status === st).length;
+  console.log(`  計 ${stages.length} 工程: ✅${count('ok')} ⚠️${count('warn')} ❌${count('fail')} ⏭️${count('skip')}`);
+  console.log('═══════════════════════════════════════════════════');
+
+  const summaryFile = process.env.GITHUB_STEP_SUMMARY;
+  if (!summaryFile) return;
+  // 表のセルに入れる文字列。先にバックスラッシュ、次に | をエスケープする（順番を逆にすると \| が壊れる）。
+  const esc = t => t.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+  const md = [
+    `## 🧾 Genesis Vault — ${todayISO()}（${label}）`,
+    '',
+    '| | 係 | 工程 | 内容 |',
+    '|---|---|---|---|',
+    ...stages.map(s => `| ${STAGE_ICON[s.status]} | ${esc(s.id)} | ${esc(s.name)} | ${esc(s.detail)} |`),
+    '',
+    `✅${count('ok')} ⚠️${count('warn')} ❌${count('fail')} ⏭️${count('skip')}`,
+    '',
+  ].join('\n');
+  try {
+    await fs.appendFile(summaryFile, md, 'utf-8');
+  } catch { /* Job Summary が書けなくても本処理は止めない */ }
+}
+
 async function main() {
   console.log('╔════════════════════════════════════════════════════╗');
   console.log('║  Genesis Vault — Multi-Agent Post Generator       ║');
@@ -339,18 +464,24 @@ async function main() {
   }
   console.log('');
 
-  // ── Idempotency: skip if today's post already exists ──────────
+  // ── Idempotency: 今日の記事が既にある日は「観測モード」 ─────────────
+  //
+  // 以前はここで process.exit(0) していた。手動実行で先に記事を書いた日は、
+  // 定期実行が財務パルスも選定も審査も一切通らずに 0 秒で終わっていた
+  // （2026-10-11 の #248）。「毎日財務を見る」が手動実行1回で崩れる。
+  // 今は二重投稿だけを止め、観測系（Tessa・Kaia・台帳・選定・Clef 審査）は毎回通す。
   const todayFile = `${todayISO()}-`;
+  let existingPost = null;
   try {
     const existingFiles = await fs.readdir(POSTS_DIR);
-    const alreadyExists = existingFiles.some(f => f.startsWith(todayFile));
-    if (alreadyExists && !process.env.GV_THEME) {
-      console.log(`Post for ${todayISO()} already exists. Skipping.`);
-      logAgent('SYSTEM', 'Idempotency', 'skip', `Post for ${todayISO()} already exists`);
-      process.exit(0);
-    }
+    existingPost = existingFiles.find(f => f.startsWith(todayFile)) ?? null;
   } catch {
     // POSTS_DIR may not exist yet — that's fine, continue
+  }
+  const observeOnly = Boolean(existingPost) && !process.env.GV_THEME;
+  if (observeOnly) {
+    console.log(`👁️  ${todayISO()} の記事は既にあります（${existingPost}）。二重投稿はせず、観測系の工程だけを全部通します。`);
+    logAgent('SYSTEM', 'Idempotency', 'observe', `Post for ${todayISO()} already exists: ${existingPost}`);
   }
 
   // ── Resume from failure: check for saved pipeline state ────────
@@ -396,6 +527,13 @@ async function main() {
   } catch (err) {
     console.warn(`  ⚠️  Scout failed: ${err.message?.substring(0, 120)}`);
   }
+  stage(
+    'VE-010 Tessa', 'トレンド収集',
+    !trendRadar ? 'warn' : trendRadar.degraded || trendRadar.capturedAt !== todayISO() ? 'warn' : 'ok',
+    trendRadar
+      ? `${trendRadar.capturedAt !== todayISO() ? `${trendRadar.capturedAt} のスナップショットで代用 / ` : ''}技術${trendRadar.tech.length}件 / 相場${trendRadar.market.length}件${trendRadar.notes.length ? `（${trendRadar.notes.join(' / ')}）` : ''}`
+      : '取得できず',
+  );
   // ── VE-011 Kaia (Treasurer): QAIZ と assetlog の財務パルス ────────
   // 金額は持たず、変化率と記号の事実だけ。fail-soft（取れなければ無しで書く）。
   let financePulse = null;
@@ -408,6 +546,13 @@ async function main() {
   } catch (err) {
     console.warn(`  ⚠️  Treasurer failed: ${err.message?.substring(0, 120)}`);
   }
+  stage(
+    'VE-011 Kaia', '財務パルス（assetlog・QAIZ）',
+    financePulse && financePulse.portfolio && financePulse.market ? 'ok' : 'warn',
+    financePulse
+      ? `assetlog ${financePulse.portfolio ? '✓' : '✗'} / QAIZ ${financePulse.market ? '✓' : '✗'} / 記号: ${financePulse.predicates.join(', ') || 'なし'}`
+      : '取得できず',
+  );
   const financeBrief = buildFinanceBrief(financePulse);
 
   const trendBrief = [buildTrendBrief(trendRadar), financeBrief ? `【今日のお金の景色】\n${financeBrief}` : '']
@@ -436,7 +581,9 @@ async function main() {
     if (!DRY_RUN) await saveLedger(ROOT_DIR, ledger);
     logAgent('VE-004', 'Vera Holt', 'facts_mined', `${mined.length} facts`);
     logAgent('VE-007', 'Edda Lindgren', 'ledger_built', `${ledger.facts.length} canon facts`);
+    stage('VE-004/007 Vera・Edda', '継続性台帳', 'ok', `過去記事${pastArticles.length}本 → 確定事実${ledger.facts.length}件`);
   } catch (err) {
+    stage('VE-004/007 Vera・Edda', '継続性台帳', 'warn', `作り直し失敗: ${err.message?.substring(0, 80)}`);
     console.warn(`  ⚠️  Continuity build failed: ${err.message?.substring(0, 120)}`);
     // 作り直しに失敗したら、読み込んだ既存台帳のまま進む（無いよりはよい）
   }
@@ -468,6 +615,7 @@ async function main() {
   const filename = `${todayISO()}-${slug}.md`;
 
   let ceoPlan, seoData, finalBody;
+  const clefVerdicts = [];
 
   // ── VE-012 Juno (Arbiter): ニューロシンボリックなテーマ選定 ────────
   //
@@ -484,11 +632,29 @@ async function main() {
       } catch { /* 既出見出しの写しが無くても選定は続ける */ }
 
       const candidates = generateCandidates(financePulse, trendRadar, priorityList, SELECTION_CONFIG.maxCandidates);
+      const recentPosts = [...pastArticles]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map(a => ({ date: a.date, title: a.title }));
+
+      // EmbeddingGemma（Workers AI 無料枠）で、言い換えの既出を意味で見分ける。取れなければ字面だけで続ける。
+      const semanticNotes = [];
+      const semantic = await semanticNearest(
+        candidates,
+        [...recentPosts.map(p => p.title), ...publishedTitles],
+        semanticNotes,
+      );
+      console.log(`  🧬 意味の既出チェック（EmbeddingGemma）: ${semantic ? '✅' : `⏭️ ${semanticNotes.join(' / ') || '無効'}`}`);
+      stage(
+        'EmbeddingGemma', '意味の既出チェック',
+        semantic ? 'ok' : SELECTION_CONFIG.semantic.enabled ? 'warn' : 'skip',
+        semantic ? `候補${Object.keys(semantic).length}件を既出と照合` : semanticNotes.join(' / ') || '無効',
+      );
+
       const { accepted, rejected } = reviewCandidates(candidates, {
         priority: priorityList,
-        recentPosts: [...pastArticles]
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map(a => ({ date: a.date, title: a.title })),
+        recentPosts,
+        semantic: semantic ?? undefined,
+        maxSemanticSimilarity: SELECTION_CONFIG.semantic.maxSimilarity,
         publishedTitles,
         // qualityGate.forbiddenTopics はスキーマ未宣言で PIPELINE_CONFIG からは落ちる（LM-018）。
         // 選定では生の JSON から読んで、禁止語を含む候補を記号側で落とす。
@@ -501,13 +667,44 @@ async function main() {
       selection = await runJuno(todayISO(), accepted, rejected, trendBrief);
       if (selection) {
         logAgent('VE-012', 'Juno Albrecht', `selected_by_${selection.method}`, `${selection.winner.theme} | ${selection.winner.hook}`);
-        if (!DRY_RUN) await appendSelectionLog(ROOT_DIR, todayISO(), selection);
+        // 観測モードの選定は「今日書くなら何を選んだか」の記録。同じ日に何度走っても1件だけ残す。
+        if (!DRY_RUN && !(observeOnly && (await hasLogEntry(path.join(ROOT_DIR, SELECTION_CONFIG.auditLogDir), `## ${todayISO()} `)))) {
+          await appendSelectionLog(ROOT_DIR, todayISO(), selection, observeOnly ? '観測のみ（記事は既にあり）' : '');
+        }
       }
+      const systemOne = selection && (selection.method === 'clef' || selection.method === 'jev');
+      stage(
+        'VE-012 Juno', `テーマ選定${observeOnly ? '（観測のみ）' : ''}`,
+        !selection ? 'warn' : systemOne ? 'ok' : 'warn',
+        selection
+          ? `method=${selection.method}${selection.transport ? ` (${selection.transport})` : ''} → [${selection.winner.theme}] ${selection.winner.hook}${selection.notes.length ? `（${selection.notes.join(' / ').slice(0, 200)}）` : ''}`
+          : `記号の規則を通った候補なし（落選 ${rejected.length}件）`,
+      );
     } catch (err) {
+      stage('VE-012 Juno', 'テーマ選定', 'warn', `失敗: ${err.message?.substring(0, 80)} — Nova に戻す`);
       console.warn(`  ⚠️  Arbiter failed: ${err.message?.substring(0, 120)} — Nova の選定に戻します`);
     }
+  } else {
+    stage('VE-012 Juno', 'テーマ選定', 'skip', process.env.GV_THEME ? `手動テーマ指定（GV_THEME=${process.env.GV_THEME}）` : 'selection.enabled=false');
   }
   const selectionBrief = buildSelectionBrief(selection);
+
+  // ── 観測モード: 書かない日も、公開済みの今日の記事を Clef で事後審査して終える ──
+  if (observeOnly) {
+    await auditExistingPost(path.join(POSTS_DIR, existingPost), DRY_RUN);
+    try {
+      const raw = await fs.readFile(path.join(POSTS_DIR, existingPost), 'utf-8');
+      const title = raw.match(/^title:\s*"?(.*?)"?\s*$/m)?.[1]?.replace(/\\"/g, '"') ?? '';
+      const tags = [...(raw.match(/^tags:\s*\[(.*)\]\s*$/m)?.[1] ?? '').matchAll(/"([^"]+)"/g)].map(m => m[1]);
+      await illustrate(existingPost.replace(/\.md$/, ''), title, tags, DRY_RUN);
+    } catch (err) {
+      stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'warn', `記事を読めない: ${err.message?.substring(0, 80)}`);
+    }
+    stage('VE-005〜006 Nova→Iris', '執筆・品質ゲート・継続性ゲート', 'skip', `今日の記事は既にある（${existingPost}）。二重投稿しない`);
+    stage('VE-008 Mira', '台帳更新', 'skip', '新しい記事なし');
+    await reportStages('observe');
+    return;
+  }
 
   // ── IDEAZ の型 ─────────────────────────────────────────────────
   let format = { writer: '', title: '', editor: '' };
@@ -671,10 +868,61 @@ async function main() {
     }
     console.log('🧭 Continuity Gate: ✅ 過去記事の到達点と矛盾なし');
     logAgent('SYSTEM', 'ContinuityGate', 'passed', `${ledger?.facts.length ?? 0} canon facts checked`);
+    stage('VE-005〜006 Nova→Iris', '執筆・品質ゲート・継続性ゲート', 'ok', `「${ceoPlan.title}」${format.writer ? '（IDEAZ の型）' : ''}`);
+    console.log('');
+
+    // ── Clef 審査（判断モデル・Workers AI 無料枠） ─────────────────
+    //
+    // yes/no の確率と順序レベルだけで審査し、合否は閾値が決める。不合格なら
+    // 落ちた項目だけを指摘して1度だけ書き直させ、書き直しも決定論ゲートを通す。
+    const reviewBrief = [
+      selectionBrief,
+      `テーマ: ${ceoPlan.theme}\nトピック: ${ceoPlan.topic}\n切り口: ${ceoPlan.angle}`,
+    ].filter(Boolean).join('\n');
+    console.log('⚖️  Clef Review: 判断モデルで原稿を審査しています…');
+    let verdict = await runClefReview(reviewBrief, ceoPlan.title, finalBody);
+    clefVerdicts.push(verdict);
+    const failedCount = v => v.checks.filter(c => !c.passed).length;
+    if (!verdict.available) {
+      console.log(`   ⏭️  審査なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）`);
+      stage('Clef 審査', '公開前の審査', CLEF_REVIEW_CONFIG.enabled ? 'warn' : 'skip', verdict.notes.join(' / ') || '判断モデルが使えない');
+    } else {
+      for (const c of verdict.checks) {
+        console.log(`   ${c.passed ? '✅' : '❌'} ${c.label}: ${c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
+      }
+      if (!verdict.passed) {
+        console.warn('   ⚠️  Clef 審査で不合格。落ちた項目だけを指摘して書き直します');
+        const rewritten = await runSophia(
+          ceoPlan,
+          seoData,
+          styleSamples,
+          [selectionSection, continuityBrief].filter(Boolean).join('\n\n'),
+          trendBrief,
+          buildClefFeedback(verdict),
+          format.writer,
+        );
+        if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0) {
+          const second = await runClefReview(reviewBrief, ceoPlan.title, rewritten);
+          clefVerdicts.push(second);
+          if (second.passed || (second.available && failedCount(second) < failedCount(verdict))) {
+            finalBody = rewritten;
+            verdict = second;
+            console.log(`   ↩️  書き直し版を採用（${second.passed ? '合格' : '不合格項目が減った'}）`);
+          }
+        }
+      }
+      logAgent('SYSTEM', 'ClefReview', verdict.passed ? 'passed' : 'failed', verdict.checks.filter(c => !c.passed).map(c => c.id).join(','));
+      stage('Clef 審査', '公開前の審査', verdict.passed ? 'ok' : 'fail', `${verdict.model} / ${summarizeChecks(verdict)}${clefVerdicts.length > 1 ? ` / 書き直し${clefVerdicts.length - 1}回` : ''}`);
+      if (!verdict.passed && CLEF_REVIEW_CONFIG.mode === 'enforce') {
+        throw new Error(`Clef review failed: ${verdict.checks.filter(c => !c.passed).map(c => c.id).join(', ')}`);
+      }
+    }
     console.log('');
 
   } catch (err) {
     logAgent('SYSTEM', 'Pipeline', 'error', undefined, err.message);
+    stage('VE-005〜006 Nova→Iris', '執筆・品質ゲート・継続性ゲート', 'fail', `テンプレートに落ちた: ${err.message?.substring(0, 120)}`);
+    if (!clefVerdicts.length) stage('Clef 審査', '公開前の審査', 'skip', 'テンプレート原稿のため審査しない');
     console.error(`❌ Agent Pipeline Error: ${err.message}`);
     console.log('📋 Falling back to template...');
     // テンプレートにも同じ継続性チェックを通す。AI が全滅した日にだけ
@@ -750,6 +998,9 @@ ${cleanBody}
     console.log(`📄 Body preview (${cleanBody.length} chars):`);
     console.log(cleanBody.substring(0, 300) + '...');
     console.log('═══════════════════════════════════════════════════');
+    stage('保存', '記事ファイル', 'skip', 'DRY_RUN');
+    await illustrate('dry-run', ceoPlan.title, seoData.tags, true);
+    await reportStages('dry-run');
     return;
   }
 
@@ -759,6 +1010,12 @@ ${cleanBody}
 
   // Phase η: Append agent telemetry summary to public log
   await appendTelemetrySummary(`${todayISO()}-${slug}`);
+  await illustrate(`${todayISO()}-${slug}`, ceoPlan.title, seoData.tags, false);
+  if (clefVerdicts.length > 0) {
+    try {
+      await appendClefReviewLog(ROOT_DIR, todayISO(), ceoPlan.title, clefVerdicts);
+    } catch { /* 記録の失敗で公開は止めない */ }
+  }
 
   // ── VE-008 Mira (Recorder): 投稿した記事の確定事実を台帳へ記録・更新 ──
   if (ledger) {
@@ -772,7 +1029,9 @@ ${cleanBody}
       });
       await saveLedger(ROOT_DIR, ledger);
       logAgent('VE-008', 'Mira Falk', 'ledger_updated', `${ledger.facts.length} facts`);
+      stage('VE-008 Mira', '台帳更新', 'ok', `確定事実${ledger.facts.length}件`);
     } catch (err) {
+      stage('VE-008 Mira', '台帳更新', 'warn', err.message?.substring(0, 80));
       console.warn(`⚠️  Recorder failed: ${err.message?.substring(0, 120)}`);
     }
   }
@@ -784,19 +1043,8 @@ ${cleanBody}
   console.log(`🏷️  Tags: ${seoData.tags.join(', ')}`);
   console.log(`🔑 Keywords: ${seoData.keywords.join(', ')}`);
   console.log('');
-  console.log('Agent Pipeline:');
-  console.log(`  VE-010 Tessa Brandt     (Scout)    → トレンド収集 ${trendRadar ? '✅' : '⏭️'}`);
-  console.log(`  VE-011 Kaia Brennan     (Treasurer)→ 財務パルス   ${financePulse ? '✅' : '⏭️'}`);
-  console.log(`  VE-012 Juno Albrecht    (Arbiter)  → テーマ選定   ${selection ? `✅ ${selection.method}` : '⏭️ Nova'}`);
-  console.log('  VE-004 Vera Holt        (Researcher)→ 過去事実抽出 ✅');
-  console.log('  VE-005 Nova Harmon      (Balancer) → ジャンル選定 ✅');
-  console.log('  VE-001 Lena Strauss     (CEO)      → トピック決定 ✅');
-  console.log('  VE-003 Chloe Verdant    (SEO)      → SEO最適化   ✅');
-  console.log('  VE-002 Sophia Nightingale(Writer)  → 本文執筆    ✅');
-  console.log('  VE-006 Iris Koenig      (Editor)   → 校正・品質  ✅');
-  console.log('  VE-007 Edda Lindgren    (Summarizer)→ 台帳統合   ✅');
-  console.log('  VE-008 Mira Falk        (Recorder) → 台帳更新    ✅');
-  console.log('═══════════════════════════════════════════════════');
+  stage('保存', '記事ファイル', 'ok', filename);
+  await reportStages('publish');
 }
 
 main().catch(err => {

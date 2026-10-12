@@ -204,7 +204,7 @@
         "envKey": "TYPESAFE_API_KEY",
         "rpm": 60,
         "rpd": 10000,
-        "comment": "TypeSafe AI Jev (System One Model). 文字列を生成せず構造化された確率判定のみ返すため LanguageModel にはならず、providers.ts の buildProviderChain からはスキップされる。審査パス(src/lib/pipeline/review.ts)が src/lib/ai/typesafe.ts 経由で直接呼ぶ。envKey 未設定なら自動的に既存のLLMチェーンへフォールバック（fail-soft）。入力$0.042/MTok・出力無料・70-500ms。早期アクセス中のため TYPESAFE_API_BASE_URL/TYPESAFE_MODEL は env で上書き可能。"
+        "comment": "TypeSafe AI Jev (System One Model). 文字列を生成せず構造化された確率判定のみ返すため LanguageModel にはならず、providers.ts の buildProviderChain からはスキップされる。審査パス(src/lib/pipeline/review.ts)が src/lib/ai/typesafe.ts 経由で直接呼ぶ。envKey 未設定なら自動的に既存のLLMチェーンへフォールバック（fail-soft）。入力$0.042/MTok・出力無料・70-500ms。公式エンドポイントは POST https://api.typesafe.ai/v1/systemone（モデル jev-latest）。テーマ選定（src/lib/ai/jev.ts）はこの形で呼ぶ。審査パスの typesafe.ts は旧形式（/v1/decisions・文字列の答え）のままで、Jev は文字列を返さないため現状は機能しない（README の既知の問題）。TYPESAFE_API_BASE_URL/TYPESAFE_MODEL は env で上書き可能。"
       }
     ]
   },
@@ -434,7 +434,7 @@
     "ledgerFile": "data/video-briefs.json"
   },
   "trends": {
-    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
+    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足、空なら Yahoo Finance chart API で代替。どちらも鍵不要）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
     "enabled": true,
     "timeoutMs": 8000,
     "cacheFile": "data/trend-radar.json",
@@ -461,21 +461,26 @@
       "symbols": [
         {
           "symbol": "^spx",
-          "label": "S&P500"
+          "label": "S&P500",
+          "yahoo": "^GSPC"
         },
         {
           "symbol": "^nkx",
-          "label": "日経平均"
+          "label": "日経平均",
+          "yahoo": "^N225"
         },
         {
           "symbol": "usdjpy",
-          "label": "ドル円"
+          "label": "ドル円",
+          "yahoo": "JPY=X"
         },
         {
           "symbol": "btcusd",
-          "label": "ビットコイン"
+          "label": "ビットコイン",
+          "yahoo": "BTC-USD"
         }
-      ]
+      ],
+      "fallbackEndpoint": "https://query1.finance.yahoo.com/v8/finance/chart"
     }
   },
   "tierOmega": {
@@ -564,15 +569,14 @@
     }
   },
   "selection": {
-    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの類似・財務の開示規則）で落とし、特徴量を付ける。神経側の Jev は生き残った候補の Choice / Score / Noul にしか答えられない。融合は weights の加重和で、Jev の確信度が minConfidence 未満なら棄権扱い。判断モデルは Cloudflare Workers AI の無料枠（1日 10,000 Neurons）で Clef（Cloudflare 製・Jev と同じ System One 形式）を最優先。Workers AI 上の typesafe/jev は Unified Billing のクレジット課金になるという報告があるため既定に入れない、TypeSafe の直接 API は鍵があるときだけ。どちらも無ければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める（選定が止まる日は無い）。",
+    "comment": "VE-012 Juno のニューロシンボリック選定。記号側が候補を作り、硬い規則（テーマの冷却期間・既出タイトルとの字面の類似・EmbeddingGemma で測った意味の類似・禁止語）で落とし、特徴量を付ける。神経側は判断モデル Clef（Cloudflare 製・Jev と同じ System One 形式）が、生き残った候補の Choice / Noul にだけ答える。融合は weights の加重和で、確信度が minConfidence 未満なら棄権扱い。すべて Cloudflare Workers AI の無料枠（1日 10,000 Neurons。Workers Free は超過しても課金されずエラーになるだけ）で動く。TypeSafe の Jev 本体は有料（入力 $0.042/MTok）なので transports の既定に入れない。Clef が使えなければ無料 LLM チェーン、それも無ければ記号側の順位だけで決める。ログの method は jev / clef / llm / symbolic で、実際に決めたモデルを区別する。",
     "enabled": true,
     "maxCandidates": 12,
     "themeCooldownDays": 2,
     "maxTitleSimilarity": 0.6,
     "jev": {
       "transports": [
-        "workers-ai",
-        "typesafe"
+        "workers-ai"
       ],
       "workersAiModels": [
         "@cf/cloudflare/clef",
@@ -587,6 +591,13 @@
       "symbolic": 0.45,
       "neural": 0.55
     },
+    "semantic": {
+      "enabled": true,
+      "model": "@cf/google/embeddinggemma-300m",
+      "batchSize": 50,
+      "maxPastTitles": 200,
+      "maxSimilarity": 0.9
+    },
     "llmFallback": true,
     "auditLogDir": "docs/selection-runs"
   },
@@ -597,5 +608,28 @@
     "upstream": "https://raw.githubusercontent.com/gentaron/IDEAZ/main/memory/",
     "minChars": 2500,
     "maxChars": 4800
+  },
+  "clefReview": {
+    "comment": "Clef 審査。既存の審査役（review.ts）は所見の文章と逐語引用を求めるため、文字列を返さない判断モデル（Jev / Clef）では答えられない。ここでは yes/no の確率と順序レベルだけで問い、合否は閾値で決める（INV-013）。veto（題材のすり替え・投資助言・実額）は加重しない。advisory は1回書き直して、それでも不合格なら記録して公開を続ける。enforce は公開しない。Clef が使えない日は『審査なし』として記録し、公開は止めない。",
+    "enabled": true,
+    "mode": "advisory",
+    "thresholds": {
+      "veto": 0.5,
+      "noul": 0.5,
+      "score": 0.5,
+      "maxSoftFailures": 1
+    },
+    "auditLogDir": "docs/gate-runs"
+  },
+  "art": {
+    "comment": "記事の挿絵。SVG のカバー絵（src/lib/art/cover.ts）はビルド時に slug から決定論で作るので、鍵もネットワークも要らず必ず出る。AI の挿絵は Workers AI 無料枠の FLUX.1 schnell（1枚およそ数十 Neurons、Clef と同じ 1日 10,000 の枠）で新しい記事に1枚だけ作り、取れたらそちらを優先する。人物は描かせない（ミナの見た目が毎回変わるため）・文字も描かせない。失敗・画像として壊れている・大きすぎる場合は保存せず SVG のまま。",
+    "ai": {
+      "enabled": true,
+      "model": "@cf/black-forest-labs/flux-1-schnell",
+      "steps": 4,
+      "timeoutMs": 60000,
+      "dir": "public/art",
+      "maxBytes": 600000
+    }
   }
 }

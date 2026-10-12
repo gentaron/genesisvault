@@ -23,7 +23,15 @@ import { askJev, type JevQuestion } from '../ai/jev.js';
 import { SELECTION_CONFIG } from '../pipeline/config.js';
 import type { Rejection, ScoredCandidate } from './candidates.js';
 
-export type SelectionMethod = 'jev' | 'llm' | 'symbolic';
+/**
+ * どの係が決めたか。System One 形式のモデルでも、Jev 本体と Clef は分けて記録する
+ * （「Jev が選んだ」と書いてあるのに実際は Clef だった、を起こさないため）。
+ */
+export type SelectionMethod = 'jev' | 'clef' | 'llm' | 'symbolic';
+
+export function systemOneMethod(model: string): 'jev' | 'clef' {
+  return /jev/i.test(model) ? 'jev' : 'clef';
+}
 
 export interface RankedCandidate extends ScoredCandidate {
   neural: number | null;
@@ -155,7 +163,9 @@ export async function runJuno(
   rejected: Rejection[],
   context: string,
 ): Promise<SelectionResult | null> {
-  console.log('\n⚖️  [VE-012] Juno Albrecht (Arbiter): 記号で絞った候補を Jev に判定させています…');
+  console.log(
+    '\n⚖️  [VE-012] Juno Albrecht (Arbiter): 記号で絞った候補を判断モデル（Clef / Jev）に判定させています…',
+  );
   const notes: string[] = [];
   if (accepted.length === 0) {
     console.log(`  ⚠️  記号の規則を通った候補がありません（落ちた候補 ${rejected.length}件）`);
@@ -185,7 +195,7 @@ export async function runJuno(
           if (g?.type === 'noul') gates[c.id] = g.probability;
         }
         neural = neuralScores(pool, pick, gates);
-        method = 'jev';
+        method = systemOneMethod(jev.model);
       } else {
         abstained = true;
         notes.push(`jev: 確信度 ${pick.probability.toFixed(2)} < ${minConf} のため棄権扱い`);
@@ -238,12 +248,14 @@ export async function appendSelectionLog(
   rootDir: string,
   today: string,
   result: SelectionResult,
+  /** 見出しに添える注記（例: 観測モードの「観測のみ」）。 */
+  label = '',
 ): Promise<void> {
   const dir = path.join(rootDir, SELECTION_CONFIG.auditLogDir);
   const file = path.join(dir, `${today.slice(0, 7)}.md`);
   const lines = [
     '',
-    `## ${today} — ${result.method}${result.abstained ? '（神経側は棄権）' : ''}`,
+    `## ${today} — ${result.method}${result.abstained ? '（神経側は棄権）' : ''}${label ? ` [${label}]` : ''}`,
     '',
     `- 採用: ${result.winner.id} [${result.winner.theme}] ${result.winner.hook}`,
     `- 確信度: ${result.confidence == null ? '—' : result.confidence.toFixed(2)} / 経路: ${result.transport ?? '—'}`,

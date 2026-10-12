@@ -50,6 +50,12 @@ export interface SymbolicContext {
   themeCooldownDays: number;
   maxTitleSimilarity: number;
   today: string;
+  /**
+   * EmbeddingGemma で測った、候補ごとの既出との意味の近さ（semantic.ts）。
+   * 取れなかった日は undefined で、字面（bigram）の規則だけが効く。
+   */
+  semantic?: Record<string, { similarity: number; nearest: string }>;
+  maxSemanticSimilarity?: number;
 }
 
 // ─── 1. Candidate generation ────────────────────────────────────
@@ -265,6 +271,15 @@ export function reviewCandidates(
         maxSim = s;
         nearest = t;
       }
+    }
+    const sem = ctx.semantic?.[c.id];
+    if (sem && ctx.maxSemanticSimilarity != null && sem.similarity >= ctx.maxSemanticSimilarity) {
+      rejected.push({
+        candidate: c,
+        rule: 'semantic_duplicate',
+        detail: `「${sem.nearest}」と意味の近さ ${Math.round(sem.similarity * 100)}%（EmbeddingGemma）`,
+      });
+      continue;
     }
     if (maxSim >= ctx.maxTitleSimilarity) {
       rejected.push({

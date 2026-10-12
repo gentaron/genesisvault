@@ -158,7 +158,7 @@ describe('Jev client — type checking on our side', () => {
     expect(answers).toEqual({});
   });
 
-  it('resolves Workers AI (Clef, then Clef-flash) first, TypeSafe second, nothing without keys', () => {
+  it('defaults to Clef on Workers AI only (no paid TypeSafe path), nothing without keys', () => {
     expect(resolveEndpoints({})).toEqual([]);
     const eps = resolveEndpoints({
       CLOUDFLARE_ACCOUNT_ID: 'acc',
@@ -168,7 +168,6 @@ describe('Jev client — type checking on our side', () => {
     expect(eps.map((e) => `${e.transport}:${e.model}`)).toEqual([
       'workers-ai:@cf/cloudflare/clef',
       'workers-ai:@cf/cloudflare/clef-flash',
-      'typesafe:jev',
     ]);
     expect(eps[0].url).toBe(
       'https://api.cloudflare.com/client/v4/accounts/acc/ai/run/@cf/cloudflare/clef',
@@ -277,7 +276,8 @@ describe('runJuno', () => {
     });
     const result = await runJuno('2026-10-10', accepted, rejected, '');
     expect(fetchMock).toHaveBeenCalledOnce();
-    expect(result?.method).toBe('jev');
+    // Workers AI の既定は Clef。Jev 本体と区別して記録する
+    expect(result?.method).toBe('clef');
     expect(result?.winner.id).toBe(pickId);
   });
 
@@ -360,5 +360,60 @@ describe('appendSelectionLog / buildState', () => {
 
   it('returns no brief without a selection', () => {
     expect(buildSelectionBrief(null)).toBe('');
+  });
+});
+
+describe('method label', () => {
+  it('records Jev itself and Clef separately', async () => {
+    const { systemOneMethod } = await import('../src/lib/selection/select');
+    expect(systemOneMethod('jev-latest')).toBe('jev');
+    expect(systemOneMethod('typesafe/jev')).toBe('jev');
+    expect(systemOneMethod('@cf/cloudflare/clef')).toBe('clef');
+  });
+});
+
+describe('semantic duplicate (EmbeddingGemma)', () => {
+  it('cosine and embedding parsing', async () => {
+    const { cosine, parseEmbeddings } = await import('../src/lib/selection/semantic');
+    expect(cosine([1, 0], [1, 0])).toBe(1);
+    expect(cosine([1, 0], [0, 1])).toBe(0);
+    expect(
+      parseEmbeddings(
+        {
+          result: {
+            shape: [2, 2],
+            data: [
+              [1, 0],
+              [0, 1],
+            ],
+          },
+        },
+        2,
+      ),
+    ).toEqual([
+      [1, 0],
+      [0, 1],
+    ]);
+    expect(parseEmbeddings({ result: { data: [[1, 0]] } }, 2)).toBeNull();
+  });
+
+  it('rejects a paraphrase the bigram rule cannot see', () => {
+    const cands = generateCandidates(pulse, null, priority, 12);
+    const target = cands.find((c) => c.theme === '投資・資産形成') ?? cands[0];
+    const { rejected } = reviewCandidates(
+      cands,
+      ctx({
+        semantic: { [target.id]: { similarity: 0.93, nearest: '連騰中に読書した' } },
+        maxSemanticSimilarity: 0.9,
+      }),
+    );
+    expect(rejected.find((r) => r.candidate.id === target.id)?.rule).toBe('semantic_duplicate');
+  });
+
+  it('skips the embedding call without Cloudflare keys', async () => {
+    const { semanticNearest } = await import('../src/lib/selection/semantic');
+    const notes: string[] = [];
+    expect(await semanticNearest([{ id: 'c01', hook: 'x' }], ['y'], notes, {})).toBeNull();
+    expect(notes.join()).toContain('Cloudflare');
   });
 });

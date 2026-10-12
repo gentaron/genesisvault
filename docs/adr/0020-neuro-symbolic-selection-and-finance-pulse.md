@@ -85,3 +85,28 @@ Workers AI の Neurons は Jev に全部回すため、文字を書くチェー�
   `selection.jev.workersAiModels` に足すか `JEV_WORKERS_AI_MODEL` で固定する（課金は承知の上で）
 - 同じ回で、QAIZ の地域コード（`GLOBAL` / `US`）がそのまま本文に出ていた。大文字のコードを日本語に直し、
   名前にすでに地域名が入っているときは重ねないようにした
+
+## 追記2（2026-10-11）: Jev 本体を最優先にし、公式エンドポイントに合わせる
+
+- TypeSafe の公式 API は `POST https://api.typesafe.ai/v1/systemone`、モデル `jev-latest`（[API reference](https://docs.typesafe.ai/api)）。
+  選定のクライアントは `/v1/decisions`・`jev` を叩いていたので直した
+- 経路の順を **Jev 本体（TypeSafe 直）→ Clef（Workers AI 無料枠）** にした。Jev 本体は無料枠ではない
+  （入力 $0.042/MTok・出力無料。1日1回の選定なら月1セント未満）。鍵が無ければ Clef で動く
+- ログの `method` を `jev` / `clef` / `llm` / `symbolic` に分けた。System One 形式で答えたのが Jev 本体か Clef かを区別しないと、
+  「Jev が選んだ」と記録されているのに実際は Clef だった、が起きる
+- 審査役の Jev（`typesafe.ts`）は旧形式のままで、答えに文字列（所見・逐語引用）を求めている。Jev は文字列を返さないので
+  この形では構造的に機能しない。審査を Jev に任せるなら、所見を「選択肢 × 確率」に置き換える設計変更が要る（未着手）
+
+## 追記3（2026-10-11）: 完全無料のため判断モデルは Clef に一本化。Clef 審査と EmbeddingGemma を足す
+
+オーナー判断で「絶対無料」を優先し、判断モデルは **Clef（Workers AI 無料枠）だけ**にした。
+TypeSafe の Jev 本体は有料（入力 $0.042/MTok）なので `selection.jev.transports` の既定から外した（コードは残す）。
+
+- **Clef 審査**（`src/lib/pipeline/clef-review.ts`）: 既存の審査役は所見の文章と逐語引用を要求するため判断モデルでは答えられない。
+  代わりに yes/no 5問（題材・投資助言なし・実額なし [以上 veto]、具体、今日ひとつ試せること）と
+  読みやすさ（順序レベル）1問だけで問い、合否は閾値で決める。毎日の自動投稿に組み込み、不合格なら1度だけ書き直す。
+  `mode: advisory` なので書き直しても不合格なら記録して公開を続ける（審査役なしで動いてきた既存の運用を止めない）。
+  記録は `docs/gate-runs/YYYY-MM.md`
+- **EmbeddingGemma**（`@cf/google/embeddinggemma-300m`、Workers AI 無料枠）: 候補と既出見出し（新しい順に200件）を
+  ベクトルにして、意味の近さ 0.9 以上の候補を落とす。bigram では捕まらない言い換えの被りを拾う。取れない日は字面だけで続ける
+- score 質問は「0 が最低レベルの確率加重値」で返るので、レベル数で 0〜1 に正規化する
