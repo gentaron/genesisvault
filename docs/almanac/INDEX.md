@@ -5,7 +5,7 @@
 このリポジトリで「なぜそうなっているか」を探すときの入口。
 設計判断は ADR、壊れたときの手順は Runbook にある。
 
-## ADR — 設計判断の記録（21件）
+## ADR — 設計判断の記録（22件）
 
 不可逆な決定と、その理由。新しい ADR は次の番号を使うこと（番号の重複は `bun run verify` で失敗する）。
 
@@ -32,6 +32,7 @@
 | 0019 | [ADR-0019: フルPWA対応とHTMLのアクセシビリティ・SEO強化](../adr/0019-pwa-and-html-hardening.md) | — | — |
 | 0020 | [ADR-0020: 財務パルス × ニューロシンボリック選定（Jev）× IDEAZ の型](../adr/0020-neuro-symbolic-selection-and-finance-pulse.md) | — | — |
 | 0021 | [ADR-0021: 挿絵（決定論 SVG + FLUX.1 schnell）と Magic Move（View Transitions）](../adr/0021-cover-art-and-magic-move.md) | — | — |
+| 0022 | [ADR-0022: サイト内アクセスカウンタ — KV への INCR をブラウザから叩く](../adr/0022-access-counter.md) | Accepted | 2026-08-18 |
 
 ## Runbook — 手順書（9件）
 

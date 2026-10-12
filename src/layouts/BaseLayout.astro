@@ -2,6 +2,7 @@
 import '../styles/app.css';
 import '../styles/global-legacy.css';
 import '../styles/motion.css';
+import AccessCounter from '../components/AccessCounter.astro';
 
 interface Props {
   title: string;
@@ -205,6 +206,7 @@ const jsonLdArray: Record<string, unknown>[] = [
 
     <footer>
       <div class="container-custom" style="text-align: center;">
+        <AccessCounter />
         <p>&copy; 2026 Genesis Vault — Mina Eureka Ernst</p>
       </div>
     </footer>
