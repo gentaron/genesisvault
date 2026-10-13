@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-12",
+  "capturedAt": "2026-10-13",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "Hackers activate automatic defrosting in supermarket fridges across Europe",
+      "url": "https://www.tomshardware.com/tech-industry/cyber-security/unprecedented-cyberattack-cripples-supermarket-fridges-across-europe-as-hackers-activate-automatic-defrosting-delivery-and-store-prices-also-impacted-by-incident",
+      "score": 863,
+      "date": "2026-10-12"
+    },
     {
       "source": "Hacker News",
       "title": "The gap in shared understanding of LLM capability is widening",
       "url": "https://twitter.com/karpathy/status/2109361546505966046",
-      "score": 662,
+      "score": 713,
       "date": "2026-10-11"
-    },
-    {
-      "source": "Hacker News",
-      "title": "QGIS enacts moratorium on AI assisted contributions",
-      "url": "https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387",
-      "score": 344,
-      "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
       "title": "GLM-Legal",
       "url": "https://z.ai/blog/glm-legal",
-      "score": 309,
+      "score": 656,
       "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
-      "title": "Why aren't AI companies being charged for hacking?",
-      "url": "https://mortoray.com/why-arent-ai-companies-being-charged-for-hacking/",
-      "score": 295,
+      "title": "AI is a tool and using it well takes skill",
+      "url": "https://yyhh.org/blog/2026/10/ai-is-a-tool/",
+      "score": 591,
       "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
-      "title": "500B tokens later: Letting AI agents decompile a first-person shooter",
-      "url": "https://momo5502.com/posts/2026-10-09-game-decompilation/",
-      "score": 206,
-      "date": "2026-10-11"
+      "title": "QGIS enacts moratorium on AI contributions",
+      "url": "https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387",
+      "score": 383,
+      "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
       "title": "AI coding agents generate more code, but not more software",
       "url": "https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/",
-      "score": 188,
+      "score": 355,
       "date": "2026-10-12"
     }
   ],
@@ -48,13 +48,13 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7807.240234375,
-      "changePct1d": -0.1,
-      "changePct5d": 0.4,
-      "sma20": 7714.14,
+      "close": 7804.4501953125,
+      "changePct1d": 0,
+      "changePct5d": -0.2,
+      "sma20": 7725.07,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-12"
+      "asOf": "2026-10-13"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.63999938964844,
-      "changePct1d": 0.4,
-      "changePct5d": 0.6,
-      "sma20": 157.36,
+      "close": 158.34300231933594,
+      "changePct1d": 0.2,
+      "changePct5d": 0.4,
+      "sma20": 157.35,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-12"
+      "asOf": "2026-10-13"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 82962.953125,
-      "changePct1d": -0.9,
-      "changePct5d": -0.4,
-      "sma20": 84066.6,
+      "close": 83035.03125,
+      "changePct1d": 1.6,
+      "changePct5d": 1.7,
+      "sma20": 83939.18,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-12"
+      "direction": "上昇",
+      "asOf": "2026-10-13"
     }
   ],
   "degraded": true,

@@ -1,23 +1,28 @@
 {
-  "capturedAt": "2026-10-12",
+  "capturedAt": "2026-10-13",
   "portfolio": {
-    "asOf": "2026-10-13",
-    "d1Pct": -0.22,
-    "d7Pct": -2.61,
-    "d30Pct": -2.68,
-    "fromHighPct": -3.16,
+    "asOf": "2026-10-14",
+    "d1Pct": 0.04,
+    "d7Pct": -3.18,
+    "d30Pct": -2.34,
+    "fromHighPct": -3.18,
     "atHigh": false,
     "vol30Pct": 10.6,
-    "streak": -1,
-    "days": 514
+    "streak": 1,
+    "days": 515
   },
   "market": {
-    "generatedAt": "2026-10-12T20:16:05.626Z",
+    "generatedAt": "2026-10-13T18:15:37.076Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "risk-on",
-    "breadth": "broad-rally",
+    "breadth": "mixed",
     "strongest": [
+      {
+        "name": "ソフトウェア",
+        "region": "欧州",
+        "r1wPct": 6.6
+      },
       {
         "name": "ソフトウェア",
         "region": "日本",
@@ -26,29 +31,24 @@
       {
         "name": "エネルギー",
         "region": "英国",
-        "r1wPct": 5.6
-      },
-      {
-        "name": "生活必需品",
-        "region": "英国",
-        "r1wPct": 5.3
+        "r1wPct": 6.4
       }
     ],
     "weakest": [
       {
         "name": "半導体",
-        "region": "米国",
-        "r1wPct": -6.8
+        "region": "欧州",
+        "r1wPct": -8.8
       },
       {
         "name": "半導体",
-        "region": "欧州",
-        "r1wPct": -4.8
+        "region": "米国",
+        "r1wPct": -8.2
       },
       {
         "name": "市場全体",
         "region": "新興国",
-        "r1wPct": -3.7
+        "r1wPct": -3.8
       }
     ],
     "rotations": [
@@ -65,6 +65,12 @@
         "to": "lagging"
       },
       {
+        "name": "米国 通信サービス",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
         "name": "米国 生活必需品",
         "region": "米国",
         "from": "lagging",
@@ -75,12 +81,6 @@
         "region": "米国",
         "from": "lagging",
         "to": "improving"
-      },
-      {
-        "name": "米国 バイオテク",
-        "region": "米国",
-        "from": "weakening",
-        "to": "lagging"
       }
     ]
   },
