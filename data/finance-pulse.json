@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-10-13",
+  "capturedAt": "2026-10-14",
   "portfolio": {
-    "asOf": "2026-10-14",
-    "d1Pct": 0.04,
-    "d7Pct": -3.18,
-    "d30Pct": -2.34,
-    "fromHighPct": -3.18,
+    "asOf": "2026-10-15",
+    "d1Pct": -0.76,
+    "d7Pct": -3.43,
+    "d30Pct": -2.53,
+    "fromHighPct": -3.69,
     "atHigh": false,
-    "vol30Pct": 10.6,
-    "streak": 1,
-    "days": 515
+    "vol30Pct": 10.9,
+    "streak": -1,
+    "days": 516
   },
   "market": {
-    "generatedAt": "2026-10-13T18:15:37.076Z",
+    "generatedAt": "2026-10-14T15:45:49.454Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "risk-on",
@@ -20,35 +20,35 @@
     "strongest": [
       {
         "name": "ソフトウェア",
-        "region": "欧州",
-        "r1wPct": 6.6
+        "region": "インド",
+        "r1wPct": 9.7
       },
       {
         "name": "ソフトウェア",
         "region": "日本",
-        "r1wPct": 6.4
+        "r1wPct": 8.3
       },
       {
         "name": "エネルギー",
         "region": "英国",
-        "r1wPct": 6.4
+        "r1wPct": 6.8
       }
     ],
     "weakest": [
       {
         "name": "半導体",
-        "region": "欧州",
-        "r1wPct": -8.8
+        "region": "韓国",
+        "r1wPct": -15.9
       },
       {
         "name": "半導体",
         "region": "米国",
-        "r1wPct": -8.2
+        "r1wPct": -8
       },
       {
-        "name": "市場全体",
-        "region": "新興国",
-        "r1wPct": -3.8
+        "name": "情報技術",
+        "region": "米国",
+        "r1wPct": -4.3
       }
     ],
     "rotations": [
@@ -65,12 +65,6 @@
         "to": "lagging"
       },
       {
-        "name": "米国 通信サービス",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
         "name": "米国 生活必需品",
         "region": "米国",
         "from": "lagging",
@@ -81,6 +75,12 @@
         "region": "米国",
         "from": "lagging",
         "to": "improving"
+      },
+      {
+        "name": "米国 ヘルスケア",
+        "region": "米国",
+        "from": "weakening",
+        "to": "leading"
       }
     ]
   },
@@ -88,7 +88,7 @@
     "divergence.market_up_me_down",
     "market.bull",
     "market.risk_on",
-    "portfolio.quiet_day"
+    "market.rotation_new_leader"
   ],
   "degraded": false,
   "notes": []

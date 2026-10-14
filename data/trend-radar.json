@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-13",
+  "capturedAt": "2026-10-14",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Hackers activate automatic defrosting in supermarket fridges across Europe",
-      "url": "https://www.tomshardware.com/tech-industry/cyber-security/unprecedented-cyberattack-cripples-supermarket-fridges-across-europe-as-hackers-activate-automatic-defrosting-delivery-and-store-prices-also-impacted-by-incident",
-      "score": 863,
-      "date": "2026-10-12"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The gap in shared understanding of LLM capability is widening",
-      "url": "https://twitter.com/karpathy/status/2109361546505966046",
-      "score": 713,
-      "date": "2026-10-11"
-    },
-    {
-      "source": "Hacker News",
-      "title": "GLM-Legal",
-      "url": "https://z.ai/blog/glm-legal",
-      "score": 656,
-      "date": "2026-10-12"
+      "title": "Gemini 4 Argon",
+      "url": "https://deepmind.google/models/gemini/",
+      "score": 1391,
+      "date": "2026-10-13"
     },
     {
       "source": "Hacker News",
       "title": "AI is a tool and using it well takes skill",
       "url": "https://yyhh.org/blog/2026/10/ai-is-a-tool/",
-      "score": 591,
-      "date": "2026-10-12"
-    },
-    {
-      "source": "Hacker News",
-      "title": "QGIS enacts moratorium on AI contributions",
-      "url": "https://github.com/qgis/QGIS-Enhancement-Proposals/pull/387",
-      "score": 383,
+      "score": 746,
       "date": "2026-10-12"
     },
     {
       "source": "Hacker News",
       "title": "AI coding agents generate more code, but not more software",
       "url": "https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/",
-      "score": 355,
+      "score": 363,
+      "date": "2026-10-12"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I posted to HN, and then my website was flooded with AI bot traffic",
+      "url": "https://www.sammystraus.com/#i-posted-to-hn-and-then-my-website-was-flooded-with-ai-bot-traffic",
+      "score": 334,
+      "date": "2026-10-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Character.ai has initiated voluntary Chapter 11 bankruptcy",
+      "url": "https://blog.character.ai/an-update-on-character-ai/",
+      "score": 328,
+      "date": "2026-10-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "'AI' Is Not a Tool by Rich Hickey",
+      "url": "https://www.linkedin.com/pulse/ai-tool-rich-hickey-kjl8e",
+      "score": 308,
       "date": "2026-10-12"
     }
   ],
@@ -48,51 +48,50 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7804.4501953125,
-      "changePct1d": 0,
-      "changePct5d": -0.2,
-      "sma20": 7725.07,
-      "aboveSma20": true,
+      "close": 7731.81982421875,
+      "changePct1d": -0.9,
+      "changePct5d": -0.9,
+      "sma20": 7734.12,
+      "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-13"
+      "asOf": "2026-10-14"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 69030.921875,
-      "changePct1d": 0,
-      "changePct5d": 1.1,
-      "sma20": 66523.85,
+      "close": 67777.5234375,
+      "changePct1d": -1.8,
+      "changePct5d": -3.1,
+      "sma20": 66655.58,
       "aboveSma20": true,
-      "direction": "横ばい",
-      "asOf": "2026-10-09"
+      "direction": "下落",
+      "asOf": "2026-10-13"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.34300231933594,
+      "close": 158.79100036621094,
       "changePct1d": 0.2,
-      "changePct5d": 0.4,
-      "sma20": 157.35,
+      "changePct5d": 0.3,
+      "sma20": 157.72,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-13"
+      "asOf": "2026-10-14"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 83035.03125,
-      "changePct1d": 1.6,
-      "changePct5d": 1.7,
-      "sma20": 83939.18,
+      "close": 81632.109375,
+      "changePct1d": -1.8,
+      "changePct5d": -1.1,
+      "sma20": 83804.84,
       "aboveSma20": false,
-      "direction": "上昇",
-      "asOf": "2026-10-13"
+      "direction": "横ばい",
+      "asOf": "2026-10-14"
     }
   ],
-  "degraded": true,
+  "degraded": false,
   "notes": [
-    "Hacker News に該当なし: robotics",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
     "相場データは Yahoo で代替: ドル円",
