@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-10-14",
+  "capturedAt": "2026-10-15",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Gemini 4 Argon",
       "url": "https://deepmind.google/models/gemini/",
-      "score": 1391,
+      "score": 1453,
       "date": "2026-10-13"
     },
     {
       "source": "Hacker News",
-      "title": "AI is a tool and using it well takes skill",
-      "url": "https://yyhh.org/blog/2026/10/ai-is-a-tool/",
-      "score": 746,
-      "date": "2026-10-12"
+      "title": "Containment and monitoring failures are to blame for AI hacking reports: experts",
+      "url": "https://www.csoonline.com/article/4234854/ai-agents-arent-going-rogue-frontier-labs-are-skipping-security-basics.html",
+      "score": 930,
+      "date": "2026-10-14"
     },
     {
       "source": "Hacker News",
-      "title": "AI coding agents generate more code, but not more software",
-      "url": "https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/",
-      "score": 363,
-      "date": "2026-10-12"
+      "title": "Banks are now trying to offload the AI data center debt they just underwrote",
+      "url": "https://startupfortune.com/banks-are-now-trying-to-offload-the-ai-data-center-debt-they-just-underwrote/",
+      "score": 373,
+      "date": "2026-10-14"
     },
     {
       "source": "Hacker News",
-      "title": "I posted to HN, and then my website was flooded with AI bot traffic",
-      "url": "https://www.sammystraus.com/#i-posted-to-hn-and-then-my-website-was-flooded-with-ai-bot-traffic",
-      "score": 334,
+      "title": "LFM2.5-24B-A2B: Built for fast on-device agents",
+      "url": "https://www.liquid.ai/blog/lfm2-5-24b-a2b",
+      "score": 262,
+      "date": "2026-10-14"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Gemini 4 Argon for Robotics",
+      "url": "https://developers.googleblog.com/gemini-4-argon-for-robotics/",
+      "score": 232,
       "date": "2026-10-13"
     },
     {
       "source": "Hacker News",
-      "title": "Character.ai has initiated voluntary Chapter 11 bankruptcy",
-      "url": "https://blog.character.ai/an-update-on-character-ai/",
-      "score": 328,
-      "date": "2026-10-13"
-    },
-    {
-      "source": "Hacker News",
-      "title": "'AI' Is Not a Tool by Rich Hickey",
-      "url": "https://www.linkedin.com/pulse/ai-tool-rich-hickey-kjl8e",
-      "score": 308,
-      "date": "2026-10-12"
+      "title": "Show HN: Petal, open-source CoScreen/ScreenHero finally free",
+      "url": "https://petal.live/",
+      "score": 202,
+      "date": "2026-10-14"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7731.81982421875,
-      "changePct1d": -0.9,
-      "changePct5d": -0.9,
-      "sma20": 7734.12,
+      "close": 7724.72021484375,
+      "changePct1d": 0.1,
+      "changePct5d": -0.5,
+      "sma20": 7737.83,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-14"
+      "asOf": "2026-10-15"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 67777.5234375,
-      "changePct1d": -1.8,
-      "changePct5d": -3.1,
-      "sma20": 66655.58,
+      "close": 67744.2890625,
+      "changePct1d": 0,
+      "changePct5d": -4.2,
+      "sma20": 66779.25,
       "aboveSma20": true,
       "direction": "下落",
-      "asOf": "2026-10-13"
+      "asOf": "2026-10-14"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.79100036621094,
-      "changePct1d": 0.2,
-      "changePct5d": 0.3,
-      "sma20": 157.72,
+      "close": 158.1269989013672,
+      "changePct1d": -0.1,
+      "changePct5d": 0,
+      "sma20": 157.8,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-14"
+      "asOf": "2026-10-15"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81632.109375,
-      "changePct1d": -1.8,
-      "changePct5d": -1.1,
-      "sma20": 83804.84,
+      "close": 82385.65625,
+      "changePct1d": 1,
+      "changePct5d": -0.6,
+      "sma20": 83718.89,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-14"
+      "asOf": "2026-10-15"
     }
   ],
   "degraded": false,

@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-10-14",
+  "capturedAt": "2026-10-15",
   "portfolio": {
-    "asOf": "2026-10-15",
-    "d1Pct": -0.76,
-    "d7Pct": -3.43,
-    "d30Pct": -2.53,
-    "fromHighPct": -3.69,
+    "asOf": "2026-10-16",
+    "d1Pct": -0.07,
+    "d7Pct": -2.91,
+    "d30Pct": -2.05,
+    "fromHighPct": -3.71,
     "atHigh": false,
-    "vol30Pct": 10.9,
-    "streak": -1,
-    "days": 516
+    "vol30Pct": 10.7,
+    "streak": -2,
+    "days": 517
   },
   "market": {
-    "generatedAt": "2026-10-14T15:45:49.454Z",
+    "generatedAt": "2026-10-15T15:30:49.618Z",
     "trend": "bull",
     "volatility": "normal",
-    "riskAppetite": "risk-on",
+    "riskAppetite": "neutral",
     "breadth": "mixed",
     "strongest": [
       {
         "name": "ソフトウェア",
         "region": "インド",
-        "r1wPct": 9.7
+        "r1wPct": 11.7
       },
       {
         "name": "ソフトウェア",
-        "region": "日本",
-        "r1wPct": 8.3
+        "region": "欧州",
+        "r1wPct": 9.6
       },
       {
-        "name": "エネルギー",
-        "region": "英国",
-        "r1wPct": 6.8
+        "name": "生活必需品",
+        "region": "欧州",
+        "r1wPct": 8.4
       }
     ],
     "weakest": [
       {
         "name": "半導体",
         "region": "韓国",
-        "r1wPct": -15.9
+        "r1wPct": -14.7
+      },
+      {
+        "name": "半導体",
+        "region": "欧州",
+        "r1wPct": -11.3
       },
       {
         "name": "半導体",
         "region": "米国",
-        "r1wPct": -8
-      },
-      {
-        "name": "情報技術",
-        "region": "米国",
-        "r1wPct": -4.3
+        "r1wPct": -9
       }
     ],
     "rotations": [
@@ -56,39 +56,39 @@
         "name": "米国 情報技術",
         "region": "米国",
         "from": "leading",
-        "to": "weakening"
+        "to": "lagging"
       },
       {
         "name": "米国 半導体",
         "region": "米国",
-        "from": "leading",
+        "from": "weakening",
         "to": "lagging"
+      },
+      {
+        "name": "米国 通信サービス",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
       },
       {
         "name": "米国 生活必需品",
         "region": "米国",
-        "from": "lagging",
-        "to": "improving"
+        "from": "improving",
+        "to": "leading"
       },
       {
         "name": "米国 金融",
         "region": "米国",
         "from": "lagging",
         "to": "improving"
-      },
-      {
-        "name": "米国 ヘルスケア",
-        "region": "米国",
-        "from": "weakening",
-        "to": "leading"
       }
     ]
   },
   "predicates": [
     "divergence.market_up_me_down",
     "market.bull",
-    "market.risk_on",
-    "market.rotation_new_leader"
+    "market.rotation_new_leader",
+    "portfolio.quiet_day"
   ],
   "degraded": false,
   "notes": []
