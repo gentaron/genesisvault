@@ -1,97 +1,98 @@
 {
-  "capturedAt": "2026-10-15",
+  "capturedAt": "2026-10-16",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Gemini 4 Argon",
-      "url": "https://deepmind.google/models/gemini/",
-      "score": 1453,
-      "date": "2026-10-13"
-    },
     {
       "source": "Hacker News",
       "title": "Containment and monitoring failures are to blame for AI hacking reports: experts",
       "url": "https://www.csoonline.com/article/4234854/ai-agents-arent-going-rogue-frontier-labs-are-skipping-security-basics.html",
-      "score": 930,
+      "score": 945,
       "date": "2026-10-14"
     },
     {
       "source": "Hacker News",
       "title": "Banks are now trying to offload the AI data center debt they just underwrote",
       "url": "https://startupfortune.com/banks-are-now-trying-to-offload-the-ai-data-center-debt-they-just-underwrote/",
-      "score": 373,
+      "score": 381,
       "date": "2026-10-14"
     },
     {
       "source": "Hacker News",
       "title": "LFM2.5-24B-A2B: Built for fast on-device agents",
       "url": "https://www.liquid.ai/blog/lfm2-5-24b-a2b",
-      "score": 262,
+      "score": 286,
       "date": "2026-10-14"
     },
     {
       "source": "Hacker News",
-      "title": "Gemini 4 Argon for Robotics",
-      "url": "https://developers.googleblog.com/gemini-4-argon-for-robotics/",
-      "score": 232,
-      "date": "2026-10-13"
+      "title": "Why We're Banning AI",
+      "url": "https://www.currentaffairs.org/news/why-were-banning-ai",
+      "score": 245,
+      "date": "2026-10-15"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: Petal, open-source CoScreen/ScreenHero finally free",
-      "url": "https://petal.live/",
-      "score": 202,
-      "date": "2026-10-14"
+      "title": "Simons Foundation launches $15M effort to help mathematicians navigate AI era",
+      "url": "https://www.simonsfoundation.org/news/simons-foundation-launches-15m-effort-to-help-mathematicians-navigate-ai-era/",
+      "score": 243,
+      "date": "2026-10-15"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Using AI to reverse engineer hardware",
+      "url": "https://blogs.gnome.org/uraeus/2026/10/15/aiandreverseengineerhardware/",
+      "score": 231,
+      "date": "2026-10-15"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7724.72021484375,
-      "changePct1d": 0.1,
-      "changePct5d": -0.5,
-      "sma20": 7737.83,
+      "close": 7716.10009765625,
+      "changePct1d": -0.4,
+      "changePct5d": -1.2,
+      "sma20": 7742.07,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-15"
+      "asOf": "2026-10-16"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 67744.2890625,
-      "changePct1d": 0,
-      "changePct5d": -4.2,
-      "sma20": 66779.25,
-      "aboveSma20": true,
+      "close": 64425.94921875,
+      "changePct1d": -4.9,
+      "changePct5d": -8,
+      "sma20": 66799.98,
+      "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-14"
+      "asOf": "2026-10-15"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.1269989013672,
+      "close": 157.85800170898438,
       "changePct1d": -0.1,
-      "changePct5d": 0,
-      "sma20": 157.8,
-      "aboveSma20": true,
+      "changePct5d": -0.1,
+      "sma20": 157.88,
+      "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-15"
+      "asOf": "2026-10-16"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 82385.65625,
-      "changePct1d": 1,
-      "changePct5d": -0.6,
-      "sma20": 83718.89,
+      "close": 81522.25,
+      "changePct1d": -0.8,
+      "changePct5d": -2.6,
+      "sma20": 83562.48,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-15"
+      "direction": "下落",
+      "asOf": "2026-10-16"
     }
   ],
-  "degraded": false,
+  "degraded": true,
   "notes": [
+    "Hacker News に該当なし: robotics",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
     "相場データは Yahoo で代替: ドル円",
