@@ -1,22 +1,22 @@
 {
-  "capturedAt": "2026-10-16",
+  "capturedAt": "2026-10-17",
   "portfolio": {
     "asOf": "2026-10-17",
-    "d1Pct": 0.05,
-    "d7Pct": -0.63,
-    "d30Pct": -1.94,
-    "fromHighPct": -3.71,
+    "d1Pct": -0.23,
+    "d7Pct": -0.91,
+    "d30Pct": -2.21,
+    "fromHighPct": -3.98,
     "atHigh": false,
-    "vol30Pct": 10.7,
-    "streak": 1,
+    "vol30Pct": 10.8,
+    "streak": -3,
     "days": 518
   },
   "market": {
-    "generatedAt": "2026-10-16T15:16:24.061Z",
+    "generatedAt": "2026-10-17T14:15:28.023Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "broad-rally",
+    "breadth": "mixed",
     "strongest": [
       {
         "name": "ソフトウェア",
@@ -24,14 +24,14 @@
         "r1wPct": 13.5
       },
       {
-        "name": "ソフトウェア",
+        "name": "金融",
         "region": "日本",
-        "r1wPct": 8.1
+        "r1wPct": 7.8
       },
       {
-        "name": "公益",
-        "region": "欧州",
-        "r1wPct": 7.8
+        "name": "ソフトウェア",
+        "region": "日本",
+        "r1wPct": 7.1
       }
     ],
     "weakest": [
@@ -42,27 +42,33 @@
       },
       {
         "name": "半導体",
-        "region": "日本",
-        "r1wPct": -9.2
+        "region": "米国",
+        "r1wPct": -10.5
       },
       {
         "name": "半導体",
-        "region": "米国",
-        "r1wPct": -8
+        "region": "欧州",
+        "r1wPct": -7.8
       }
     ],
     "rotations": [
       {
         "name": "米国 情報技術",
         "region": "米国",
-        "from": "leading",
-        "to": "weakening"
+        "from": "weakening",
+        "to": "lagging"
       },
       {
         "name": "米国 半導体",
         "region": "米国",
         "from": "weakening",
         "to": "lagging"
+      },
+      {
+        "name": "米国 ソフトウェア",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "米国 通信サービス",
@@ -75,12 +81,6 @@
         "region": "米国",
         "from": "improving",
         "to": "leading"
-      },
-      {
-        "name": "米国 金融",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
       }
     ]
   },
