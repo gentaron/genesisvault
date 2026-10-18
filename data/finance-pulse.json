@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-10-17",
+  "capturedAt": "2026-10-18",
   "portfolio": {
-    "asOf": "2026-10-17",
-    "d1Pct": -0.23,
-    "d7Pct": -0.91,
-    "d30Pct": -2.21,
-    "fromHighPct": -3.98,
+    "asOf": "2026-10-18",
+    "d1Pct": -0.05,
+    "d7Pct": -1.01,
+    "d30Pct": -2.75,
+    "fromHighPct": -4.02,
     "atHigh": false,
-    "vol30Pct": 10.8,
-    "streak": -3,
-    "days": 518
+    "vol30Pct": 10.5,
+    "streak": -4,
+    "days": 519
   },
   "market": {
-    "generatedAt": "2026-10-17T14:15:28.023Z",
+    "generatedAt": "2026-10-18T14:30:28.308Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -29,9 +29,9 @@
         "r1wPct": 7.8
       },
       {
-        "name": "ソフトウェア",
-        "region": "日本",
-        "r1wPct": 7.1
+        "name": "公益",
+        "region": "欧州",
+        "r1wPct": 7.6
       }
     ],
     "weakest": [
@@ -88,6 +88,7 @@
     "divergence.market_up_me_down",
     "market.bull",
     "market.rotation_new_leader",
+    "portfolio.down_streak",
     "portfolio.quiet_day"
   ],
   "degraded": false,

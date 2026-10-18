@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-10-17",
+  "capturedAt": "2026-10-18",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Muse Spark Open",
-      "url": "https://research.meta.ai/blog/muse-spark-open",
-      "score": 911,
-      "date": "2026-10-15"
+      "title": "DeepSeek-v4.1-Flash-1017",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "score": 908,
+      "date": "2026-10-17"
     },
     {
       "source": "Hacker News",
       "title": "90% of US working hours are spent on tasks not covered well by AI benchmarks",
       "url": "https://www.mercor.com/research/labor-index/benchmark-map/",
-      "score": 551,
+      "score": 611,
       "date": "2026-10-16"
     },
     {
       "source": "Hacker News",
       "title": "Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console",
       "url": "https://github.com/cobanov/PS5LM",
-      "score": 316,
+      "score": 368,
       "date": "2026-10-16"
     },
     {
       "source": "Hacker News",
-      "title": "Why We're Banning AI",
-      "url": "https://www.currentaffairs.org/news/why-were-banning-ai",
-      "score": 256,
-      "date": "2026-10-15"
+      "title": "Show HN: Llmspeed – feel how fast a local LLM runs before you buy the hardware",
+      "url": "https://llmspeed.dev/",
+      "score": 310,
+      "date": "2026-10-17"
     },
     {
       "source": "Hacker News",
-      "title": "Using AI to reverse engineer hardware",
-      "url": "https://blogs.gnome.org/uraeus/2026/10/15/aiandreverseengineerhardware/",
-      "score": 249,
-      "date": "2026-10-15"
+      "title": "Anthropic assigned highest junk credit rating in June",
+      "url": "https://www.ft.com/content/5a310aee-f555-4266-874c-b1b4db20186d",
+      "score": 292,
+      "date": "2026-10-16"
     },
     {
       "source": "Hacker News",
-      "title": "Simons Foundation launches $15M effort to help mathematicians navigate AI era",
-      "url": "https://www.simonsfoundation.org/news/simons-foundation-launches-15m-effort-to-help-mathematicians-navigate-ai-era/",
-      "score": 247,
-      "date": "2026-10-15"
+      "title": "Postgres 19 delayed after AI reviewers find more bugs than humans can fix",
+      "url": "https://www.theregister.com/databases/2026/10/16/postgres-19-delayed-after-ai-reviewers-find-more-bugs-than-humans-can-fix/5303471",
+      "score": 214,
+      "date": "2026-10-16"
     }
   ],
   "market": [
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81362.40625,
-      "changePct1d": -0.2,
-      "changePct5d": -0.5,
-      "sma20": 83406.62,
+      "close": 80996.5078125,
+      "changePct1d": -0.5,
+      "changePct5d": -2.5,
+      "sma20": 83282.3,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-17"
+      "direction": "下落",
+      "asOf": "2026-10-18"
     }
   ],
   "degraded": true,
