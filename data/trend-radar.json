@@ -1,60 +1,60 @@
 {
-  "capturedAt": "2026-10-18",
+  "capturedAt": "2026-10-19",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "DeepSeek-v4.1-Flash-1017",
-      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
-      "score": 908,
+      "title": "Hybrid Reasoning Agents: LLM agents that think in latent space, act through text",
+      "url": "https://arxiv.org/abs/2610.18861",
+      "score": 492,
+      "date": "2026-10-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Timestral: Mistral release time-series foundation models",
+      "url": "https://mistral.ai/news/timestral/",
+      "score": 382,
+      "date": "2026-10-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "If you don't run your own LLM proxy, how do you know whats going on?",
+      "url": "https://jrdsgl.com/if-you-dont-run-your-own-llm-proxy-how-the-fuck-do-you-even-know-whats-going-on/",
+      "score": 278,
+      "date": "2026-10-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I built a programming language that LLMs can't use",
+      "url": "https://blog.picheta.me/post/killswitch-lang/",
+      "score": 257,
       "date": "2026-10-17"
     },
     {
       "source": "Hacker News",
-      "title": "90% of US working hours are spent on tasks not covered well by AI benchmarks",
-      "url": "https://www.mercor.com/research/labor-index/benchmark-map/",
-      "score": 611,
-      "date": "2026-10-16"
+      "title": "Show HN: Sphinx – A hook that quizzes you on your AI's code before shipping",
+      "url": "https://sphinx-six-theta.vercel.app/",
+      "score": 249,
+      "date": "2026-10-18"
     },
     {
       "source": "Hacker News",
-      "title": "Llama.cpp on a jailbroken PS5: run any GGUF model natively on the console",
-      "url": "https://github.com/cobanov/PS5LM",
-      "score": 368,
-      "date": "2026-10-16"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: Llmspeed – feel how fast a local LLM runs before you buy the hardware",
-      "url": "https://llmspeed.dev/",
-      "score": 310,
-      "date": "2026-10-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Anthropic assigned highest junk credit rating in June",
-      "url": "https://www.ft.com/content/5a310aee-f555-4266-874c-b1b4db20186d",
-      "score": 292,
-      "date": "2026-10-16"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Postgres 19 delayed after AI reviewers find more bugs than humans can fix",
-      "url": "https://www.theregister.com/databases/2026/10/16/postgres-19-delayed-after-ai-reviewers-find-more-bugs-than-humans-can-fix/5303471",
-      "score": 214,
-      "date": "2026-10-16"
+      "title": "Anthropic's proposed AI safety bill only kicks in if 50 deaths or $1B in damages",
+      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-proposed-ai-safety-bill-only-kicks-in-if-50-deaths-or-usd1-billion-in-damages-are-on-the-line-proposal-would-effectively-make-the-commerce-department-the-only-agency-capable-of-stopping-an-ai-model",
+      "score": 170,
+      "date": "2026-10-18"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7659.43994140625,
-      "changePct1d": -1.1,
-      "changePct5d": -1.9,
-      "sma20": 7739.24,
+      "close": 7698.39990234375,
+      "changePct1d": 0.5,
+      "changePct5d": -1.4,
+      "sma20": 7735.93,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-10-16"
+      "direction": "横ばい",
+      "asOf": "2026-10-19"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.98699951171875,
-      "changePct1d": -0.1,
-      "changePct5d": -0.1,
-      "sma20": 157.94,
+      "close": 158.51300048828125,
+      "changePct1d": 0.2,
+      "changePct5d": 0.2,
+      "sma20": 157.97,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-16"
+      "asOf": "2026-10-19"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80996.5078125,
-      "changePct1d": -0.5,
-      "changePct5d": -2.5,
-      "sma20": 83282.3,
+      "close": 81842.5703125,
+      "changePct1d": -0.2,
+      "changePct5d": 0.3,
+      "sma20": 83244.36,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-10-18"
+      "direction": "横ばい",
+      "asOf": "2026-10-19"
     }
   ],
   "degraded": true,
