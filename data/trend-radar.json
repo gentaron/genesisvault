@@ -1,40 +1,33 @@
 {
-  "capturedAt": "2026-10-19",
+  "capturedAt": "2026-10-20",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Hybrid Reasoning Agents: LLM agents that think in latent space, act through text",
       "url": "https://arxiv.org/abs/2610.18861",
-      "score": 492,
+      "score": 502,
       "date": "2026-10-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Timestral: Mistral release time-series foundation models",
-      "url": "https://mistral.ai/news/timestral/",
-      "score": 382,
-      "date": "2026-10-19"
     },
     {
       "source": "Hacker News",
       "title": "If you don't run your own LLM proxy, how do you know whats going on?",
       "url": "https://jrdsgl.com/if-you-dont-run-your-own-llm-proxy-how-the-fuck-do-you-even-know-whats-going-on/",
-      "score": 278,
+      "score": 292,
       "date": "2026-10-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I built a programming language that LLMs can't use",
-      "url": "https://blog.picheta.me/post/killswitch-lang/",
-      "score": 257,
-      "date": "2026-10-17"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: Sphinx – A hook that quizzes you on your AI's code before shipping",
       "url": "https://sphinx-six-theta.vercel.app/",
-      "score": 249,
+      "score": 252,
       "date": "2026-10-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Ask HN: How to deal with shipping AI-written code you don't understand?",
+      "url": "https://news.ycombinator.com/item?id=50151036",
+      "score": 226,
+      "date": "2026-10-19"
     },
     {
       "source": "Hacker News",
@@ -42,18 +35,25 @@
       "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-proposed-ai-safety-bill-only-kicks-in-if-50-deaths-or-usd1-billion-in-damages-are-on-the-line-proposal-would-effectively-make-the-commerce-department-the-only-agency-capable-of-stopping-an-ai-model",
       "score": 170,
       "date": "2026-10-18"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Websites are closing their doors to AI agents",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1013195/ai-agents-blocked-web",
+      "score": 153,
+      "date": "2026-10-18"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7698.39990234375,
-      "changePct1d": 0.5,
-      "changePct5d": -1.4,
-      "sma20": 7735.93,
+      "close": 7690.72998046875,
+      "changePct1d": 0.4,
+      "changePct5d": -1.5,
+      "sma20": 7735.54,
       "aboveSma20": false,
-      "direction": "横ばい",
+      "direction": "下落",
       "asOf": "2026-10-19"
     },
     {
@@ -70,10 +70,10 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.51300048828125,
-      "changePct1d": 0.2,
-      "changePct5d": 0.2,
-      "sma20": 157.97,
+      "close": 158.5279998779297,
+      "changePct1d": 0.5,
+      "changePct5d": 0,
+      "sma20": 157.99,
       "aboveSma20": true,
       "direction": "横ばい",
       "asOf": "2026-10-19"
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81842.5703125,
+      "close": 81842.9765625,
       "changePct1d": -0.2,
       "changePct5d": 0.3,
-      "sma20": 83244.36,
+      "sma20": 83244.38,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-19"
+      "asOf": "2026-10-20"
     }
   ],
   "degraded": true,
