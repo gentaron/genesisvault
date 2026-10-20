@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-19",
+  "capturedAt": "2026-10-20",
   "portfolio": {
     "asOf": "2026-10-20",
     "d1Pct": 0.04,
@@ -11,86 +11,13 @@
     "streak": 2,
     "days": 521
   },
-  "market": {
-    "generatedAt": "2026-10-19T17:30:20.426Z",
-    "trend": "bull",
-    "volatility": "normal",
-    "riskAppetite": "neutral",
-    "breadth": "mixed",
-    "strongest": [
-      {
-        "name": "ソフトウェア",
-        "region": "インド",
-        "r1wPct": 10.9
-      },
-      {
-        "name": "金融",
-        "region": "日本",
-        "r1wPct": 7.8
-      },
-      {
-        "name": "ソフトウェア",
-        "region": "日本",
-        "r1wPct": 7.1
-      }
-    ],
-    "weakest": [
-      {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": -17.7
-      },
-      {
-        "name": "半導体",
-        "region": "米国",
-        "r1wPct": -6.2
-      },
-      {
-        "name": "半導体",
-        "region": "日本",
-        "r1wPct": -5.3
-      }
-    ],
-    "rotations": [
-      {
-        "name": "米国 ソフトウェア",
-        "region": "米国",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "米国 生活必需品",
-        "region": "米国",
-        "from": "improving",
-        "to": "leading"
-      },
-      {
-        "name": "米国 銀行",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "米国 ヘルスケア",
-        "region": "米国",
-        "from": "weakening",
-        "to": "leading"
-      },
-      {
-        "name": "米国 素材",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      }
-    ]
-  },
+  "market": null,
   "predicates": [
-    "divergence.market_up_me_down",
-    "market.bull",
-    "market.rotation_new_leader",
     "portfolio.month_down",
     "portfolio.quiet_day"
   ],
-  "degraded": false,
-  "notes": []
+  "degraded": true,
+  "notes": [
+    "qaiz: QAIZ_BASE_URL が未設定のため読みませんでした"
+  ]
 }
