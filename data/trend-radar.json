@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-10-19",
+  "capturedAt": "2026-10-20",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "DeepSeek just open-sourced its inference engine",
+      "url": "https://github.com/deepseek-ai/DeepInfer",
+      "score": 1513,
+      "date": "2026-10-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "WhatsApp's help pages hid LLM instructions: dont recommend a regulator",
+      "url": "https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions",
+      "score": 653,
+      "date": "2026-10-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Ask HN: How to deal with shipping AI-written code you don't understand?",
+      "url": "https://news.ycombinator.com/item?id=50151036",
+      "score": 555,
+      "date": "2026-10-19"
+    },
     {
       "source": "Hacker News",
       "title": "Hybrid Reasoning Agents: LLM agents that think in latent space, act through text",
       "url": "https://arxiv.org/abs/2610.18861",
-      "score": 492,
+      "score": 511,
       "date": "2026-10-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Timestral: Mistral release time-series foundation models",
-      "url": "https://mistral.ai/news/timestral/",
-      "score": 382,
-      "date": "2026-10-19"
     },
     {
       "source": "Hacker News",
       "title": "If you don't run your own LLM proxy, how do you know whats going on?",
       "url": "https://jrdsgl.com/if-you-dont-run-your-own-llm-proxy-how-the-fuck-do-you-even-know-whats-going-on/",
-      "score": 278,
+      "score": 298,
       "date": "2026-10-18"
     },
     {
       "source": "Hacker News",
-      "title": "I built a programming language that LLMs can't use",
-      "url": "https://blog.picheta.me/post/killswitch-lang/",
-      "score": 257,
-      "date": "2026-10-17"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: Sphinx – A hook that quizzes you on your AI's code before shipping",
-      "url": "https://sphinx-six-theta.vercel.app/",
-      "score": 249,
-      "date": "2026-10-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Anthropic's proposed AI safety bill only kicks in if 50 deaths or $1B in damages",
-      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/anthropics-proposed-ai-safety-bill-only-kicks-in-if-50-deaths-or-usd1-billion-in-damages-are-on-the-line-proposal-would-effectively-make-the-commerce-department-the-only-agency-capable-of-stopping-an-ai-model",
-      "score": 170,
-      "date": "2026-10-18"
+      "title": "Show HN: Qwen3-4B with the AI writing tics trained out",
+      "url": "https://100toolkit.com/blog/deslop-model/",
+      "score": 154,
+      "date": "2026-10-19"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7698.39990234375,
-      "changePct1d": 0.5,
-      "changePct5d": -1.4,
-      "sma20": 7735.93,
+      "close": 7722.2998046875,
+      "changePct1d": 0.4,
+      "changePct5d": -1.1,
+      "sma20": 7733.43,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-19"
+      "asOf": "2026-10-20"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 65324.2890625,
-      "changePct1d": 1.4,
-      "changePct5d": -5.4,
-      "sma20": 66891.55,
+      "close": 64916.69921875,
+      "changePct1d": -0.6,
+      "changePct5d": -6,
+      "sma20": 66963.18,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-16"
+      "asOf": "2026-10-19"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.51300048828125,
+      "close": 158.18800354003906,
       "changePct1d": 0.2,
-      "changePct5d": 0.2,
-      "sma20": 157.97,
+      "changePct5d": -0.2,
+      "sma20": 157.98,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-19"
+      "asOf": "2026-10-20"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81842.5703125,
-      "changePct1d": -0.2,
-      "changePct5d": 0.3,
-      "sma20": 83244.36,
+      "close": 82578.2890625,
+      "changePct1d": 0.9,
+      "changePct5d": 0.5,
+      "sma20": 83196.13,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-19"
+      "asOf": "2026-10-20"
     }
   ],
   "degraded": true,
