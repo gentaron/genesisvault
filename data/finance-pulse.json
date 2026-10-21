@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-10-20",
+  "capturedAt": "2026-10-21",
   "portfolio": {
-    "asOf": "2026-10-21",
-    "d1Pct": 0.16,
-    "d7Pct": -0.96,
-    "d30Pct": -3.11,
-    "fromHighPct": -3.88,
+    "asOf": "2026-10-22",
+    "d1Pct": 0.07,
+    "d7Pct": -0.03,
+    "d30Pct": -3.43,
+    "fromHighPct": -3.67,
     "atHigh": false,
-    "vol30Pct": 10.4,
-    "streak": 1,
-    "days": 522
+    "vol30Pct": 10.2,
+    "streak": 2,
+    "days": 523
   },
   "market": {
-    "generatedAt": "2026-10-20T15:30:19.603Z",
+    "generatedAt": "2026-10-21T15:45:30.223Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -21,34 +21,34 @@
       {
         "name": "ソフトウェア",
         "region": "インド",
-        "r1wPct": 10.9
+        "r1wPct": 10
       },
       {
         "name": "ヘルスケア",
         "region": "日本",
-        "r1wPct": 7.6
+        "r1wPct": 7.4
       },
       {
-        "name": "ヘルスケア",
+        "name": "ソフトウェア",
         "region": "欧州",
         "r1wPct": 5.9
       }
     ],
     "weakest": [
       {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": -13
+        "name": "通信サービス",
+        "region": "香港",
+        "r1wPct": -7.4
       },
       {
-        "name": "銀行",
+        "name": "半導体",
         "region": "日本",
-        "r1wPct": -7
+        "r1wPct": -4.7
       },
       {
-        "name": "半導体",
-        "region": "米国",
-        "r1wPct": -6.2
+        "name": "資本財",
+        "region": "日本",
+        "r1wPct": -4.1
       }
     ],
     "rotations": [
@@ -59,25 +59,25 @@
         "to": "lagging"
       },
       {
-        "name": "米国 ソフトウェア",
-        "region": "米国",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "米国 通信サービス",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "米国 生活必需品",
+        "name": "米国 金融",
         "region": "米国",
         "from": "improving",
         "to": "leading"
       },
       {
         "name": "米国 銀行",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
+        "name": "米国 バイオテク",
+        "region": "米国",
+        "from": "lagging",
+        "to": "leading"
+      },
+      {
+        "name": "金 (ゴールド)",
         "region": "米国",
         "from": "lagging",
         "to": "improving"

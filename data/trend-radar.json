@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-10-20",
+  "capturedAt": "2026-10-21",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "DeepSeek just open-sourced its inference engine",
+      "title": "DeepInfer: High-performance inference framework for DeepSeek models",
       "url": "https://github.com/deepseek-ai/DeepInfer",
-      "score": 1513,
+      "score": 2281,
+      "date": "2026-10-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Voxtral 3",
+      "url": "https://mistral.ai/news/voxtral-3/",
+      "score": 747,
       "date": "2026-10-20"
     },
     {
       "source": "Hacker News",
       "title": "WhatsApp's help pages hid LLM instructions: dont recommend a regulator",
       "url": "https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions",
-      "score": 653,
+      "score": 734,
       "date": "2026-10-19"
     },
     {
       "source": "Hacker News",
-      "title": "Ask HN: How to deal with shipping AI-written code you don't understand?",
-      "url": "https://news.ycombinator.com/item?id=50151036",
-      "score": 555,
-      "date": "2026-10-19"
+      "title": "Google Cloud outage affects almost all banking and other operations in Europe",
+      "url": "https://www.neowin.net/news/google-cloud-outage-takes-down-hsbc-revolut-bank-of-scotland-llyods-equifax-more/",
+      "score": 396,
+      "date": "2026-10-20"
     },
     {
       "source": "Hacker News",
-      "title": "Hybrid Reasoning Agents: LLM agents that think in latent space, act through text",
-      "url": "https://arxiv.org/abs/2610.18861",
-      "score": 511,
-      "date": "2026-10-18"
+      "title": "Publish fake stats, get cited in LLMs",
+      "url": "https://peec.ai/blog/publish-stats-get-cited-the-tactic-that-put-my-data-all-over-the-web",
+      "score": 351,
+      "date": "2026-10-20"
     },
     {
       "source": "Hacker News",
-      "title": "If you don't run your own LLM proxy, how do you know whats going on?",
-      "url": "https://jrdsgl.com/if-you-dont-run-your-own-llm-proxy-how-the-fuck-do-you-even-know-whats-going-on/",
-      "score": 298,
-      "date": "2026-10-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Show HN: Qwen3-4B with the AI writing tics trained out",
-      "url": "https://100toolkit.com/blog/deslop-model/",
-      "score": 154,
-      "date": "2026-10-19"
+      "title": "PHP2Shell: AI uncovers critical RCE in PHP",
+      "url": "https://www.wiz.io/blog/php2shell-php-rce",
+      "score": 303,
+      "date": "2026-10-21"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7722.2998046875,
-      "changePct1d": 0.4,
-      "changePct5d": -1.1,
-      "sma20": 7733.43,
-      "aboveSma20": false,
+      "close": 7751.1298828125,
+      "changePct1d": 0.5,
+      "changePct5d": 0.4,
+      "sma20": 7735.19,
+      "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-20"
+      "asOf": "2026-10-21"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 64916.69921875,
-      "changePct1d": -0.6,
-      "changePct5d": -6,
-      "sma20": 66963.18,
+      "close": 64075.421875,
+      "changePct1d": -1.3,
+      "changePct5d": -5.5,
+      "sma20": 66970.8,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-19"
+      "asOf": "2026-10-20"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.18800354003906,
-      "changePct1d": 0.2,
-      "changePct5d": -0.2,
-      "sma20": 157.98,
+      "close": 158.13499450683594,
+      "changePct1d": -0.2,
+      "changePct5d": -0.1,
+      "sma20": 158.03,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-20"
+      "asOf": "2026-10-21"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 82578.2890625,
-      "changePct1d": 0.9,
-      "changePct5d": 0.5,
-      "sma20": 83196.13,
-      "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-20"
+      "close": 84433.5390625,
+      "changePct1d": 1.8,
+      "changePct5d": 3.6,
+      "sma20": 83193.29,
+      "aboveSma20": true,
+      "direction": "上昇",
+      "asOf": "2026-10-21"
     }
   ],
   "degraded": true,
