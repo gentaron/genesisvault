@@ -11,86 +11,12 @@
     "streak": -1,
     "days": 524
   },
-  "market": {
-    "generatedAt": "2026-10-22T15:45:28.993Z",
-    "trend": "bull",
-    "volatility": "normal",
-    "riskAppetite": "risk-off",
-    "breadth": "mixed",
-    "strongest": [
-      {
-        "name": "ソフトウェア",
-        "region": "欧州",
-        "r1wPct": 7
-      },
-      {
-        "name": "ソフトウェア",
-        "region": "インド",
-        "r1wPct": 6
-      },
-      {
-        "name": "金融",
-        "region": "日本",
-        "r1wPct": 5.6
-      }
-    ],
-    "weakest": [
-      {
-        "name": "一般消費財",
-        "region": "香港",
-        "r1wPct": -11.9
-      },
-      {
-        "name": "通信サービス",
-        "region": "香港",
-        "r1wPct": -9.7
-      },
-      {
-        "name": "半導体",
-        "region": "米国",
-        "r1wPct": -6.6
-      }
-    ],
-    "rotations": [
-      {
-        "name": "米国 情報技術",
-        "region": "米国",
-        "from": "weakening",
-        "to": "lagging"
-      },
-      {
-        "name": "米国 金融",
-        "region": "米国",
-        "from": "improving",
-        "to": "leading"
-      },
-      {
-        "name": "米国 銀行",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "米国 バイオテク",
-        "region": "米国",
-        "from": "lagging",
-        "to": "leading"
-      },
-      {
-        "name": "金 (ゴールド)",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      }
-    ]
-  },
+  "market": null,
   "predicates": [
-    "divergence.market_up_me_down",
-    "market.bull",
-    "market.risk_off",
-    "market.rotation_new_leader",
     "portfolio.month_down"
   ],
-  "degraded": false,
-  "notes": []
+  "degraded": true,
+  "notes": [
+    "qaiz: QAIZ_BASE_URL が未設定のため読みませんでした"
+  ]
 }
