@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-10-21",
+  "capturedAt": "2026-10-22",
   "portfolio": {
-    "asOf": "2026-10-22",
-    "d1Pct": 0.07,
-    "d7Pct": -0.03,
-    "d30Pct": -3.43,
-    "fromHighPct": -3.67,
+    "asOf": "2026-10-23",
+    "d1Pct": -0.57,
+    "d7Pct": -0.48,
+    "d30Pct": -4.11,
+    "fromHighPct": -4.22,
     "atHigh": false,
-    "vol30Pct": 10.2,
-    "streak": 2,
-    "days": 523
+    "vol30Pct": 10.3,
+    "streak": -1,
+    "days": 524
   },
   "market": {
-    "generatedAt": "2026-10-21T15:45:30.223Z",
+    "generatedAt": "2026-10-22T15:45:28.993Z",
     "trend": "bull",
     "volatility": "normal",
-    "riskAppetite": "neutral",
+    "riskAppetite": "risk-off",
     "breadth": "mixed",
     "strongest": [
       {
         "name": "ソフトウェア",
-        "region": "インド",
-        "r1wPct": 10
-      },
-      {
-        "name": "ヘルスケア",
-        "region": "日本",
-        "r1wPct": 7.4
+        "region": "欧州",
+        "r1wPct": 7
       },
       {
         "name": "ソフトウェア",
-        "region": "欧州",
-        "r1wPct": 5.9
+        "region": "インド",
+        "r1wPct": 6
+      },
+      {
+        "name": "金融",
+        "region": "日本",
+        "r1wPct": 5.6
       }
     ],
     "weakest": [
       {
+        "name": "一般消費財",
+        "region": "香港",
+        "r1wPct": -11.9
+      },
+      {
         "name": "通信サービス",
         "region": "香港",
-        "r1wPct": -7.4
+        "r1wPct": -9.7
       },
       {
         "name": "半導体",
-        "region": "日本",
-        "r1wPct": -4.7
-      },
-      {
-        "name": "資本財",
-        "region": "日本",
-        "r1wPct": -4.1
+        "region": "米国",
+        "r1wPct": -6.6
       }
     ],
     "rotations": [
@@ -87,9 +87,9 @@
   "predicates": [
     "divergence.market_up_me_down",
     "market.bull",
+    "market.risk_off",
     "market.rotation_new_leader",
-    "portfolio.month_down",
-    "portfolio.quiet_day"
+    "portfolio.month_down"
   ],
   "degraded": false,
   "notes": []

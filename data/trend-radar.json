@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-21",
+  "capturedAt": "2026-10-22",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "DeepInfer: High-performance inference framework for DeepSeek models",
-      "url": "https://github.com/deepseek-ai/DeepInfer",
-      "score": 2281,
-      "date": "2026-10-20"
-    },
     {
       "source": "Hacker News",
       "title": "Voxtral 3",
       "url": "https://mistral.ai/news/voxtral-3/",
-      "score": 747,
-      "date": "2026-10-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "WhatsApp's help pages hid LLM instructions: dont recommend a regulator",
-      "url": "https://redact.dev/blog/whatsapp-help-pages-hidden-ai-instructions",
-      "score": 734,
-      "date": "2026-10-19"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Google Cloud outage affects almost all banking and other operations in Europe",
-      "url": "https://www.neowin.net/news/google-cloud-outage-takes-down-hsbc-revolut-bank-of-scotland-llyods-equifax-more/",
-      "score": 396,
-      "date": "2026-10-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Publish fake stats, get cited in LLMs",
-      "url": "https://peec.ai/blog/publish-stats-get-cited-the-tactic-that-put-my-data-all-over-the-web",
-      "score": 351,
+      "score": 765,
       "date": "2026-10-20"
     },
     {
       "source": "Hacker News",
       "title": "PHP2Shell: AI uncovers critical RCE in PHP",
       "url": "https://www.wiz.io/blog/php2shell-php-rce",
-      "score": 303,
+      "score": 444,
+      "date": "2026-10-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Mistral Large 4",
+      "url": "https://mistral.ai/news/mistral-large-4/",
+      "score": 322,
+      "date": "2026-10-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Airbnb bans making guests do dishes and take out the trash",
+      "url": "https://www.theverge.com/tech/1015844/airbnb-chores-house-rules-update",
+      "score": 215,
+      "date": "2026-10-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Several Linux kernel vulnerabilities accidentally posted to public mailing list",
+      "url": "https://www.phoronix.com/news/LKML-New-Trend-Vulnerabilities",
+      "score": 185,
+      "date": "2026-10-22"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Using LLM for confidence scoring is a bad idea",
+      "url": "https://rumple.github.io/blog/2026/10/20/asking-llm-for-confidence.html",
+      "score": 157,
       "date": "2026-10-21"
     }
   ],
@@ -48,46 +48,46 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7751.1298828125,
-      "changePct1d": 0.5,
-      "changePct5d": 0.4,
-      "sma20": 7735.19,
-      "aboveSma20": true,
+      "close": 7671.89013671875,
+      "changePct1d": -1.1,
+      "changePct5d": -0.9,
+      "sma20": 7733.88,
+      "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-21"
+      "asOf": "2026-10-22"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 64075.421875,
-      "changePct1d": -1.3,
-      "changePct5d": -5.5,
-      "sma20": 66970.8,
+      "close": 64621.23828125,
+      "changePct1d": 0.9,
+      "changePct5d": -4.6,
+      "sma20": 66995.05,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-20"
+      "asOf": "2026-10-21"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.13499450683594,
-      "changePct1d": -0.2,
-      "changePct5d": -0.1,
-      "sma20": 158.03,
-      "aboveSma20": true,
+      "close": 157.09800720214844,
+      "changePct1d": -0.7,
+      "changePct5d": -0.5,
+      "sma20": 157.97,
+      "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-21"
+      "asOf": "2026-10-22"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 84433.5390625,
-      "changePct1d": 1.8,
-      "changePct5d": 3.6,
-      "sma20": 83193.29,
-      "aboveSma20": true,
-      "direction": "上昇",
-      "asOf": "2026-10-21"
+      "close": 81604.046875,
+      "changePct1d": -2.9,
+      "changePct5d": 0.3,
+      "sma20": 83027.55,
+      "aboveSma20": false,
+      "direction": "横ばい",
+      "asOf": "2026-10-22"
     }
   ],
   "degraded": true,
