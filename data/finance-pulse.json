@@ -1,49 +1,49 @@
 {
-  "capturedAt": "2026-10-23",
+  "capturedAt": "2026-10-24",
   "portfolio": {
     "asOf": "2026-10-24",
-    "d1Pct": -0.12,
-    "d7Pct": -0.34,
-    "d30Pct": -3.41,
-    "fromHighPct": -4.3,
+    "d1Pct": -0.75,
+    "d7Pct": -0.97,
+    "d30Pct": -4.02,
+    "fromHighPct": -4.91,
     "atHigh": false,
-    "vol30Pct": 10,
+    "vol30Pct": 10.2,
     "streak": -2,
     "days": 525
   },
   "market": {
-    "generatedAt": "2026-10-23T15:34:04.230Z",
+    "generatedAt": "2026-10-24T14:30:12.794Z",
     "trend": "bull",
-    "volatility": "elevated",
+    "volatility": "normal",
     "riskAppetite": "neutral",
     "breadth": "narrow-selloff",
     "strongest": [
       {
-        "name": "生活必需品",
-        "region": "欧州",
-        "r1wPct": 7.4
-      },
-      {
         "name": "ソフトウェア",
         "region": "欧州",
-        "r1wPct": 6.7
+        "r1wPct": 7.6
+      },
+      {
+        "name": "生活必需品",
+        "region": "欧州",
+        "r1wPct": 7.1
       },
       {
         "name": "ソフトウェア",
         "region": "米国",
-        "r1wPct": 5.7
+        "r1wPct": 6
       }
     ],
     "weakest": [
       {
-        "name": "資本財",
-        "region": "欧州",
-        "r1wPct": -8.2
-      },
-      {
         "name": "一般消費財",
         "region": "香港",
         "r1wPct": -8.1
+      },
+      {
+        "name": "資本財",
+        "region": "欧州",
+        "r1wPct": -7.7
       },
       {
         "name": "通信サービス",
@@ -71,15 +71,15 @@
         "to": "leading"
       },
       {
+        "name": "日本 電機・精密",
+        "region": "日本",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
         "name": "欧州 銀行",
         "region": "欧州",
         "from": "weakening",
-        "to": "lagging"
-      },
-      {
-        "name": "欧州 資本財",
-        "region": "欧州",
-        "from": "improving",
         "to": "lagging"
       }
     ]
@@ -89,9 +89,7 @@
     "market.bull",
     "market.narrow",
     "market.rotation_new_leader",
-    "market.vol_high",
-    "portfolio.month_down",
-    "portfolio.quiet_day"
+    "portfolio.month_down"
   ],
   "degraded": false,
   "notes": []

@@ -1,57 +1,57 @@
 {
-  "capturedAt": "2026-10-23",
+  "capturedAt": "2026-10-24",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Every AI model has the same \"controversial\" take on humans",
       "url": "https://www.modelcompare.ai/blog/ai-models-controversial-take-on-humans",
-      "score": 558,
+      "score": 638,
       "date": "2026-10-22"
     },
     {
       "source": "Hacker News",
       "title": "OpenShell – A safe, private runtime for fleets of autonomous AI agents",
       "url": "https://github.com/NVIDIA/OpenShell",
-      "score": 460,
+      "score": 495,
       "date": "2026-10-22"
     },
     {
       "source": "Hacker News",
       "title": "LLMs are making formal software verification feasible at a much larger scale",
       "url": "https://www.anthropic.com/research/formal-verification",
-      "score": 396,
+      "score": 453,
       "date": "2026-10-22"
     },
     {
       "source": "Hacker News",
-      "title": "Airbnb bans making guests do dishes and take out the trash",
-      "url": "https://www.theverge.com/tech/1015844/airbnb-chores-house-rules-update",
-      "score": 252,
-      "date": "2026-10-21"
+      "title": "Hacker reverses Samsung TV, finds on-board AI listening OpenAI account suspended",
+      "url": "https://www.reddit.com/r/antiai/comments/1xdv3e5/hacker_reverse_engineers_his_samsung_tv_and_finds/",
+      "score": 334,
+      "date": "2026-10-24"
     },
     {
       "source": "Hacker News",
-      "title": "Several Linux kernel vulnerabilities accidentally posted to public mailing list",
-      "url": "https://www.phoronix.com/news/LKML-New-Trend-Vulnerabilities",
-      "score": 248,
-      "date": "2026-10-22"
+      "title": "Evolving Threat: http2shell is an RCE in Node, Python, and more",
+      "url": "https://nitter.click/AikidoSecurity/status/2113759110625906950?__galadriel=lPmlGl9id4oAd5UeBwMhlYKArHyr6lR2IDGujPwB5HV2kQ1aLoPWFd5A9sGuzNcmrp8fUso8qygmHcKTDZ8MNHWqQ3bDJcycV87xp_0VypzQLYj6O_RRHlZuQqj33oASGY2YLSoAiMjeOZN40h7Stf8AG7DPrGZbAPVKUXy36HoMudRbvwF3_r2uYNmfJMhpKzywQDM6Ab8",
+      "score": 175,
+      "date": "2026-10-23"
     },
     {
       "source": "Hacker News",
-      "title": "AI and the Enclosure of the Scientific Commons",
-      "url": "https://arxiv.org/abs/2610.27251",
-      "score": 137,
-      "date": "2026-10-22"
+      "title": "Air Purifiers as White Noise Machines",
+      "url": "https://www.jefftk.com/p/air-purifiers-as-white-noise-machines",
+      "score": 151,
+      "date": "2026-10-23"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7650.14013671875,
-      "changePct1d": -0.2,
-      "changePct5d": -0.1,
-      "sma20": 7728.8,
+      "close": 7623.68017578125,
+      "changePct1d": -0.5,
+      "changePct5d": -0.5,
+      "sma20": 7727.48,
       "aboveSma20": false,
       "direction": "横ばい",
       "asOf": "2026-10-23"
@@ -59,21 +59,21 @@
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 62907.83984375,
-      "changePct1d": -2.7,
-      "changePct5d": -2.4,
-      "sma20": 66889.49,
+      "close": 62693.16015625,
+      "changePct1d": -0.3,
+      "changePct5d": -4,
+      "sma20": 66748.45,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-22"
+      "asOf": "2026-10-23"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 156.8509979248047,
-      "changePct1d": -0.8,
-      "changePct5d": -0.8,
-      "sma20": 157.93,
+      "close": 156.81399536132812,
+      "changePct1d": 0.2,
+      "changePct5d": -0.6,
+      "sma20": 157.88,
       "aboveSma20": false,
       "direction": "横ばい",
       "asOf": "2026-10-23"
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81493.578125,
-      "changePct1d": 0.2,
-      "changePct5d": -0.6,
-      "sma20": 82849.45,
+      "close": 80082.921875,
+      "changePct1d": -1.2,
+      "changePct5d": -2.2,
+      "sma20": 82508.61,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-23"
+      "direction": "下落",
+      "asOf": "2026-10-24"
     }
   ],
   "degraded": true,
