@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-10-24",
+  "capturedAt": "2026-10-25",
   "portfolio": {
-    "asOf": "2026-10-24",
-    "d1Pct": -0.75,
-    "d7Pct": -0.97,
-    "d30Pct": -4.02,
-    "fromHighPct": -4.91,
+    "asOf": "2026-10-25",
+    "d1Pct": -0.03,
+    "d7Pct": -0.96,
+    "d30Pct": -4.25,
+    "fromHighPct": -4.94,
     "atHigh": false,
     "vol30Pct": 10.2,
-    "streak": -2,
-    "days": 525
+    "streak": -3,
+    "days": 526
   },
   "market": {
-    "generatedAt": "2026-10-24T14:30:12.794Z",
+    "generatedAt": "2026-10-25T14:45:20.319Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -89,7 +89,8 @@
     "market.bull",
     "market.narrow",
     "market.rotation_new_leader",
-    "portfolio.month_down"
+    "portfolio.month_down",
+    "portfolio.quiet_day"
   ],
   "degraded": false,
   "notes": []

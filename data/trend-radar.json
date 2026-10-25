@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-24",
+  "capturedAt": "2026-10-25",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Every AI model has the same \"controversial\" take on humans",
-      "url": "https://www.modelcompare.ai/blog/ai-models-controversial-take-on-humans",
-      "score": 638,
-      "date": "2026-10-22"
+      "title": "Kimi K3.1 Pro and K3.1 Pro Highspeed",
+      "url": "https://www.kimi.ai/blog/kimi-k3-1-pro",
+      "score": 1068,
+      "date": "2026-10-23"
     },
     {
       "source": "Hacker News",
-      "title": "OpenShell – A safe, private runtime for fleets of autonomous AI agents",
-      "url": "https://github.com/NVIDIA/OpenShell",
-      "score": 495,
-      "date": "2026-10-22"
+      "title": "No signs of AI payoff outside the tech sector",
+      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector",
+      "score": 583,
+      "date": "2026-10-24"
     },
     {
       "source": "Hacker News",
-      "title": "LLMs are making formal software verification feasible at a much larger scale",
-      "url": "https://www.anthropic.com/research/formal-verification",
-      "score": 453,
-      "date": "2026-10-22"
+      "title": "America has lost 200k of jobs in media, film and the arts. How much is AI?",
+      "url": "https://www.apricitas.io/p/ai-and-the-fall-of-the-creative-class",
+      "score": 421,
+      "date": "2026-10-24"
     },
     {
       "source": "Hacker News",
-      "title": "Hacker reverses Samsung TV, finds on-board AI listening OpenAI account suspended",
-      "url": "https://www.reddit.com/r/antiai/comments/1xdv3e5/hacker_reverse_engineers_his_samsung_tv_and_finds/",
-      "score": 334,
+      "title": "Cerebras Deploys Trillion-Parameter AI Models",
+      "url": "https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras",
+      "score": 252,
+      "date": "2026-10-25"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Why is AI generated language so hard to understand?",
+      "url": "https://arxiv.org/abs/2610.29162",
+      "score": 216,
       "date": "2026-10-24"
     },
     {
       "source": "Hacker News",
       "title": "Evolving Threat: http2shell is an RCE in Node, Python, and more",
       "url": "https://nitter.click/AikidoSecurity/status/2113759110625906950?__galadriel=lPmlGl9id4oAd5UeBwMhlYKArHyr6lR2IDGujPwB5HV2kQ1aLoPWFd5A9sGuzNcmrp8fUso8qygmHcKTDZ8MNHWqQ3bDJcycV87xp_0VypzQLYj6O_RRHlZuQqj33oASGY2YLSoAiMjeOZN40h7Stf8AG7DPrGZbAPVKUXy36HoMudRbvwF3_r2uYNmfJMhpKzywQDM6Ab8",
-      "score": 175,
-      "date": "2026-10-23"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Air Purifiers as White Noise Machines",
-      "url": "https://www.jefftk.com/p/air-purifiers-as-white-noise-machines",
-      "score": 151,
+      "score": 184,
       "date": "2026-10-23"
     }
   ],
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80082.921875,
-      "changePct1d": -1.2,
-      "changePct5d": -2.2,
-      "sma20": 82508.61,
+      "close": 80530.21875,
+      "changePct1d": -0.3,
+      "changePct5d": -2.9,
+      "sma20": 82281.18,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-24"
+      "asOf": "2026-10-25"
     }
   ],
   "degraded": true,
