@@ -1,49 +1,49 @@
 {
-  "capturedAt": "2026-10-25",
+  "capturedAt": "2026-10-26",
   "portfolio": {
-    "asOf": "2026-10-25",
-    "d1Pct": -0.03,
-    "d7Pct": -0.96,
-    "d30Pct": -4.25,
-    "fromHighPct": -4.94,
+    "asOf": "2026-10-27",
+    "d1Pct": 0.02,
+    "d7Pct": -0.97,
+    "d30Pct": -4.9,
+    "fromHighPct": -4.97,
     "atHigh": false,
-    "vol30Pct": 10.2,
-    "streak": -3,
-    "days": 526
+    "vol30Pct": 9.8,
+    "streak": 1,
+    "days": 528
   },
   "market": {
-    "generatedAt": "2026-10-25T14:45:20.319Z",
+    "generatedAt": "2026-10-26T17:15:06.701Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "narrow-selloff",
+    "breadth": "broad-rally",
     "strongest": [
       {
-        "name": "ソフトウェア",
+        "name": "生活必需品",
         "region": "欧州",
-        "r1wPct": 7.6
+        "r1wPct": 8.1
       },
       {
-        "name": "生活必需品",
+        "name": "ソフトウェア",
         "region": "欧州",
         "r1wPct": 7.1
       },
       {
-        "name": "ソフトウェア",
-        "region": "米国",
-        "r1wPct": 6
+        "name": "ヘルスケア",
+        "region": "欧州",
+        "r1wPct": 5
       }
     ],
     "weakest": [
       {
-        "name": "一般消費財",
-        "region": "香港",
-        "r1wPct": -8.1
+        "name": "市場全体",
+        "region": "ブラジル",
+        "r1wPct": -19.1
       },
       {
-        "name": "資本財",
-        "region": "欧州",
-        "r1wPct": -7.7
+        "name": "一般消費財",
+        "region": "香港",
+        "r1wPct": -10
       },
       {
         "name": "通信サービス",
@@ -59,6 +59,18 @@
         "to": "lagging"
       },
       {
+        "name": "米国 金融",
+        "region": "米国",
+        "from": "improving",
+        "to": "leading"
+      },
+      {
+        "name": "米国 バイオテク",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
         "name": "金 (ゴールド)",
         "region": "米国",
         "from": "improving",
@@ -69,25 +81,12 @@
         "region": "日本",
         "from": "weakening",
         "to": "leading"
-      },
-      {
-        "name": "日本 電機・精密",
-        "region": "日本",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "欧州 銀行",
-        "region": "欧州",
-        "from": "weakening",
-        "to": "lagging"
       }
     ]
   },
   "predicates": [
     "divergence.market_up_me_down",
     "market.bull",
-    "market.narrow",
     "market.rotation_new_leader",
     "portfolio.month_down",
     "portfolio.quiet_day"

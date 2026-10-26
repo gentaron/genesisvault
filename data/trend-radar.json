@@ -1,60 +1,60 @@
 {
-  "capturedAt": "2026-10-25",
+  "capturedAt": "2026-10-26",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Kimi K3.1 Pro and K3.1 Pro Highspeed",
-      "url": "https://www.kimi.ai/blog/kimi-k3-1-pro",
-      "score": 1068,
-      "date": "2026-10-23"
+      "title": "A 10-year-old CNN outperforms frontier LLMs for skin cancer diagnosis",
+      "url": "https://lynchlab.net/llm-skin-cancer",
+      "score": 642,
+      "date": "2026-10-25"
     },
     {
       "source": "Hacker News",
       "title": "No signs of AI payoff outside the tech sector",
       "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector",
-      "score": 583,
+      "score": 637,
       "date": "2026-10-24"
     },
     {
       "source": "Hacker News",
       "title": "America has lost 200k of jobs in media, film and the arts. How much is AI?",
       "url": "https://www.apricitas.io/p/ai-and-the-fall-of-the-creative-class",
-      "score": 421,
+      "score": 537,
       "date": "2026-10-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "OpenAI and Anthropic cut their LLM prices by up to 80% within a few months. Why?",
+      "url": "https://minimaxir.com/2026/10/cheap-llms/",
+      "score": 396,
+      "date": "2026-10-25"
     },
     {
       "source": "Hacker News",
       "title": "Cerebras Deploys Trillion-Parameter AI Models",
       "url": "https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras",
-      "score": 252,
+      "score": 363,
       "date": "2026-10-25"
     },
     {
       "source": "Hacker News",
       "title": "Why is AI generated language so hard to understand?",
       "url": "https://arxiv.org/abs/2610.29162",
-      "score": 216,
+      "score": 251,
       "date": "2026-10-24"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Evolving Threat: http2shell is an RCE in Node, Python, and more",
-      "url": "https://nitter.click/AikidoSecurity/status/2113759110625906950?__galadriel=lPmlGl9id4oAd5UeBwMhlYKArHyr6lR2IDGujPwB5HV2kQ1aLoPWFd5A9sGuzNcmrp8fUso8qygmHcKTDZ8MNHWqQ3bDJcycV87xp_0VypzQLYj6O_RRHlZuQqj33oASGY2YLSoAiMjeOZN40h7Stf8AG7DPrGZbAPVKUXy36HoMudRbvwF3_r2uYNmfJMhpKzywQDM6Ab8",
-      "score": 184,
-      "date": "2026-10-23"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7623.68017578125,
-      "changePct1d": -0.5,
-      "changePct5d": -0.5,
-      "sma20": 7727.48,
+      "close": 7684.43017578125,
+      "changePct1d": 0.8,
+      "changePct5d": -0.1,
+      "sma20": 7727.51,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-23"
+      "asOf": "2026-10-26"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 156.81399536132812,
-      "changePct1d": 0.2,
-      "changePct5d": -0.6,
-      "sma20": 157.88,
+      "close": 157.41099548339844,
+      "changePct1d": 0.6,
+      "changePct5d": -0.3,
+      "sma20": 157.91,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-23"
+      "asOf": "2026-10-26"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80530.21875,
-      "changePct1d": -0.3,
-      "changePct5d": -2.9,
-      "sma20": 82281.18,
+      "close": 80236.5625,
+      "changePct1d": 0.3,
+      "changePct5d": -4.5,
+      "sma20": 81989.82,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-25"
+      "asOf": "2026-10-26"
     }
   ],
   "degraded": true,
