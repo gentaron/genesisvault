@@ -1,57 +1,69 @@
 {
-  "capturedAt": "2026-10-26",
+  "capturedAt": "2026-10-27",
   "portfolio": {
-    "asOf": "2026-10-27",
-    "d1Pct": 0.02,
-    "d7Pct": -0.97,
-    "d30Pct": -4.9,
-    "fromHighPct": -4.97,
+    "asOf": "2026-10-28",
+    "d1Pct": 0,
+    "d7Pct": -1.36,
+    "d30Pct": -4.83,
+    "fromHighPct": -5.04,
     "atHigh": false,
     "vol30Pct": 9.8,
-    "streak": 1,
-    "days": 528
+    "streak": -6,
+    "days": 529
   },
   "market": {
-    "generatedAt": "2026-10-26T17:15:06.701Z",
+    "generatedAt": "2026-10-27T16:45:18.179Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "broad-rally",
+    "breadth": "mixed",
     "strongest": [
       {
         "name": "生活必需品",
         "region": "欧州",
-        "r1wPct": 8.1
+        "r1wPct": 7.2
       },
       {
         "name": "ソフトウェア",
         "region": "欧州",
-        "r1wPct": 7.1
+        "r1wPct": 6.2
       },
       {
-        "name": "ヘルスケア",
-        "region": "欧州",
-        "r1wPct": 5
+        "name": "金融",
+        "region": "日本",
+        "r1wPct": 5.4
       }
     ],
     "weakest": [
       {
         "name": "市場全体",
         "region": "ブラジル",
-        "r1wPct": -19.1
+        "r1wPct": -19.7
+      },
+      {
+        "name": "銀行",
+        "region": "英国",
+        "r1wPct": -7.5
       },
       {
         "name": "一般消費財",
         "region": "香港",
-        "r1wPct": -10
-      },
-      {
-        "name": "通信サービス",
-        "region": "香港",
-        "r1wPct": -7.6
+        "r1wPct": -7.5
       }
     ],
     "rotations": [
+      {
+        "name": "米国 情報技術",
+        "region": "米国",
+        "from": "lagging",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 ソフトウェア",
+        "region": "米国",
+        "from": "weakening",
+        "to": "leading"
+      },
       {
         "name": "米国 通信サービス",
         "region": "米国",
@@ -59,28 +71,16 @@
         "to": "lagging"
       },
       {
-        "name": "米国 金融",
+        "name": "米国 エネルギー",
         "region": "米国",
-        "from": "improving",
-        "to": "leading"
-      },
-      {
-        "name": "米国 バイオテク",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "金 (ゴールド)",
         "region": "米国",
         "from": "improving",
         "to": "lagging"
-      },
-      {
-        "name": "日本 銀行",
-        "region": "日本",
-        "from": "weakening",
-        "to": "leading"
       }
     ]
   },
@@ -88,6 +88,8 @@
     "divergence.market_up_me_down",
     "market.bull",
     "market.rotation_new_leader",
+    "portfolio.down_streak",
+    "portfolio.drawdown",
     "portfolio.month_down",
     "portfolio.quiet_day"
   ],

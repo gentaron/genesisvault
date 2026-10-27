@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-10-26",
+  "capturedAt": "2026-10-27",
   "tech": [
     {
       "source": "Hacker News",
       "title": "A 10-year-old CNN outperforms frontier LLMs for skin cancer diagnosis",
       "url": "https://lynchlab.net/llm-skin-cancer",
-      "score": 642,
+      "score": 665,
       "date": "2026-10-25"
     },
     {
       "source": "Hacker News",
-      "title": "No signs of AI payoff outside the tech sector",
-      "url": "https://www.apollo.com/wealth/insights-news/insights/daily-spark/no-signs-of-ai-payoff-outside-the-tech-sector",
-      "score": 637,
-      "date": "2026-10-24"
-    },
-    {
-      "source": "Hacker News",
-      "title": "America has lost 200k of jobs in media, film and the arts. How much is AI?",
-      "url": "https://www.apricitas.io/p/ai-and-the-fall-of-the-creative-class",
-      "score": 537,
-      "date": "2026-10-24"
+      "title": "AI promised less work. I've never worked more",
+      "url": "https://oioannou.com/blog/ai-promised-less-work/",
+      "score": 564,
+      "date": "2026-10-27"
     },
     {
       "source": "Hacker News",
       "title": "OpenAI and Anthropic cut their LLM prices by up to 80% within a few months. Why?",
       "url": "https://minimaxir.com/2026/10/cheap-llms/",
-      "score": 396,
+      "score": 428,
       "date": "2026-10-25"
     },
     {
       "source": "Hacker News",
-      "title": "Cerebras Deploys Trillion-Parameter AI Models",
-      "url": "https://www.cerebras.ai/blog/how-we-deploy-trillion-parameter-frontier-models-on-cerebras",
-      "score": 363,
-      "date": "2026-10-25"
+      "title": "The Mythical Man-Month in the Age of AI",
+      "url": "https://j11g.com/the-mythical-man-month-in-the-age-of-ai",
+      "score": 352,
+      "date": "2026-10-27"
     },
     {
       "source": "Hacker News",
-      "title": "Why is AI generated language so hard to understand?",
-      "url": "https://arxiv.org/abs/2610.29162",
-      "score": 251,
-      "date": "2026-10-24"
+      "title": "Concerning behavior from a popular open-weight AI model",
+      "url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
+      "score": 314,
+      "date": "2026-10-26"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Wikipedia's Cleanup of AI-Generated Content",
+      "url": "https://spectrum.ieee.org/wikipedia-wikiproject-ai-writing-cleanup",
+      "score": 261,
+      "date": "2026-10-27"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7684.43017578125,
-      "changePct1d": 0.8,
-      "changePct5d": -0.1,
-      "sma20": 7727.51,
+      "close": 7719.08984375,
+      "changePct1d": 0.6,
+      "changePct5d": 0.1,
+      "sma20": 7729.54,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-26"
+      "asOf": "2026-10-27"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 62693.16015625,
-      "changePct1d": -0.3,
-      "changePct5d": -4,
-      "sma20": 66748.45,
+      "close": 62189.6484375,
+      "changePct1d": -0.8,
+      "changePct5d": -4.2,
+      "sma20": 66539.72,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-23"
+      "asOf": "2026-10-26"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.41099548339844,
-      "changePct1d": 0.6,
-      "changePct5d": -0.3,
-      "sma20": 157.91,
+      "close": 157.86399841308594,
+      "changePct1d": 0.7,
+      "changePct5d": -0.4,
+      "sma20": 157.9,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-26"
+      "asOf": "2026-10-27"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80236.5625,
-      "changePct1d": 0.3,
-      "changePct5d": -4.5,
-      "sma20": 81989.82,
+      "close": 80456.640625,
+      "changePct1d": 0.6,
+      "changePct5d": -1.1,
+      "sma20": 81837.36,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-10-26"
+      "direction": "横ばい",
+      "asOf": "2026-10-27"
     }
   ],
   "degraded": true,
