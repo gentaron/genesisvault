@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-27",
+  "capturedAt": "2026-10-28",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "A 10-year-old CNN outperforms frontier LLMs for skin cancer diagnosis",
-      "url": "https://lynchlab.net/llm-skin-cancer",
-      "score": 665,
-      "date": "2026-10-25"
-    },
     {
       "source": "Hacker News",
       "title": "AI promised less work. I've never worked more",
       "url": "https://oioannou.com/blog/ai-promised-less-work/",
-      "score": 564,
+      "score": 656,
       "date": "2026-10-27"
-    },
-    {
-      "source": "Hacker News",
-      "title": "OpenAI and Anthropic cut their LLM prices by up to 80% within a few months. Why?",
-      "url": "https://minimaxir.com/2026/10/cheap-llms/",
-      "score": 428,
-      "date": "2026-10-25"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The Mythical Man-Month in the Age of AI",
-      "url": "https://j11g.com/the-mythical-man-month-in-the-age-of-ai",
-      "score": 352,
-      "date": "2026-10-27"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Concerning behavior from a popular open-weight AI model",
-      "url": "https://cohere.com/blog/concerning-behaviour-popular-open-weight-ai-model",
-      "score": 314,
-      "date": "2026-10-26"
     },
     {
       "source": "Hacker News",
       "title": "Wikipedia's Cleanup of AI-Generated Content",
       "url": "https://spectrum.ieee.org/wikipedia-wikiproject-ai-writing-cleanup",
-      "score": 261,
+      "score": 492,
+      "date": "2026-10-27"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Survival LLM: AI assistant and emergency library that runs on your own computer",
+      "url": "https://www.brangus.io/survival-llm",
+      "score": 474,
+      "date": "2026-10-27"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The Mythical Man-Month in the Age of AI",
+      "url": "https://j11g.com/the-mythical-man-month-in-the-age-of-ai",
+      "score": 469,
+      "date": "2026-10-27"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Police are using AI to pull over drivers for 'suspicious' behavior",
+      "url": "https://gizmodo.com/police-are-using-ai-to-pull-over-drivers-for-suspicious-behavior-2000831220",
+      "score": 386,
+      "date": "2026-10-27"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Amazon Is Gutting Its AI Division After Sustained Failure",
+      "url": "https://futurism.com/artificial-intelligence/amazon-ai-division-failure-nova",
+      "score": 352,
       "date": "2026-10-27"
     }
   ],
@@ -48,46 +48,46 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7719.08984375,
-      "changePct1d": 0.6,
-      "changePct5d": 0.1,
-      "sma20": 7729.54,
-      "aboveSma20": false,
+      "close": 7736.68017578125,
+      "changePct1d": 0.2,
+      "changePct5d": -0.3,
+      "sma20": 7733.97,
+      "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-27"
+      "asOf": "2026-10-28"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 62189.6484375,
-      "changePct1d": -0.8,
-      "changePct5d": -4.2,
-      "sma20": 66539.72,
+      "close": 63268.37109375,
+      "changePct1d": 1.7,
+      "changePct5d": -1.3,
+      "sma20": 66409.26,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-10-26"
+      "direction": "横ばい",
+      "asOf": "2026-10-27"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.86399841308594,
-      "changePct1d": 0.7,
-      "changePct5d": -0.4,
-      "sma20": 157.9,
-      "aboveSma20": false,
+      "close": 158.18600463867188,
+      "changePct1d": 0.4,
+      "changePct5d": -0.1,
+      "sma20": 157.93,
+      "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-10-27"
+      "asOf": "2026-10-28"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80456.640625,
-      "changePct1d": 0.6,
-      "changePct5d": -1.1,
-      "sma20": 81837.36,
+      "close": 80365,
+      "changePct1d": -0.5,
+      "changePct5d": -0.9,
+      "sma20": 81789.22,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-27"
+      "asOf": "2026-10-28"
     }
   ],
   "degraded": true,
