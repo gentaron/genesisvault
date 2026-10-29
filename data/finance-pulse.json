@@ -1,62 +1,68 @@
 {
-  "capturedAt": "2026-10-28",
+  "capturedAt": "2026-10-29",
   "portfolio": {
-    "asOf": "2026-10-29",
-    "d1Pct": 0,
-    "d7Pct": -1.01,
-    "d30Pct": -3.83,
-    "fromHighPct": -4.64,
+    "asOf": "2026-10-30",
+    "d1Pct": 0.28,
+    "d7Pct": -0.19,
+    "d30Pct": -3.31,
+    "fromHighPct": -4.38,
     "atHigh": false,
-    "vol30Pct": 9.8,
-    "streak": 2,
-    "days": 530
+    "vol30Pct": 9.9,
+    "streak": 3,
+    "days": 531
   },
   "market": {
-    "generatedAt": "2026-10-28T17:00:11.415Z",
+    "generatedAt": "2026-10-29T17:15:17.557Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
     "breadth": "mixed",
     "strongest": [
       {
-        "name": "金融",
-        "region": "日本",
-        "r1wPct": 6.3
+        "name": "半導体",
+        "region": "韓国",
+        "r1wPct": 8.3
       },
       {
         "name": "半導体",
-        "region": "韓国",
-        "r1wPct": 5
+        "region": "米国",
+        "r1wPct": 7.4
       },
       {
-        "name": "生活必需品",
+        "name": "半導体",
         "region": "欧州",
-        "r1wPct": 4.4
+        "r1wPct": 6.6
       }
     ],
     "weakest": [
       {
         "name": "市場全体",
         "region": "ブラジル",
-        "r1wPct": -21.1
+        "r1wPct": -21.7
+      },
+      {
+        "name": "通信サービス",
+        "region": "米国",
+        "r1wPct": -5.6
       },
       {
         "name": "銀行",
         "region": "英国",
-        "r1wPct": -8
-      },
-      {
-        "name": "通信サービス",
-        "region": "香港",
-        "r1wPct": -6.1
+        "r1wPct": -4.9
       }
     ],
     "rotations": [
       {
-        "name": "米国 ソフトウェア",
+        "name": "米国 情報技術",
         "region": "米国",
-        "from": "weakening",
-        "to": "leading"
+        "from": "lagging",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 半導体",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
       },
       {
         "name": "米国 エネルギー",
@@ -65,16 +71,10 @@
         "to": "weakening"
       },
       {
-        "name": "金 (ゴールド)",
-        "region": "米国",
-        "from": "improving",
-        "to": "lagging"
-      },
-      {
-        "name": "日本 機械",
+        "name": "日本 銀行",
         "region": "日本",
-        "from": "improving",
-        "to": "lagging"
+        "from": "weakening",
+        "to": "leading"
       },
       {
         "name": "欧州 テクノロジー",
