@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-10-29",
+  "capturedAt": "2026-10-30",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Gemini 4 Carbon",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
-      "score": 989,
-      "date": "2026-10-28"
-    },
-    {
-      "source": "Hacker News",
-      "title": "We're releasing the weights of Mistral Large 4",
-      "url": "https://mistral.ai/news/mistral-large-4-oss/",
-      "score": 644,
+      "title": "LLM Voice",
+      "url": "https://martinfowler.com/bliki/LLM-Voice.html",
+      "score": 569,
       "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
-      "title": "Survival LLM: AI assistant and emergency library that runs on your own computer",
-      "url": "https://www.brangus.io/survival-llm",
-      "score": 535,
-      "date": "2026-10-27"
+      "title": "We ran AI agent swarms in Minecraft and Mindustry",
+      "url": "https://labs.ycombinator.com/projects/games/index.html",
+      "score": 372,
+      "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
-      "title": "Kentucky man becomes the first humanist granted religious exemption from AI",
-      "url": "https://religionnews.com/2026/10/26/in-a-first-a-humanist-granted-a-religious-exemption-from-using-ai/",
-      "score": 477,
-      "date": "2026-10-28"
+      "title": "I went to Mexico to test-drive the cars Americans can’t buy",
+      "url": "https://www.washingtonpost.com/climate-environment/2026/10/27/i-saw-future-driving-mexico-its-off-limits-americans/",
+      "score": 315,
+      "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
-      "title": "Dayjob: Tax – evaluating AI agents on 50 professional tax assignments",
-      "url": "https://surgehq.ai/blog/dayjob-tax",
-      "score": 248,
-      "date": "2026-10-28"
+      "title": "Manifestos, Fear, and 'Loser Thinking': Inside Proton's AI Reckoning",
+      "url": "https://www.404media.co/manifestos-fear-and-loser-thinking-inside-protons-ai-reckoning/",
+      "score": 200,
+      "date": "2026-10-29"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Zombie stats: Where the numbers AI quotes come from",
+      "url": "https://trakkr.ai/trakkr-research/zombie-stats",
+      "score": 172,
+      "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
       "title": "Google AI gets cagey when asked who won the 2020 elections",
       "url": "https://arstechnica.com/ai/2026/10/google-ai-gets-cagey-when-asked-who-won-the-2020-elections/",
-      "score": 160,
+      "score": 169,
       "date": "2026-10-28"
     }
   ],
@@ -48,46 +48,46 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7710.81982421875,
-      "changePct1d": -0.4,
-      "changePct5d": 0.6,
-      "sma20": 7736.56,
+      "close": 7581.39990234375,
+      "changePct1d": -1.8,
+      "changePct5d": -0.6,
+      "sma20": 7729.97,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-29"
+      "asOf": "2026-10-30"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 63954.19140625,
+      "close": 64659.46875,
       "changePct1d": 1.1,
-      "changePct5d": -1,
-      "sma20": 66332.9,
+      "changePct5d": 2.8,
+      "sma20": 66228.19,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-28"
+      "direction": "上昇",
+      "asOf": "2026-10-29"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.8820037841797,
-      "changePct1d": -0.1,
-      "changePct5d": -0.2,
-      "sma20": 157.93,
+      "close": 157.48300170898438,
+      "changePct1d": -0.2,
+      "changePct5d": 0.6,
+      "sma20": 157.91,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-29"
+      "asOf": "2026-10-30"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81056.6875,
-      "changePct1d": -0.3,
-      "changePct5d": 0.3,
-      "sma20": 81759.87,
+      "close": 77296.8671875,
+      "changePct1d": -0.6,
+      "changePct5d": -3.4,
+      "sma20": 81315.02,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-29"
+      "direction": "下落",
+      "asOf": "2026-10-30"
     }
   ],
   "degraded": true,
