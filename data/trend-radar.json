@@ -1,57 +1,57 @@
 {
-  "capturedAt": "2026-10-29",
+  "capturedAt": "2026-10-30",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Gemini 4 Carbon",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/",
-      "score": 989,
-      "date": "2026-10-28"
-    },
-    {
-      "source": "Hacker News",
-      "title": "We're releasing the weights of Mistral Large 4",
-      "url": "https://mistral.ai/news/mistral-large-4-oss/",
-      "score": 644,
-      "date": "2026-10-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Survival LLM: AI assistant and emergency library that runs on your own computer",
-      "url": "https://www.brangus.io/survival-llm",
-      "score": 535,
-      "date": "2026-10-27"
-    },
     {
       "source": "Hacker News",
       "title": "Kentucky man becomes the first humanist granted religious exemption from AI",
       "url": "https://religionnews.com/2026/10/26/in-a-first-a-humanist-granted-a-religious-exemption-from-using-ai/",
-      "score": 477,
+      "score": 482,
       "date": "2026-10-28"
+    },
+    {
+      "source": "Hacker News",
+      "title": "LLM Voice",
+      "url": "https://martinfowler.com/bliki/LLM-Voice.html",
+      "score": 325,
+      "date": "2026-10-29"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I went to Mexico to test-drive the cars Americans can’t buy",
+      "url": "https://www.washingtonpost.com/climate-environment/2026/10/27/i-saw-future-driving-mexico-its-off-limits-americans/",
+      "score": 276,
+      "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
       "title": "Dayjob: Tax – evaluating AI agents on 50 professional tax assignments",
       "url": "https://surgehq.ai/blog/dayjob-tax",
-      "score": 248,
+      "score": 253,
       "date": "2026-10-28"
     },
     {
       "source": "Hacker News",
       "title": "Google AI gets cagey when asked who won the 2020 elections",
       "url": "https://arstechnica.com/ai/2026/10/google-ai-gets-cagey-when-asked-who-won-the-2020-elections/",
-      "score": 160,
+      "score": 165,
       "date": "2026-10-28"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Zombie stats: Where the numbers AI quotes come from",
+      "url": "https://trakkr.ai/trakkr-research/zombie-stats",
+      "score": 139,
+      "date": "2026-10-29"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7710.81982421875,
-      "changePct1d": -0.4,
-      "changePct5d": 0.6,
-      "sma20": 7736.56,
+      "close": 7720.39013671875,
+      "changePct1d": -0.3,
+      "changePct5d": 0.7,
+      "sma20": 7737.04,
       "aboveSma20": false,
       "direction": "横ばい",
       "asOf": "2026-10-29"
@@ -59,35 +59,35 @@
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 63954.19140625,
-      "changePct1d": 1.1,
-      "changePct5d": -1,
-      "sma20": 66332.9,
+      "close": 64033.19140625,
+      "changePct1d": 0.1,
+      "changePct5d": 1.8,
+      "sma20": 66196.88,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-28"
+      "direction": "上昇",
+      "asOf": "2026-10-30"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.8820037841797,
+      "close": 157.7449951171875,
       "changePct1d": -0.1,
-      "changePct5d": -0.2,
-      "sma20": 157.93,
+      "changePct5d": 0.8,
+      "sma20": 157.92,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-29"
+      "asOf": "2026-10-30"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 81056.6875,
-      "changePct1d": -0.3,
-      "changePct5d": 0.3,
-      "sma20": 81759.87,
+      "close": 76894.7734375,
+      "changePct1d": -5.4,
+      "changePct5d": -4.8,
+      "sma20": 81551.77,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-29"
+      "direction": "下落",
+      "asOf": "2026-10-30"
     }
   ],
   "degraded": true,
