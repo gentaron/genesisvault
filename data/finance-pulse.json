@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-10-30",
+  "capturedAt": "2026-10-31",
   "portfolio": {
-    "asOf": "2026-10-31",
-    "d1Pct": -0.68,
-    "d7Pct": -0.33,
-    "d30Pct": -4.04,
-    "fromHighPct": -5.22,
+    "asOf": "2026-11-01",
+    "d1Pct": 0,
+    "d7Pct": -0.57,
+    "d30Pct": -4.37,
+    "fromHighPct": -5.49,
     "atHigh": false,
-    "vol30Pct": 10.1,
-    "streak": -1,
-    "days": 532
+    "vol30Pct": 10.3,
+    "streak": 1,
+    "days": 533
   },
   "market": {
-    "generatedAt": "2026-10-30T17:00:32.050Z",
+    "generatedAt": "2026-10-31T16:00:13.859Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -24,30 +24,30 @@
         "r1wPct": 8.9
       },
       {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": 8.2
+        "name": "ヘルスケア",
+        "region": "欧州",
+        "r1wPct": 4.7
       },
       {
-        "name": "防衛・宇宙",
-        "region": "米国",
-        "r1wPct": 4.6
+        "name": "半導体",
+        "region": "韓国",
+        "r1wPct": 4.4
       }
     ],
     "weakest": [
       {
         "name": "市場全体",
         "region": "ブラジル",
-        "r1wPct": -23.6
-      },
-      {
-        "name": "銀行",
-        "region": "英国",
-        "r1wPct": -6
+        "r1wPct": -23.8
       },
       {
         "name": "ソフトウェア",
         "region": "米国",
+        "r1wPct": -5.7
+      },
+      {
+        "name": "銀行",
+        "region": "英国",
         "r1wPct": -5.5
       }
     ],
@@ -89,7 +89,8 @@
     "market.bull",
     "market.rotation_new_leader",
     "portfolio.drawdown",
-    "portfolio.month_down"
+    "portfolio.month_down",
+    "portfolio.quiet_day"
   ],
   "degraded": false,
   "notes": []

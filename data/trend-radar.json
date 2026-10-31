@@ -1,57 +1,57 @@
 {
-  "capturedAt": "2026-10-30",
+  "capturedAt": "2026-10-31",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "LLM Voice",
-      "url": "https://martinfowler.com/bliki/LLM-Voice.html",
-      "score": 569,
-      "date": "2026-10-29"
+      "title": "AI isn't replacing SREs, it's deskilling them",
+      "url": "https://newsletter.signoz.io/p/ai-isnt-replacing-sres-its-deskilling",
+      "score": 624,
+      "date": "2026-10-30"
     },
     {
       "source": "Hacker News",
       "title": "We ran AI agent swarms in Minecraft and Mindustry",
       "url": "https://labs.ycombinator.com/projects/games/index.html",
-      "score": 372,
+      "score": 407,
       "date": "2026-10-29"
     },
     {
       "source": "Hacker News",
-      "title": "I went to Mexico to test-drive the cars Americans can’t buy",
-      "url": "https://www.washingtonpost.com/climate-environment/2026/10/27/i-saw-future-driving-mexico-its-off-limits-americans/",
-      "score": 315,
-      "date": "2026-10-29"
+      "title": "Proton's CEO Cancels AI 'Re-Interviews'",
+      "url": "https://www.404media.co/protons-ceo-cancels-ai-re-interviews/",
+      "score": 287,
+      "date": "2026-10-30"
     },
     {
       "source": "Hacker News",
-      "title": "Manifestos, Fear, and 'Loser Thinking': Inside Proton's AI Reckoning",
-      "url": "https://www.404media.co/manifestos-fear-and-loser-thinking-inside-protons-ai-reckoning/",
-      "score": 200,
-      "date": "2026-10-29"
+      "title": "US tech stocks see sharp falls over AI cost fears",
+      "url": "https://www.bbc.co.uk/news/articles/cvwy72e0n72yo",
+      "score": 261,
+      "date": "2026-10-30"
     },
     {
       "source": "Hacker News",
-      "title": "Zombie stats: Where the numbers AI quotes come from",
-      "url": "https://trakkr.ai/trakkr-research/zombie-stats",
-      "score": 172,
-      "date": "2026-10-29"
+      "title": "Cisco gives engineer unlimited AI tokens to rewrite legacy code",
+      "url": "https://fortune.com/2026/10/30/cisco-president-jeetu-patel-gen-z-27-year-old-unlimited-ai-tokens-rewrite-legacy-code-entry-level-jobs/",
+      "score": 252,
+      "date": "2026-10-30"
     },
     {
       "source": "Hacker News",
-      "title": "Google AI gets cagey when asked who won the 2020 elections",
-      "url": "https://arstechnica.com/ai/2026/10/google-ai-gets-cagey-when-asked-who-won-the-2020-elections/",
-      "score": 169,
-      "date": "2026-10-28"
+      "title": "Digital minimalism",
+      "url": "https://vitalik.eth.limo/general/2026/10/31/digital_minimalism.html",
+      "score": 176,
+      "date": "2026-10-31"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7581.39990234375,
+      "close": 7580.06982421875,
       "changePct1d": -1.8,
       "changePct5d": -0.6,
-      "sma20": 7729.97,
+      "sma20": 7729.9,
       "aboveSma20": false,
       "direction": "横ばい",
       "asOf": "2026-10-30"
@@ -59,21 +59,21 @@
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 64659.46875,
-      "changePct1d": 1.1,
-      "changePct5d": 2.8,
-      "sma20": 66228.19,
+      "close": 63290.109375,
+      "changePct1d": -2.1,
+      "changePct5d": 1,
+      "sma20": 65944.86,
       "aboveSma20": false,
-      "direction": "上昇",
-      "asOf": "2026-10-29"
+      "direction": "横ばい",
+      "asOf": "2026-10-30"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.48300170898438,
-      "changePct1d": -0.2,
-      "changePct5d": 0.6,
-      "sma20": 157.91,
+      "close": 157.8040008544922,
+      "changePct1d": 0,
+      "changePct5d": 0.8,
+      "sma20": 157.92,
       "aboveSma20": false,
       "direction": "横ばい",
       "asOf": "2026-10-30"
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 77296.8671875,
-      "changePct1d": -0.6,
-      "changePct5d": -3.4,
-      "sma20": 81315.02,
+      "close": 77473.03125,
+      "changePct1d": 0.4,
+      "changePct5d": -3.2,
+      "sma20": 80999.76,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-30"
+      "asOf": "2026-10-31"
     }
   ],
   "degraded": true,
