@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-10-31",
+  "capturedAt": "2026-11-01",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AI isn't replacing SREs, it's deskilling them",
-      "url": "https://newsletter.signoz.io/p/ai-isnt-replacing-sres-its-deskilling",
-      "score": 624,
-      "date": "2026-10-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "We ran AI agent swarms in Minecraft and Mindustry",
-      "url": "https://labs.ycombinator.com/projects/games/index.html",
-      "score": 407,
-      "date": "2026-10-29"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Proton's CEO Cancels AI 'Re-Interviews'",
-      "url": "https://www.404media.co/protons-ceo-cancels-ai-re-interviews/",
-      "score": 287,
-      "date": "2026-10-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "US tech stocks see sharp falls over AI cost fears",
-      "url": "https://www.bbc.co.uk/news/articles/cvwy72e0n72yo",
-      "score": 261,
-      "date": "2026-10-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Cisco gives engineer unlimited AI tokens to rewrite legacy code",
-      "url": "https://fortune.com/2026/10/30/cisco-president-jeetu-patel-gen-z-27-year-old-unlimited-ai-tokens-rewrite-legacy-code-entry-level-jobs/",
-      "score": 252,
-      "date": "2026-10-30"
+      "title": "Do the math: How we took over ChatGPT accounts",
+      "url": "https://www.parameter.ai/labs/we-found-a-gap-at-openai",
+      "score": 356,
+      "date": "2026-10-31"
     },
     {
       "source": "Hacker News",
       "title": "Digital minimalism",
       "url": "https://vitalik.eth.limo/general/2026/10/31/digital_minimalism.html",
-      "score": 176,
+      "score": 335,
       "date": "2026-10-31"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Proton's CEO Cancels AI 'Re-Interviews'",
+      "url": "https://www.404media.co/protons-ceo-cancels-ai-re-interviews/",
+      "score": 292,
+      "date": "2026-10-30"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Malware uses LLMs to rank victims by how much they're worth",
+      "url": "https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/",
+      "score": 251,
+      "date": "2026-10-31"
+    },
+    {
+      "source": "Hacker News",
+      "title": "ChatGPT and Codex usage limits merging",
+      "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
+      "score": 201,
+      "date": "2026-10-31"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The AI cost of JavaScript frameworks",
+      "url": "https://nolanlawson.com/2026/10/28/the-ai-cost-of-javascript-frameworks/",
+      "score": 197,
+      "date": "2026-11-01"
     }
   ],
   "market": [
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 77473.03125,
-      "changePct1d": 0.4,
-      "changePct5d": -3.2,
-      "sma20": 80999.76,
+      "close": 78020,
+      "changePct1d": 0.8,
+      "changePct5d": -3.4,
+      "sma20": 80810.72,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-10-31"
+      "asOf": "2026-11-01"
     }
   ],
   "degraded": true,
