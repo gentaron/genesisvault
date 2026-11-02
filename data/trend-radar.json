@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-01",
+  "capturedAt": "2026-11-02",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Do the math: How we took over ChatGPT accounts",
-      "url": "https://www.parameter.ai/labs/we-found-a-gap-at-openai",
-      "score": 356,
-      "date": "2026-10-31"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Digital minimalism",
-      "url": "https://vitalik.eth.limo/general/2026/10/31/digital_minimalism.html",
-      "score": 335,
-      "date": "2026-10-31"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Proton's CEO Cancels AI 'Re-Interviews'",
-      "url": "https://www.404media.co/protons-ceo-cancels-ai-re-interviews/",
-      "score": 292,
-      "date": "2026-10-30"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Malware uses LLMs to rank victims by how much they're worth",
-      "url": "https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/",
-      "score": 251,
-      "date": "2026-10-31"
-    },
-    {
-      "source": "Hacker News",
-      "title": "ChatGPT and Codex usage limits merging",
-      "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
-      "score": 201,
-      "date": "2026-10-31"
+      "title": "Show HN: HackerBooks – HackerTube, but for books mentioned on HN",
+      "url": "https://hackerbooks.org",
+      "score": 1793,
+      "date": "2026-11-01"
     },
     {
       "source": "Hacker News",
       "title": "The AI cost of JavaScript frameworks",
       "url": "https://nolanlawson.com/2026/10/28/the-ai-cost-of-javascript-frameworks/",
-      "score": 197,
+      "score": 462,
+      "date": "2026-11-01"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI delivers 'zero financial payoff' to most companies, Apollo economist says",
+      "url": "https://techcrunch.com/2026/10/25/ai-delivers-zero-financial-payoff-to-most-companies-according-to-apollo-economist/",
+      "score": 241,
+      "date": "2026-11-01"
+    },
+    {
+      "source": "Hacker News",
+      "title": "ChatGPT and Codex usage limits merging",
+      "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
+      "score": 232,
+      "date": "2026-10-31"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Anthropic's internal AI use, at retail prices, now exceeds its employee pay",
+      "url": "https://www.businessinsider.com/anthropic-claude-internal-ai-use-exceeds-employee-pay-tokens-2026-11",
+      "score": 222,
+      "date": "2026-11-02"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Frontier Airlines Likely Breached",
+      "url": "https://www.reddit.com/r/frontierairlines/comments/1xl20e8/psa_email_scam/",
+      "score": 218,
       "date": "2026-11-01"
     }
   ],
@@ -48,13 +48,13 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7580.06982421875,
-      "changePct1d": -1.8,
-      "changePct5d": -0.6,
-      "sma20": 7729.9,
+      "close": 7556.22021484375,
+      "changePct1d": -0.3,
+      "changePct5d": -1.6,
+      "sma20": 7719.02,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-10-30"
+      "direction": "下落",
+      "asOf": "2026-11-02"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.8040008544922,
+      "close": 157.86900329589844,
       "changePct1d": 0,
-      "changePct5d": 0.8,
-      "sma20": 157.92,
+      "changePct5d": 0.7,
+      "sma20": 157.93,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-30"
+      "asOf": "2026-11-02"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 78020,
-      "changePct1d": 0.8,
-      "changePct5d": -3.4,
-      "sma20": 80810.72,
+      "close": 76852.796875,
+      "changePct1d": -1.8,
+      "changePct5d": -5.4,
+      "sma20": 80510.03,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-01"
+      "asOf": "2026-11-02"
     }
   ],
   "degraded": true,

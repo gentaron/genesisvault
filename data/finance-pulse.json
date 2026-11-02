@@ -1,32 +1,32 @@
 {
-  "capturedAt": "2026-11-01",
+  "capturedAt": "2026-11-02",
   "portfolio": {
-    "asOf": "2026-11-02",
-    "d1Pct": 0,
-    "d7Pct": -0.5,
-    "d30Pct": -4.68,
-    "fromHighPct": -5.46,
+    "asOf": "2026-11-03",
+    "d1Pct": 0.45,
+    "d7Pct": -0.09,
+    "d30Pct": -4.37,
+    "fromHighPct": -5.12,
     "atHigh": false,
-    "vol30Pct": 10.1,
-    "streak": 2,
-    "days": 534
+    "vol30Pct": 10.3,
+    "streak": 1,
+    "days": 535
   },
   "market": {
-    "generatedAt": "2026-11-01T17:00:10.197Z",
+    "generatedAt": "2026-11-02T20:45:14.837Z",
     "trend": "bull",
-    "volatility": "normal",
+    "volatility": "elevated",
     "riskAppetite": "neutral",
     "breadth": "mixed",
     "strongest": [
       {
         "name": "ヘルスケア",
         "region": "英国",
-        "r1wPct": 8.9
+        "r1wPct": 7.8
       },
       {
-        "name": "ヘルスケア",
-        "region": "欧州",
-        "r1wPct": 4.7
+        "name": "素材",
+        "region": "米国",
+        "r1wPct": 4.6
       },
       {
         "name": "半導体",
@@ -36,22 +36,28 @@
     ],
     "weakest": [
       {
-        "name": "市場全体",
-        "region": "ブラジル",
-        "r1wPct": -23.8
-      },
-      {
         "name": "ソフトウェア",
         "region": "米国",
-        "r1wPct": -5.7
+        "r1wPct": -8
+      },
+      {
+        "name": "情報技術",
+        "region": "米国",
+        "r1wPct": -6
       },
       {
         "name": "銀行",
         "region": "英国",
-        "r1wPct": -5.5
+        "r1wPct": -6
       }
     ],
     "rotations": [
+      {
+        "name": "米国 ソフトウェア",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
+      },
       {
         "name": "米国 一般消費財",
         "region": "米国",
@@ -65,19 +71,13 @@
         "to": "weakening"
       },
       {
-        "name": "米国 バイオテク",
-        "region": "米国",
-        "from": "lagging",
-        "to": "leading"
-      },
-      {
-        "name": "米国 素材",
+        "name": "米国 銀行",
         "region": "米国",
         "from": "improving",
         "to": "leading"
       },
       {
-        "name": "米国 公益",
+        "name": "米国 バイオテク",
         "region": "米国",
         "from": "improving",
         "to": "leading"
@@ -88,6 +88,7 @@
     "divergence.market_up_me_down",
     "market.bull",
     "market.rotation_new_leader",
+    "market.vol_high",
     "portfolio.drawdown",
     "portfolio.month_down",
     "portfolio.quiet_day"
