@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-11-02",
+  "capturedAt": "2026-11-03",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Show HN: HackerBooks – HackerTube, but for books mentioned on HN",
-      "url": "https://hackerbooks.org",
-      "score": 1793,
-      "date": "2026-11-01"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The AI cost of JavaScript frameworks",
-      "url": "https://nolanlawson.com/2026/10/28/the-ai-cost-of-javascript-frameworks/",
-      "score": 462,
-      "date": "2026-11-01"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI delivers 'zero financial payoff' to most companies, Apollo economist says",
-      "url": "https://techcrunch.com/2026/10/25/ai-delivers-zero-financial-payoff-to-most-companies-according-to-apollo-economist/",
-      "score": 241,
-      "date": "2026-11-01"
-    },
-    {
-      "source": "Hacker News",
-      "title": "ChatGPT and Codex usage limits merging",
-      "url": "https://help.openai.com/en/articles/20001625-understanding-chatgpt-and-codex-usage-limits",
-      "score": 232,
-      "date": "2026-10-31"
+      "title": "Ubuntu still has not released patch for Linux 0day RCE in almost 3 weeks",
+      "url": "https://freenode.net/article/ubuntu-lts-kernels-still-unfixed-for-critical-cve-2026-98432",
+      "score": 586,
+      "date": "2026-11-02"
     },
     {
       "source": "Hacker News",
       "title": "Anthropic's internal AI use, at retail prices, now exceeds its employee pay",
       "url": "https://www.businessinsider.com/anthropic-claude-internal-ai-use-exceeds-employee-pay-tokens-2026-11",
-      "score": 222,
+      "score": 343,
       "date": "2026-11-02"
     },
     {
       "source": "Hacker News",
-      "title": "Frontier Airlines Likely Breached",
-      "url": "https://www.reddit.com/r/frontierairlines/comments/1xl20e8/psa_email_scam/",
-      "score": 218,
+      "title": "Postman silently auto-installs AI plugins and attempts to share all API data",
+      "url": "https://github.com/postmanlabs/postman-app-support/issues/14370",
+      "score": 290,
+      "date": "2026-11-03"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Google will turn off search for schools that reject AI",
+      "url": "https://www.nytimes.com/2026/11/03/us/google-search-schools-restrict-ai.html",
+      "score": 267,
+      "date": "2026-11-03"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI delivers 'zero financial payoff' to most companies, Apollo economist says",
+      "url": "https://techcrunch.com/2026/10/25/ai-delivers-zero-financial-payoff-to-most-companies-according-to-apollo-economist/",
+      "score": 245,
       "date": "2026-11-01"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Fujifilm to boost tape production 5x as AI fuels archiving demand",
+      "url": "https://arstechnica.com/gadgets/2026/10/fujifilm-to-boost-tape-production-5x-as-ai-fuels-archiving-demand/",
+      "score": 234,
+      "date": "2026-11-02"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7556.22021484375,
-      "changePct1d": -0.3,
-      "changePct5d": -1.6,
-      "sma20": 7719.02,
+      "close": 7589.18017578125,
+      "changePct1d": 0.6,
+      "changePct5d": -1.7,
+      "sma20": 7706.79,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-02"
+      "asOf": "2026-11-03"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 63290.109375,
-      "changePct1d": -2.1,
-      "changePct5d": 1,
-      "sma20": 65944.86,
+      "close": 63081.859375,
+      "changePct1d": -0.3,
+      "changePct5d": 1.4,
+      "sma20": 65683.48,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-10-30"
+      "asOf": "2026-11-02"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.86900329589844,
-      "changePct1d": 0,
+      "close": 158.5570068359375,
+      "changePct1d": 0.6,
       "changePct5d": 0.7,
-      "sma20": 157.93,
-      "aboveSma20": false,
+      "sma20": 157.95,
+      "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-02"
+      "asOf": "2026-11-03"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 76852.796875,
-      "changePct1d": -1.8,
-      "changePct5d": -5.4,
-      "sma20": 80510.03,
+      "close": 77631.96875,
+      "changePct1d": 1.2,
+      "changePct5d": -0.2,
+      "sma20": 80304.73,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-11-02"
+      "direction": "横ばい",
+      "asOf": "2026-11-03"
     }
   ],
   "degraded": true,
