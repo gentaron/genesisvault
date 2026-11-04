@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-11-03",
+  "capturedAt": "2026-11-04",
   "portfolio": {
-    "asOf": "2026-11-04",
-    "d1Pct": -0.16,
-    "d7Pct": -1.3,
-    "d30Pct": -5.15,
-    "fromHighPct": -5.88,
+    "asOf": "2026-11-05",
+    "d1Pct": 0.58,
+    "d7Pct": -0.59,
+    "d30Pct": -4.67,
+    "fromHighPct": -5.21,
     "atHigh": false,
-    "vol30Pct": 10.1,
-    "streak": -3,
-    "days": 536
+    "vol30Pct": 10.3,
+    "streak": 1,
+    "days": 537
   },
   "market": {
-    "generatedAt": "2026-11-03T18:30:13.682Z",
+    "generatedAt": "2026-11-04T18:30:09.499Z",
     "trend": "bull",
-    "volatility": "elevated",
-    "riskAppetite": "neutral",
+    "volatility": "normal",
+    "riskAppetite": "risk-off",
     "breadth": "mixed",
     "strongest": [
       {
         "name": "エネルギー",
         "region": "インド",
-        "r1wPct": 9.3
-      },
-      {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": 7.5
+        "r1wPct": 13.2
       },
       {
         "name": "ヘルスケア",
         "region": "英国",
-        "r1wPct": 7.3
+        "r1wPct": 9.9
+      },
+      {
+        "name": "一般消費財",
+        "region": "欧州",
+        "r1wPct": 8.1
       }
     ],
     "weakest": [
       {
-        "name": "ソフトウェア",
+        "name": "半導体",
         "region": "米国",
-        "r1wPct": -7.8
-      },
-      {
-        "name": "市場全体",
-        "region": "ブラジル",
-        "r1wPct": -7.5
+        "r1wPct": -10.8
       },
       {
         "name": "半導体",
+        "region": "欧州",
+        "r1wPct": -10.2
+      },
+      {
+        "name": "エネルギー",
         "region": "米国",
-        "r1wPct": -6.8
+        "r1wPct": -8.2
       }
     ],
     "rotations": [
@@ -87,11 +87,10 @@
   "predicates": [
     "divergence.market_up_me_down",
     "market.bull",
+    "market.risk_off",
     "market.rotation_new_leader",
-    "market.vol_high",
     "portfolio.drawdown",
-    "portfolio.month_down",
-    "portfolio.quiet_day"
+    "portfolio.month_down"
   ],
   "degraded": false,
   "notes": []
