@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-04",
+  "capturedAt": "2026-11-05",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Postman silently auto-installs AI plugins and attempts to share all API data",
-      "url": "https://github.com/postmanlabs/postman-app-support/issues/14370",
-      "score": 1455,
-      "date": "2026-11-03"
-    },
     {
       "source": "Hacker News",
       "title": "AI is forcing us to pay off 40 years of technical debt",
       "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability",
-      "score": 746,
+      "score": 1243,
       "date": "2026-11-04"
     },
     {
       "source": "Hacker News",
-      "title": "Google will turn off search for schools that reject AI",
-      "url": "https://www.nytimes.com/2026/11/03/us/google-search-schools-restrict-ai.html",
-      "score": 652,
-      "date": "2026-11-03"
+      "title": "Ask HN: What's your current AI agentic setup?",
+      "url": "https://news.ycombinator.com/item?id=50366117",
+      "score": 486,
+      "date": "2026-11-04"
     },
     {
       "source": "Hacker News",
       "title": "US tech giants' hidden AI debt swells 90% to $3.2T in 6 months",
       "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/us-tech-giants-hidden-ai-debt-swells-90-to-3.2tn-in-6-months",
-      "score": 398,
+      "score": 413,
       "date": "2026-11-03"
     },
     {
       "source": "Hacker News",
       "title": "The Little Book of Generative AI Foundations: An Intuitive Mathematical Primer",
       "url": "https://arxiv.org/abs/2605.29713",
-      "score": 375,
+      "score": 388,
       "date": "2026-11-03"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Lemmings CSS Animation",
+      "url": "https://markblah.github.io/lemmings/",
+      "score": 361,
+      "date": "2026-11-05"
     },
     {
       "source": "Hacker News",
       "title": "Geoffrey Hinton: it might turn out we were better off without AI",
       "url": "https://www.theguardian.com/uk-news/2026/nov/03/ai-godfather-geoffrey-hinton-better-off-without-ai",
-      "score": 277,
+      "score": 316,
       "date": "2026-11-04"
     }
   ],
@@ -48,46 +48,46 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7702.740234375,
-      "changePct1d": 1.8,
-      "changePct5d": -0.5,
-      "sma20": 7700.82,
-      "aboveSma20": true,
-      "direction": "横ばい",
-      "asOf": "2026-11-04"
+      "close": 7376.5,
+      "changePct1d": -4.1,
+      "changePct5d": -4.5,
+      "sma20": 7680.68,
+      "aboveSma20": false,
+      "direction": "下落",
+      "asOf": "2026-11-05"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 63081.859375,
-      "changePct1d": -0.3,
-      "changePct5d": 1.4,
-      "sma20": 65683.48,
+      "close": 62188.62890625,
+      "changePct1d": -1.4,
+      "changePct5d": -1.7,
+      "sma20": 65295.57,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-11-02"
+      "direction": "下落",
+      "asOf": "2026-11-04"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.4149932861328,
-      "changePct1d": 0.3,
-      "changePct5d": 0.3,
-      "sma20": 157.92,
-      "aboveSma20": true,
+      "close": 157.718994140625,
+      "changePct1d": -0.5,
+      "changePct5d": -0.1,
+      "sma20": 157.91,
+      "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-11-04"
+      "asOf": "2026-11-05"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 80271.8984375,
-      "changePct1d": 3.8,
-      "changePct5d": 4,
-      "sma20": 80196.9,
-      "aboveSma20": true,
-      "direction": "上昇",
-      "asOf": "2026-11-04"
+      "close": 75951.390625,
+      "changePct1d": -5.5,
+      "changePct5d": -1.9,
+      "sma20": 79926.1,
+      "aboveSma20": false,
+      "direction": "下落",
+      "asOf": "2026-11-05"
     }
   ],
   "degraded": true,
