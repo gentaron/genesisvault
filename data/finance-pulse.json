@@ -1,69 +1,57 @@
 {
-  "capturedAt": "2026-11-05",
+  "capturedAt": "2026-11-06",
   "portfolio": {
-    "asOf": "2026-11-06",
-    "d1Pct": 2.4,
-    "d7Pct": 2.17,
-    "d30Pct": -2.5,
-    "fromHighPct": -2.5,
+    "asOf": "2026-11-07",
+    "d1Pct": -0.1,
+    "d7Pct": 2.26,
+    "d30Pct": -3.08,
+    "fromHighPct": -3.35,
     "atHigh": false,
-    "vol30Pct": 13.8,
-    "streak": 2,
-    "days": 538
+    "vol30Pct": 12.2,
+    "streak": -1,
+    "days": 539
   },
   "market": {
-    "generatedAt": "2026-11-05T18:45:09.194Z",
+    "generatedAt": "2026-11-06T18:00:07.856Z",
     "trend": "bull",
     "volatility": "elevated",
-    "riskAppetite": "risk-off",
-    "breadth": "narrow-selloff",
+    "riskAppetite": "neutral",
+    "breadth": "mixed",
     "strongest": [
       {
-        "name": "エネルギー",
-        "region": "インド",
-        "r1wPct": 12.5
+        "name": "通信サービス",
+        "region": "香港",
+        "r1wPct": 14
       },
       {
         "name": "銀行",
         "region": "インド",
-        "r1wPct": 11.2
+        "r1wPct": 13.8
       },
       {
         "name": "一般消費財",
-        "region": "欧州",
-        "r1wPct": 9.1
+        "region": "香港",
+        "r1wPct": 13.5
       }
     ],
     "weakest": [
       {
-        "name": "防衛・宇宙",
-        "region": "米国",
-        "r1wPct": -68.3
+        "name": "半導体",
+        "region": "韓国",
+        "r1wPct": -13.1
       },
       {
         "name": "半導体",
-        "region": "米国",
-        "r1wPct": -19
+        "region": "日本",
+        "r1wPct": -11.6
       },
       {
-        "name": "半導体",
-        "region": "欧州",
-        "r1wPct": -16.9
+        "name": "エネルギー",
+        "region": "米国",
+        "r1wPct": -11.2
       }
     ],
     "rotations": [
-      {
-        "name": "米国 情報技術",
-        "region": "米国",
-        "from": "weakening",
-        "to": "lagging"
-      },
-      {
-        "name": "米国 半導体",
-        "region": "米国",
-        "from": "improving",
-        "to": "lagging"
-      },
       {
         "name": "米国 通信サービス",
         "region": "米国",
@@ -71,26 +59,37 @@
         "to": "improving"
       },
       {
-        "name": "米国 一般消費財",
+        "name": "米国 銀行",
         "region": "米国",
         "from": "improving",
         "to": "leading"
       },
       {
-        "name": "米国 エネルギー",
+        "name": "米国 不動産",
         "region": "米国",
-        "from": "leading",
-        "to": "weakening"
+        "from": "improving",
+        "to": "leading"
+      },
+      {
+        "name": "金 (ゴールド)",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
+        "name": "日本 電機・精密",
+        "region": "日本",
+        "from": "weakening",
+        "to": "lagging"
       }
     ]
   },
   "predicates": [
     "market.bull",
-    "market.narrow",
-    "market.risk_off",
     "market.rotation_new_leader",
     "market.vol_high",
-    "portfolio.big_up_day"
+    "portfolio.month_down",
+    "portfolio.quiet_day"
   ],
   "degraded": false,
   "notes": []

@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-05",
+  "capturedAt": "2026-11-06",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AI is forcing us to pay off 40 years of technical debt",
-      "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability",
-      "score": 1243,
-      "date": "2026-11-04"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Ask HN: What's your current AI agentic setup?",
-      "url": "https://news.ycombinator.com/item?id=50366117",
-      "score": 486,
-      "date": "2026-11-04"
-    },
-    {
-      "source": "Hacker News",
-      "title": "US tech giants' hidden AI debt swells 90% to $3.2T in 6 months",
-      "url": "https://asia.nikkei.com/business/technology/artificial-intelligence/us-tech-giants-hidden-ai-debt-swells-90-to-3.2tn-in-6-months",
-      "score": 413,
-      "date": "2026-11-03"
-    },
-    {
-      "source": "Hacker News",
-      "title": "The Little Book of Generative AI Foundations: An Intuitive Mathematical Primer",
-      "url": "https://arxiv.org/abs/2605.29713",
-      "score": 388,
-      "date": "2026-11-03"
+      "title": "Cuban: Facebook knowingly runs AI deepfake scam ads; docs say $16B fraud revenue",
+      "url": "https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html",
+      "score": 475,
+      "date": "2026-11-05"
     },
     {
       "source": "Hacker News",
       "title": "Lemmings CSS Animation",
       "url": "https://markblah.github.io/lemmings/",
-      "score": 361,
+      "score": 407,
       "date": "2026-11-05"
     },
     {
       "source": "Hacker News",
-      "title": "Geoffrey Hinton: it might turn out we were better off without AI",
-      "url": "https://www.theguardian.com/uk-news/2026/nov/03/ai-godfather-geoffrey-hinton-better-off-without-ai",
-      "score": 316,
+      "title": "Qualcomm Cloud AI 100 Ultra – 150W AI Accelerator Card with 128GB at 548GB/s",
+      "url": "https://www.qualcomm.com/data-center/products/cloud-ai-100-ultra",
+      "score": 170,
+      "date": "2026-11-04"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Nasdaq Sinks 5% as Investors Retreat from AI Trade After Election",
+      "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-05-2026",
+      "score": 162,
+      "date": "2026-11-05"
+    },
+    {
+      "source": "Hacker News",
+      "title": "I struggle to believe that AI R&D is ingenious",
+      "url": "https://www.lesswrong.com/posts/DALNiKBjMGMF8grme/arjun-panickssery-s-shortform?commentId=fJtaHHHfx45tD7BSL",
+      "score": 160,
+      "date": "2026-11-06"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Everything is an AI scam now",
+      "url": "https://www.davidralphlewis.co.uk/posts/everything-is-an-ai-scam-now/",
+      "score": 152,
       "date": "2026-11-04"
     }
   ],
@@ -48,46 +48,46 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7376.5,
-      "changePct1d": -4.1,
-      "changePct5d": -4.5,
-      "sma20": 7680.68,
+      "close": 7393.72998046875,
+      "changePct1d": 0.5,
+      "changePct5d": -2.5,
+      "sma20": 7658.65,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-05"
+      "asOf": "2026-11-06"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 62188.62890625,
-      "changePct1d": -1.4,
-      "changePct5d": -1.7,
-      "sma20": 65295.57,
+      "close": 61077.8984375,
+      "changePct1d": -1.8,
+      "changePct5d": -4.5,
+      "sma20": 64815.27,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-04"
+      "asOf": "2026-11-05"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.718994140625,
-      "changePct1d": -0.5,
-      "changePct5d": -0.1,
-      "sma20": 157.91,
-      "aboveSma20": false,
+      "close": 158.22300720214844,
+      "changePct1d": -0.1,
+      "changePct5d": 0.3,
+      "sma20": 157.95,
+      "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-05"
+      "asOf": "2026-11-06"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 75951.390625,
-      "changePct1d": -5.5,
-      "changePct5d": -1.9,
-      "sma20": 79926.1,
+      "close": 75656.65625,
+      "changePct1d": -0.4,
+      "changePct5d": -3.3,
+      "sma20": 79639.36,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-05"
+      "asOf": "2026-11-06"
     }
   ],
   "degraded": true,
