@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-11-06",
+  "capturedAt": "2026-11-07",
   "portfolio": {
-    "asOf": "2026-11-07",
-    "d1Pct": -0.1,
-    "d7Pct": 2.26,
-    "d30Pct": -3.08,
-    "fromHighPct": -3.35,
+    "asOf": "2026-11-08",
+    "d1Pct": -0.01,
+    "d7Pct": 1.72,
+    "d30Pct": -3.04,
+    "fromHighPct": -3.84,
     "atHigh": false,
     "vol30Pct": 12.2,
-    "streak": -1,
-    "days": 539
+    "streak": -2,
+    "days": 540
   },
   "market": {
-    "generatedAt": "2026-11-06T18:00:07.856Z",
-    "trend": "bull",
+    "generatedAt": "2026-11-07T16:45:11.526Z",
+    "trend": "range",
     "volatility": "elevated",
     "riskAppetite": "neutral",
-    "breadth": "mixed",
+    "breadth": "narrow-selloff",
     "strongest": [
-      {
-        "name": "通信サービス",
-        "region": "香港",
-        "r1wPct": 14
-      },
       {
         "name": "銀行",
         "region": "インド",
         "r1wPct": 13.8
       },
       {
-        "name": "一般消費財",
+        "name": "エネルギー",
+        "region": "インド",
+        "r1wPct": 13.3
+      },
+      {
+        "name": "通信サービス",
         "region": "香港",
-        "r1wPct": 13.5
+        "r1wPct": 9.4
       }
     ],
     "weakest": [
       {
+        "name": "エネルギー",
+        "region": "日本",
+        "r1wPct": -16.6
+      },
+      {
         "name": "半導体",
         "region": "韓国",
-        "r1wPct": -13.1
+        "r1wPct": -16.1
       },
       {
         "name": "半導体",
         "region": "日本",
-        "r1wPct": -11.6
-      },
-      {
-        "name": "エネルギー",
-        "region": "米国",
-        "r1wPct": -11.2
+        "r1wPct": -14.3
       }
     ],
     "rotations": [
@@ -77,15 +77,16 @@
         "to": "improving"
       },
       {
-        "name": "日本 電機・精密",
+        "name": "日本 銀行",
         "region": "日本",
         "from": "weakening",
-        "to": "lagging"
+        "to": "leading"
       }
     ]
   },
   "predicates": [
-    "market.bull",
+    "market.narrow",
+    "market.range",
     "market.rotation_new_leader",
     "market.vol_high",
     "portfolio.month_down",

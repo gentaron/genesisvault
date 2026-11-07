@@ -1,57 +1,57 @@
 {
-  "capturedAt": "2026-11-06",
+  "capturedAt": "2026-11-07",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "A Jev that can ask Opus for help gives Opus accuracy at 4x lower cost",
+      "url": "https://hightouch.com/blog/llm-judges-identity-resolution",
+      "score": 538,
+      "date": "2026-11-06"
+    },
     {
       "source": "Hacker News",
       "title": "Cuban: Facebook knowingly runs AI deepfake scam ads; docs say $16B fraud revenue",
       "url": "https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html",
-      "score": 475,
+      "score": 509,
       "date": "2026-11-05"
     },
     {
       "source": "Hacker News",
-      "title": "Lemmings CSS Animation",
-      "url": "https://markblah.github.io/lemmings/",
-      "score": 407,
-      "date": "2026-11-05"
+      "title": "US FAA says it will phase out floppy disks from air traffic control by 2028",
+      "url": "https://www.reuters.com/world/us/us-faa-says-it-will-phase-out-floppy-disks-air-traffic-control-by-2028-2026-11-05/",
+      "score": 373,
+      "date": "2026-11-06"
     },
     {
       "source": "Hacker News",
-      "title": "Qualcomm Cloud AI 100 Ultra – 150W AI Accelerator Card with 128GB at 548GB/s",
-      "url": "https://www.qualcomm.com/data-center/products/cloud-ai-100-ultra",
-      "score": 170,
-      "date": "2026-11-04"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Nasdaq Sinks 5% as Investors Retreat from AI Trade After Election",
-      "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-05-2026",
-      "score": 162,
-      "date": "2026-11-05"
+      "title": "AI is dramatically accelerating AI research",
+      "url": "https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai",
+      "score": 342,
+      "date": "2026-11-06"
     },
     {
       "source": "Hacker News",
       "title": "I struggle to believe that AI R&D is ingenious",
       "url": "https://www.lesswrong.com/posts/DALNiKBjMGMF8grme/arjun-panickssery-s-shortform?commentId=fJtaHHHfx45tD7BSL",
-      "score": 160,
+      "score": 210,
       "date": "2026-11-06"
     },
     {
       "source": "Hacker News",
-      "title": "Everything is an AI scam now",
-      "url": "https://www.davidralphlewis.co.uk/posts/everything-is-an-ai-scam-now/",
-      "score": 152,
-      "date": "2026-11-04"
+      "title": "Living beyond the limits of survival: wood ants trapped in a gigantic pitfall (2016)",
+      "url": "https://jhr.pensoft.net/articles.php?id=9096",
+      "score": 175,
+      "date": "2026-11-06"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7393.72998046875,
-      "changePct1d": 0.5,
-      "changePct5d": -2.5,
-      "sma20": 7658.65,
+      "close": 7376.85986328125,
+      "changePct1d": 0.3,
+      "changePct5d": -2.7,
+      "sma20": 7657.8,
       "aboveSma20": false,
       "direction": "下落",
       "asOf": "2026-11-06"
@@ -59,35 +59,35 @@
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 61077.8984375,
-      "changePct1d": -1.8,
-      "changePct5d": -4.5,
-      "sma20": 64815.27,
+      "close": 57434.76953125,
+      "changePct1d": -6,
+      "changePct5d": -11.2,
+      "sma20": 64185.22,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-05"
+      "asOf": "2026-11-06"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.22300720214844,
-      "changePct1d": -0.1,
-      "changePct5d": 0.3,
-      "sma20": 157.95,
+      "close": 158.4250030517578,
+      "changePct1d": 0.6,
+      "changePct5d": 0.5,
+      "sma20": 157.92,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-06"
+      "asOf": "2026-11-07"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 75656.65625,
-      "changePct1d": -0.4,
-      "changePct5d": -3.3,
-      "sma20": 79639.36,
+      "close": 75669.1796875,
+      "changePct1d": -0.1,
+      "changePct5d": -1.3,
+      "sma20": 79326.46,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-11-06"
+      "direction": "横ばい",
+      "asOf": "2026-11-07"
     }
   ],
   "degraded": true,
