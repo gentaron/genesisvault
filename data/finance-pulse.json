@@ -1,18 +1,18 @@
 {
-  "capturedAt": "2026-11-07",
+  "capturedAt": "2026-11-08",
   "portfolio": {
-    "asOf": "2026-11-08",
-    "d1Pct": -0.01,
-    "d7Pct": 1.72,
-    "d30Pct": -3.04,
-    "fromHighPct": -3.84,
+    "asOf": "2026-11-09",
+    "d1Pct": 0,
+    "d7Pct": 1.78,
+    "d30Pct": -0.79,
+    "fromHighPct": -3.86,
     "atHigh": false,
-    "vol30Pct": 12.2,
-    "streak": -2,
-    "days": 540
+    "vol30Pct": 9.2,
+    "streak": 1,
+    "days": 541
   },
   "market": {
-    "generatedAt": "2026-11-07T16:45:11.526Z",
+    "generatedAt": "2026-11-08T17:00:06.783Z",
     "trend": "range",
     "volatility": "elevated",
     "riskAppetite": "neutral",
@@ -21,17 +21,17 @@
       {
         "name": "銀行",
         "region": "インド",
-        "r1wPct": 13.8
-      },
-      {
-        "name": "エネルギー",
-        "region": "インド",
-        "r1wPct": 13.3
+        "r1wPct": 12
       },
       {
         "name": "通信サービス",
         "region": "香港",
         "r1wPct": 9.4
+      },
+      {
+        "name": "一般消費財",
+        "region": "香港",
+        "r1wPct": 8.1
       }
     ],
     "weakest": [
@@ -89,7 +89,6 @@
     "market.range",
     "market.rotation_new_leader",
     "market.vol_high",
-    "portfolio.month_down",
     "portfolio.quiet_day"
   ],
   "degraded": false,

@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-07",
+  "capturedAt": "2026-11-08",
   "tech": [
+    {
+      "source": "Hacker News",
+      "title": "Every Mac comes with an (undocumented) family member classifier",
+      "url": "https://8rank.ai/game/apple-intelligence-personal-knowledge-graph",
+      "score": 799,
+      "date": "2026-11-07"
+    },
     {
       "source": "Hacker News",
       "title": "A Jev that can ask Opus for help gives Opus accuracy at 4x lower cost",
       "url": "https://hightouch.com/blog/llm-judges-identity-resolution",
-      "score": 538,
+      "score": 589,
       "date": "2026-11-06"
     },
     {
       "source": "Hacker News",
-      "title": "Cuban: Facebook knowingly runs AI deepfake scam ads; docs say $16B fraud revenue",
-      "url": "https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html",
-      "score": 509,
-      "date": "2026-11-05"
-    },
-    {
-      "source": "Hacker News",
-      "title": "US FAA says it will phase out floppy disks from air traffic control by 2028",
-      "url": "https://www.reuters.com/world/us/us-faa-says-it-will-phase-out-floppy-disks-air-traffic-control-by-2028-2026-11-05/",
-      "score": 373,
-      "date": "2026-11-06"
+      "title": "The end of Microsoft Research's AI Frontiers group",
+      "url": "https://hunch.net/?p=13764006",
+      "score": 481,
+      "date": "2026-11-07"
     },
     {
       "source": "Hacker News",
       "title": "AI is dramatically accelerating AI research",
       "url": "https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai",
-      "score": 342,
+      "score": 372,
       "date": "2026-11-06"
     },
     {
       "source": "Hacker News",
-      "title": "I struggle to believe that AI R&D is ingenious",
-      "url": "https://www.lesswrong.com/posts/DALNiKBjMGMF8grme/arjun-panickssery-s-shortform?commentId=fJtaHHHfx45tD7BSL",
-      "score": 210,
-      "date": "2026-11-06"
+      "title": "MaxxBench – \"Nice DeepSWE score. But is it true?\"",
+      "url": "https://maxxbench.unlap.ai/research/why-maxxbench/",
+      "score": 355,
+      "date": "2026-11-07"
     },
     {
       "source": "Hacker News",
-      "title": "Living beyond the limits of survival: wood ants trapped in a gigantic pitfall (2016)",
-      "url": "https://jhr.pensoft.net/articles.php?id=9096",
-      "score": 175,
+      "title": "Firecracker VM Escape: PwnEscape Part 2",
+      "url": "https://pwn.ai/blog/firecracker-escape",
+      "score": 285,
       "date": "2026-11-06"
     }
   ],
@@ -76,18 +76,18 @@
       "sma20": 157.92,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-07"
+      "asOf": "2026-11-08"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 75669.1796875,
-      "changePct1d": -0.1,
-      "changePct5d": -1.3,
-      "sma20": 79326.46,
+      "close": 75718.2265625,
+      "changePct1d": 0,
+      "changePct5d": -2.1,
+      "sma20": 79023.61,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-11-07"
+      "direction": "下落",
+      "asOf": "2026-11-08"
     }
   ],
   "degraded": true,
