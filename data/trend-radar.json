@@ -1,60 +1,60 @@
 {
-  "capturedAt": "2026-11-08",
+  "capturedAt": "2026-11-09",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Every Mac comes with an (undocumented) family member classifier",
-      "url": "https://8rank.ai/game/apple-intelligence-personal-knowledge-graph",
-      "score": 799,
-      "date": "2026-11-07"
+      "title": "Fold Epic Paper Airplanes",
+      "url": "https://www.foldableflight.com",
+      "score": 730,
+      "date": "2026-11-09"
     },
     {
       "source": "Hacker News",
-      "title": "A Jev that can ask Opus for help gives Opus accuracy at 4x lower cost",
-      "url": "https://hightouch.com/blog/llm-judges-identity-resolution",
-      "score": 589,
-      "date": "2026-11-06"
+      "title": "I'm not convinced the AI bubble exists",
+      "url": "https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html#im-not-convinced-the-ai-bubble-exists",
+      "score": 534,
+      "date": "2026-11-08"
     },
     {
       "source": "Hacker News",
-      "title": "The end of Microsoft Research's AI Frontiers group",
-      "url": "https://hunch.net/?p=13764006",
-      "score": 481,
-      "date": "2026-11-07"
+      "title": "Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU",
+      "url": "https://github.com/synchopate/llama-modchip",
+      "score": 473,
+      "date": "2026-11-08"
     },
     {
       "source": "Hacker News",
-      "title": "AI is dramatically accelerating AI research",
-      "url": "https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai",
-      "score": 372,
-      "date": "2026-11-06"
+      "title": "How I'm fighting the AI brain fry",
+      "url": "https://sergeykuhne.com/blog/fighting-ai-brain-fry",
+      "score": 299,
+      "date": "2026-11-08"
     },
     {
       "source": "Hacker News",
-      "title": "MaxxBench – \"Nice DeepSWE score. But is it true?\"",
-      "url": "https://maxxbench.unlap.ai/research/why-maxxbench/",
-      "score": 355,
-      "date": "2026-11-07"
+      "title": "Our Smallest, Most Efficient Model: Muse Ember",
+      "url": "https://research.meta.ai/blog/muse-ember",
+      "score": 168,
+      "date": "2026-11-09"
     },
     {
       "source": "Hacker News",
-      "title": "Firecracker VM Escape: PwnEscape Part 2",
-      "url": "https://pwn.ai/blog/firecracker-escape",
-      "score": 285,
-      "date": "2026-11-06"
+      "title": "Wearable device makers are using brain data to train AI without telling users",
+      "url": "https://www.science.org/content/article/wearable-device-makers-are-harvesting-brain-data-train-ai-without-telling-users",
+      "score": 119,
+      "date": "2026-11-08"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7376.85986328125,
-      "changePct1d": 0.3,
-      "changePct5d": -2.7,
-      "sma20": 7657.8,
+      "close": 7549.93994140625,
+      "changePct1d": 2.3,
+      "changePct5d": 0.1,
+      "sma20": 7644.94,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-11-06"
+      "direction": "横ばい",
+      "asOf": "2026-11-09"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.4250030517578,
-      "changePct1d": 0.6,
-      "changePct5d": 0.5,
-      "sma20": 157.92,
+      "close": 157.91200256347656,
+      "changePct1d": 0.3,
+      "changePct5d": 0.1,
+      "sma20": 157.9,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-08"
+      "asOf": "2026-11-09"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 75718.2265625,
-      "changePct1d": 0,
-      "changePct5d": -2.1,
-      "sma20": 79023.61,
+      "close": 74878.03125,
+      "changePct1d": 0.4,
+      "changePct5d": -6.9,
+      "sma20": 78563.78,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-08"
+      "asOf": "2026-11-09"
     }
   ],
   "degraded": true,

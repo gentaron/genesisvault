@@ -1,27 +1,27 @@
 {
-  "capturedAt": "2026-11-08",
+  "capturedAt": "2026-11-09",
   "portfolio": {
-    "asOf": "2026-11-09",
-    "d1Pct": 0,
-    "d7Pct": 1.78,
-    "d30Pct": -0.79,
-    "fromHighPct": -3.86,
+    "asOf": "2026-11-10",
+    "d1Pct": 0.7,
+    "d7Pct": 2.62,
+    "d30Pct": -0.22,
+    "fromHighPct": -3.26,
     "atHigh": false,
-    "vol30Pct": 9.2,
+    "vol30Pct": 9.6,
     "streak": 1,
-    "days": 541
+    "days": 542
   },
   "market": {
-    "generatedAt": "2026-11-08T17:00:06.783Z",
-    "trend": "range",
-    "volatility": "elevated",
+    "generatedAt": "2026-11-09T21:30:07.998Z",
+    "trend": "bull",
+    "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "narrow-selloff",
+    "breadth": "broad-rally",
     "strongest": [
       {
         "name": "銀行",
         "region": "インド",
-        "r1wPct": 12
+        "r1wPct": 14
       },
       {
         "name": "通信サービス",
@@ -36,19 +36,19 @@
     ],
     "weakest": [
       {
-        "name": "エネルギー",
-        "region": "日本",
-        "r1wPct": -16.6
-      },
-      {
         "name": "半導体",
         "region": "韓国",
         "r1wPct": -16.1
       },
       {
+        "name": "エネルギー",
+        "region": "日本",
+        "r1wPct": -13.9
+      },
+      {
         "name": "半導体",
         "region": "日本",
-        "r1wPct": -14.3
+        "r1wPct": -10
       }
     ],
     "rotations": [
@@ -57,18 +57,6 @@
         "region": "米国",
         "from": "lagging",
         "to": "improving"
-      },
-      {
-        "name": "米国 銀行",
-        "region": "米国",
-        "from": "improving",
-        "to": "leading"
-      },
-      {
-        "name": "米国 不動産",
-        "region": "米国",
-        "from": "improving",
-        "to": "leading"
       },
       {
         "name": "金 (ゴールド)",
@@ -81,15 +69,24 @@
         "region": "日本",
         "from": "weakening",
         "to": "leading"
+      },
+      {
+        "name": "日本 エネルギー",
+        "region": "日本",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
+        "name": "日本 素材・化学",
+        "region": "日本",
+        "from": "weakening",
+        "to": "leading"
       }
     ]
   },
   "predicates": [
-    "market.narrow",
-    "market.range",
-    "market.rotation_new_leader",
-    "market.vol_high",
-    "portfolio.quiet_day"
+    "market.bull",
+    "market.rotation_new_leader"
   ],
   "degraded": false,
   "notes": []
