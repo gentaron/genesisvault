@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-11-09",
+  "capturedAt": "2026-11-10",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Fold Epic Paper Airplanes",
+      "title": "Foldable Flight: The Best Paper Airplanes",
       "url": "https://www.foldableflight.com",
-      "score": 730,
+      "score": 1166,
       "date": "2026-11-09"
     },
     {
       "source": "Hacker News",
       "title": "I'm not convinced the AI bubble exists",
       "url": "https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html#im-not-convinced-the-ai-bubble-exists",
-      "score": 534,
-      "date": "2026-11-08"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU",
-      "url": "https://github.com/synchopate/llama-modchip",
-      "score": 473,
+      "score": 560,
       "date": "2026-11-08"
     },
     {
       "source": "Hacker News",
       "title": "How I'm fighting the AI brain fry",
       "url": "https://sergeykuhne.com/blog/fighting-ai-brain-fry",
-      "score": 299,
+      "score": 308,
       "date": "2026-11-08"
     },
     {
       "source": "Hacker News",
-      "title": "Our Smallest, Most Efficient Model: Muse Ember",
-      "url": "https://research.meta.ai/blog/muse-ember",
-      "score": 168,
-      "date": "2026-11-09"
+      "title": "CoreWeave bond yield tops 16% as AI credit stress rises",
+      "url": "https://www.cnbc.com/2026/11/06/coreweave-bond-yield-tops-16percent-as-ai-credit-stress-rises.html",
+      "score": 189,
+      "date": "2026-11-10"
     },
     {
       "source": "Hacker News",
-      "title": "Wearable device makers are using brain data to train AI without telling users",
-      "url": "https://www.science.org/content/article/wearable-device-makers-are-harvesting-brain-data-train-ai-without-telling-users",
-      "score": 119,
-      "date": "2026-11-08"
+      "title": "AI usage generates a fragile codebase",
+      "url": "https://evanxmerz.com/post/ai-usage-generates-a-fragile-codebase/",
+      "score": 167,
+      "date": "2026-11-10"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Fireworks AI security breach impacts Notion and their customers",
+      "url": "https://www.notion.com/help/security-incident-involving-a-third-party-ai-vendor",
+      "score": 147,
+      "date": "2026-11-10"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7549.93994140625,
-      "changePct1d": 2.3,
-      "changePct5d": 0.1,
-      "sma20": 7644.94,
+      "close": 7492.8701171875,
+      "changePct1d": -0.8,
+      "changePct5d": -1,
+      "sma20": 7629.31,
       "aboveSma20": false,
       "direction": "横ばい",
-      "asOf": "2026-11-09"
+      "asOf": "2026-11-10"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 57434.76953125,
-      "changePct1d": -6,
-      "changePct5d": -11.2,
-      "sma20": 64185.22,
+      "close": 58775.5,
+      "changePct1d": 2.3,
+      "changePct5d": -7.1,
+      "sma20": 63671.89,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-06"
+      "asOf": "2026-11-09"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 157.91200256347656,
+      "close": 158.77099609375,
       "changePct1d": 0.3,
-      "changePct5d": 0.1,
-      "sma20": 157.9,
+      "changePct5d": 0.5,
+      "sma20": 157.93,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-09"
+      "asOf": "2026-11-10"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 74878.03125,
-      "changePct1d": 0.4,
-      "changePct5d": -6.9,
-      "sma20": 78563.78,
+      "close": 73410.7578125,
+      "changePct1d": -2.4,
+      "changePct5d": -3.3,
+      "sma20": 78050.98,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-09"
+      "asOf": "2026-11-10"
     }
   ],
   "degraded": true,

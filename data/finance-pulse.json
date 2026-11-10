@@ -1,22 +1,22 @@
 {
-  "capturedAt": "2026-11-09",
+  "capturedAt": "2026-11-10",
   "portfolio": {
-    "asOf": "2026-11-10",
-    "d1Pct": 0.7,
-    "d7Pct": 2.62,
-    "d30Pct": -0.22,
-    "fromHighPct": -3.26,
+    "asOf": "2026-11-11",
+    "d1Pct": -0.56,
+    "d7Pct": 2.36,
+    "d30Pct": -0.6,
+    "fromHighPct": -3.53,
     "atHigh": false,
-    "vol30Pct": 9.6,
-    "streak": 1,
-    "days": 542
+    "vol30Pct": 10.1,
+    "streak": -1,
+    "days": 543
   },
   "market": {
-    "generatedAt": "2026-11-09T21:30:07.998Z",
+    "generatedAt": "2026-11-10T18:30:11.985Z",
     "trend": "bull",
-    "volatility": "normal",
+    "volatility": "elevated",
     "riskAppetite": "neutral",
-    "breadth": "broad-rally",
+    "breadth": "mixed",
     "strongest": [
       {
         "name": "銀行",
@@ -24,21 +24,21 @@
         "r1wPct": 14
       },
       {
-        "name": "通信サービス",
-        "region": "香港",
-        "r1wPct": 9.4
+        "name": "銀行",
+        "region": "欧州",
+        "r1wPct": 7.8
       },
       {
-        "name": "一般消費財",
-        "region": "香港",
-        "r1wPct": 8.1
+        "name": "防衛・宇宙",
+        "region": "欧州",
+        "r1wPct": 7.7
       }
     ],
     "weakest": [
       {
         "name": "半導体",
         "region": "韓国",
-        "r1wPct": -16.1
+        "r1wPct": -17.1
       },
       {
         "name": "エネルギー",
@@ -65,10 +65,10 @@
         "to": "improving"
       },
       {
-        "name": "日本 銀行",
+        "name": "日本 食品",
         "region": "日本",
-        "from": "weakening",
-        "to": "leading"
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "日本 エネルギー",
@@ -77,16 +77,16 @@
         "to": "weakening"
       },
       {
-        "name": "日本 素材・化学",
-        "region": "日本",
-        "from": "weakening",
-        "to": "leading"
+        "name": "欧州 銀行",
+        "region": "欧州",
+        "from": "lagging",
+        "to": "improving"
       }
     ]
   },
   "predicates": [
     "market.bull",
-    "market.rotation_new_leader"
+    "market.vol_high"
   ],
   "degraded": false,
   "notes": []
