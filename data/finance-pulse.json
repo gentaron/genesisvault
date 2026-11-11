@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-11-10",
+  "capturedAt": "2026-11-11",
   "portfolio": {
-    "asOf": "2026-11-11",
-    "d1Pct": -0.56,
-    "d7Pct": 2.36,
-    "d30Pct": -0.6,
-    "fromHighPct": -3.53,
+    "asOf": "2026-11-12",
+    "d1Pct": 0.11,
+    "d7Pct": 1.53,
+    "d30Pct": -0.11,
+    "fromHighPct": -3.33,
     "atHigh": false,
-    "vol30Pct": 10.1,
-    "streak": -1,
-    "days": 543
+    "vol30Pct": 10,
+    "streak": 1,
+    "days": 544
   },
   "market": {
-    "generatedAt": "2026-11-10T18:30:11.985Z",
+    "generatedAt": "2026-11-11T18:45:10.240Z",
     "trend": "bull",
-    "volatility": "elevated",
+    "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "mixed",
+    "breadth": "broad-rally",
     "strongest": [
       {
         "name": "銀行",
         "region": "インド",
-        "r1wPct": 14
+        "r1wPct": 11.2
       },
       {
-        "name": "銀行",
-        "region": "欧州",
-        "r1wPct": 7.8
+        "name": "一般消費財",
+        "region": "日本",
+        "r1wPct": 8.7
       },
       {
         "name": "防衛・宇宙",
         "region": "欧州",
-        "r1wPct": 7.7
+        "r1wPct": 5.3
       }
     ],
     "weakest": [
       {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": -17.1
-      },
-      {
         "name": "エネルギー",
         "region": "日本",
-        "r1wPct": -13.9
+        "r1wPct": -10.6
       },
       {
         "name": "半導体",
+        "region": "韓国",
+        "r1wPct": -9.4
+      },
+      {
+        "name": "生活必需品",
         "region": "日本",
-        "r1wPct": -10
+        "r1wPct": -8.1
       }
     ],
     "rotations": [
@@ -59,34 +59,35 @@
         "to": "improving"
       },
       {
+        "name": "米国 銀行",
+        "region": "米国",
+        "from": "leading",
+        "to": "improving"
+      },
+      {
+        "name": "米国 バイオテク",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
+      },
+      {
+        "name": "米国 公益",
+        "region": "米国",
+        "from": "improving",
+        "to": "leading"
+      },
+      {
         "name": "金 (ゴールド)",
         "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "日本 食品",
-        "region": "日本",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "日本 エネルギー",
-        "region": "日本",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "欧州 銀行",
-        "region": "欧州",
-        "from": "lagging",
-        "to": "improving"
+        "from": "improving",
+        "to": "lagging"
       }
     ]
   },
   "predicates": [
     "market.bull",
-    "market.vol_high"
+    "market.rotation_new_leader",
+    "portfolio.quiet_day"
   ],
   "degraded": false,
   "notes": []
