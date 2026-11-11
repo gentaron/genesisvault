@@ -2,25 +2,14 @@
   "mcpServers": {
     "infocollect-kb": {
       "command": "npx",
-      "args": [
-        "-y",
-        "-p",
-        "github:gentaron/infocollect",
-        "infocollect-kb"
-      ],
+      "args": ["-y", "-p", "github:gentaron/infocollect", "infocollect-kb"],
       "env": {
         "INFOCOLLECT_KB_URL": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/docs/kb"
       }
     },
     "forge": {
       "command": "npx",
-      "args": [
-        "-y",
-        "-p",
-        "github:gentaron/infocollect",
-        "forge",
-        "mcp"
-      ]
+      "args": ["-y", "-p", "github:gentaron/infocollect", "forge", "mcp"]
     }
   }
 }

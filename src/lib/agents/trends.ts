@@ -24,8 +24,8 @@
  *   数日以内のスナップショットがあれば「昨日の地合い」で書ける。
  */
 
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { TRENDS_CONFIG } from '../pipeline/config.js';
 
@@ -160,6 +160,55 @@ export function parseArxiv(body: string): TechSignal[] {
       url: id.trim(),
       score: null,
       date: published.slice(0, 10),
+    });
+  }
+  return signals;
+}
+
+// ─── Tech signals: InfoCollect knowledge base (gentaron/infocollect) ─
+
+interface KbDoc {
+  title?: string;
+  titleJa?: string;
+  url?: string;
+  source?: string;
+  sourceType?: string;
+  date?: string;
+  seen?: number;
+}
+
+/**
+ * ハブ（gentaron/infocollect）のナレッジベースの JSONL を TechSignal に落とす。
+ *
+ * ハブは arXiv・HF・Reddit・HN・Zenn/Qiita・各社のリリースを毎朝集めて、
+ * 同じ URL を何日見たか（seen）を数えている。ここでは **何日も続けて
+ * 観測された話題だけ** を拾う（一発の話題で日記がニュース欄にならないように）。
+ * 点数は HN と並べられるよう、minPoints を土台に seen で上乗せする。
+ * ハブ自身の記事やリポジトリ台帳（sourceType: own）は外の話題ではないので捨てる。
+ */
+export function parseKnowledgeBase(
+  body: string,
+  { since, minSeen, basePoints }: { since: string; minSeen: number; basePoints: number },
+): TechSignal[] {
+  const signals: TechSignal[] = [];
+  for (const line of body.split('\n')) {
+    if (!line.trim()) continue;
+    let doc: KbDoc;
+    try {
+      doc = JSON.parse(line) as KbDoc;
+    } catch {
+      continue;
+    }
+    const title = (doc.titleJa || doc.title || '').trim();
+    const seen = typeof doc.seen === 'number' ? doc.seen : 1;
+    if (!title || !doc.url || doc.sourceType === 'own') continue;
+    if ((doc.date ?? '') < since || seen < minSeen) continue;
+    signals.push({
+      source: `InfoCollect/${doc.source ?? '?'}`,
+      title,
+      url: doc.url,
+      score: basePoints + 25 * (seen - 1),
+      date: doc.date ?? '',
     });
   }
   return signals;
@@ -330,6 +379,41 @@ export async function collectTechSignals(
       continue;
     }
     collected.push(...parseArxiv(body));
+  }
+
+  // ハブのナレッジベース（任意）。manifest を読んで、今月と先月のシャードだけ取る。
+  if (cfg.tech.kbEndpoint) {
+    const sinceDate = new Date(now.getTime() - cfg.tech.lookbackHours * 3600_000)
+      .toISOString()
+      .slice(0, 10);
+    const manifestBody = await fetchText(`${cfg.tech.kbEndpoint}/manifest.json`, cfg.timeoutMs);
+    let keys: string[] = [];
+    try {
+      const manifest = JSON.parse(manifestBody ?? '') as { shards?: { key: string }[] };
+      keys = (manifest.shards ?? [])
+        .map((sh) => sh.key)
+        .filter((k) => k >= sinceDate.slice(0, 7))
+        .sort()
+        .slice(-2);
+    } catch {
+      notes.push('InfoCollect KB 取得失敗: manifest');
+    }
+    let found = 0;
+    for (const key of keys) {
+      const body = await fetchText(`${cfg.tech.kbEndpoint}/shards/${key}.jsonl`, cfg.timeoutMs);
+      if (body === null) {
+        notes.push(`InfoCollect KB 取得失敗: ${key}`);
+        continue;
+      }
+      const hits = parseKnowledgeBase(body, {
+        since: sinceDate,
+        minSeen: cfg.tech.kbMinSeen ?? 2,
+        basePoints: cfg.tech.minPoints,
+      });
+      found += hits.length;
+      collected.push(...hits);
+    }
+    if (keys.length && !found) notes.push('InfoCollect KB に該当なし');
   }
 
   const signals = dedupeByTitle(collected)

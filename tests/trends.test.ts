@@ -25,6 +25,7 @@ import {
   loadTrendRadar,
   parseArxiv,
   parseHackerNews,
+  parseKnowledgeBase,
   parseStooqCsv,
   parseYahooChart,
   saveTrendRadar,
@@ -342,5 +343,94 @@ describe('arXiv is retried once', () => {
     const tech = await collectTechSignals(new Date('2026-08-05T00:00:00Z'), { retryDelayMs: 0 });
     expect(arxivCalls).toBe(2);
     expect(tech.notes.some((n) => n.includes('arXiv 取得失敗'))).toBe(false);
+  });
+});
+
+// ─── InfoCollect knowledge base (hub) ───────────────────────────
+
+const KB_LINES = [
+  {
+    title: 'Qwen4 27B released',
+    url: 'https://q.example/a',
+    source: 'Qwen Blog',
+    sourceType: 'feed',
+    date: '2026-08-04',
+    seen: 3,
+  },
+  {
+    title: 'one-off story',
+    url: 'https://q.example/b',
+    source: 'Hacker News',
+    sourceType: 'hn',
+    date: '2026-08-04',
+    seen: 1,
+  },
+  {
+    title: 'old but persistent',
+    url: 'https://q.example/c',
+    source: 'arXiv cs.CL',
+    sourceType: 'paper',
+    date: '2026-07-01',
+    seen: 9,
+  },
+  {
+    title: 'our own post',
+    url: 'https://q.example/d',
+    source: 'InfoCollect Blog',
+    sourceType: 'own',
+    date: '2026-08-04',
+    seen: 5,
+  },
+  {
+    titleJa: 'ローカル推論の新手法',
+    title: 'local inference',
+    url: 'https://q.example/e',
+    source: 'Zenn LLM',
+    sourceType: 'feed',
+    date: '2026-08-05',
+    seen: 2,
+  },
+]
+  .map((d) => JSON.stringify(d))
+  .join('\n')
+  .concat('\n{broken line\n');
+
+describe('parseKnowledgeBase', () => {
+  it('keeps only recent, repeatedly seen, outside topics, scored next to HN points', () => {
+    const out = parseKnowledgeBase(KB_LINES, { since: '2026-08-03', minSeen: 2, basePoints: 100 });
+    expect(out.map((s) => s.url)).toEqual(['https://q.example/a', 'https://q.example/e']);
+    expect(out[0]).toMatchObject({
+      source: 'InfoCollect/Qwen Blog',
+      score: 150,
+      date: '2026-08-04',
+    });
+    expect(out[1].title).toBe('ローカル推論の新手法');
+  });
+
+  it('never throws on garbage', () => {
+    expect(
+      parseKnowledgeBase('<html>error</html>', { since: '2026-01-01', minSeen: 1, basePoints: 0 }),
+    ).toEqual([]);
+  });
+});
+
+describe('collectTechSignals reads the hub knowledge base', () => {
+  it('fetches the manifest, then only the recent shards', async () => {
+    const asked: string[] = [];
+    vi.stubGlobal('fetch', async (input: string | URL) => {
+      const url = String(input);
+      asked.push(url);
+      if (url.endsWith('/manifest.json')) {
+        return new Response(
+          JSON.stringify({ shards: [{ key: '2026-06' }, { key: '2026-07' }, { key: '2026-08' }] }),
+        );
+      }
+      if (url.endsWith('/shards/2026-08.jsonl')) return new Response(KB_LINES);
+      return new Response('', { status: 503 });
+    });
+    const tech = await collectTechSignals(new Date('2026-08-05T00:00:00Z'), { retryDelayMs: 0 });
+    expect(tech.signals.some((s) => s.source === 'InfoCollect/Qwen Blog')).toBe(true);
+    expect(tech.signals.some((s) => s.url === 'https://q.example/d')).toBe(false);
+    expect(asked.some((u) => u.includes('/shards/2026-06'))).toBe(false);
   });
 });

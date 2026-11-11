@@ -8,68 +8,43 @@
   "role": "Mina Eureka Ernst の日記ブログ。12体のエージェント（Liminal Forge）が毎日書く",
   "stack": "Astro · Bun · Vercel",
   "site": "https://genesisvault.vercel.app",
-  "produces": [
-    "blog"
-  ],
-  "consumes": [
-    "kb",
-    "formats",
-    "market"
-  ],
+  "produces": ["blog"],
+  "consumes": ["kb", "formats", "market"],
   "upstream": [
     {
       "repo": "infocollect",
-      "flows": [
-        "kb"
-      ],
+      "flows": ["kb"],
       "url": "https://github.com/gentaron/infocollect"
     },
     {
       "repo": "IDEAZ",
-      "flows": [
-        "formats"
-      ],
+      "flows": ["formats"],
       "url": "https://github.com/gentaron/IDEAZ"
     },
     {
       "repo": "QAIZ",
-      "flows": [
-        "market"
-      ],
+      "flows": ["market"],
       "url": "https://github.com/gentaron/QAIZ"
     }
   ],
   "downstream": [
     {
       "repo": "VAIZ",
-      "flows": [
-        "blog"
-      ],
+      "flows": ["blog"],
       "url": "https://github.com/gentaron/VAIZ"
     },
     {
       "repo": "SAIZ",
-      "flows": [
-        "blog"
-      ],
+      "flows": ["blog"],
       "url": "https://github.com/gentaron/SAIZ"
     },
     {
       "repo": "genimage",
-      "flows": [
-        "blog"
-      ],
+      "flows": ["blog"],
       "url": "https://github.com/gentaron/genimage"
     }
   ],
-  "siblings": [
-    "IDEAZ",
-    "Gentarog",
-    "VAIZ",
-    "SAIZ",
-    "genimage",
-    "seo"
-  ],
+  "siblings": ["IDEAZ", "Gentarog", "VAIZ", "SAIZ", "genimage", "seo"],
   "predecessors": [
     "aiblogmaker",
     "nextjs-gens-notes",
@@ -81,9 +56,6 @@
     "repo": "https://github.com/gentaron/infocollect",
     "map": "https://github.com/gentaron/infocollect/blob/HEAD/ecosystem/README.md",
     "kb": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/docs/kb",
-    "mcp": [
-      "infocollect-kb",
-      "forge"
-    ]
+    "mcp": ["infocollect-kb", "forge"]
   }
 }
