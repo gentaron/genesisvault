@@ -230,11 +230,7 @@
       },
       "VE-001": {
         "tier": "creative",
-        "preferredProviders": [
-          "gemini-2.5-flash",
-          "gemini-2.5-flash-lite",
-          "groq-llama-3.3-70b"
-        ],
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
         "temperature": 0.9,
         "maxOutputTokens": 1024,
         "why": "日本語の企画・タイトル。創造性が要るので最強モデル＋高温度。"
@@ -274,11 +270,7 @@
       },
       "VE-009": {
         "tier": "creative",
-        "preferredProviders": [
-          "gemini-2.5-flash",
-          "gemini-2.5-flash-lite",
-          "groq-llama-3.3-70b"
-        ],
+        "preferredProviders": ["gemini-2.5-flash", "gemini-2.5-flash-lite", "groq-llama-3.3-70b"],
         "temperature": 0.6,
         "maxOutputTokens": 1024,
         "why": "記事から動画の切り口・トーン・ビジュアル方向性を起こす日本語の企画仕事。ブリーフの骨格（見出し・想定尺）は video-brief.ts が決めるので、モデルが返すのは中身だけ。テーマがすり替わると別テーマの動画が出来上がり、それを止める仕組みは下流に無いので温度は控えめ。"
@@ -304,13 +296,7 @@
     "binaryContrastLimit": 3,
     "forbiddenTopics": {
       "comment": "これらのキーワードを本文に複数含む記事は生成を禁止する（シンボリックガードで検出）",
-      "terms": [
-        "貯金",
-        "貯蓄",
-        "家計簿",
-        "貯める",
-        "貯金額"
-      ],
+      "terms": ["貯金", "貯蓄", "家計簿", "貯める", "貯金額"],
       "maxHitCount": 0
     },
     "penalty": {
@@ -334,24 +320,12 @@
       "大切なこと",
       "という(選択|生き方)"
     ],
-    "clicheVocabulary": [
-      "真理",
-      "美学",
-      "境地",
-      "本質"
-    ]
+    "clicheVocabulary": ["真理", "美学", "境地", "本質"]
   },
   "references": {
     "comment": "文体・テーマ・継続性の参照源。current が正典（整合性チェックの基準）、legacy は文体サンプルのみ。",
-    "legacy": [
-      "gensnotes_1.md",
-      "gensnotes_2.md"
-    ],
-    "current": [
-      "gensnotes_3.md",
-      "gensnotes_4.md",
-      "gensnotes_5.md"
-    ]
+    "legacy": ["gensnotes_1.md", "gensnotes_2.md"],
+    "current": ["gensnotes_3.md", "gensnotes_4.md", "gensnotes_5.md"]
   },
   "review": {
     "comment": "囲い（審査層）の設定。設計原則は4つ。(1) 審査役には最強モデルを置く。(2) 審査は執筆と別の呼び出しで行い、審査側には仕様と成果物しか渡さない（書き手の自己評価にしない）。(3) モデルには観察だけをさせ、合否はコード側で決定論的に集計する（甘い採点を防ぐ）。(4) 審査できなかったときは通さない（fail-closed）。",
@@ -362,11 +336,7 @@
     "requireEvidence": true,
     "quarantineDir": ".gate-quarantine",
     "auditLogDir": "docs/gate-runs",
-    "judgeProviders": [
-      "typesafe-jev",
-      "gemini-2.5-flash",
-      "gemini-2.5-flash-lite"
-    ],
+    "judgeProviders": ["typesafe-jev", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
     "rubric": [
       {
         "id": "brief_coverage",
@@ -434,7 +404,7 @@
     "ledgerFile": "data/video-briefs.json"
   },
   "trends": {
-    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足、空なら Yahoo Finance chart API で代替。どちらも鍵不要）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。",
+    "comment": "VE-010 Tessa のトレンド・レーダー。AI/最先端技術の話題（Hacker News・arXiv）と株式市場の地合い（Stooq の日足、空なら Yahoo Finance chart API で代替。どちらも鍵不要）を取り、企画と執筆に「今日の外の景色」を渡す。API キーを要求するソースは足さないこと——鍵の有無で挙動が変わると、鍵の無い環境でだけ壊れる。取得できない日は degraded として続行する（fail-soft）。tech.kbEndpoint はハブ（gentaron/infocollect）のナレッジベースで、何日も続けて観測された話題（kbMinSeen 以上）だけを HN と並べて使う。検証コマンドからは絶対に呼ばない（INV-004）。",
     "enabled": true,
     "timeoutMs": 8000,
     "cacheFile": "data/trend-radar.json",
@@ -442,17 +412,13 @@
     "tech": {
       "hnEndpoint": "https://hn.algolia.com/api/v1/search",
       "arxivEndpoint": "https://export.arxiv.org/api/query",
-      "queries": [
-        "AI",
-        "LLM",
-        "robotics"
-      ],
-      "arxivCategories": [
-        "cs.AI"
-      ],
+      "queries": ["AI", "LLM", "robotics"],
+      "arxivCategories": ["cs.AI"],
       "maxSignals": 6,
       "minPoints": 100,
-      "lookbackHours": 48
+      "lookbackHours": 48,
+      "kbEndpoint": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/docs/kb",
+      "kbMinSeen": 2
     },
     "market": {
       "endpoint": "https://stooq.com/q/d/l/",
@@ -492,10 +458,7 @@
         "sdk": "huggingface",
         "envKey": "HF_TOKEN",
         "context": 1000000,
-        "useFor": [
-          "writer",
-          "editor"
-        ],
+        "useFor": ["writer", "editor"],
         "temperature": 0.85,
         "maxOutputTokens": 4096
       },
@@ -505,20 +468,13 @@
         "sdk": "openrouter",
         "envKey": "OPENROUTER_API_KEY",
         "context": 128000,
-        "useFor": [
-          "balancer",
-          "summarizer",
-          "recorder"
-        ],
+        "useFor": ["balancer", "summarizer", "recorder"],
         "temperature": 0.3,
         "maxOutputTokens": 2048
       },
       "local_verification": {
         "comment": "Local symbolic guard — deterministic, zero-cost, zero-latency. Runs before LLM judge to filter 90% of violations without API calls.",
-        "useFor": [
-          "symbolic_guard",
-          "provenance_checker"
-        ],
+        "useFor": ["symbolic_guard", "provenance_checker"],
         "enabled": true
       }
     },
@@ -552,11 +508,7 @@
     "disclosure": "relative",
     "assetlog": {
       "spreadsheetId": "1aI6fooaWdDw9Z8D9_O7JKNGdZ9kBwBX7EgHE7Wjir9k",
-      "sheets": [
-        "sheet=logs",
-        "gid=1467211041",
-        "sheet=Index2"
-      ]
+      "sheets": ["sheet=logs", "gid=1467211041", "sheet=Index2"]
     },
     "qaiz": {
       "baseUrlEnv": "QAIZ_BASE_URL",
@@ -575,13 +527,8 @@
     "themeCooldownDays": 2,
     "maxTitleSimilarity": 0.6,
     "jev": {
-      "transports": [
-        "workers-ai"
-      ],
-      "workersAiModels": [
-        "@cf/cloudflare/clef",
-        "@cf/cloudflare/clef-flash"
-      ],
+      "transports": ["workers-ai"],
+      "workersAiModels": ["@cf/cloudflare/clef", "@cf/cloudflare/clef-flash"],
       "accountIdEnv": "CLOUDFLARE_ACCOUNT_ID",
       "tokenEnv": "CLOUDFLARE_API_TOKEN",
       "timeoutMs": 8000,

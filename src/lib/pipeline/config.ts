@@ -179,6 +179,10 @@ export const TrendsConfigSchema = z.object({
     /** この点数以下の投稿は「話題になっている」とは呼ばない。 */
     minPoints: z.number().int().min(0),
     lookbackHours: z.number().int().positive(),
+    /** ハブ（gentaron/infocollect）のナレッジベースの置き場。無ければ使わない。 */
+    kbEndpoint: z.string().url().optional(),
+    /** ハブが何日観測した話題から拾うか。1 にすると一発の話題まで入る。 */
+    kbMinSeen: z.number().int().positive().optional(),
   }),
   market: z.object({
     endpoint: z.string().url(),

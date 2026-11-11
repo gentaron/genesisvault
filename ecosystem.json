@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/ecosystem/schema.json",
+  "schema": 1,
+  "name": "genesisvault",
+  "group": "pipeline",
+  "groupLabel": "発信パイプライン",
+  "status": "active",
+  "role": "Mina Eureka Ernst の日記ブログ。12体のエージェント（Liminal Forge）が毎日書く",
+  "stack": "Astro · Bun · Vercel",
+  "site": "https://genesisvault.vercel.app",
+  "produces": ["blog"],
+  "consumes": ["kb", "formats", "market"],
+  "upstream": [
+    {
+      "repo": "infocollect",
+      "flows": ["kb"],
+      "url": "https://github.com/gentaron/infocollect"
+    },
+    {
+      "repo": "IDEAZ",
+      "flows": ["formats"],
+      "url": "https://github.com/gentaron/IDEAZ"
+    },
+    {
+      "repo": "QAIZ",
+      "flows": ["market"],
+      "url": "https://github.com/gentaron/QAIZ"
+    }
+  ],
+  "downstream": [
+    {
+      "repo": "VAIZ",
+      "flows": ["blog"],
+      "url": "https://github.com/gentaron/VAIZ"
+    },
+    {
+      "repo": "SAIZ",
+      "flows": ["blog"],
+      "url": "https://github.com/gentaron/SAIZ"
+    },
+    {
+      "repo": "genimage",
+      "flows": ["blog"],
+      "url": "https://github.com/gentaron/genimage"
+    }
+  ],
+  "siblings": ["IDEAZ", "Gentarog", "VAIZ", "SAIZ", "genimage", "seo"],
+  "predecessors": [
+    "aiblogmaker",
+    "nextjs-gens-notes",
+    "nextjs-gensnotes",
+    "gensnotes",
+    "genesisone"
+  ],
+  "hub": {
+    "repo": "https://github.com/gentaron/infocollect",
+    "map": "https://github.com/gentaron/infocollect/blob/HEAD/ecosystem/README.md",
+    "kb": "https://raw.githubusercontent.com/gentaron/infocollect/HEAD/docs/kb",
+    "mcp": ["infocollect-kb", "forge"]
+  }
+}

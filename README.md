@@ -767,3 +767,18 @@ is:issue is:open -label:healthcheck
 **著者**: Mina Eureka Ernst（ミナ・エウレカ・エルンスト）
 **サイト**: https://genesisvault.vercel.app
 **コンセプト**: Liminal Forge AI × 静かなデジタル日記
+
+<!-- ecosystem:begin (自動生成: gentaron/infocollect の ecosystem/registry.json から。手で直さない) -->
+
+## つながり
+
+gentaron のリポジトリ群のうち **発信パイプライン** の一つ。Mina Eureka Ernst の日記ブログ。12体のエージェント（Liminal Forge）が毎日書く。
+
+- **受け取る**: [infocollect](https://github.com/gentaron/infocollect)（ナレッジベース）、[IDEAZ](https://github.com/gentaron/IDEAZ)（書き方の型）、[QAIZ](https://github.com/gentaron/QAIZ)（相場の地形）
+- **渡す**: [VAIZ](https://github.com/gentaron/VAIZ)（記事）、[SAIZ](https://github.com/gentaron/SAIZ)（記事）、[genimage](https://github.com/gentaron/genimage)（記事）
+- **同じ島**: [Gentarog](https://github.com/gentaron/Gentarog)、[seo](https://github.com/gentaron/seo)
+- **前身**: [aiblogmaker](https://github.com/gentaron/aiblogmaker)、[nextjs-gens-notes](https://github.com/gentaron/nextjs-gens-notes)、[nextjs-gensnotes](https://github.com/gentaron/nextjs-gensnotes)、[gensnotes](https://github.com/gentaron/gensnotes)、[genesisone](https://github.com/gentaron/genesisone)
+
+全体の地図 → [ecosystem](https://github.com/gentaron/infocollect/blob/HEAD/ecosystem/README.md)
+
+<!-- ecosystem:end -->

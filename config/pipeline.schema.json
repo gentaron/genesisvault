@@ -556,6 +556,15 @@
               "type": "integer",
               "exclusiveMinimum": 0,
               "maximum": 9007199254740991
+            },
+            "kbEndpoint": {
+              "type": "string",
+              "format": "uri"
+            },
+            "kbMinSeen": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
             }
           },
           "required": [
