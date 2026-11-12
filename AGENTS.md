@@ -495,6 +495,22 @@ VE-010 Tessa（`src/lib/agents/trends.ts`）は、このリポジトリで唯一
 
 <!-- ecosystem:begin (自動生成: gentaron/infocollect の ecosystem/registry.json から。手で直さない) -->
 
+## 14. オーナー指示（2026-11-12）— 構造で守る
+
+オーナーが会話で直接指示したこと。**指示として書くだけでなく、すべてゲートで止める**。
+ここを緩める変更は、オーナーの明示的な許可なしに行わない。
+
+| 指示 | 守る仕組み |
+|------|-----------|
+| データがバラバラで矛盾している。資産は assetlog・QAIZ で認知する | 正典 `data/canon/canon.json`（INV-021）。財務の数字は Kaia の変化率だけ |
+| 「投資8年目」のような語りをやめる | `detectCanonViolations()` を4箇所 + verify が全記事を走査（LM-021） |
+| note.com/gensnotes をクロールして整合性を保つ | `scripts/sync-note.mjs` → `data/vault/note`（毎朝・INV-022） |
+| データセットを RAG・Obsidian 的に管理して跳躍をなくす | Vault（1記事1ノート・wikilink・MOC）+ `vault/retrieve.ts` の検索を書き手へ |
+| タイトルが降りてこないように（同じ言い回しの使い回しを止める） | `title-guard.ts`（INV-023 / LM-022） |
+| サムネ決定機構をしっかり動かす | `thumbnail.ts` + `data/thumbnails.json` + 描き足し（INV-024 / LM-023） |
+
+正典に事実を足すときは、assetlog か note で裏を取り、`source` を書く。金額は書かない。
+
 ## エコシステム（このリポジトリの外側）
 
 - 役割: Mina Eureka Ernst の日記ブログ。12体のエージェント（Liminal Forge）が毎日書く（発信パイプライン）

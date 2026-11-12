@@ -17,6 +17,8 @@
     "gate:eval": "bun scripts/gate-eval.mjs",
     "lint:content": "bun scripts/verify.mjs --quick",
     "auto-post": "bun scripts/auto-post.mjs",
+    "vault:sync": "bun scripts/sync-note.mjs",
+    "thumbnails": "bun scripts/decide-thumbnails.mjs",
     "video:brief": "bun scripts/linear-video-brief.mjs",
     "video:brief:dry": "bun scripts/linear-video-brief.mjs --dry-run",
     "gen:dry": "DRY_RUN=true bun scripts/auto-post.mjs",

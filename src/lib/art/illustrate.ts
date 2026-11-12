@@ -94,6 +94,8 @@ export async function generateIllustration(
   tags: string[],
   notes: string[],
   env: NodeJS.ProcessEnv = process.env,
+  /** サムネ決定機構（thumbnail.ts）が決めたプロンプト。無ければテーマの既定の情景。 */
+  prompt?: string,
 ): Promise<IllustrationResult | null> {
   const cfg = ART_CONFIG.ai;
   if (!cfg.enabled) {
@@ -133,7 +135,10 @@ export async function generateIllustration(
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({ prompt: buildIllustrationPrompt(title, tags), steps: cfg.steps }),
+        body: JSON.stringify({
+          prompt: prompt ?? buildIllustrationPrompt(title, tags),
+          steps: cfg.steps,
+        }),
       },
     );
     if (!res.ok) {
