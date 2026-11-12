@@ -1,54 +1,54 @@
 {
-  "capturedAt": "2026-11-11",
+  "capturedAt": "2026-11-12",
   "portfolio": {
-    "asOf": "2026-11-12",
-    "d1Pct": 0.11,
-    "d7Pct": 1.53,
-    "d30Pct": -0.11,
-    "fromHighPct": -3.33,
+    "asOf": "2026-11-13",
+    "d1Pct": -0.64,
+    "d7Pct": -0.52,
+    "d30Pct": -0.83,
+    "fromHighPct": -3.76,
     "atHigh": false,
-    "vol30Pct": 10,
-    "streak": 1,
-    "days": 544
+    "vol30Pct": 10.2,
+    "streak": -1,
+    "days": 545
   },
   "market": {
-    "generatedAt": "2026-11-11T18:45:10.240Z",
+    "generatedAt": "2026-11-12T19:00:09.012Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
-    "breadth": "broad-rally",
+    "breadth": "mixed",
     "strongest": [
       {
-        "name": "銀行",
+        "name": "金融",
         "region": "インド",
-        "r1wPct": 11.2
+        "r1wPct": 12.2
+      },
+      {
+        "name": "半導体",
+        "region": "米国",
+        "r1wPct": 12.2
       },
       {
         "name": "一般消費財",
-        "region": "日本",
-        "r1wPct": 8.7
-      },
-      {
-        "name": "防衛・宇宙",
-        "region": "欧州",
-        "r1wPct": 5.3
+        "region": "インド",
+        "r1wPct": 11.7
       }
     ],
     "weakest": [
       {
         "name": "エネルギー",
-        "region": "日本",
-        "r1wPct": -10.6
+        "region": "中国",
+        "r1wPct": -12.5
       },
       {
-        "name": "半導体",
-        "region": "韓国",
-        "r1wPct": -9.4
+        "name": "一般消費財",
+        "region": "香港",
+        "r1wPct": -9.1
       },
       {
         "name": "生活必需品",
         "region": "日本",
-        "r1wPct": -8.1
+        "r1wPct": -8.8
       }
     ],
     "rotations": [
@@ -85,9 +85,9 @@
     ]
   },
   "predicates": [
+    "divergence.market_up_me_down",
     "market.bull",
-    "market.rotation_new_leader",
-    "portfolio.quiet_day"
+    "market.rotation_new_leader"
   ],
   "degraded": false,
   "notes": []

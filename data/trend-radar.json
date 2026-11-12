@@ -1,98 +1,99 @@
 {
-  "capturedAt": "2026-11-11",
+  "capturedAt": "2026-11-12",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Google SWE points 48 AI agents at NASA Lidar, finds unmapped Maya pyramid in 72h",
-      "url": "https://pietromiotti.com/latest/maya-site/?maya",
-      "score": 802,
+      "title": "My AI agents found an unmapped Maya site?",
+      "url": "https://pietromiotti.com/latest/maya-site",
+      "score": 1023,
       "date": "2026-11-11"
     },
     {
       "source": "Hacker News",
-      "title": "AI usage generates a fragile codebase",
-      "url": "https://evanxmerz.com/post/ai-usage-generates-a-fragile-codebase/",
-      "score": 618,
-      "date": "2026-11-10"
+      "title": "AWS emulator",
+      "url": "https://github.com/aws/aws-emulator",
+      "score": 951,
+      "date": "2026-11-11"
+    },
+    {
+      "source": "Hacker News",
+      "title": "United Airlines bans AI agents from booking flights on behalf of travelers",
+      "url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
+      "score": 647,
+      "date": "2026-11-11"
     },
     {
       "source": "Hacker News",
       "title": "Apple has new Mac app coming to make running local AI models easy",
       "url": "https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/",
-      "score": 477,
+      "score": 548,
       "date": "2026-11-10"
     },
     {
       "source": "Hacker News",
-      "title": "A false smoke alarm almost drowned Jane Street's only NYC datacenter",
-      "url": "https://michael.bacarella.com/2026/11/10/false-smoke-alarm-jane-street-datacenter/",
-      "score": 209,
+      "title": "Retirement Savings Are Fueling the AI Bubble",
+      "url": "https://lpeproject.org/blog/your-retirement-savings-are-fueling-the-ai-bubble/",
+      "score": 165,
       "date": "2026-11-11"
     },
     {
       "source": "Hacker News",
-      "title": "CoreWeave bond yield tops 16% as AI credit stress rises",
-      "url": "https://www.cnbc.com/2026/11/06/coreweave-bond-yield-tops-16percent-as-ai-credit-stress-rises.html",
-      "score": 194,
-      "date": "2026-11-10"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Fireworks AI security breach impacts Notion and their customers",
-      "url": "https://www.notion.com/help/security-incident-involving-a-third-party-ai-vendor",
-      "score": 164,
-      "date": "2026-11-10"
+      "title": "AI, activity, and outcomes in software engineering",
+      "url": "https://cabird.com/talks/shipping-faster/",
+      "score": 124,
+      "date": "2026-11-11"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7645.66015625,
-      "changePct1d": 1.7,
-      "changePct5d": -0.6,
-      "sma20": 7627.05,
-      "aboveSma20": true,
-      "direction": "横ばい",
-      "asOf": "2026-11-11"
+      "close": 7612.2998046875,
+      "changePct1d": -0.1,
+      "changePct5d": 3.5,
+      "sma20": 7619.15,
+      "aboveSma20": false,
+      "direction": "上昇",
+      "asOf": "2026-11-12"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 60459.578125,
-      "changePct1d": 2.9,
-      "changePct5d": -4.2,
-      "sma20": 63243.32,
+      "close": 61248.58984375,
+      "changePct1d": 1.3,
+      "changePct5d": -1.5,
+      "sma20": 62916.88,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-10"
+      "asOf": "2026-11-11"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.86700439453125,
-      "changePct1d": 1.2,
+      "close": 159.83700561523438,
+      "changePct1d": 0.7,
       "changePct5d": 0.9,
-      "sma20": 157.97,
+      "sma20": 158,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-11"
+      "asOf": "2026-11-12"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 74442.0078125,
-      "changePct1d": 1,
-      "changePct5d": -1.7,
-      "sma20": 77722.95,
+      "close": 71674.0703125,
+      "changePct1d": -3.1,
+      "changePct5d": -5.4,
+      "sma20": 77229.07,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-11"
+      "asOf": "2026-11-12"
     }
   ],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: robotics",
+    "Hacker News 取得失敗: LLM",
+    "Hacker News 取得失敗: robotics",
     "InfoCollect KB 取得失敗: manifest",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
