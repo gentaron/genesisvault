@@ -340,6 +340,53 @@ export const ArtConfigSchema = z.object({
     /** これより大きい画像は保存しない（リポジトリを太らせない）。 */
     maxBytes: z.number().int().positive(),
   }),
+  /**
+   * サムネ決定機構（src/lib/art/thumbnail.ts）。テーマと情景を本文まで見て決定論で決め、
+   * 決定を記録ファイルに残す。直近と同じ情景は使わない。enforceFrom 以降の記事は
+   * verify が「決定記録がある・画像か SVG が必ず出る」ことを確かめる。
+   */
+  thumbnail: z.object({
+    recordFile: z.string().min(1),
+    avoidRepeatDays: z.number().int().min(1).max(60),
+    /** 1回の実行で、挿絵の無い過去記事を何枚まで描き足すか（Workers AI 無料枠の範囲で）。 */
+    backfillPerRun: z.number().int().min(0).max(10),
+    enforceFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  }),
+});
+
+/**
+ * タイトルの使い回し防止（src/lib/pipeline/title-guard.ts）。
+ * 直近 windowDays 日のタイトルと minSharedChars 文字以上の言い回しを共有したら差し戻す。
+ * allowedShared はテーマ名など、共有してよい一般語。enforceFrom 以降の記事は verify も見る。
+ */
+export const TitleGuardConfigSchema = z.object({
+  comment: z.string().optional(),
+  enabled: z.boolean(),
+  windowDays: z.number().int().min(1).max(120),
+  minSharedChars: z.number().int().min(3).max(12),
+  allowedShared: z.array(z.string().min(1)),
+  maxRetries: z.number().int().min(1).max(5),
+  enforceFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  /**
+   * 語の使いすぎ。英数字・カタカナ・漢字の2文字以上の語が、直近 termWindowDays 日の
+   * タイトルに maxTermUses 回以上出ていたら、今回のタイトルには使わせない（「AI」が31本中22本、LM-024）。
+   */
+  termWindowDays: z.number().int().min(1).max(60),
+  maxTermUses: z.number().int().min(1).max(10),
+  termStopwords: z.array(z.string().min(1)),
+});
+
+/**
+ * Vault（note.com/gensnotes の写し + 日記記事）と、その検索（RAG）。
+ * 同期は scripts/sync-note.mjs（外部通信・fail-soft）。検索はローカルの決定論。
+ */
+export const VaultConfigSchema = z.object({
+  comment: z.string().optional(),
+  dir: z.string().min(1),
+  noteDir: z.string().min(1),
+  topK: z.number().int().min(1).max(12),
+  maxSnippetChars: z.number().int().min(40).max(600),
+  minScore: z.number().min(0),
 });
 
 export const FormatConfigSchema = z.object({
@@ -380,6 +427,8 @@ export const PipelineConfigSchema = z.object({
   format: FormatConfigSchema,
   clefReview: ClefReviewConfigSchema,
   art: ArtConfigSchema,
+  titleGuard: TitleGuardConfigSchema,
+  vault: VaultConfigSchema,
 });
 
 export type PipelineConfig = z.infer<typeof PipelineConfigSchema>;
@@ -397,6 +446,8 @@ export type SelectionConfig = z.infer<typeof SelectionConfigSchema>;
 export type FormatConfig = z.infer<typeof FormatConfigSchema>;
 export type ClefReviewConfig = z.infer<typeof ClefReviewConfigSchema>;
 export type ArtConfig = z.infer<typeof ArtConfigSchema>;
+export type TitleGuardConfig = z.infer<typeof TitleGuardConfigSchema>;
+export type VaultConfig = z.infer<typeof VaultConfigSchema>;
 
 // ─── Referential integrity ──────────────────────────────────────
 
@@ -631,3 +682,5 @@ export const SELECTION_CONFIG: SelectionConfig = PIPELINE_CONFIG.selection;
 export const FORMAT_CONFIG: FormatConfig = PIPELINE_CONFIG.format;
 export const CLEF_REVIEW_CONFIG: ClefReviewConfig = PIPELINE_CONFIG.clefReview;
 export const ART_CONFIG: ArtConfig = PIPELINE_CONFIG.art;
+export const TITLE_GUARD_CONFIG: TitleGuardConfig = PIPELINE_CONFIG.titleGuard;
+export const VAULT_CONFIG: VaultConfig = PIPELINE_CONFIG.vault;

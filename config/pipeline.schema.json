@@ -1029,10 +1029,142 @@
             "dir",
             "maxBytes"
           ]
+        },
+        "thumbnail": {
+          "type": "object",
+          "properties": {
+            "recordFile": {
+              "type": "string",
+              "minLength": 1
+            },
+            "avoidRepeatDays": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60
+            },
+            "backfillPerRun": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "enforceFrom": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "required": [
+            "recordFile",
+            "avoidRepeatDays",
+            "backfillPerRun",
+            "enforceFrom"
+          ]
         }
       },
       "required": [
-        "ai"
+        "ai",
+        "thumbnail"
+      ]
+    },
+    "titleGuard": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "windowDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "minSharedChars": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 12
+        },
+        "allowedShared": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "maxRetries": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "enforceFrom": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "termWindowDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "maxTermUses": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "termStopwords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "enabled",
+        "windowDays",
+        "minSharedChars",
+        "allowedShared",
+        "maxRetries",
+        "enforceFrom",
+        "termWindowDays",
+        "maxTermUses",
+        "termStopwords"
+      ]
+    },
+    "vault": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "noteDir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "topK": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "maxSnippetChars": {
+          "type": "integer",
+          "minimum": 40,
+          "maximum": 600
+        },
+        "minScore": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "dir",
+        "noteDir",
+        "topK",
+        "maxSnippetChars",
+        "minScore"
       ]
     }
   },
@@ -1050,6 +1182,8 @@
     "selection",
     "format",
     "clefReview",
-    "art"
+    "art",
+    "titleGuard",
+    "vault"
   ]
 }

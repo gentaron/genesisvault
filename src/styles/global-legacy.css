@@ -104,7 +104,12 @@ a:hover {
   padding: 0 1.5rem;
 }
 
-header {
+/*
+ * サイトのナビだけを固定する。以前は素の `header` に当てていたので、記事ページの
+ * タイトル部分（<header>）まで sticky になり、スクロールするとタイトルが一緒に
+ * 降りてきた（LM-025）。要素名ではなくクラスで当てること。
+ */
+.site-header {
   position: sticky;
   top: 0;
   z-index: 50;
@@ -897,7 +902,7 @@ footer {
 
 /* スタンドアロン表示時にノッチ / ホームインジケータを避ける */
 @supports (padding: env(safe-area-inset-top)) {
-  header {
+  .site-header {
     padding-top: env(safe-area-inset-top);
   }
 

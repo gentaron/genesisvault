@@ -81,6 +81,7 @@ Vera → Edda が逆行禁止ブリーフを CEO/Writer に注入する。
 **文体・テーマの参照源であって、事実の参照源ではない**。混ぜると過去の設定が復活する。
 
 - **守り方**: `config/pipeline.json` の `references` で legacy / current を分離
+- **追記（2026-11-12）**: 現役の note.com/gensnotes は事実の参照源になった（INV-022）。正典は INV-021
 
 ---
 
@@ -102,6 +103,53 @@ Vera → Edda が逆行禁止ブリーフを CEO/Writer に注入する。
 
 - **守り方**: `tests/continuity.test.ts` の `detectRegressions` 節、
   `scripts/auto-post.mjs` の Continuity Gate、`generateFallbackPost` の述語
+
+### INV-021: ミナについての事実は正典が決める。台帳は正典に勝てない
+
+継続性台帳は記事から導出される「AI が書いたこと」で、`data/canon/canon.json` は
+人間が書き、assetlog と note.com/gensnotes で裏を取った「本当のこと」。食い違えば正典が勝つ。
+
+- 投資歴・積立年数を語らない（資産の記録は 2025-04-10 から。それ以前の経歴は存在しない）
+- 資産の中心は株式。暗号資産が中心であるかのように書かない
+- 資産は変化率と向きだけ。金額は書かない
+- 正典に無い経歴・年数・金額を新しく作らない
+
+正典の領分（投資歴など）を台帳の指標にしてはいけない。導出物は導出元の嘘を増幅する（LM-021）。
+
+- **守り方**: `detectCanonViolations()` を auto-post の原稿・校正後・テンプレート・保存直前の4箇所で通す。
+  `bun run verify` の 2b 節が公開済み全記事と台帳を走査する。`tests/canon.test.ts`
+
+### INV-022: note.com/gensnotes の写し（Vault）は事実の参照源。同期は fail-soft
+
+`data/vault/note/` は note の公開記事の写しで、Obsidian で開ける1記事1ノート（タグは wikilink）。
+書き手は書く前にここと過去の日記を検索（RAG）し、過去の記述と矛盾しない・唐突な設定を足さない。
+INV-008 の「旧ブログの WXR は事実の参照源ではない」はそのまま。現役の note は参照源になる。
+
+同期（`scripts/sync-note.mjs`）は外部通信なので fail-soft で、`bun run verify` からは呼ばない（INV-004）。
+検索（`vault/retrieve.ts`）はローカルの BM25 で、埋め込みもネットワークも使わない。
+
+- **守り方**: verify の「Vault が読める」、`tests/vault.test.ts`、daily-post の同期ステップ（continue-on-error）
+
+### INV-023: タイトルは直近30日の言い回しを再利用しない
+
+全体の類似度ではなく、共有するフレーズで判定する（LM-022）。直らなければ公開しない。
+2文字以上の語も、直近14日に2本以上で使っていたら使わない（「AI」が31本中22本、LM-024）。
+
+### INV-025: スクロールで記事のタイトルを固定しない
+
+画面に張り付いてよいのはサイトのナビ（`.site-header`）だけ。sticky / fixed は要素名（`header` など）に当てない（LM-025）。
+
+- **守り方**: `tests/layout-sticky.test.ts`
+
+- **守り方**: `title-guard.ts`（Lena の直後・保存直前）、verify の監査（`titleGuard.enforceFrom` 以降）、
+  `tests/title-guard.test.ts`
+
+### INV-024: 全記事にサムネの決定記録がある
+
+テーマと情景は `thumbnail.ts` が決定論で決め、`data/thumbnails.json` に残す。描けなくても決定は残り、
+SVG のカバー絵が同じテーマで必ず出る。禁止トピックのテーマは選ばない。
+
+- **守り方**: verify の「全記事にサムネの決定がある」、`tests/thumbnail.test.ts`、`bun run thumbnails`
 
 ### INV-020: 外部トレンドの取り込みは fail-soft で、検証を汚さない
 

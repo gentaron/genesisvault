@@ -1,0 +1,2753 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "slug": "2026-02-09-rainy-reading",
+      "date": "2026-02-09",
+      "theme": "読書",
+      "sceneId": "tea-books",
+      "prompt": "a stack of books and a cup of tea on a windowsill, soft afternoon light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 8,
+        "瞑想・マインドフルネス": 1
+      }
+    },
+    {
+      "slug": "2026-02-10-digital-paper",
+      "date": "2026-02-10",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "瞑想・マインドフルネス": 1,
+        "ジャーナリング": 5,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-02-11-morning-walk",
+      "date": "2026-02-11",
+      "theme": "散歩・日常",
+      "sceneId": "park-path",
+      "prompt": "a tree-lined path in a quiet city park in the early morning, long shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "散歩・日常": 10
+      }
+    },
+    {
+      "slug": "2026-02-21-post-5ktj96",
+      "date": "2026-02-21",
+      "theme": "散歩・日常",
+      "sceneId": "rain-crosswalk",
+      "prompt": "a quiet crosswalk after rain with puddles reflecting streetlights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "散歩・日常": 3,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-02-21-post-7vbcc7",
+      "date": "2026-02-21",
+      "theme": "AI・テクノロジー",
+      "sceneId": "terminal-window",
+      "prompt": "a minimal laptop on a desk by a window, abstract light patterns on the screen, no text, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "散歩・日常": 1,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-02-22-post-3cp55n",
+      "date": "2026-02-22",
+      "theme": "AI・テクノロジー",
+      "sceneId": "data-waves",
+      "prompt": "flowing translucent waves of light particles over a dark teal gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-03-03-post-q82yf5",
+      "date": "2026-03-03",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "candle-breath",
+      "prompt": "a single candle flame in a dim minimal room, steam rising from a cup, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 3,
+        "散歩・日常": 11,
+        "自己成長": 1,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-04-post-7w9qio",
+      "date": "2026-03-04",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 22,
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 1,
+        "散歩・日常": 4
+      }
+    },
+    {
+      "slug": "2026-03-05-post-bidm7i",
+      "date": "2026-03-05",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 1,
+        "散歩・日常": 9,
+        "自己成長": 18
+      }
+    },
+    {
+      "slug": "2026-03-06-post-htrasw",
+      "date": "2026-03-06",
+      "theme": "自己成長",
+      "sceneId": "ladder-sky",
+      "prompt": "a simple wooden ladder leaning against a wall under an open sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 3,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 2,
+        "散歩・日常": 11,
+        "自己成長": 12,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-07-post-yjf624",
+      "date": "2026-03-07",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 2,
+        "ひとり旅": 4,
+        "読書": 2,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 14,
+        "散歩・日常": 12,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-03-08-post-e0f7qz",
+      "date": "2026-03-08",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 22,
+        "ひとり旅": 1,
+        "読書": 1,
+        "瞑想・マインドフルネス": 6,
+        "散歩・日常": 6,
+        "暗号資産": 15,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-09-post-cynti7",
+      "date": "2026-03-09",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 19,
+        "散歩・日常": 9,
+        "自己成長": 1,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-03-10-post-fe47ec",
+      "date": "2026-03-10",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 21,
+        "ひとり旅": 1,
+        "読書": 1,
+        "瞑想・マインドフルネス": 11,
+        "ジャーナリング": 1,
+        "散歩・日常": 3,
+        "暗号資産": 14,
+        "自己成長": 12,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-03-11-post-4za70s",
+      "date": "2026-03-11",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 18,
+        "ひとり旅": 3,
+        "瞑想・マインドフルネス": 13,
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "暗号資産": 14,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-12-post-r8e7k8",
+      "date": "2026-03-12",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 3,
+        "読書": 3,
+        "瞑想・マインドフルネス": 10,
+        "ジャーナリング": 17,
+        "散歩・日常": 5,
+        "自己成長": 11,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-03-13-post-22moi6",
+      "date": "2026-03-13",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 3,
+        "散歩・日常": 6,
+        "暗号資産": 12,
+        "自己成長": 1,
+        "AI・テクノロジー": 7
+      }
+    },
+    {
+      "slug": "2026-03-14-post-ndosni",
+      "date": "2026-03-14",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 7,
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 16,
+        "散歩・日常": 6,
+        "自己成長": 1,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-15-post-q1q6nz",
+      "date": "2026-03-15",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 17,
+        "散歩・日常": 3,
+        "自己成長": 1,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-03-16-post-hvaydh",
+      "date": "2026-03-16",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 15,
+        "散歩・日常": 11,
+        "自己成長": 1,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-03-18-post-teh94j",
+      "date": "2026-03-18",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 1,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 17,
+        "散歩・日常": 9,
+        "自己成長": 2,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-03-19-post-9w4m4k",
+      "date": "2026-03-19",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 20,
+        "ひとり旅": 3,
+        "読書": 1,
+        "瞑想・マインドフルネス": 11,
+        "ジャーナリング": 5,
+        "散歩・日常": 6,
+        "暗号資産": 15,
+        "自己成長": 11,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-03-20-post-oa1nb4",
+      "date": "2026-03-20",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 1,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 13,
+        "散歩・日常": 6,
+        "自己成長": 14,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-03-25-post-rkpasg",
+      "date": "2026-03-25",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 14,
+        "ひとり旅": 1,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 13,
+        "散歩・日常": 1,
+        "暗号資産": 14,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-03-26-post-ziwti4",
+      "date": "2026-03-26",
+      "theme": "自己成長",
+      "sceneId": "ladder-sky",
+      "prompt": "a simple wooden ladder leaning against a wall under an open sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 6,
+        "散歩・日常": 9,
+        "自己成長": 17,
+        "AI・テクノロジー": 4
+      }
+    },
+    {
+      "slug": "2026-03-27-post-alcb7a",
+      "date": "2026-03-27",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 18,
+        "散歩・日常": 6,
+        "自己成長": 1,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-03-28-post-a1jk0o",
+      "date": "2026-03-28",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 16,
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 1,
+        "散歩・日常": 4,
+        "暗号資産": 14,
+        "自己成長": 1,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-03-29-post-cc5k2v",
+      "date": "2026-03-29",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 2,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 17,
+        "散歩・日常": 6
+      }
+    },
+    {
+      "slug": "2026-03-30-post-nxi9bl",
+      "date": "2026-03-30",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "forest-light",
+      "prompt": "sunbeams through tall trees in a quiet forest clearing, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 12,
+        "ひとり旅": 3,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 12,
+        "散歩・日常": 4,
+        "暗号資産": 12,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-03-31-post-5qiis0",
+      "date": "2026-03-31",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 14,
+        "ひとり旅": 2,
+        "読書": 1,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 3,
+        "散歩・日常": 4,
+        "暗号資産": 14,
+        "自己成長": 2,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-04-02-post-vr9yf0",
+      "date": "2026-04-02",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 19,
+        "ひとり旅": 6,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 4,
+        "散歩・日常": 6,
+        "暗号資産": 15,
+        "自己成長": 3,
+        "AI・テクノロジー": 7
+      }
+    },
+    {
+      "slug": "2026-04-04-post-67jxvv",
+      "date": "2026-04-04",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 20,
+        "読書": 3,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 2,
+        "散歩・日常": 3
+      }
+    },
+    {
+      "slug": "2026-04-06-post-jptpbn",
+      "date": "2026-04-06",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 1,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 16,
+        "散歩・日常": 3,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-04-07-post-v2hm1a",
+      "date": "2026-04-07",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 4,
+        "読書": 2,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 4,
+        "散歩・日常": 6,
+        "自己成長": 13,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-04-08-post-yojans",
+      "date": "2026-04-08",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 2,
+        "瞑想・マインドフルネス": 11,
+        "ジャーナリング": 15,
+        "散歩・日常": 6,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-04-12-post-1xeg71",
+      "date": "2026-04-12",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 2,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 16,
+        "散歩・日常": 8,
+        "自己成長": 9,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-04-15-post-ggjlcx",
+      "date": "2026-04-15",
+      "theme": "暗号資産",
+      "sceneId": "hex-tiles",
+      "prompt": "abstract glowing hexagonal tiles connected by thin lines, night sky gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 5,
+        "読書": 3,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 4,
+        "暗号資産": 20,
+        "自己成長": 2,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-04-16-post-em9bfu",
+      "date": "2026-04-16",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "瞑想・マインドフルネス": 1,
+        "ジャーナリング": 13,
+        "散歩・日常": 9,
+        "自己成長": 3
+      }
+    },
+    {
+      "slug": "2026-04-17-post-1d44gg",
+      "date": "2026-04-17",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 12,
+        "ひとり旅": 4,
+        "読書": 4,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 15,
+        "散歩・日常": 6,
+        "暗号資産": 2,
+        "自己成長": 2
+      }
+    },
+    {
+      "slug": "2026-04-18-post-821w1e",
+      "date": "2026-04-18",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 17,
+        "散歩・日常": 9,
+        "自己成長": 3,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-04-19-post-jkoc4p",
+      "date": "2026-04-19",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 2,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 14,
+        "散歩・日常": 9,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-04-21-post-9r8f5c",
+      "date": "2026-04-21",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 2,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 13,
+        "散歩・日常": 9,
+        "自己成長": 3,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-04-24-post-5leo8j",
+      "date": "2026-04-24",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 23,
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 3,
+        "散歩・日常": 2,
+        "暗号資産": 20,
+        "自己成長": 13,
+        "AI・テクノロジー": 7
+      }
+    },
+    {
+      "slug": "2026-04-25-post-9lnqnq",
+      "date": "2026-04-25",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 20,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 1,
+        "散歩・日常": 2
+      }
+    },
+    {
+      "slug": "2026-04-26-post-tr9fd1",
+      "date": "2026-04-26",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 20,
+        "散歩・日常": 8,
+        "自己成長": 10
+      }
+    },
+    {
+      "slug": "2026-04-27-post-z19sg5",
+      "date": "2026-04-27",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "ひとり旅": 14,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 17,
+        "散歩・日常": 3,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-03-post-03iz9a",
+      "date": "2026-05-03",
+      "theme": "暗号資産",
+      "sceneId": "hex-tiles",
+      "prompt": "abstract glowing hexagonal tiles connected by thin lines, night sky gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 13,
+        "読書": 1,
+        "瞑想・マインドフルネス": 10,
+        "ジャーナリング": 2,
+        "散歩・日常": 6,
+        "暗号資産": 17,
+        "自己成長": 9,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-05-04-post-6dva8d",
+      "date": "2026-05-04",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 14,
+        "散歩・日常": 9,
+        "自己成長": 3,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-06-post-043jr2",
+      "date": "2026-05-06",
+      "theme": "読書",
+      "sceneId": "tea-books",
+      "prompt": "a stack of books and a cup of tea on a windowsill, soft afternoon light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 13,
+        "瞑想・マインドフルネス": 2,
+        "ジャーナリング": 3,
+        "散歩・日常": 8,
+        "自己成長": 3
+      }
+    },
+    {
+      "slug": "2026-05-07-post-tnlize",
+      "date": "2026-05-07",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 20,
+        "読書": 2,
+        "瞑想・マインドフルネス": 4,
+        "散歩・日常": 3,
+        "暗号資産": 20,
+        "自己成長": 3,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-05-08-post-ho997f",
+      "date": "2026-05-08",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "瞑想・マインドフルネス": 2,
+        "ジャーナリング": 17,
+        "散歩・日常": 1,
+        "自己成長": 12,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-09-post-mv26ri",
+      "date": "2026-05-09",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 17,
+        "散歩・日常": 11,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-11-post-wfkfyg",
+      "date": "2026-05-11",
+      "theme": "散歩・日常",
+      "sceneId": "riverside",
+      "prompt": "a riverside walkway at golden hour with soft clouds, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 1,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 1,
+        "散歩・日常": 12,
+        "自己成長": 10,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-12-post-5pedct",
+      "date": "2026-05-12",
+      "theme": "散歩・日常",
+      "sceneId": "park-path",
+      "prompt": "a tree-lined path in a quiet city park in the early morning, long shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 2,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 1,
+        "散歩・日常": 12
+      }
+    },
+    {
+      "slug": "2026-05-14-post-rrrye7",
+      "date": "2026-05-14",
+      "theme": "散歩・日常",
+      "sceneId": "autumn-alley",
+      "prompt": "a narrow alley with autumn leaves and a bicycle leaning on a wall, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 1,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 17,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-15-post-hxtyvx",
+      "date": "2026-05-15",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 10,
+        "読書": 5,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 15,
+        "散歩・日常": 11,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-17-post-dd9xgl",
+      "date": "2026-05-17",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 20,
+        "ひとり旅": 2,
+        "瞑想・マインドフルネス": 2,
+        "ジャーナリング": 3,
+        "散歩・日常": 2,
+        "暗号資産": 17,
+        "自己成長": 4,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-05-20-post-nepgq3",
+      "date": "2026-05-20",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-05-21-post-8c1ve6",
+      "date": "2026-05-21",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 2,
+        "瞑想・マインドフルネス": 13,
+        "ジャーナリング": 15,
+        "散歩・日常": 7,
+        "自己成長": 13
+      }
+    },
+    {
+      "slug": "2026-05-23-post-xur8fk",
+      "date": "2026-05-23",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 25,
+        "読書": 1,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 2,
+        "散歩・日常": 2
+      }
+    },
+    {
+      "slug": "2026-05-24-post-r67lo5",
+      "date": "2026-05-24",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 15,
+        "散歩・日常": 11,
+        "自己成長": 12
+      }
+    },
+    {
+      "slug": "2026-05-28-post-1rzlkq",
+      "date": "2026-05-28",
+      "theme": "読書",
+      "sceneId": "open-book-garden",
+      "prompt": "an open book resting on a garden bench under dappled leaves, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 17,
+        "瞑想・マインドフルネス": 9,
+        "散歩・日常": 2,
+        "自己成長": 9
+      }
+    },
+    {
+      "slug": "2026-05-29-post-u4uxbr",
+      "date": "2026-05-29",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 17,
+        "散歩・日常": 1,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-05-31-post-547fyq",
+      "date": "2026-05-31",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 13,
+        "自己成長": 13
+      }
+    },
+    {
+      "slug": "2026-06-01-post-5tjtq2",
+      "date": "2026-06-01",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 17,
+        "散歩・日常": 7,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-02-post-uxgjko",
+      "date": "2026-06-02",
+      "theme": "暗号資産",
+      "sceneId": "hex-tiles",
+      "prompt": "abstract glowing hexagonal tiles connected by thin lines, night sky gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 14,
+        "ひとり旅": 1,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "ジャーナリング": 1,
+        "散歩・日常": 1,
+        "暗号資産": 20,
+        "自己成長": 1,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-04-post-bfqd88",
+      "date": "2026-06-04",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 3,
+        "読書": 2,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 17,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-06-05-post-gf5mt8",
+      "date": "2026-06-05",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 4,
+        "読書": 1,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 17,
+        "散歩・日常": 1,
+        "自己成長": 7,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-09-post-b9w2um",
+      "date": "2026-06-09",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 17,
+        "散歩・日常": 14,
+        "自己成長": 16,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-11-post-yv1z6u",
+      "date": "2026-06-11",
+      "theme": "暗号資産",
+      "sceneId": "node-constellation",
+      "prompt": "a constellation of small luminous nodes forming a loose lattice, minimal, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 9,
+        "読書": 2,
+        "瞑想・マインドフルネス": 1,
+        "散歩・日常": 2,
+        "暗号資産": 13,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-12-post-y0iwyb",
+      "date": "2026-06-12",
+      "theme": "暗号資産",
+      "sceneId": "hex-tiles",
+      "prompt": "abstract glowing hexagonal tiles connected by thin lines, night sky gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "読書": 2,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 2,
+        "散歩・日常": 1,
+        "暗号資産": 20,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-06-13-post-lp5avp",
+      "date": "2026-06-13",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 25,
+        "読書": 3,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 5,
+        "散歩・日常": 5,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-06-16-post-k8smiy",
+      "date": "2026-06-16",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 22,
+        "読書": 4,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 2,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-06-20-post-6tn5st",
+      "date": "2026-06-20",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 2,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 16,
+        "散歩・日常": 14,
+        "自己成長": 15,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-06-21-post-a8r5l1",
+      "date": "2026-06-21",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "zen-sand",
+      "prompt": "raked sand garden with three stones, early morning shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 2,
+        "瞑想・マインドフルネス": 17,
+        "ジャーナリング": 11,
+        "散歩・日常": 4,
+        "自己成長": 6
+      }
+    },
+    {
+      "slug": "2026-06-22-post-vpfvat",
+      "date": "2026-06-22",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 3,
+        "散歩・日常": 6,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-06-27-post-4hofmy",
+      "date": "2026-06-27",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 1,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 17,
+        "散歩・日常": 11,
+        "自己成長": 13,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-06-30-post-b6hvfm",
+      "date": "2026-06-30",
+      "theme": "読書",
+      "sceneId": "tea-books",
+      "prompt": "a stack of books and a cup of tea on a windowsill, soft afternoon light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 3,
+        "読書": 17,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 9
+      }
+    },
+    {
+      "slug": "2026-07-02-post-skycdm",
+      "date": "2026-07-02",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 2,
+        "ひとり旅": 22,
+        "読書": 1,
+        "瞑想・マインドフルネス": 7,
+        "散歩・日常": 2,
+        "自己成長": 12,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-07-07-post-0fpym1",
+      "date": "2026-07-07",
+      "theme": "ひとり旅",
+      "sceneId": "train-window",
+      "prompt": "an empty train window view of distant mountains and a winding river at dusk, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 23,
+        "読書": 9,
+        "瞑想・マインドフルネス": 11,
+        "ジャーナリング": 13,
+        "散歩・日常": 6,
+        "自己成長": 1,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-07-08-post-swipww",
+      "date": "2026-07-08",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 2,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 3,
+        "散歩・日常": 14,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-07-10-post-r8pjuv",
+      "date": "2026-07-10",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "読書": 2,
+        "瞑想・マインドフルネス": 6,
+        "暗号資産": 13,
+        "自己成長": 5,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-07-14-post-slx95e",
+      "date": "2026-07-14",
+      "theme": "散歩・日常",
+      "sceneId": "rain-crosswalk",
+      "prompt": "a quiet crosswalk after rain with puddles reflecting streetlights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 1,
+        "散歩・日常": 15,
+        "自己成長": 11,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-07-18-post-z12xho",
+      "date": "2026-07-18",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 4,
+        "瞑想・マインドフルネス": 11,
+        "ジャーナリング": 4,
+        "散歩・日常": 14,
+        "自己成長": 15,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-07-27-post-q0y8zo",
+      "date": "2026-07-27",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 18,
+        "読書": 2,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 1,
+        "散歩・日常": 1,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-07-29-post-6tinbv",
+      "date": "2026-07-29",
+      "theme": "自己成長",
+      "sceneId": "ladder-sky",
+      "prompt": "a simple wooden ladder leaning against a wall under an open sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 4,
+        "散歩・日常": 11,
+        "自己成長": 15,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-07-30-post-howf00",
+      "date": "2026-07-30",
+      "theme": "暗号資産",
+      "sceneId": "hex-tiles",
+      "prompt": "abstract glowing hexagonal tiles connected by thin lines, night sky gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 10,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 2,
+        "散歩・日常": 4,
+        "暗号資産": 15,
+        "自己成長": 2,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-08-01-post-17gr9o",
+      "date": "2026-08-01",
+      "theme": "自己成長",
+      "sceneId": "mountain-trail",
+      "prompt": "a winding mountain trail rising toward a bright summit, clear sky, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 1,
+        "読書": 1,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 3,
+        "散歩・日常": 9,
+        "自己成長": 18,
+        "AI・テクノロジー": 1
+      }
+    },
+    {
+      "slug": "2026-08-02-post-zzo0wq",
+      "date": "2026-08-02",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "ひとり旅": 5,
+        "読書": 3,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 14,
+        "散歩・日常": 9,
+        "自己成長": 15
+      }
+    },
+    {
+      "slug": "2026-08-05-post-6f576n",
+      "date": "2026-08-05",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 17,
+        "散歩・日常": 3,
+        "自己成長": 3,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-08-06-post-nxuvwm",
+      "date": "2026-08-06",
+      "theme": "AI・テクノロジー",
+      "sceneId": "terminal-window",
+      "prompt": "a minimal laptop on a desk by a window, abstract light patterns on the screen, no text, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 2,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 4,
+        "自己成長": 9,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-08-08-post-j4tkfy",
+      "date": "2026-08-08",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 14,
+        "散歩・日常": 11,
+        "自己成長": 3,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-08-09-post-b2hzer",
+      "date": "2026-08-09",
+      "theme": "散歩・日常",
+      "sceneId": "park-path",
+      "prompt": "a tree-lined path in a quiet city park in the early morning, long shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 2,
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 2,
+        "散歩・日常": 14,
+        "自己成長": 2,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-08-12-post-7hrf6p",
+      "date": "2026-08-12",
+      "theme": "読書",
+      "sceneId": "library-corner",
+      "prompt": "a cozy library corner with an armchair and warm reading lamp, rain on the window, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 17,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 12,
+        "散歩・日常": 2,
+        "自己成長": 4,
+        "AI・テクノロジー": 13
+      }
+    },
+    {
+      "slug": "2026-08-15-post-06vf76",
+      "date": "2026-08-15",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 19,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "ジャーナリング": 1,
+        "暗号資産": 16,
+        "自己成長": 1,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-08-16-post-djvr2m",
+      "date": "2026-08-16",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 18,
+        "ひとり旅": 1,
+        "読書": 2,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 1,
+        "散歩・日常": 4,
+        "暗号資産": 18,
+        "自己成長": 3,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-08-18-post-vhiy0f",
+      "date": "2026-08-18",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 14,
+        "散歩・日常": 1,
+        "自己成長": 10,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-08-20-post-konzmi",
+      "date": "2026-08-20",
+      "theme": "暗号資産",
+      "sceneId": "chain-links",
+      "prompt": "translucent glass chain links floating over a soft violet gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "読書": 3,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 1,
+        "散歩・日常": 4,
+        "暗号資産": 20,
+        "自己成長": 3,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-08-22-post-xt9jhw",
+      "date": "2026-08-22",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 4,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 13,
+        "散歩・日常": 1,
+        "自己成長": 2,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-08-23-post-z63n3u",
+      "date": "2026-08-23",
+      "theme": "暗号資産",
+      "sceneId": "node-constellation",
+      "prompt": "a constellation of small luminous nodes forming a loose lattice, minimal, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "暗号資産": 20,
+        "自己成長": 1,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-08-24-post-tyrydo",
+      "date": "2026-08-24",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 22,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "暗号資産": 16,
+        "自己成長": 6,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-08-26-post-yv9pdr",
+      "date": "2026-08-26",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 5,
+        "読書": 3,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 15,
+        "散歩・日常": 6,
+        "自己成長": 10,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-08-27-post-njt8wl",
+      "date": "2026-08-27",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 4,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 12,
+        "散歩・日常": 6,
+        "自己成長": 17,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-08-28-post-7reek1",
+      "date": "2026-08-28",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-08-29-post-01y4z8",
+      "date": "2026-08-29",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-08-30-post-kmpx87",
+      "date": "2026-08-30",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-08-31-post-37pkc3",
+      "date": "2026-08-31",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-01-post-i9sxa3",
+      "date": "2026-09-01",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-02-post-0pasrs",
+      "date": "2026-09-02",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-03-post-xv0asi",
+      "date": "2026-09-03",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-04-post-i4p5rl",
+      "date": "2026-09-04",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-05-post-9tm6xa",
+      "date": "2026-09-05",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-06-post-g3qeew",
+      "date": "2026-09-06",
+      "theme": "ひとり旅",
+      "sceneId": "train-window",
+      "prompt": "an empty train window view of distant mountains and a winding river at dusk, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-07-post-8nu5l1",
+      "date": "2026-09-07",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-08-post-56k4bn",
+      "date": "2026-09-08",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-09-post-612j13",
+      "date": "2026-09-09",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-10-post-7c9rky",
+      "date": "2026-09-10",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-11-post-mlf16s",
+      "date": "2026-09-11",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-12-post-cabxqj",
+      "date": "2026-09-12",
+      "theme": "ひとり旅",
+      "sceneId": "train-window",
+      "prompt": "an empty train window view of distant mountains and a winding river at dusk, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-13-post-tve5yt",
+      "date": "2026-09-13",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-14-post-dyhqb3",
+      "date": "2026-09-14",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-15-post-1cn5qj",
+      "date": "2026-09-15",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-16-post-s2ii82",
+      "date": "2026-09-16",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-17-post-h5sgjd",
+      "date": "2026-09-17",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-18-post-bcca9b",
+      "date": "2026-09-18",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-19-post-czyqgg",
+      "date": "2026-09-19",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-20-post-bvje83",
+      "date": "2026-09-20",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-21-post-0svmxs",
+      "date": "2026-09-21",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-22-post-pgwxyr",
+      "date": "2026-09-22",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-23-post-mq5mm1",
+      "date": "2026-09-23",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-24-post-wxklpr",
+      "date": "2026-09-24",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-25-post-egxlbk",
+      "date": "2026-09-25",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-26-post-3yu4qo",
+      "date": "2026-09-26",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-27-post-tlfxac",
+      "date": "2026-09-27",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-28-post-2sifwn",
+      "date": "2026-09-28",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-09-29-post-g8xkt8",
+      "date": "2026-09-29",
+      "theme": "ひとり旅",
+      "sceneId": "train-window",
+      "prompt": "an empty train window view of distant mountains and a winding river at dusk, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-09-30-post-vpa51i",
+      "date": "2026-09-30",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-01-post-yiik27",
+      "date": "2026-10-01",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-10-02-post-0tdh70",
+      "date": "2026-10-02",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-03-post-gs6lh9",
+      "date": "2026-10-03",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-10-04-post-dvx7oz",
+      "date": "2026-10-04",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-05-post-muxbup",
+      "date": "2026-10-05",
+      "theme": "ひとり旅",
+      "sceneId": "train-window",
+      "prompt": "an empty train window view of distant mountains and a winding river at dusk, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-10-06-post-j3q9fk",
+      "date": "2026-10-06",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-07-post-3qkpen",
+      "date": "2026-10-07",
+      "theme": "ひとり旅",
+      "sceneId": "harbor-morning",
+      "prompt": "a quiet harbor at sunrise with small boats and soft reflections, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "ひとり旅": 21,
+        "読書": 3,
+        "瞑想・マインドフルネス": 2,
+        "散歩・日常": 5
+      }
+    },
+    {
+      "slug": "2026-10-08-post-ozop4u",
+      "date": "2026-10-08",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-09-post-jky300",
+      "date": "2026-10-09",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-10-post-p79v2j",
+      "date": "2026-10-10",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 1,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "自己成長": 1
+      }
+    },
+    {
+      "slug": "2026-10-11-post-6cuzey",
+      "date": "2026-10-11",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 17,
+        "ひとり旅": 1,
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 3,
+        "散歩・日常": 6,
+        "暗号資産": 3,
+        "自己成長": 3,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-10-12-post-7nd7p9",
+      "date": "2026-10-12",
+      "theme": "散歩・日常",
+      "sceneId": "riverside",
+      "prompt": "a riverside walkway at golden hour with soft clouds, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "ひとり旅": 1,
+        "読書": 3,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 1,
+        "散歩・日常": 14,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-10-13-post-m1y5k5",
+      "date": "2026-10-13",
+      "theme": "ジャーナリング",
+      "sceneId": "notebook-pen",
+      "prompt": "an open notebook with a fountain pen on a linen tablecloth, warm lamp light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 11,
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 17,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 11,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-10-14-post-fnna80",
+      "date": "2026-10-14",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "読書": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 6,
+        "自己成長": 14,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-10-15-post-eh5jev",
+      "date": "2026-10-15",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "zen-sand",
+      "prompt": "raked sand garden with three stones, early morning shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 4,
+        "ひとり旅": 2,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 1,
+        "散歩・日常": 5,
+        "自己成長": 1,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-10-16-post-kyjhi3",
+      "date": "2026-10-16",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 20,
+        "ひとり旅": 4,
+        "読書": 5,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 2,
+        "散歩・日常": 6,
+        "自己成長": 4
+      }
+    },
+    {
+      "slug": "2026-10-17-post-vvt1su",
+      "date": "2026-10-17",
+      "theme": "散歩・日常",
+      "sceneId": "autumn-alley",
+      "prompt": "a narrow alley with autumn leaves and a bicycle leaning on a wall, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 5,
+        "読書": 4,
+        "瞑想・マインドフルネス": 12,
+        "ジャーナリング": 4,
+        "散歩・日常": 14,
+        "自己成長": 7,
+        "AI・テクノロジー": 2
+      }
+    },
+    {
+      "slug": "2026-10-18-post-h2e2hq",
+      "date": "2026-10-18",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "forest-light",
+      "prompt": "sunbeams through tall trees in a quiet forest clearing, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 9,
+        "読書": 2,
+        "瞑想・マインドフルネス": 17,
+        "散歩・日常": 6,
+        "自己成長": 11
+      }
+    },
+    {
+      "slug": "2026-10-19-post-0ugyzs",
+      "date": "2026-10-19",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 18,
+        "読書": 1,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 2,
+        "散歩・日常": 4,
+        "自己成長": 3,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-10-20-post-rclpfa",
+      "date": "2026-10-20",
+      "theme": "散歩・日常",
+      "sceneId": "rain-crosswalk",
+      "prompt": "a quiet crosswalk after rain with puddles reflecting streetlights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 1,
+        "読書": 1,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 2,
+        "散歩・日常": 11,
+        "自己成長": 10,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-10-21-post-wlg1va",
+      "date": "2026-10-21",
+      "theme": "散歩・日常",
+      "sceneId": "park-path",
+      "prompt": "a tree-lined path in a quiet city park in the early morning, long shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 2,
+        "ひとり旅": 1,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 1,
+        "散歩・日常": 12,
+        "暗号資産": 1,
+        "自己成長": 9,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-10-22-post-7bafdr",
+      "date": "2026-10-22",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 13,
+        "ひとり旅": 6,
+        "読書": 3,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "自己成長": 14,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-10-23-post-cftggt",
+      "date": "2026-10-23",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "candle-breath",
+      "prompt": "a single candle flame in a dim minimal room, steam rising from a cup, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "読書": 3,
+        "瞑想・マインドフルネス": 17,
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 1,
+        "AI・テクノロジー": 13
+      }
+    },
+    {
+      "slug": "2026-10-24-post-g1ii7w",
+      "date": "2026-10-24",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 18,
+        "ひとり旅": 2,
+        "読書": 6,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 3,
+        "散歩・日常": 6,
+        "暗号資産": 2,
+        "自己成長": 3,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-10-25-post-5vv59l",
+      "date": "2026-10-25",
+      "theme": "散歩・日常",
+      "sceneId": "hill-view",
+      "prompt": "a gentle hilltop bench overlooking a calm town at dawn, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 9,
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 1,
+        "散歩・日常": 14,
+        "暗号資産": 1,
+        "自己成長": 14,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-10-26-post-oluh38",
+      "date": "2026-10-26",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 16,
+        "散歩・日常": 6,
+        "自己成長": 11,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-10-27-post-t661an",
+      "date": "2026-10-27",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "lake-ripples",
+      "prompt": "a calm lake with concentric ripples at dawn, mist over the water, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 4,
+        "瞑想・マインドフルネス": 16,
+        "散歩・日常": 1,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-10-28-post-28xrgh",
+      "date": "2026-10-28",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 21,
+        "ひとり旅": 4,
+        "読書": 2,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 2,
+        "散歩・日常": 3,
+        "自己成長": 4
+      }
+    },
+    {
+      "slug": "2026-10-29-post-rg1sw3",
+      "date": "2026-10-29",
+      "theme": "散歩・日常",
+      "sceneId": "autumn-alley",
+      "prompt": "a narrow alley with autumn leaves and a bicycle leaning on a wall, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 8,
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 1,
+        "散歩・日常": 12,
+        "暗号資産": 1,
+        "自己成長": 3,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-10-30-post-vff1y0",
+      "date": "2026-10-30",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "forest-light",
+      "prompt": "sunbeams through tall trees in a quiet forest clearing, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "読書": 3,
+        "瞑想・マインドフルネス": 17,
+        "散歩・日常": 6,
+        "自己成長": 10,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-10-31-post-72to2l",
+      "date": "2026-10-31",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 17,
+        "読書": 1,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 5,
+        "暗号資産": 1,
+        "自己成長": 1,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-11-01-post-qw3qtm",
+      "date": "2026-11-01",
+      "theme": "AI・テクノロジー",
+      "sceneId": "data-waves",
+      "prompt": "flowing translucent waves of light particles over a dark teal gradient, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 8,
+        "ひとり旅": 3,
+        "読書": 3,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 2,
+        "散歩・日常": 9,
+        "暗号資産": 1,
+        "自己成長": 10,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-11-02-post-988g9e",
+      "date": "2026-11-02",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "candle-breath",
+      "prompt": "a single candle flame in a dim minimal room, steam rising from a cup, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 6,
+        "ひとり旅": 3,
+        "読書": 2,
+        "瞑想・マインドフルネス": 17,
+        "ジャーナリング": 2,
+        "散歩・日常": 8,
+        "自己成長": 11,
+        "AI・テクノロジー": 3
+      }
+    },
+    {
+      "slug": "2026-11-03-post-dvjji7",
+      "date": "2026-11-03",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 19,
+        "読書": 1,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 4,
+        "自己成長": 3,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-11-04-post-mak92l",
+      "date": "2026-11-04",
+      "theme": "ジャーナリング",
+      "sceneId": "cafe-notes",
+      "prompt": "a cafe table with a notebook, a latte and morning sunlight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "ひとり旅": 4,
+        "読書": 2,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 13,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 11,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-11-05-post-x2o997",
+      "date": "2026-11-05",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "lake-ripples",
+      "prompt": "a calm lake with concentric ripples at dawn, mist over the water, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 8,
+        "ひとり旅": 3,
+        "読書": 3,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 2,
+        "散歩・日常": 6,
+        "暗号資産": 2,
+        "自己成長": 10,
+        "AI・テクノロジー": 12
+      }
+    },
+    {
+      "slug": "2026-11-06-post-z4vsf2",
+      "date": "2026-11-06",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 15,
+        "ひとり旅": 2,
+        "読書": 4,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 4,
+        "AI・テクノロジー": 6
+      }
+    },
+    {
+      "slug": "2026-11-07-post-c997e2",
+      "date": "2026-11-07",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 9,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 2,
+        "散歩・日常": 7,
+        "暗号資産": 1,
+        "自己成長": 13,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-11-08-post-5sv17t",
+      "date": "2026-11-08",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "forest-light",
+      "prompt": "sunbeams through tall trees in a quiet forest clearing, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 9,
+        "読書": 3,
+        "瞑想・マインドフルネス": 17,
+        "散歩・日常": 6,
+        "暗号資産": 2,
+        "自己成長": 3,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-11-09-post-vnxf8s",
+      "date": "2026-11-09",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 18,
+        "読書": 4,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 1,
+        "散歩・日常": 5,
+        "暗号資産": 1,
+        "自己成長": 13,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-11-10-post-e23t8n",
+      "date": "2026-11-10",
+      "theme": "AI・テクノロジー",
+      "sceneId": "soft-network",
+      "prompt": "abstract network of soft glowing nodes over a pale blue gradient, minimal, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 11,
+        "ひとり旅": 6,
+        "読書": 4,
+        "瞑想・マインドフルネス": 9,
+        "ジャーナリング": 4,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 5,
+        "AI・テクノロジー": 14
+      }
+    },
+    {
+      "slug": "2026-11-11-post-0qd9rd",
+      "date": "2026-11-11",
+      "theme": "散歩・日常",
+      "sceneId": "riverside",
+      "prompt": "a riverside walkway at golden hour with soft clouds, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "読書": 1,
+        "瞑想・マインドフルネス": 8,
+        "ジャーナリング": 2,
+        "散歩・日常": 12,
+        "自己成長": 9,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-11-12-post-w4j2nl",
+      "date": "2026-11-12",
+      "theme": "ひとり旅",
+      "sceneId": "old-street",
+      "prompt": "an empty old stone street with lanterns at twilight, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "ひとり旅": 18,
+        "読書": 3,
+        "瞑想・マインドフルネス": 5,
+        "ジャーナリング": 2,
+        "散歩・日常": 8,
+        "自己成長": 1,
+        "AI・テクノロジー": 6
+      }
+    }
+  ]
+}

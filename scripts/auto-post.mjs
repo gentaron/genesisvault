@@ -78,6 +78,22 @@ import { generateCandidates, reviewCandidates } from '../src/lib/selection/candi
 import { runJuno, buildSelectionBrief, appendSelectionLog } from '../src/lib/selection/select.ts';
 import { semanticNearest } from '../src/lib/selection/semantic.ts';
 import { generateIllustration } from '../src/lib/art/illustrate.ts';
+import { findIllustration } from '../src/lib/art/resolve.ts';
+import {
+  decideThumbnail,
+  loadThumbnailRecord,
+  saveThumbnailRecord,
+  upsertDecision,
+} from '../src/lib/art/thumbnail.ts';
+import { fillMissingDecisions } from './decide-thumbnails.mjs';
+import {
+  loadCanon,
+  buildCanonBrief,
+  buildCanonFeedback,
+  detectCanonViolations,
+} from '../src/lib/canon/canon.ts';
+import { findTitleEchoes, buildTitleEchoFeedback, listOverusedTerms } from '../src/lib/pipeline/title-guard.ts';
+import { loadVaultDocs, buildIndex, searchVault, buildVaultBrief } from '../src/lib/vault/retrieve.ts';
 import {
   runClefReview,
   buildClefFeedback,
@@ -89,7 +105,7 @@ import {
   buildIdeazTitleRules,
   buildIdeazEditorRules,
 } from '../src/lib/format/ideaz.ts';
-import { SELECTION_CONFIG, CLEF_REVIEW_CONFIG } from '../src/lib/pipeline/config.ts';
+import { SELECTION_CONFIG, CLEF_REVIEW_CONFIG, TITLE_GUARD_CONFIG, ART_CONFIG, VAULT_CONFIG } from '../src/lib/pipeline/config.ts';
 import rawPipelineConfig from '../config/pipeline.json' with { type: 'json' };
 import { runQualityGate } from '../src/lib/pipeline/quality-gate.ts';
 
@@ -400,14 +416,25 @@ async function auditExistingPost(filePath, dryRun) {
  * 挿絵（Workers AI 無料枠の FLUX.1 schnell）。既にあれば描かない。失敗してもビルド時の
  * SVG カバー絵が出るので、ここは何が起きても止めない。
  */
-async function illustrate(slug, title, tags, dryRun) {
+async function illustrate(slug, title, tags, dryRun, body = '') {
+  // ── サムネ決定（決定論・必ず記録する）── 描けなくても決定は残り、SVG も同じテーマで出る
+  let record = await loadThumbnailRecord(ROOT_DIR);
+  const date = /^\d{4}-\d{2}-\d{2}/.test(slug) ? slug.slice(0, 10) : todayISO();
+  let decision = record.entries.find(e => e.slug === slug);
+  if (!decision) {
+    decision = decideThumbnail({ slug, date, title, tags, body }, record.entries);
+    record = upsertDecision(record, decision);
+    if (!dryRun) await saveThumbnailRecord(ROOT_DIR, record);
+  }
+  stage('サムネ決定', 'テーマと情景の決定', 'ok', `${decision.theme} / ${decision.sceneId}`);
+
   if (dryRun) {
     stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'skip', 'DRY_RUN');
     return;
   }
   const notes = [];
-  console.log('🎨 挿絵: Workers AI（FLUX.1 schnell）で1枚描いています…');
-  const art = await generateIllustration(ROOT_DIR, slug, title, tags, notes);
+  console.log(`🎨 挿絵: Workers AI（FLUX.1 schnell）で1枚描いています…（${decision.theme} / ${decision.sceneId}）`);
+  const art = await generateIllustration(ROOT_DIR, slug, title, tags, notes, process.env, decision.prompt);
   if (art) {
     console.log(`   ✅ ${art.url}（${Math.round(art.bytes / 1024)}KB）`);
     logAgent('SYSTEM', 'Illustrator', 'drawn', art.url);
@@ -416,7 +443,26 @@ async function illustrate(slug, title, tags, dryRun) {
     const already = notes.includes('挿絵は既にある');
     console.log(`   ⏭️  ${notes.join(' / ')} — SVG のカバー絵を使います`);
     stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', already ? 'skip' : 'warn', `${notes.join(' / ')}（SVG のカバー絵で表示）`);
+    if (!already) return; // 鍵が無い・枠切れの日は描き足しもしない
   }
+
+  // ── 描き足し: 挿絵の無い過去記事を新しい順に backfillPerRun 枚まで ──
+  const quota = ART_CONFIG.thumbnail.backfillPerRun;
+  if (quota <= 0) return;
+  const { record: filled } = await fillMissingDecisions(ROOT_DIR);
+  const missing = filled.entries
+    .filter(e => e.slug !== slug && !findIllustration(e.slug, ROOT_DIR, ART_CONFIG.ai.dir))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, quota);
+  let drawn = 0;
+  for (const e of missing) {
+    const n = [];
+    const extra = await generateIllustration(ROOT_DIR, e.slug, '', [], n, process.env, e.prompt);
+    if (!extra) break; // 枠切れ・障害なら今日はここまで
+    drawn++;
+    logAgent('SYSTEM', 'Illustrator', 'backfilled', extra.url);
+  }
+  stage('挿絵の描き足し', `挿絵の無い過去記事（残り${filled.entries.filter(e => !findIllustration(e.slug, ROOT_DIR, ART_CONFIG.ai.dir)).length}件）`, drawn > 0 ? 'ok' : 'skip', `${drawn}/${missing.length}枚`);
 }
 
 async function reportStages(mode) {
@@ -587,8 +633,18 @@ async function main() {
     console.warn(`  ⚠️  Continuity build failed: ${err.message?.substring(0, 120)}`);
     // 作り直しに失敗したら、読み込んだ既存台帳のまま進む（無いよりはよい）
   }
+  // ── 正典（Canon）: 台帳より上位の「本当のこと」（AGENTS.md §14 / INV-021） ──
+  // 読めない・壊れている正典で書き始めない。例外はそのまま main の catch へ（記事を出さない）。
+  const canon = loadCanon(ROOT_DIR);
+  const canonBrief = buildCanonBrief(canon);
+  /** 正典違反（投資歴の作り話・資産構成の誤り・金額の開示）。タイトルと description も本文として見る。 */
+  const findCanon = (title, body, extra = '') =>
+    detectCanonViolations([title, extra, body].filter(Boolean).join('。\n'), canon);
+  console.log(`  📜 正典を執筆陣へ注入します（事実${canon.facts.length}件 / 禁止${canon.forbiddenClaims.length}件）`);
+
   const continuityBrief = [
     process.env.GV_BRIEF ? `【今回の企画指示・最優先】\n${process.env.GV_BRIEF}` : '',
+    canonBrief,
     ledger?.brief ?? '',
   ].filter(Boolean).join('\n\n');
   if (continuityBrief) console.log(`  🧭 継続性ブリーフを執筆陣へ注入します（${continuityBrief.length}字）`);
@@ -696,7 +752,7 @@ async function main() {
       const raw = await fs.readFile(path.join(POSTS_DIR, existingPost), 'utf-8');
       const title = raw.match(/^title:\s*"?(.*?)"?\s*$/m)?.[1]?.replace(/\\"/g, '"') ?? '';
       const tags = [...(raw.match(/^tags:\s*\[(.*)\]\s*$/m)?.[1] ?? '').matchAll(/"([^"]+)"/g)].map(m => m[1]);
-      await illustrate(existingPost.replace(/\.md$/, ''), title, tags, DRY_RUN);
+      await illustrate(existingPost.replace(/\.md$/, ''), title, tags, DRY_RUN, raw.replace(/^---\n[\s\S]*?\n---\n/, ''));
     } catch (err) {
       stage('挿絵', 'AI の挿絵（FLUX.1 schnell）', 'warn', `記事を読めない: ${err.message?.substring(0, 80)}`);
     }
@@ -748,13 +804,43 @@ async function main() {
     }
 
     // Phase κ: タイトル重複チェック付きでCEOを実行（最大3回リトライ）
+    // Title Guard: 直近のタイトルと同じ言い回しは使わせない（LM-022）。先に一覧を見せ、
+    // それでも使い回したら名指しで差し戻す。maxRetries 回で直らなければテンプレートへ。
+    const overusedTerms = TITLE_GUARD_CONFIG.enabled ? listOverusedTerms(pastArticles, todayISO()) : [];
+    const recentTitleBrief = TITLE_GUARD_CONFIG.enabled
+      ? [
+          overusedTerms.length
+            ? `【タイトルに使ってはいけない語（直近${TITLE_GUARD_CONFIG.termWindowDays}日に${TITLE_GUARD_CONFIG.maxTermUses}本以上で使用済み）】${overusedTerms.map(t => `「${t}」`).join('')}`
+            : '',
+          `【直近${TITLE_GUARD_CONFIG.windowDays}日のタイトル — ここにある言い回し（${TITLE_GUARD_CONFIG.minSharedChars}文字以上の共通部分）を今回のタイトルに入れない】`,
+          ...[...pastArticles]
+            .filter(a => a.date < todayISO() && Date.parse(todayISO()) - Date.parse(a.date) <= TITLE_GUARD_CONFIG.windowDays * 86_400_000)
+            .sort((a, b) => b.date.localeCompare(a.date))
+            .map(a => `  - ${a.date}「${a.title}」`),
+        ].filter(Boolean).join('\n')
+      : '';
+    const checkTitle = (title) => {
+      const dup = checkTitleDup(title);
+      if (dup) return dup;
+      const echoes = findTitleEchoes(title, pastArticles, todayISO());
+      if (echoes.length > 0) {
+        console.warn(`  ⚠️  タイトルの使い回し: ${[...new Set(echoes.map(e => e.phrase))].join(' / ')}`);
+        return buildTitleEchoFeedback(echoes);
+      }
+      const canonHits = findCanon(title, '');
+      return canonHits.length > 0 ? buildCanonFeedback(canonHits) : '';
+    };
     let titleRetries = 0;
     let titleFeedback = '';
     do {
-      ceoPlan = await runLena(titles, styleSamples, assignedTheme, enhancedContinuityBrief || continuityBrief, trendBrief, titleFeedback, format.title);
-      titleFeedback = checkTitleDup(ceoPlan.title) || '';
+      ceoPlan = await runLena(titles, styleSamples, assignedTheme, [enhancedContinuityBrief || continuityBrief, recentTitleBrief].filter(Boolean).join('\n\n'), trendBrief, titleFeedback, format.title);
+      titleFeedback = checkTitle(ceoPlan.title);
       titleRetries++;
-    } while (titleFeedback && titleRetries < 3);
+    } while (titleFeedback && titleRetries < TITLE_GUARD_CONFIG.maxRetries);
+    if (titleFeedback) {
+      logAgent('SYSTEM', 'TitleGuard', 'failed', ceoPlan.title);
+      throw new Error(`Title guard failed after ${titleRetries} attempts: ${ceoPlan.title}`);
+    }
 
     if (!validateCEOPlan(ceoPlan)) {
       console.warn('  ⚠️  CEO plan validation failed — using fallback');
@@ -781,7 +867,22 @@ async function main() {
     // 継続性の逆行だけは、書き直させれば直る種類の不合格なので、ここで
     // 1度だけ差し戻す。ブリーフに「逆行するな」と書いてあっても、守られた
     // かどうかは誰も確認しない限り分からない — 指示ではなく検査で担保する。
-    const writerBrief = [selectionSection, continuityBrief].filter(Boolean).join('\n\n');
+    // Vault（note の写し + 過去の日記）から、今日の企画に近い記述を引く（RAG・ローカル）。
+    let vaultBrief = '';
+    try {
+      const vaultIndex = buildIndex(await loadVaultDocs(ROOT_DIR));
+      const query = `${ceoPlan.title} ${ceoPlan.topic ?? ''} ${ceoPlan.angle ?? ''}`;
+      const half = Math.max(1, Math.ceil(VAULT_CONFIG.topK / 2));
+      const hits = [
+        ...searchVault(vaultIndex, query, { topK: half, exclude: d => d.source !== 'note' }),
+        ...searchVault(vaultIndex, query, { topK: half, exclude: d => d.source !== 'diary' || d.date >= todayISO() }),
+      ];
+      vaultBrief = buildVaultBrief(hits);
+      stage('Vault', '過去の記述の検索（RAG）', hits.length ? 'ok' : 'warn', `${vaultIndex.docs.length}件から${hits.length}件`);
+    } catch (err) {
+      stage('Vault', '過去の記述の検索（RAG）', 'warn', err.message?.substring(0, 80));
+    }
+    const writerBrief = [selectionSection, continuityBrief, vaultBrief].filter(Boolean).join('\n\n');
     let draft = await runSophia(ceoPlan, seoData, styleSamples, writerBrief, trendBrief, '', format.writer);
     if (!draft) throw new Error('Writer Agent returned empty');
 
@@ -811,6 +912,17 @@ async function main() {
         } else {
           regressions = remaining;
         }
+      }
+    }
+    // 正典違反も書き直せば直る種類の不合格。1度だけ名指しで差し戻す。
+    const draftCanon = findCanon(ceoPlan.title, draft);
+    if (draftCanon.length > 0) {
+      console.warn(`  ⚠️  正典違反を検出（${draftCanon.map(v => `「${v.quote}」`).join(' ')}）。書き直しを指示します`);
+      logAgent('SYSTEM', 'CanonGate', 'violation_detected', draftCanon.map(v => v.rule).join(', '));
+      const rewritten = await runSophia(ceoPlan, seoData, styleSamples, writerBrief, trendBrief, buildCanonFeedback(draftCanon), format.writer);
+      if (rewritten && findCanon(ceoPlan.title, rewritten).length === 0 && findRegressions(ceoPlan.title, rewritten).length === 0) {
+        console.log('  ✅ 書き直しで正典違反が解消しました');
+        draft = rewritten;
       }
     }
     logAgent('VE-002', 'Sophia Nightingale', 'draft_written', `${draft.length} chars`);
@@ -867,6 +979,14 @@ async function main() {
       );
     }
     console.log('🧭 Continuity Gate: ✅ 過去記事の到達点と矛盾なし');
+
+    // ── Canon Gate（正典に反する記事は公開しない）── 校正後の本文・description・keywords を見る
+    const finalCanon = findCanon(ceoPlan.title, finalBody, `${seoData.description ?? ''} ${(seoData.keywords ?? []).join(' ')}`);
+    if (finalCanon.length > 0) {
+      logAgent('SYSTEM', 'CanonGate', 'failed', finalCanon.map(v => `${v.rule}:${v.quote}`).join(', '));
+      throw new Error(`Canon gate failed: ${finalCanon.map(v => `「${v.quote}」(${v.rule})`).join(' / ')}`);
+    }
+    console.log('📜 Canon Gate: ✅ 正典と矛盾なし');
     logAgent('SYSTEM', 'ContinuityGate', 'passed', `${ledger?.facts.length ?? 0} canon facts checked`);
     stage('VE-005〜006 Nova→Iris', '執筆・品質ゲート・継続性ゲート', 'ok', `「${ceoPlan.title}」${format.writer ? '（IDEAZ の型）' : ''}`);
     console.log('');
@@ -896,12 +1016,12 @@ async function main() {
           ceoPlan,
           seoData,
           styleSamples,
-          [selectionSection, continuityBrief].filter(Boolean).join('\n\n'),
+          [selectionSection, continuityBrief, vaultBrief].filter(Boolean).join('\n\n'),
           trendBrief,
           buildClefFeedback(verdict),
           format.writer,
         );
-        if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0) {
+        if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0 && findCanon(ceoPlan.title, rewritten).length === 0) {
           const second = await runClefReview(reviewBrief, ceoPlan.title, rewritten);
           clefVerdicts.push(second);
           if (second.passed || (second.available && failedCount(second) < failedCount(verdict))) {
@@ -929,13 +1049,37 @@ async function main() {
     // 逆行が出るのが、一番見つけにくい壊れ方だから。
     const fallback = generateFallbackPost(
       themeBalance,
-      text => detectRegressions({ title: '', text, date: todayISO() }, ledger).length === 0,
+      text =>
+        detectRegressions({ title: '', text, date: todayISO() }, ledger).length === 0 &&
+        detectCanonViolations(text, canon).length === 0 &&
+        !(rawPipelineConfig.qualityGate?.forbiddenTopics?.terms ?? []).some(t => text.includes(t)) &&
+        findTitleEchoes(text.split('。')[0], pastArticles, todayISO()).length === 0,
     );
     ceoPlan = fallback.ceoPlan;
     seoData = fallback.seoData;
     finalBody = fallback.body;
     // Phase η: Report to Sentry
     try { captureException(err); } catch { /* best effort */ }
+  }
+
+  // ── 最後の砦: テンプレートも含め、正典違反・タイトルの使い回しは公開しない ──
+  // generateFallbackPost は安全な候補が無いと危険な候補でも返すので、ここで止める。
+  // 静かに嘘を出すより、出さないほうがよい（ワークフローが赤くなり、人が気づく）。
+  const lastCanon = findCanon(ceoPlan.title, finalBody, `${seoData.description ?? ''} ${(seoData.keywords ?? []).join(' ')}`);
+  const lastEchoes = findTitleEchoes(ceoPlan.title, pastArticles, todayISO());
+  // 禁止トピック（AGENTS.md §13.5）。テンプレートには家計簿・貯金の原稿が残っているので、ここでも止める。
+  const lastForbidden = (rawPipelineConfig.qualityGate?.forbiddenTopics?.terms ?? []).filter(t =>
+    `${ceoPlan.title}${finalBody}`.includes(t),
+  );
+  if (lastCanon.length > 0 || lastEchoes.length > 0 || lastForbidden.length > 0) {
+    const why = [
+      ...lastCanon.map(v => `正典違反「${v.quote}」`),
+      ...lastForbidden.map(t => `禁止トピック「${t}」`),
+      ...[...new Set(lastEchoes.map(e => e.phrase))].map(p => `タイトルの使い回し「${p}」`),
+    ].join(' / ');
+    stage('保存', '記事ファイル', 'fail', `公開しない: ${why}`);
+    await reportStages('publish');
+    throw new Error(`Refusing to publish: ${why}`);
   }
 
   // ── Clear pipeline state on success ───────────────────────
@@ -999,7 +1143,7 @@ ${cleanBody}
     console.log(cleanBody.substring(0, 300) + '...');
     console.log('═══════════════════════════════════════════════════');
     stage('保存', '記事ファイル', 'skip', 'DRY_RUN');
-    await illustrate('dry-run', ceoPlan.title, seoData.tags, true);
+    await illustrate('dry-run', ceoPlan.title, seoData.tags, true, cleanBody);
     await reportStages('dry-run');
     return;
   }
@@ -1010,7 +1154,7 @@ ${cleanBody}
 
   // Phase η: Append agent telemetry summary to public log
   await appendTelemetrySummary(`${todayISO()}-${slug}`);
-  await illustrate(`${todayISO()}-${slug}`, ceoPlan.title, seoData.tags, false);
+  await illustrate(`${todayISO()}-${slug}`, ceoPlan.title, seoData.tags, false, cleanBody);
   if (clefVerdicts.length > 0) {
     try {
       await appendClefReviewLog(ROOT_DIR, todayISO(), ceoPlan.title, clefVerdicts);

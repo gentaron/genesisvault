@@ -569,7 +569,7 @@
     "auditLogDir": "docs/gate-runs"
   },
   "art": {
-    "comment": "記事の挿絵。SVG のカバー絵（src/lib/art/cover.ts）はビルド時に slug から決定論で作るので、鍵もネットワークも要らず必ず出る。AI の挿絵は Workers AI 無料枠の FLUX.1 schnell（1枚およそ数十 Neurons、Clef と同じ 1日 10,000 の枠）で新しい記事に1枚だけ作り、取れたらそちらを優先する。人物は描かせない（ミナの見た目が毎回変わるため）・文字も描かせない。失敗・画像として壊れている・大きすぎる場合は保存せず SVG のまま。",
+    "comment": "記事の挿絵。SVG のカバー絵（src/lib/art/cover.ts）はビルド時に slug から決定論で作るので、鍵もネットワークも要らず必ず出る。AI の挿絵は Workers AI 無料枠の FLUX.1 schnell（1枚およそ数十 Neurons、Clef と同じ 1日 10,000 の枠）で新しい記事に1枚だけ作り、取れたらそちらを優先する。人物は描かせない（ミナの見た目が毎回変わるため）・文字も描かせない。失敗・画像として壊れている・大きすぎる場合は保存せず SVG のまま。 サムネの決定（テーマ・情景）は thumbnail.ts が本文まで見て決定論で行い、data/thumbnails.json に記録する。直近 avoidRepeatDays 日と同じ情景は選ばない（同じテーマが続いても毎回同じ絵にならない）。",
     "ai": {
       "enabled": true,
       "model": "@cf/black-forest-labs/flux-1-schnell",
@@ -577,6 +577,41 @@
       "timeoutMs": 60000,
       "dir": "public/art",
       "maxBytes": 600000
+    },
+    "thumbnail": {
+      "recordFile": "data/thumbnails.json",
+      "avoidRepeatDays": 7,
+      "backfillPerRun": 2,
+      "enforceFrom": "2026-11-13"
     }
+  },
+  "titleGuard": {
+    "comment": "タイトルの使い回し防止。『1万歩超え』『5分瞑想』『静かな市場』のような同じ言い回しが毎週降りてくるのを止める（2026-11-12 オーナー指示、AGENTS.md §14）。直近 windowDays 日のタイトルと minSharedChars 文字以上の言い回しを共有したら Lena に差し戻し、maxRetries 回で直らなければ記事を書かない（使い回しのタイトルで公開しない）。allowedShared はテーマ名のように共有してよい一般語。",
+    "enabled": true,
+    "windowDays": 30,
+    "minSharedChars": 4,
+    "allowedShared": [
+      "ポートフォリオ",
+      "マインドフルネス",
+      "ジャーナリング",
+      "ジャーナル",
+      "テクノロジー",
+      "わたしの",
+      "ひとり旅",
+      "qaiz"
+    ],
+    "maxRetries": 3,
+    "enforceFrom": "2026-11-13",
+    "termWindowDays": 14,
+    "maxTermUses": 2,
+    "termStopwords": []
+  },
+  "vault": {
+    "comment": "Vault = note.com/gensnotes の写し（data/vault/note、Obsidian 風の1記事1ノート）+ 日記記事。scripts/sync-note.mjs が毎朝同期し（外部通信・fail-soft・verify からは呼ばない）、vault.ts が書き手に『過去に書いたこと』を検索して渡す（RAG・ローカルの決定論）。跳躍（過去と繋がらない唐突な設定）を防ぐための参照で、事実の正本は data/canon/canon.json。",
+    "dir": "data/vault",
+    "noteDir": "data/vault/note",
+    "topK": 4,
+    "maxSnippetChars": 160,
+    "minScore": 0.05
   }
 }
