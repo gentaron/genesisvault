@@ -1099,6 +1099,23 @@
         "enforceFrom": {
           "type": "string",
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "termWindowDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "maxTermUses": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "termStopwords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "required": [
@@ -1107,7 +1124,10 @@
         "minSharedChars",
         "allowedShared",
         "maxRetries",
-        "enforceFrom"
+        "enforceFrom",
+        "termWindowDays",
+        "maxTermUses",
+        "termStopwords"
       ]
     },
     "vault": {

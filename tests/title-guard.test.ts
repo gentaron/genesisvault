@@ -3,7 +3,9 @@ import type { TitleGuardConfig } from '../src/lib/pipeline/config';
 import {
   auditTitleEchoes,
   buildTitleEchoFeedback,
+  findOverusedTerms,
   findTitleEchoes,
+  listOverusedTerms,
   longestCommonSubstring,
   normalizeTitle,
 } from '../src/lib/pipeline/title-guard';
@@ -15,6 +17,9 @@ const cfg: TitleGuardConfig = {
   allowedShared: ['ポートフォリオ', 'ジャーナリング'],
   maxRetries: 3,
   enforceFrom: '2026-11-13',
+  termWindowDays: 14,
+  maxTermUses: 2,
+  termStopwords: [],
 };
 
 const recent = [
@@ -73,8 +78,37 @@ describe('title guard — 同じ言い回しを降らせない（LM-022）', () 
     expect(fb).toContain('「5分瞑想');
   });
 
+  it('語の使いすぎ: 直近14日に2本以上で使った語は止める（LM-024）', () => {
+    const r = [
+      { date: '2026-11-10', title: 'AIと散歩した朝' },
+      { date: '2026-11-11', title: 'AIの夜に読む本' },
+      { date: '2026-10-01', title: '市場の話' },
+      { date: '2026-10-02', title: '市場の朝' },
+    ];
+    expect(findOverusedTerms('AIが変える読書', r, '2026-11-13', cfg).map((e) => e.phrase)).toEqual([
+      'AI',
+    ]);
+    // 窓の外の「市場」・1本しか無い「読書」は通す
+    expect(findOverusedTerms('市場で読書', r, '2026-11-13', cfg)).toEqual([]);
+    expect(listOverusedTerms(r, '2026-11-13', cfg)).toEqual(['AI']);
+    expect(findTitleEchoes('AIの話', r, '2026-11-13', cfg).some((e) => e.kind === 'term')).toBe(
+      true,
+    );
+  });
+
+  it('語は英数字・カタカナ・漢字の2文字以上', async () => {
+    const { titleTerms } = await import('../src/lib/pipeline/title-guard');
+    expect(titleTerms('1万歩超えでＡＩ進化とポートフォリオ')).toEqual([
+      '万歩超',
+      'AI',
+      '進化',
+      'ポートフォリオ',
+    ]);
+  });
+
   it('監査は enforceFrom 以降だけを見る', () => {
     const posts = [
+      { file: 'z.md', date: '2026-11-01', title: '別の話' },
       { file: 'a.md', date: '2026-11-10', title: '1万歩超えの朝' },
       { file: 'b.md', date: '2026-11-12', title: '1万歩超えの夜' },
       { file: 'c.md', date: '2026-11-14', title: '1万歩超えの昼' },

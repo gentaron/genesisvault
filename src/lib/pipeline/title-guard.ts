@@ -18,8 +18,9 @@
 import { TITLE_GUARD_CONFIG, type TitleGuardConfig } from './config.js';
 
 export interface TitleEcho {
-  /** 共有してしまった言い回し。 */
+  /** 共有してしまった言い回し（kind=term なら使いすぎの語）。 */
   phrase: string;
+  kind?: 'phrase' | 'term';
   date: string;
   title: string;
 }
@@ -49,6 +50,52 @@ export function longestCommonSubstring(a: string, b: string): string {
   return best;
 }
 
+/** タイトルの語（英数字・カタカナ・漢字の2文字以上の連なり）。ひらがなは助詞なので見ない。 */
+export function titleTerms(title: string): string[] {
+  const s = title.normalize('NFKC');
+  return [...new Set(s.match(/[A-Za-z0-9]{2,}|[ァ-ヴー]{2,}|[一-龯々]{2,}/g) ?? [])];
+}
+
+/**
+ * 語の使いすぎ。直近 termWindowDays 日のタイトルのうち、その語を含むものが
+ * maxTermUses 本以上あれば使いすぎ。「分瞑想」と「瞑想」のような揺れは部分一致で数える。
+ */
+export function findOverusedTerms(
+  title: string,
+  recent: { date: string; title: string }[],
+  today: string,
+  cfg: TitleGuardConfig = TITLE_GUARD_CONFIG,
+): TitleEcho[] {
+  const t0 = Date.parse(`${today}T00:00:00Z`);
+  const window = recent.filter((r) => {
+    const t = Date.parse(`${r.date}T00:00:00Z`);
+    return Number.isFinite(t) && t < t0 && t0 - t <= cfg.termWindowDays * DAY;
+  });
+  const out: TitleEcho[] = [];
+  for (const term of titleTerms(title)) {
+    if (cfg.termStopwords.includes(term)) continue;
+    const key = term.toLowerCase();
+    const uses = window.filter((r) => r.title.normalize('NFKC').toLowerCase().includes(key));
+    if (uses.length >= cfg.maxTermUses) {
+      const latest = [...uses].sort((a, b) => b.date.localeCompare(a.date))[0];
+      out.push({ phrase: term, kind: 'term', date: latest.date, title: latest.title });
+    }
+  }
+  return out;
+}
+
+/** 今いちばん使いすぎている語（企画の前に Lena へ見せる禁止語の一覧）。 */
+export function listOverusedTerms(
+  recent: { date: string; title: string }[],
+  today: string,
+  cfg: TitleGuardConfig = TITLE_GUARD_CONFIG,
+): string[] {
+  const pool = new Set<string>();
+  for (const r of recent) for (const t of titleTerms(r.title)) pool.add(t);
+  const banned = findOverusedTerms([...pool].join(' '), recent, today, cfg).map((e) => e.phrase);
+  return [...new Set(banned)];
+}
+
 /** 共通部分から一般語を取り除いた残りが minSharedChars 以上か。 */
 function meaningfulShared(shared: string, cfg: TitleGuardConfig): string | null {
   let rest = shared;
@@ -76,8 +123,9 @@ export function findTitleEchoes(
     const t = Date.parse(`${r.date}T00:00:00Z`);
     if (!Number.isFinite(t) || t >= t0 || t0 - t > cfg.windowDays * DAY) continue;
     const shared = meaningfulShared(longestCommonSubstring(mine, normalizeTitle(r.title)), cfg);
-    if (shared) out.push({ phrase: shared, date: r.date, title: r.title });
+    if (shared) out.push({ phrase: shared, kind: 'phrase', date: r.date, title: r.title });
   }
+  out.push(...findOverusedTerms(title, recent, today, cfg));
   return out.sort((a, b) => b.date.localeCompare(a.date));
 }
 
@@ -88,6 +136,7 @@ export function buildTitleEchoFeedback(echoes: TitleEcho[]): string {
     '【タイトルの使い回し — 差し戻し】',
     `次の言い回しは直近${TITLE_GUARD_CONFIG.windowDays}日のタイトルで既に使った。今回のタイトルに入れないこと: ${phrases.map((p) => `「${p}」`).join('、')}`,
     ...echoes.slice(0, 5).map((e) => `  - ${e.date}「${e.title}」`),
+    `「AI」「市場」のような語も、直近${TITLE_GUARD_CONFIG.termWindowDays}日に${TITLE_GUARD_CONFIG.maxTermUses}本以上で使った語は使わない。別の言葉で言い換える。`,
     '数字の実績（歩数・分数など）や同じ情景で引きつけるのをやめ、今日だけの具体的な問い・発見を見出しにする。',
   ].join('\n');
 }

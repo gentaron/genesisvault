@@ -367,6 +367,13 @@ export const TitleGuardConfigSchema = z.object({
   allowedShared: z.array(z.string().min(1)),
   maxRetries: z.number().int().min(1).max(5),
   enforceFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  /**
+   * 語の使いすぎ。英数字・カタカナ・漢字の2文字以上の語が、直近 termWindowDays 日の
+   * タイトルに maxTermUses 回以上出ていたら、今回のタイトルには使わせない（「AI」が31本中22本、LM-024）。
+   */
+  termWindowDays: z.number().int().min(1).max(60),
+  maxTermUses: z.number().int().min(1).max(10),
+  termStopwords: z.array(z.string().min(1)),
 });
 
 /**

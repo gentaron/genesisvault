@@ -133,6 +133,13 @@ INV-008 の「旧ブログの WXR は事実の参照源ではない」はその�
 ### INV-023: タイトルは直近30日の言い回しを再利用しない
 
 全体の類似度ではなく、共有するフレーズで判定する（LM-022）。直らなければ公開しない。
+2文字以上の語も、直近14日に2本以上で使っていたら使わない（「AI」が31本中22本、LM-024）。
+
+### INV-025: スクロールで記事のタイトルを固定しない
+
+画面に張り付いてよいのはサイトのナビ（`.site-header`）だけ。sticky / fixed は要素名（`header` など）に当てない（LM-025）。
+
+- **守り方**: `tests/layout-sticky.test.ts`
 
 - **守り方**: `title-guard.ts`（Lena の直後・保存直前）、verify の監査（`titleGuard.enforceFrom` 以降）、
   `tests/title-guard.test.ts`

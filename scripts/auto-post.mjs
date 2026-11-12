@@ -92,7 +92,7 @@ import {
   buildCanonFeedback,
   detectCanonViolations,
 } from '../src/lib/canon/canon.ts';
-import { findTitleEchoes, buildTitleEchoFeedback } from '../src/lib/pipeline/title-guard.ts';
+import { findTitleEchoes, buildTitleEchoFeedback, listOverusedTerms } from '../src/lib/pipeline/title-guard.ts';
 import { loadVaultDocs, buildIndex, searchVault, buildVaultBrief } from '../src/lib/vault/retrieve.ts';
 import {
   runClefReview,
@@ -806,14 +806,18 @@ async function main() {
     // Phase κ: タイトル重複チェック付きでCEOを実行（最大3回リトライ）
     // Title Guard: 直近のタイトルと同じ言い回しは使わせない（LM-022）。先に一覧を見せ、
     // それでも使い回したら名指しで差し戻す。maxRetries 回で直らなければテンプレートへ。
+    const overusedTerms = TITLE_GUARD_CONFIG.enabled ? listOverusedTerms(pastArticles, todayISO()) : [];
     const recentTitleBrief = TITLE_GUARD_CONFIG.enabled
       ? [
+          overusedTerms.length
+            ? `【タイトルに使ってはいけない語（直近${TITLE_GUARD_CONFIG.termWindowDays}日に${TITLE_GUARD_CONFIG.maxTermUses}本以上で使用済み）】${overusedTerms.map(t => `「${t}」`).join('')}`
+            : '',
           `【直近${TITLE_GUARD_CONFIG.windowDays}日のタイトル — ここにある言い回し（${TITLE_GUARD_CONFIG.minSharedChars}文字以上の共通部分）を今回のタイトルに入れない】`,
           ...[...pastArticles]
             .filter(a => a.date < todayISO() && Date.parse(todayISO()) - Date.parse(a.date) <= TITLE_GUARD_CONFIG.windowDays * 86_400_000)
             .sort((a, b) => b.date.localeCompare(a.date))
             .map(a => `  - ${a.date}「${a.title}」`),
-        ].join('\n')
+        ].filter(Boolean).join('\n')
       : '';
     const checkTitle = (title) => {
       const dup = checkTitleDup(title);

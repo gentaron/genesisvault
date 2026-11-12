@@ -601,7 +601,10 @@
       "qaiz"
     ],
     "maxRetries": 3,
-    "enforceFrom": "2026-11-13"
+    "enforceFrom": "2026-11-13",
+    "termWindowDays": 14,
+    "maxTermUses": 2,
+    "termStopwords": []
   },
   "vault": {
     "comment": "Vault = note.com/gensnotes の写し（data/vault/note、Obsidian 風の1記事1ノート）+ 日記記事。scripts/sync-note.mjs が毎朝同期し（外部通信・fail-soft・verify からは呼ばない）、vault.ts が書き手に『過去に書いたこと』を検索して渡す（RAG・ローカルの決定論）。跳躍（過去と繋がらない唐突な設定）を防ぐための参照で、事実の正本は data/canon/canon.json。",

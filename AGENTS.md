@@ -506,7 +506,9 @@ VE-010 Tessa（`src/lib/agents/trends.ts`）は、このリポジトリで唯一
 | 「投資8年目」のような語りをやめる | `detectCanonViolations()` を4箇所 + verify が全記事を走査（LM-021） |
 | note.com/gensnotes をクロールして整合性を保つ | `scripts/sync-note.mjs` → `data/vault/note`（毎朝・INV-022） |
 | データセットを RAG・Obsidian 的に管理して跳躍をなくす | Vault（1記事1ノート・wikilink・MOC）+ `vault/retrieve.ts` の検索を書き手へ |
-| タイトルが降りてこないように（同じ言い回しの使い回しを止める） | `title-guard.ts`（INV-023 / LM-022） |
+| 同じ言い回しのタイトルを繰り返さない | `title-guard.ts`（INV-023 / LM-022） |
+| 同じ語がタイトルに入りすぎ（「AI」「市場」など） | `findOverusedTerms()`: 直近14日に2本以上で使った語は使わない（LM-024） |
+| スクロールするとタイトルが一緒に降りてくる | sticky は `.site-header` だけ。`tests/layout-sticky.test.ts`（INV-025 / LM-025） |
 | サムネ決定機構をしっかり動かす | `thumbnail.ts` + `data/thumbnails.json` + 描き足し（INV-024 / LM-023） |
 
 正典に事実を足すときは、assetlog か note で裏を取り、`source` を書く。金額は書かない。
