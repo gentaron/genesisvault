@@ -1,99 +1,98 @@
 {
-  "capturedAt": "2026-11-12",
+  "capturedAt": "2026-11-13",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "My AI agents found an unmapped Maya site?",
-      "url": "https://pietromiotti.com/latest/maya-site",
-      "score": 1023,
-      "date": "2026-11-11"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AWS emulator",
-      "url": "https://github.com/aws/aws-emulator",
-      "score": 951,
-      "date": "2026-11-11"
+      "title": "Jensen Huang resigns",
+      "url": "https://apnews.com/article/nvidia-megaspeed-china-singapore-huang-5403f152a601cf82ce939f1d24fffa0f",
+      "score": 3962,
+      "date": "2026-11-12"
     },
     {
       "source": "Hacker News",
       "title": "United Airlines bans AI agents from booking flights on behalf of travelers",
       "url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
-      "score": 647,
+      "score": 676,
       "date": "2026-11-11"
     },
     {
       "source": "Hacker News",
-      "title": "Apple has new Mac app coming to make running local AI models easy",
-      "url": "https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/",
-      "score": 548,
-      "date": "2026-11-10"
+      "title": "Reverse engineering my Coway air purifier to ditch the cloud",
+      "url": "https://scottjg.com/posts/2026-11-11-reverse-engineering-my-coway-air-purifier-to-ditch-the-cloud/",
+      "score": 476,
+      "date": "2026-11-12"
     },
     {
       "source": "Hacker News",
-      "title": "Retirement Savings Are Fueling the AI Bubble",
-      "url": "https://lpeproject.org/blog/your-retirement-savings-are-fueling-the-ai-bubble/",
-      "score": 165,
-      "date": "2026-11-11"
+      "title": "I'm making LLMs work on small and old devices",
+      "url": "https://github.com/hyperionaidev/smolmaxxing/",
+      "score": 461,
+      "date": "2026-11-12"
     },
     {
       "source": "Hacker News",
-      "title": "AI, activity, and outcomes in software engineering",
-      "url": "https://cabird.com/talks/shipping-faster/",
-      "score": 124,
-      "date": "2026-11-11"
+      "title": "Elevated errors on claude.ai, Claude Code, and platform.claude.com",
+      "url": "https://status.claude.com/incidents/nn11wk485zfn",
+      "score": 454,
+      "date": "2026-11-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs",
+      "url": "https://unemploymentlabs.com/checkpoint-forensics",
+      "score": 346,
+      "date": "2026-11-12"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7612.2998046875,
-      "changePct1d": -0.1,
-      "changePct5d": 3.5,
-      "sma20": 7619.15,
+      "close": 7546.2900390625,
+      "changePct1d": -0.6,
+      "changePct5d": 2.3,
+      "sma20": 7612.49,
       "aboveSma20": false,
       "direction": "上昇",
-      "asOf": "2026-11-12"
+      "asOf": "2026-11-13"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 61248.58984375,
-      "changePct1d": 1.3,
-      "changePct5d": -1.5,
-      "sma20": 62916.88,
+      "close": 60819.359375,
+      "changePct1d": -0.7,
+      "changePct5d": -0.4,
+      "sma20": 62570.63,
       "aboveSma20": false,
-      "direction": "下落",
-      "asOf": "2026-11-11"
-    },
-    {
-      "symbol": "usdjpy",
-      "label": "ドル円",
-      "close": 159.83700561523438,
-      "changePct1d": 0.7,
-      "changePct5d": 0.9,
-      "sma20": 158,
-      "aboveSma20": true,
       "direction": "横ばい",
       "asOf": "2026-11-12"
     },
     {
+      "symbol": "usdjpy",
+      "label": "ドル円",
+      "close": 159.70599365234375,
+      "changePct1d": 0,
+      "changePct5d": 1.4,
+      "sma20": 158.08,
+      "aboveSma20": true,
+      "direction": "横ばい",
+      "asOf": "2026-11-13"
+    },
+    {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 71674.0703125,
-      "changePct1d": -3.1,
-      "changePct5d": -5.4,
-      "sma20": 77229.07,
+      "close": 68825.6484375,
+      "changePct1d": -3.5,
+      "changePct5d": -7.7,
+      "sma20": 76614.26,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-12"
+      "asOf": "2026-11-13"
     }
   ],
   "degraded": true,
   "notes": [
-    "Hacker News 取得失敗: LLM",
-    "Hacker News 取得失敗: robotics",
+    "Hacker News に該当なし: robotics",
     "InfoCollect KB 取得失敗: manifest",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
