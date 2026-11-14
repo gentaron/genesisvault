@@ -192,7 +192,9 @@ export function financeCachePath(rootDir: string): string {
 
 export async function loadFinancePulse(rootDir: string): Promise<FinancePulse | null> {
   try {
-    const cached = JSON.parse(await fs.readFile(financeCachePath(rootDir), 'utf-8')) as FinancePulse;
+    const cached = JSON.parse(
+      await fs.readFile(financeCachePath(rootDir), 'utf-8'),
+    ) as FinancePulse;
     // 古いスナップショットの個人資産由来の情報を再利用しない。
     return { ...cached, portfolio: null, predicates: derivePredicates(null, cached.market) };
   } catch {
@@ -203,7 +205,11 @@ export async function loadFinancePulse(rootDir: string): Promise<FinancePulse | 
 export async function saveFinancePulse(rootDir: string, pulse: FinancePulse): Promise<void> {
   const full = financeCachePath(rootDir);
   await fs.mkdir(path.dirname(full), { recursive: true });
-  const publicPulse = { ...pulse, portfolio: null, predicates: derivePredicates(null, pulse.market) };
+  const publicPulse = {
+    ...pulse,
+    portfolio: null,
+    predicates: derivePredicates(null, pulse.market),
+  };
   await fs.writeFile(full, `${JSON.stringify(publicPulse, null, 2)}\n`, 'utf-8');
 }
 
