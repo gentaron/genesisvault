@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-13",
+  "capturedAt": "2026-11-14",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Jensen Huang resigns",
-      "url": "https://apnews.com/article/nvidia-megaspeed-china-singapore-huang-5403f152a601cf82ce939f1d24fffa0f",
-      "score": 3962,
-      "date": "2026-11-12"
-    },
-    {
-      "source": "Hacker News",
-      "title": "United Airlines bans AI agents from booking flights on behalf of travelers",
-      "url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
-      "score": 676,
-      "date": "2026-11-11"
+      "title": "Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs",
+      "url": "https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus",
+      "score": 930,
+      "date": "2026-11-14"
     },
     {
       "source": "Hacker News",
       "title": "Reverse engineering my Coway air purifier to ditch the cloud",
       "url": "https://scottjg.com/posts/2026-11-11-reverse-engineering-my-coway-air-purifier-to-ditch-the-cloud/",
-      "score": 476,
-      "date": "2026-11-12"
-    },
-    {
-      "source": "Hacker News",
-      "title": "I'm making LLMs work on small and old devices",
-      "url": "https://github.com/hyperionaidev/smolmaxxing/",
-      "score": 461,
+      "score": 773,
       "date": "2026-11-12"
     },
     {
       "source": "Hacker News",
       "title": "Elevated errors on claude.ai, Claude Code, and platform.claude.com",
       "url": "https://status.claude.com/incidents/nn11wk485zfn",
-      "score": 454,
+      "score": 489,
+      "date": "2026-11-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Jonathan Blow – If AI solved coding, why is my software still the same? [video]",
+      "url": "https://www.youtube.com/watch?v=IRK8h67ol7Q",
+      "score": 432,
+      "date": "2026-11-13"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI unlocks Gödel's notebooks, said to contain hundreds of proved theorems",
+      "url": "https://www.theguardian.com/science/2026/nov/13/kurt-godel-notebooks-ai-helps-unlock-hidden-discoveries-man-who-transformed-maths",
+      "score": 412,
       "date": "2026-11-13"
     },
     {
       "source": "Hacker News",
       "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs",
       "url": "https://unemploymentlabs.com/checkpoint-forensics",
-      "score": 346,
+      "score": 368,
       "date": "2026-11-12"
     }
   ],
@@ -48,10 +48,10 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7546.2900390625,
-      "changePct1d": -0.6,
-      "changePct5d": 2.3,
-      "sma20": 7612.49,
+      "close": 7561.669921875,
+      "changePct1d": -0.4,
+      "changePct5d": 2.5,
+      "sma20": 7613.26,
       "aboveSma20": false,
       "direction": "上昇",
       "asOf": "2026-11-13"
@@ -59,40 +59,40 @@
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 60819.359375,
-      "changePct1d": -0.7,
-      "changePct5d": -0.4,
-      "sma20": 62570.63,
+      "close": 61142.3515625,
+      "changePct1d": 0.5,
+      "changePct5d": 6.5,
+      "sma20": 62406.45,
       "aboveSma20": false,
-      "direction": "横ばい",
-      "asOf": "2026-11-12"
+      "direction": "上昇",
+      "asOf": "2026-11-13"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.70599365234375,
-      "changePct1d": 0,
-      "changePct5d": 1.4,
-      "sma20": 158.08,
+      "close": 159.875,
+      "changePct1d": 0.1,
+      "changePct5d": 1.5,
+      "sma20": 158.09,
       "aboveSma20": true,
-      "direction": "横ばい",
+      "direction": "上昇",
       "asOf": "2026-11-13"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 68825.6484375,
-      "changePct1d": -3.5,
-      "changePct5d": -7.7,
-      "sma20": 76614.26,
+      "close": 65134.671875,
+      "changePct1d": -4.6,
+      "changePct5d": -13.4,
+      "sma20": 75840.97,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-13"
+      "asOf": "2026-11-14"
     }
   ],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: robotics",
+    "Hacker News に該当なし: LLM",
     "InfoCollect KB 取得失敗: manifest",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",

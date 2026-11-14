@@ -1,63 +1,57 @@
 {
-  "capturedAt": "2026-11-13",
+  "capturedAt": "2026-11-14",
   "portfolio": {
     "asOf": "2026-11-14",
-    "d1Pct": -0.31,
-    "d7Pct": 0.04,
-    "d30Pct": -0.15,
-    "fromHighPct": -3.79,
+    "d1Pct": -0.38,
+    "d7Pct": -0.03,
+    "d30Pct": -0.22,
+    "fromHighPct": -3.85,
     "atHigh": false,
     "vol30Pct": 9.8,
     "streak": -2,
     "days": 546
   },
   "market": {
-    "generatedAt": "2026-11-13T18:31:01.634Z",
+    "generatedAt": "2026-11-14T17:01:07.663Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
     "breadth": "mixed",
     "strongest": [
       {
+        "name": "半導体",
+        "region": "台湾",
+        "r1wPct": 10.1
+      },
+      {
         "name": "市場全体",
         "region": "台湾",
-        "r1wPct": 13.2
+        "r1wPct": 9.1
       },
       {
         "name": "半導体",
-        "region": "米国",
-        "r1wPct": 12.1
-      },
-      {
-        "name": "半導体",
-        "region": "台湾",
-        "r1wPct": 11.3
+        "region": "欧州",
+        "r1wPct": 9
       }
     ],
     "weakest": [
       {
         "name": "暗号資産",
         "region": "米国",
-        "r1wPct": -8.2
+        "r1wPct": -9.4
       },
       {
-        "name": "素材",
-        "region": "中国",
-        "r1wPct": -7.7
-      },
-      {
-        "name": "情報技術",
+        "name": "公益",
         "region": "韓国",
-        "r1wPct": -7.1
+        "r1wPct": -9
+      },
+      {
+        "name": "暗号資産",
+        "region": "",
+        "r1wPct": -8.5
       }
     ],
     "rotations": [
-      {
-        "name": "米国 銀行",
-        "region": "米国",
-        "from": "leading",
-        "to": "improving"
-      },
       {
         "name": "米国 ヘルスケア",
         "region": "米国",
@@ -68,24 +62,32 @@
         "name": "米国 バイオテク",
         "region": "米国",
         "from": "leading",
-        "to": "weakening"
+        "to": "lagging"
       },
       {
-        "name": "金 (ゴールド)",
+        "name": "米国 素材",
         "region": "米国",
-        "from": "improving",
-        "to": "lagging"
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "米国 総合債券",
         "region": "米国",
         "from": "leading",
-        "to": "improving"
+        "to": "lagging"
+      },
+      {
+        "name": "日本 情報通信",
+        "region": "日本",
+        "from": "weakening",
+        "to": "leading"
       }
     ]
   },
   "predicates": [
+    "divergence.market_up_me_down",
     "market.bull",
+    "market.rotation_new_leader",
     "portfolio.quiet_day"
   ],
   "degraded": false,
