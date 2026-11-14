@@ -254,7 +254,7 @@ describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
 
   it('reads only QAIZ and derives market predicates', async () => {
     vi.stubEnv('QAIZ_BASE_URL', 'https://qaiz.example.workers.dev/');
-    const fetchMock = vi.fn(async () => new Response(overviewBody, { status: 200 }));
+    const fetchMock = vi.fn(async (_url: string) => new Response(overviewBody, { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const pulse = await collectFinancePulse(new Date('2026-10-10T00:00:00Z'));
     expect(pulse.portfolio).toBeNull();
