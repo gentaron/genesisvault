@@ -38,7 +38,7 @@ jobs:
 
       - name: Diagnose lint
         if: failure()
-        run: bunx biome check .
+        run: bunx biome check src/lib/finance/pulse.ts tests/finance.test.ts
 
       - name: Diagnose types
         if: failure()
