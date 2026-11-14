@@ -1,7 +1,7 @@
 /**
  * VE-011 Kaia Brennan (Treasurer) — 財務パルス
  *
- * QAIZ（外の地形）と assetlog（自分の資産推移）を毎朝読み、
+ * QAIZ（外の地形）だけを毎朝読み、
  *   1. 変化率だけの要約（金額は持たない）
  *   2. 記号の事実（predicates）— テーマ選定の規則が食べる形
  *   3. 書き手に渡すブリーフ（使い方の制約つき）
@@ -11,7 +11,7 @@
  * `portfolio.drawdown` は「高値から5%以上離れている」という観測であって、
  * 「買い場」でも「危険」でもない。解釈は書き手の日記の仕事。
  *
- * fail-soft: どちらも取れなければ直近 maxCacheAgeDays 日以内のスナップショット、
+ * fail-soft: QAIZ が取れなければ直近 maxCacheAgeDays 日以内のスナップショット、
  * それも無ければ null。記事は財務パルス無しでも書ける。
  */
 
@@ -19,12 +19,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fetchText } from '../agents/trends.js';
 import { FINANCE_CONFIG } from '../pipeline/config.js';
-import {
-  assetlogUrls,
-  type PortfolioStats,
-  parseGvizLogs,
-  summarizePortfolio,
-} from './assetlog.js';
+import type { PortfolioStats } from './assetlog.js';
 import { labelWithRegion, type MarketTerrain, parseQaizOverview } from './qaiz.js';
 
 export interface FinancePulse {
@@ -169,15 +164,6 @@ export async function collectFinancePulse(now = new Date()): Promise<FinancePuls
   const cfg = FINANCE_CONFIG;
   const notes: string[] = [];
 
-  let portfolio: PortfolioStats | null = null;
-  for (const url of assetlogUrls(cfg.assetlog.spreadsheetId, cfg.assetlog.sheets)) {
-    const body = await fetchText(url, cfg.timeoutMs);
-    if (!body) continue;
-    portfolio = summarizePortfolio(parseGvizLogs(body));
-    if (portfolio) break;
-  }
-  if (!portfolio) notes.push('assetlog: シートを読めませんでした');
-
   let market: MarketTerrain | null = null;
   const base = process.env[cfg.qaiz.baseUrlEnv]?.replace(/\/$/, '');
   if (!base) {
@@ -190,10 +176,10 @@ export async function collectFinancePulse(now = new Date()): Promise<FinancePuls
 
   return {
     capturedAt: now.toISOString().slice(0, 10),
-    portfolio,
+    portfolio: null,
     market,
-    predicates: derivePredicates(portfolio, market),
-    degraded: !portfolio || !market,
+    predicates: derivePredicates(null, market),
+    degraded: !market,
     notes,
   };
 }
@@ -206,7 +192,9 @@ export function financeCachePath(rootDir: string): string {
 
 export async function loadFinancePulse(rootDir: string): Promise<FinancePulse | null> {
   try {
-    return JSON.parse(await fs.readFile(financeCachePath(rootDir), 'utf-8')) as FinancePulse;
+    const cached = JSON.parse(await fs.readFile(financeCachePath(rootDir), 'utf-8')) as FinancePulse;
+    // 古いスナップショットの個人資産由来の情報を再利用しない。
+    return { ...cached, portfolio: null, predicates: derivePredicates(null, cached.market) };
   } catch {
     return null;
   }
@@ -215,7 +203,8 @@ export async function loadFinancePulse(rootDir: string): Promise<FinancePulse | 
 export async function saveFinancePulse(rootDir: string, pulse: FinancePulse): Promise<void> {
   const full = financeCachePath(rootDir);
   await fs.mkdir(path.dirname(full), { recursive: true });
-  await fs.writeFile(full, `${JSON.stringify(pulse, null, 2)}\n`, 'utf-8');
+  const publicPulse = { ...pulse, portfolio: null, predicates: derivePredicates(null, pulse.market) };
+  await fs.writeFile(full, `${JSON.stringify(publicPulse, null, 2)}\n`, 'utf-8');
 }
 
 export function isPulseFresh(pulse: FinancePulse | null, now = new Date()): boolean {
@@ -225,7 +214,7 @@ export function isPulseFresh(pulse: FinancePulse | null, now = new Date()): bool
 }
 
 export async function runKaia(rootDir: string, now = new Date()): Promise<FinancePulse | null> {
-  console.log('\n💹 [VE-011] Kaia Brennan (Treasurer): QAIZ と assetlog を読んでいます…');
+  console.log('\n💹 [VE-011] Kaia Brennan (Treasurer): QAIZ を読んでいます…');
   if (!FINANCE_CONFIG.enabled) {
     console.log('  ⏭️  finance.enabled=false のためスキップします');
     return null;
@@ -238,7 +227,7 @@ export async function runKaia(rootDir: string, now = new Date()): Promise<Financ
     console.warn(`  ⚠️  財務パルスで例外: ${(err as Error).message?.substring(0, 120)}`);
   }
 
-  if (pulse && (pulse.portfolio || pulse.market)) {
+  if (pulse?.market) {
     for (const note of pulse.notes) console.log(`  ⚠️  ${note}`);
     console.log(`  ✅ 記号の事実: ${pulse.predicates.join(', ') || '（なし）'}`);
     return pulse;
