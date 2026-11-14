@@ -17,7 +17,7 @@
       "name": "Kaia Brennan",
       "shortName": "Kaia",
       "role": "treasurer",
-      "roleJa": "QAIZ（相場の地形）と assetlog（資産推移）を毎日読み、変化率と記号の事実に落とす（財務パルス）",
+      "roleJa": "QAIZ（相場の地形）を毎日読み、市場の向きと記号の事実に落とす（財務パルス）",
       "step": 2,
       "promptDir": "kaia"
     },
@@ -500,15 +500,15 @@
     }
   },
   "finance": {
-    "comment": "VE-011 Kaia の財務パルス。QAIZ（地域×セクターの地形・レジーム）と assetlog（ミナの資産推移の公開シート）を毎朝読む。鍵の要らない口だけ。公開リポジトリと公開記事に出すのは変化率と向きだけで、金額は書かない（disclosure=relative）。取れない日は degraded として記事を書き続ける（fail-soft）。verify からは呼ばない（INV-004）。",
+    "comment": "VE-011 Kaia は QAIZ の市場地形のみを読む。assetlog は独立運用。取れない日は degraded として記事を書き続ける（fail-soft）。verify からは呼ばない（INV-004）。",
     "enabled": true,
     "timeoutMs": 10000,
     "cacheFile": "data/finance-pulse.json",
     "maxCacheAgeDays": 3,
     "disclosure": "relative",
     "assetlog": {
-      "spreadsheetId": "1aI6fooaWdDw9Z8D9_O7JKNGdZ9kBwBX7EgHE7Wjir9k",
-      "sheets": ["sheet=logs", "gid=1467211041", "sheet=Index2"]
+      "spreadsheetId": "standalone",
+      "sheets": ["unused"]
     },
     "qaiz": {
       "baseUrlEnv": "QAIZ_BASE_URL",
