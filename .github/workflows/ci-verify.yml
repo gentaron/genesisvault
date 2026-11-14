@@ -35,11 +35,3 @@ jobs:
 
       - name: Run verify gate
         run: bun run verify
-
-      - name: Diagnose lint
-        if: failure()
-        run: bunx biome check src/lib/finance/pulse.ts tests/finance.test.ts
-
-      - name: Diagnose types
-        if: failure()
-        run: bunx astro check
