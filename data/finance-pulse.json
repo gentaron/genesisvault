@@ -1,8 +1,8 @@
 {
-  "capturedAt": "2026-11-14",
+  "capturedAt": "2026-11-15",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-14T17:01:07.663Z",
+    "generatedAt": "2026-11-15T17:46:22.040Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -19,26 +19,26 @@
         "r1wPct": 9.1
       },
       {
-        "name": "半導体",
-        "region": "欧州",
-        "r1wPct": 9
+        "name": "金融",
+        "region": "台湾",
+        "r1wPct": 8.6
       }
     ],
     "weakest": [
       {
         "name": "暗号資産",
+        "region": "",
+        "r1wPct": -14.7
+      },
+      {
+        "name": "暗号資産",
         "region": "米国",
-        "r1wPct": -9.4
+        "r1wPct": -10.9
       },
       {
         "name": "公益",
         "region": "韓国",
         "r1wPct": -9
-      },
-      {
-        "name": "暗号資産",
-        "region": "",
-        "r1wPct": -8.5
       }
     ],
     "rotations": [

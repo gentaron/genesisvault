@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-11-14",
+  "capturedAt": "2026-11-15",
   "tech": [
     {
       "source": "Hacker News",
       "title": "Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs",
       "url": "https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus",
-      "score": 930,
+      "score": 1086,
       "date": "2026-11-14"
     },
     {
       "source": "Hacker News",
-      "title": "Reverse engineering my Coway air purifier to ditch the cloud",
-      "url": "https://scottjg.com/posts/2026-11-11-reverse-engineering-my-coway-air-purifier-to-ditch-the-cloud/",
-      "score": 773,
-      "date": "2026-11-12"
+      "title": "All AI-generated code should be Open Source",
+      "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/",
+      "score": 515,
+      "date": "2026-11-15"
     },
     {
       "source": "Hacker News",
-      "title": "Elevated errors on claude.ai, Claude Code, and platform.claude.com",
-      "url": "https://status.claude.com/incidents/nn11wk485zfn",
-      "score": 489,
+      "title": "Live airband on all frequencies from KORS. Victoria, CA also ground stopped",
+      "url": "https://orcasairband.com/",
+      "score": 293,
       "date": "2026-11-13"
     },
     {
       "source": "Hacker News",
-      "title": "Jonathan Blow – If AI solved coding, why is my software still the same? [video]",
-      "url": "https://www.youtube.com/watch?v=IRK8h67ol7Q",
-      "score": 432,
+      "title": "No AI Slop: A Manifesto",
+      "url": "https://www.slopmanifesto.com/",
+      "score": 221,
       "date": "2026-11-13"
     },
     {
       "source": "Hacker News",
-      "title": "AI unlocks Gödel's notebooks, said to contain hundreds of proved theorems",
-      "url": "https://www.theguardian.com/science/2026/nov/13/kurt-godel-notebooks-ai-helps-unlock-hidden-discoveries-man-who-transformed-maths",
-      "score": 412,
+      "title": "All US airports are currently ground stopped",
+      "url": "https://twitter.com/flightradar24/status/2121347654714077605",
+      "score": 213,
       "date": "2026-11-13"
     },
     {
       "source": "Hacker News",
-      "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs",
-      "url": "https://unemploymentlabs.com/checkpoint-forensics",
-      "score": 368,
-      "date": "2026-11-12"
+      "title": "OpenAI disbands its robotics team as its general models start running robots",
+      "url": "https://fortune.com/2026/11/13/openai-disbands-robotics-team-as-its-general-models-start-running-robots/",
+      "score": 178,
+      "date": "2026-11-13"
     }
   ],
   "market": [
@@ -81,19 +81,18 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 65134.671875,
-      "changePct1d": -4.6,
-      "changePct5d": -13.4,
-      "sma20": 75840.97,
+      "close": 64512.87890625,
+      "changePct1d": 0.6,
+      "changePct5d": -12.5,
+      "sma20": 75015.95,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-14"
+      "asOf": "2026-11-15"
     }
   ],
   "degraded": true,
   "notes": [
-    "Hacker News に該当なし: LLM",
-    "InfoCollect KB 取得失敗: manifest",
+    "InfoCollect KB に該当なし",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
     "相場データは Yahoo で代替: ドル円",
