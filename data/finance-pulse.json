@@ -1,16 +1,6 @@
 {
   "capturedAt": "2026-11-14",
-  "portfolio": {
-    "asOf": "2026-11-14",
-    "d1Pct": -0.38,
-    "d7Pct": -0.03,
-    "d30Pct": -0.22,
-    "fromHighPct": -3.85,
-    "atHigh": false,
-    "vol30Pct": 9.8,
-    "streak": -2,
-    "days": 546
-  },
+  "portfolio": null,
   "market": {
     "generatedAt": "2026-11-14T17:01:07.663Z",
     "trend": "bull",
@@ -85,10 +75,8 @@
     ]
   },
   "predicates": [
-    "divergence.market_up_me_down",
     "market.bull",
-    "market.rotation_new_leader",
-    "portfolio.quiet_day"
+    "market.rotation_new_leader"
   ],
   "degraded": false,
   "notes": []

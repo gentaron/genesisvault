@@ -15,7 +15,7 @@ Genesis Vault は、Mina Eureka Ernst（ミナ・エウレカ・エルンスト�
 毎朝の流れは次の4段です。
 
 1. **外を見る。** AI の話題と相場の地合いを集める
-2. **お金を見る。** QAIZ（相場の地形）と assetlog（自分の資産推移）を読む
+2. **お金を見る。** QAIZ（相場の地形）を読む
 3. **テーマを決める。** 判断モデルの **Clef**（Jev と同じ形式の Cloudflare 製モデル）と決定論の規則を組み合わせて、今日の1本を選ぶ（ニューロシンボリック）。書いた原稿も Clef が審査する
 4. **書く。** IDEAZ の型で書いて、決定論の検査と審査役を通ったものだけを公開する
 
@@ -61,7 +61,7 @@ GitHub Actions（[`daily-post.yml`](./.github/workflows/daily-post.yml)）が **
 flowchart TD
   S[IDEAZ の型を取り寄せ<br/>sync-ideaz.mjs] --> T
   T[VE-010 Tessa<br/>外の景色<br/>HN / arXiv / Stooq] --> K
-  K[VE-011 Kaia<br/>お金の景色<br/>assetlog + QAIZ] --> V
+  K[VE-011 Kaia<br/>お金の景色<br/>QAIZ] --> V
   V[VE-004 Vera → VE-007 Edda<br/>継続性台帳] --> J
   J{VE-012 Juno<br/>ニューロシンボリック選定<br/>記号の規則 + EmbeddingGemma × Clef}
   J -->|選べなかった日だけ| N[VE-005 Nova<br/>テーマ残高で選ぶ]
@@ -95,7 +95,6 @@ AI が全滅した日だけはテンプレート記事が出ます。
 
 | 何を | どこで | 料金 | 鍵 |
 |------|-------|------|-----|
-| 自分の資産推移 | assetlog の公開スプレッドシート（gviz） | 無料 | 不要 |
 | 相場の地形 | [QAIZ](https://github.com/gentaron/QAIZ) の `/api/overview`（Cloudflare Workers 無料プラン） | 無料 | 不要（URL だけ） |
 | 外の景色 | Hacker News / arXiv / Stooq（空なら Yahoo Finance chart API） | 無料 | 不要 |
 | テーマ選定・原稿審査 | **Clef on Cloudflare Workers AI**（Cloudflare 製の判断モデル。Jev と同じ System One 形式） | 無料（Workers AI の無料枠 1日 10,000 Neurons。Workers Free は超過しても課金されずエラーになるだけ） | Cloudflare のトークン |
@@ -125,7 +124,7 @@ Workers AI の無料枠は、Clef（選定・審査）と EmbeddingGemma（既�
 | Secret | `GEMINI_API_KEY` | **ほぼ必須** | [Google AI Studio](https://aistudio.google.com) の無料キー | メインの書き手が使えない |
 | Secret | `CLOUDFLARE_ACCOUNT_ID` | **推奨** | Cloudflare の Account ID（Workers & Pages の画面右側） | Clef が呼ばれない（選定は LLM か記号の順位、審査なし、既出チェックは字面だけ） |
 | Secret | `CLOUDFLARE_API_TOKEN` | **推奨** | My Profile → API Tokens → テンプレート「Workers AI」で作成 | 同上 |
-| Variable | `QAIZ_BASE_URL` | 推奨 | `https://qaiz.〇〇.workers.dev`（末尾の `/` なし） | QAIZ を読まない（assetlog だけで動く） |
+| Variable | `QAIZ_BASE_URL` | 推奨 | `https://qaiz.〇〇.workers.dev`（末尾の `/` なし） | 市場データなしで記事を続ける |
 | Secret | `GROQ_API_KEY` | 任意 | Groq の無料キー | 書き手の予備が減る |
 | Secret | `CEREBRAS_API_KEY` | 任意 | Cerebras の無料キー | 同上 |
 | Secret | `OPENROUTER_API_KEY` | 任意 | OpenRouter のキー（`:free` モデルだけを使う） | 同上 |
@@ -158,7 +157,7 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 | `method=clef` | **Clef**（判断モデル）がテーマを選んだ。これが正常 |
 | `method=jev` | Jev 本体が選んだ（有料経路を明示的に足したときだけ） |
 | `method=llm` / `method=symbolic` | 判断モデルが使えず、代役が選んだ（`ℹ️ jev(...)` の行に理由が出る） |
-| `✅ 記号の事実: ...` | assetlog（と QAIZ）が読めた |
+| `✅ 記号の事実: ...` | QAIZ が読めた |
 | `📐 IDEAZ の型を執筆陣へ渡します` | 型が書き手に渡った |
 | `🧬 意味の既出チェック（EmbeddingGemma）: ✅` | 言い換えの既出チェックが動いた |
 | `⚖️  Clef Review:` の下の ✅ / ❌ | Clef が原稿を審査した（記録は `docs/gate-runs/YYYY-MM.md`） |
@@ -175,7 +174,7 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 | 順 | ID | エージェント | 役割 |
 |---|----|-------------|------|
 | 1 | VE-010 | **Tessa Brandt** (Scout) | AI・最先端技術の話題と相場の地合いを集める（トレンド・レーダー） |
-| 2 | VE-011 | **Kaia Brennan** (Treasurer) | QAIZ と assetlog を読み、変化率と記号の事実に落とす（財務パルス） |
+| 2 | VE-011 | **Kaia Brennan** (Treasurer) | QAIZ を読み、市場の向きと記号の事実に落とす（財務パルス） |
 | 3 | VE-004 | **Vera Holt** (Researcher) | 過去記事から確定事実（金額・継続日数・年数・冊数）を抜き出す |
 | 4 | VE-005 | **Nova Harmon** (Balancer) | テーマ残高を分析する。Juno が選べなかった日だけテーマを選ぶ |
 | 5 | VE-012 | **Juno Albrecht** (Arbiter) | 記号の規則（EmbeddingGemma の意味チェック込み）と Clef を組み合わせて、今日の1本を決める（ニューロシンボリック選定） |
@@ -193,36 +192,15 @@ Actions → **Genesis Vault — Multi-Agent Daily Post** の実行ログで、�
 
 ## お金の景色（VE-011 Kaia）
 
-書く前に、外の相場と自分の資産の両方を見ます。設定は `config/pipeline.json` の `finance` です。
+書く前に、QAIZ の `GET /api/overview` から公開市場の地形を読みます。Assetlog は独立運用で、シートや個人資産の記録を取得しません。
 
-| 何を | どこから | 出すもの |
-|------|---------|---------|
-| 自分の資産推移 | assetlog の公開シート（`logs`）を gviz で読む | 前日比・1週間・1か月の変化率、高値からの距離、何日続けて同じ向きか、30日ボラティリティ |
-| 相場の地形 | QAIZ の `GET /api/overview` | レジーム（トレンド・ボラティリティ・リスク選好）、市場の幅、1週間で強かった/弱かったセクター、象限が切り替わったセクター |
-
-観測は**記号の事実**に変換します。テーマ選定の規則はこれを読みます。
-
-| 記号 | 意味（閾値は `finance.thresholds`） |
+| 入力 | 出力 |
 |------|------|
-| `portfolio.new_high` / `portfolio.near_high` | 記録の最高値 / 最高値から1%以内 |
-| `portfolio.drawdown` | 最高値から5%以上離れている |
-| `portfolio.big_up_day` / `portfolio.big_down_day` | 1日で±1.5%以上動いた |
-| `portfolio.quiet_day` | ほとんど動かなかった |
-| `portfolio.up_streak` / `portfolio.down_streak` | 4日以上続けて同じ向き |
-| `portfolio.month_up` / `portfolio.month_down` | 1か月で±3%以上 |
-| `market.bull` / `market.bear` / `market.range` | QAIZ のトレンド判定 |
-| `market.risk_on` / `market.risk_off` | リスク選好 |
-| `market.vol_high` / `market.vol_low` | ボラティリティ環境 |
-| `market.narrow` | 一部の銘柄だけが上げている |
-| `market.rotation_new_leader` | 新しく「先行」象限に入ったセクターがある |
-| `divergence.market_up_me_down` / `divergence.market_down_me_up` | 相場と自分の資産が逆を向いている週 |
+| QAIZ の市場概要 | トレンド・ボラティリティ・リスク選好・市場の幅・セクターの動き |
 
-守っていること:
+市場の観測は `market.*` の記号に変換し、テーマ選定と書き手へのブリーフに渡します。予測や投資助言には使いません。QAIZ が利用できないときは3日以内の市場スナップショットを使い、それも無ければこの入力なしで記事を続けます。
 
-- **金額は持ちません。** 型の上で、変化率と向きしか持てないようにしてあります（`disclosure: relative`）。毎日コミットされる `data/finance-pulse.json` にも、記事にも、実額は出ません。継続性台帳は「総資産額は逆行しない」を前提にしているので、実際に上下する実額を書くと、相場が下がった日に台帳と現実がぶつかるためです
-- **予測しません。** 記号の事実は見ればわかることだけです。「買い場」「危険」のような解釈は作りません
-- 書き手へのブリーフには、必ず使い方の制約が付きます（金額を書かない／投資助言をしない／数字は2つまで／「貯金」系の語を使わない）
-- 取れなければ、直近3日以内のスナップショットを使います。それも無ければ財務なしで書きます（fail-soft）
+古いスナップショットに個人資産由来の値が残っていても、読み込み時に破棄します。新しい `data/finance-pulse.json` に個人資産の値や `portfolio.*` の記号は保存しません。
 
 ---
 
@@ -519,7 +497,7 @@ API キーが入っているものだけがチェーンに入ります。チェ�
 | [OpenRouter](https://openrouter.ai/) | `:free` モデル3種を順に試す（ADR-0010） |
 | [HuggingFace](https://huggingface.co/) | `Llama-3.3-70B-Instruct`。サーバーレス無料枠 |
 | Multi-Agent Pipeline | 12エージェント。名簿と実行順は `config/pipeline.json`、実装は `src/lib/agents/` |
-| Finance Pulse | VE-011 Kaia。assetlog（gviz）と QAIZ を読み、変化率と記号の事実を出す。金額は持たない（ADR-0020） |
+| Finance Pulse | VE-011 Kaia。QAIZ の公開市場概要を読み、市場の記号の事実を出す。個人資産は読まない |
 | Neuro-Symbolic Selection | VE-012 Juno。記号の規則（字面と EmbeddingGemma の意味）で候補を絞り、Clef の Choice / Noul と融合する。確信度が低ければ棄権扱い（ADR-0020） |
 | IDEAZ Format | `prompts/ideaz/` の型を見出し単位で組み立てて、Lena / Sophia / Iris に渡す |
 | Trend Radar | VE-010 Tessa。HN / arXiv / Stooq。API キー不要・fail-soft（ADR-0018） |
@@ -748,7 +726,7 @@ is:issue is:open -label:healthcheck
 | リポジトリ | 説明 |
 |-----------|------|
 | [gentaron/QAIZ](https://github.com/gentaron/QAIZ) | 地域×セクターの株式分析ターミナル。お金の景色の「外の地形」 |
-| [gentaron/assetlog](https://github.com/gentaron/assetlog) | 資産成長分析ダッシュボード。お金の景色の「自分の資産推移」と同じシートを読む |
+| Assetlog | 独立した資産ダッシュボード。Genesisvault からは参照しない |
 | [gentaron/IDEAZ](https://github.com/gentaron/IDEAZ) | 1日5枠のブログ・フォーマット。書き方の型の正本 |
 | [gentaron/VAIZ](https://github.com/gentaron/VAIZ) | 動画ブリーフを拾って短尺動画にする |
 | [gentaron/edu](https://github.com/gentaron/edu) | EDU メインアプリケーション |
