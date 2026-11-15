@@ -92,14 +92,18 @@ jobs:
 
       - name: Summary report
         if: always()
+        env:
+          SECURITY_INPUT_1: ${{ job.status == 'success' && 'UP' || 'DOWN' }}
+          SECURITY_INPUT_2: ${{ job.status == 'success' && 'OK' || 'STALE' }}
+          SECURITY_INPUT_3: ${{ job.status == 'success' && 'OK (402)' || 'FAILED' }}
         run: |
           echo "## Heartbeat Report" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
           echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Homepage | ${{ job.status == 'success' && 'UP' || 'DOWN' }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Article Freshness | ${{ job.status == 'success' && 'OK' || 'STALE' }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Paywall Gate | ${{ job.status == 'success' && 'OK (402)' || 'FAILED' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Homepage | ${SECURITY_INPUT_1} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Article Freshness | ${SECURITY_INPUT_2} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Paywall Gate | ${SECURITY_INPUT_3} |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Timestamp | $(date -u +'%Y-%m-%d %H:%M UTC') |" >> "$GITHUB_STEP_SUMMARY"
 
       # ── 障害通知 ────────────────────────────────────────────
@@ -122,7 +126,7 @@ jobs:
       # ワークフローが可変ブランチ参照の外部アクションを走らせていたため。
       - name: Open or refresh the healthcheck issue
         if: failure()
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
           DATE_TAG: ${{ env.DATE_TAG }}
           LATEST_AGE_HOURS: ${{ env.LATEST_AGE_HOURS }}
@@ -194,7 +198,7 @@ jobs:
 
       - name: Close the healthcheck issue on recovery
         if: success()
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
           DATE_TAG: ${{ env.DATE_TAG }}
         with:
