@@ -17,7 +17,7 @@
  *   「更新する」が押されたときだけ skipWaiting → reload する
  */
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const STATIC_CACHE = `gv-static-${VERSION}`;
 const RUNTIME_CACHE = `gv-runtime-${VERSION}`;
 const FONT_CACHE = `gv-fonts-${VERSION}`;
@@ -32,7 +32,7 @@ const PRECACHE_URLS = [
   '/status/',
   '/offline/',
   '/manifest.webmanifest',
-  '/favicon.svg',
+  '/icons/favicon.ico',
   '/mina-profile.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
