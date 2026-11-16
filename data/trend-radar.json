@@ -1,60 +1,60 @@
 {
-  "capturedAt": "2026-11-15",
+  "capturedAt": "2026-11-16",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Nvidia allegedly engineered scarcity by funding AI startups to buy its GPUs",
-      "url": "https://www.techpowerup.com/354814/nvidia-allegedly-engineered-scarcity-by-funding-ai-startups-to-buy-its-gpus",
-      "score": 1086,
-      "date": "2026-11-14"
-    },
     {
       "source": "Hacker News",
       "title": "All AI-generated code should be Open Source",
       "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/",
-      "score": 515,
+      "score": 1240,
       "date": "2026-11-15"
     },
     {
       "source": "Hacker News",
-      "title": "Live airband on all frequencies from KORS. Victoria, CA also ground stopped",
-      "url": "https://orcasairband.com/",
-      "score": 293,
-      "date": "2026-11-13"
+      "title": "Qwen4-Max",
+      "url": "https://qwen.ai/blog?id=qwen4-max",
+      "score": 842,
+      "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
-      "title": "No AI Slop: A Manifesto",
-      "url": "https://www.slopmanifesto.com/",
-      "score": 221,
-      "date": "2026-11-13"
+      "title": "How to make almost anything",
+      "url": "https://pub.cba.mit.edu/863.26/site/",
+      "score": 796,
+      "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
-      "title": "All US airports are currently ground stopped",
-      "url": "https://twitter.com/flightradar24/status/2121347654714077605",
-      "score": 213,
-      "date": "2026-11-13"
+      "title": "Court denies motion to dismiss DRAM price fixing case",
+      "url": "https://litnews.ai/articles/garciaguirre-samsung-sk-hynix-micron-dram-conspiracy-suit-survives-dismissal",
+      "score": 527,
+      "date": "2026-11-15"
     },
     {
       "source": "Hacker News",
-      "title": "OpenAI disbands its robotics team as its general models start running robots",
-      "url": "https://fortune.com/2026/11/13/openai-disbands-robotics-team-as-its-general-models-start-running-robots/",
-      "score": 178,
-      "date": "2026-11-13"
+      "title": "Understanding Positional Embeddings in Modern LLMs",
+      "url": "https://magazine.sebastianraschka.com/p/understanding-positional-embeddings",
+      "score": 241,
+      "date": "2026-11-15"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Tor Project Issues Rapid-Response DoS-Defense Fix Amid Sustained DDoS Attack",
+      "url": "https://forum.torproject.org/t/security-release-0-4-9-17/22454",
+      "score": 237,
+      "date": "2026-11-16"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7561.669921875,
-      "changePct1d": -0.4,
-      "changePct5d": 2.5,
-      "sma20": 7613.26,
+      "close": 7416.58984375,
+      "changePct1d": -1.9,
+      "changePct5d": -1.8,
+      "sma20": 7599.55,
       "aboveSma20": false,
-      "direction": "上昇",
-      "asOf": "2026-11-13"
+      "direction": "下落",
+      "asOf": "2026-11-16"
     },
     {
       "symbol": "^nkx",
@@ -70,28 +70,29 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.875,
-      "changePct1d": 0.1,
-      "changePct5d": 1.5,
-      "sma20": 158.09,
+      "close": 159.48500061035156,
+      "changePct1d": -0.2,
+      "changePct5d": 0.8,
+      "sma20": 158.17,
       "aboveSma20": true,
-      "direction": "上昇",
-      "asOf": "2026-11-13"
+      "direction": "横ばい",
+      "asOf": "2026-11-16"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 64512.87890625,
-      "changePct1d": 0.6,
-      "changePct5d": -12.5,
-      "sma20": 75015.95,
+      "close": 64960.94921875,
+      "changePct1d": -0.5,
+      "changePct5d": -12.2,
+      "sma20": 74263.35,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-15"
+      "asOf": "2026-11-16"
     }
   ],
   "degraded": true,
   "notes": [
+    "Hacker News に該当なし: robotics",
     "InfoCollect KB に該当なし",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",

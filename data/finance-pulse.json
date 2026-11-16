@@ -1,8 +1,8 @@
 {
-  "capturedAt": "2026-11-15",
+  "capturedAt": "2026-11-16",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-15T17:46:22.040Z",
+    "generatedAt": "2026-11-16T21:01:01.595Z",
     "trend": "bull",
     "volatility": "normal",
     "riskAppetite": "neutral",
@@ -19,16 +19,16 @@
         "r1wPct": 9.1
       },
       {
-        "name": "金融",
-        "region": "台湾",
-        "r1wPct": 8.6
+        "name": "通信サービス",
+        "region": "ブラジル",
+        "r1wPct": 7.8
       }
     ],
     "weakest": [
       {
         "name": "暗号資産",
         "region": "",
-        "r1wPct": -14.7
+        "r1wPct": -11.4
       },
       {
         "name": "暗号資産",
