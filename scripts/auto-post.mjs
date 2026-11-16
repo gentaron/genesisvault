@@ -54,6 +54,11 @@ import {
   buildTitleDupFeedback,
 } from '../src/lib/agents/continuity.ts';
 import {
+  appendMemory,
+  formatMemoryBrief,
+  recallMemories,
+} from '../src/lib/agents/memory.ts';
+import {
   runResearcher,
   runSummarizer,
   runRecorder,
@@ -738,8 +743,16 @@ async function main() {
     // Phase κ: 同テーマの過去記事を検索し、トピック継続性ブリーフを追加
     const relatedArticles = findRelatedArticles(pastArticles, assignedTheme, assignedTheme);
     const topicBrief = buildTopicContinuityBrief(relatedArticles, assignedTheme);
+    const recalledMemories = await recallMemories(ROOT_DIR, assignedTheme);
+    const memoryBrief = formatMemoryBrief(recalledMemories);
+    if (memoryBrief) {
+      console.log(`  🧠 過去に採用した記事${recalledMemories.length}件を参考情報として渡します:`);
+      for (const m of recalledMemories) console.log(`     - ${m.date}「${m.title}」`);
+    }
     const selectionSection = selectionBrief ? `【今回の企画指示・最優先】\n${selectionBrief}` : '';
-    const enhancedContinuityBrief = [selectionSection, continuityBrief, topicBrief].filter(Boolean).join('\n\n');
+    const enhancedContinuityBrief = [selectionSection, continuityBrief, topicBrief, memoryBrief]
+      .filter(Boolean)
+      .join('\n\n');
     if (topicBrief) {
       console.log(`  🔗 同テーマの過去記事${relatedArticles.length}件を参照:`);
       for (const a of relatedArticles.slice(0, 3)) {
@@ -781,7 +794,7 @@ async function main() {
     // 継続性の逆行だけは、書き直させれば直る種類の不合格なので、ここで
     // 1度だけ差し戻す。ブリーフに「逆行するな」と書いてあっても、守られた
     // かどうかは誰も確認しない限り分からない — 指示ではなく検査で担保する。
-    const writerBrief = [selectionSection, continuityBrief].filter(Boolean).join('\n\n');
+    const writerBrief = [selectionSection, continuityBrief, memoryBrief].filter(Boolean).join('\n\n');
     let draft = await runSophia(ceoPlan, seoData, styleSamples, writerBrief, trendBrief, '', format.writer);
     if (!draft) throw new Error('Writer Agent returned empty');
 
@@ -896,7 +909,7 @@ async function main() {
           ceoPlan,
           seoData,
           styleSamples,
-          [selectionSection, continuityBrief].filter(Boolean).join('\n\n'),
+          [selectionSection, continuityBrief, memoryBrief].filter(Boolean).join('\n\n'),
           trendBrief,
           buildClefFeedback(verdict),
           format.writer,
@@ -1015,6 +1028,24 @@ ${cleanBody}
     try {
       await appendClefReviewLog(ROOT_DIR, todayISO(), ceoPlan.title, clefVerdicts);
     } catch { /* 記録の失敗で公開は止めない */ }
+  }
+
+  // ── 採用記事の記憶: 次回の重複テーマ回避と型の再利用に使う ──────────
+  try {
+    await appendMemory(ROOT_DIR, {
+      date: todayISO(),
+      title: ceoPlan.title,
+      summary: seoData.description || cleanBody.slice(0, 120),
+      tags: seoData.tags,
+      patterns: [
+        format.writer ? 'IDEAZ の書き方の型' : '日記体（見出しなし）',
+        `雰囲気: ${ceoPlan.mood_hint}`,
+        selection?.winner.hook ? `フック: ${selection.winner.hook}` : '',
+      ].filter(Boolean),
+    });
+    logAgent('SYSTEM', 'RecallMemory', 'saved', ceoPlan.title);
+  } catch (err) {
+    console.warn(`⚠️  Memory save failed: ${err.message?.substring(0, 120)}`);
   }
 
   // ── VE-008 Mira (Recorder): 投稿した記事の確定事実を台帳へ記録・更新 ──
