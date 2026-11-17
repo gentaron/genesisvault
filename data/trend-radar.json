@@ -1,93 +1,93 @@
 {
-  "capturedAt": "2026-11-16",
+  "capturedAt": "2026-11-17",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "All AI-generated code should be Open Source",
-      "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/",
-      "score": 1240,
-      "date": "2026-11-15"
+      "title": "How to make almost anything",
+      "url": "https://pub.cba.mit.edu/863.26/site/",
+      "score": 898,
+      "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
       "title": "Qwen4-Max",
       "url": "https://qwen.ai/blog?id=qwen4-max",
-      "score": 842,
+      "score": 871,
       "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
-      "title": "How to make almost anything",
-      "url": "https://pub.cba.mit.edu/863.26/site/",
-      "score": 796,
+      "title": "OpenCode Browse",
+      "url": "https://opencode.ai/product/browse",
+      "score": 319,
       "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
-      "title": "Court denies motion to dismiss DRAM price fixing case",
-      "url": "https://litnews.ai/articles/garciaguirre-samsung-sk-hynix-micron-dram-conspiracy-suit-survives-dismissal",
-      "score": 527,
-      "date": "2026-11-15"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Understanding Positional Embeddings in Modern LLMs",
-      "url": "https://magazine.sebastianraschka.com/p/understanding-positional-embeddings",
-      "score": 241,
-      "date": "2026-11-15"
+      "title": "United Airlines experiencing a widespread system outage, airline says",
+      "url": "https://www.cnn.com/2026/11/16/us/united-airlines-outage",
+      "score": 251,
+      "date": "2026-11-16"
     },
     {
       "source": "Hacker News",
       "title": "Tor Project Issues Rapid-Response DoS-Defense Fix Amid Sustained DDoS Attack",
       "url": "https://forum.torproject.org/t/security-release-0-4-9-17/22454",
-      "score": 237,
+      "score": 250,
       "date": "2026-11-16"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Baidu, Xiaomi CEOs warn of growing gap between AI hype and returns",
+      "url": "https://www.scmp.com/tech/big-tech/article/3374774/baidu-xiaomi-ceos-warn-growing-gap-between-ai-hype-and-returns",
+      "score": 174,
+      "date": "2026-11-17"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7416.58984375,
-      "changePct1d": -1.9,
-      "changePct5d": -1.8,
-      "sma20": 7599.55,
+      "close": 7308.6298828125,
+      "changePct1d": -1.5,
+      "changePct5d": -2.8,
+      "sma20": 7579.36,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-16"
+      "asOf": "2026-11-17"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 61142.3515625,
-      "changePct1d": 0.5,
-      "changePct5d": 6.5,
-      "sma20": 62406.45,
+      "close": 59662.01953125,
+      "changePct1d": -2.4,
+      "changePct5d": 1.5,
+      "sma20": 62123.34,
       "aboveSma20": false,
       "direction": "上昇",
-      "asOf": "2026-11-13"
+      "asOf": "2026-11-16"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.48500061035156,
-      "changePct1d": -0.2,
-      "changePct5d": 0.8,
-      "sma20": 158.17,
+      "close": 159.34100341796875,
+      "changePct1d": -0.3,
+      "changePct5d": 0.9,
+      "sma20": 158.23,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-16"
+      "asOf": "2026-11-17"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 64960.94921875,
-      "changePct1d": -0.5,
-      "changePct5d": -12.2,
-      "sma20": 74263.35,
+      "close": 63705.98046875,
+      "changePct1d": -1.8,
+      "changePct5d": -10.7,
+      "sma20": 73380.02,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-16"
+      "asOf": "2026-11-17"
     }
   ],
   "degraded": true,

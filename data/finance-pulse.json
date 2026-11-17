@@ -1,47 +1,53 @@
 {
-  "capturedAt": "2026-11-16",
+  "capturedAt": "2026-11-17",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-16T21:01:01.595Z",
+    "generatedAt": "2026-11-17T19:46:08.024Z",
     "trend": "bull",
-    "volatility": "normal",
+    "volatility": "elevated",
     "riskAppetite": "neutral",
     "breadth": "mixed",
     "strongest": [
       {
-        "name": "半導体",
-        "region": "台湾",
-        "r1wPct": 10.1
-      },
-      {
-        "name": "市場全体",
-        "region": "台湾",
-        "r1wPct": 9.1
+        "name": "ソフトウェア",
+        "region": "豪州",
+        "r1wPct": 10.2
       },
       {
         "name": "通信サービス",
         "region": "ブラジル",
-        "r1wPct": 7.8
+        "r1wPct": 7.4
+      },
+      {
+        "name": "金融",
+        "region": "韓国",
+        "r1wPct": 7
       }
     ],
     "weakest": [
       {
         "name": "暗号資産",
-        "region": "",
-        "r1wPct": -11.4
+        "region": "米国",
+        "r1wPct": -13.7
       },
       {
         "name": "暗号資産",
-        "region": "米国",
-        "r1wPct": -10.9
+        "region": "",
+        "r1wPct": -12.3
       },
       {
-        "name": "公益",
-        "region": "韓国",
-        "r1wPct": -9
+        "name": "金・貴金属",
+        "region": "カナダ",
+        "r1wPct": -10.7
       }
     ],
     "rotations": [
+      {
+        "name": "米国 銀行",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
+      },
       {
         "name": "米国 ヘルスケア",
         "region": "米国",
@@ -55,28 +61,22 @@
         "to": "lagging"
       },
       {
+        "name": "米国 資本財",
+        "region": "米国",
+        "from": "improving",
+        "to": "lagging"
+      },
+      {
         "name": "米国 素材",
         "region": "米国",
         "from": "leading",
         "to": "weakening"
-      },
-      {
-        "name": "米国 総合債券",
-        "region": "米国",
-        "from": "leading",
-        "to": "lagging"
-      },
-      {
-        "name": "日本 情報通信",
-        "region": "日本",
-        "from": "weakening",
-        "to": "leading"
       }
     ]
   },
   "predicates": [
     "market.bull",
-    "market.rotation_new_leader"
+    "market.vol_high"
   ],
   "degraded": false,
   "notes": []
