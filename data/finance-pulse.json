@@ -1,47 +1,53 @@
 {
-  "capturedAt": "2026-11-17",
+  "capturedAt": "2026-11-18",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-17T19:46:08.024Z",
-    "trend": "bull",
+    "generatedAt": "2026-11-18T19:16:08.533Z",
+    "trend": "range",
     "volatility": "elevated",
     "riskAppetite": "neutral",
-    "breadth": "mixed",
+    "breadth": "narrow-selloff",
     "strongest": [
-      {
-        "name": "ソフトウェア",
-        "region": "豪州",
-        "r1wPct": 10.2
-      },
       {
         "name": "通信サービス",
         "region": "ブラジル",
-        "r1wPct": 7.4
+        "r1wPct": 10.4
       },
       {
-        "name": "金融",
-        "region": "韓国",
-        "r1wPct": 7
+        "name": "ヘルスケア",
+        "region": "ブラジル",
+        "r1wPct": 8.5
+      },
+      {
+        "name": "ソフトウェア",
+        "region": "豪州",
+        "r1wPct": 8
       }
     ],
     "weakest": [
       {
-        "name": "暗号資産",
-        "region": "米国",
-        "r1wPct": -13.7
+        "name": "公益",
+        "region": "韓国",
+        "r1wPct": -18
       },
       {
         "name": "暗号資産",
-        "region": "",
-        "r1wPct": -12.3
+        "region": "米国",
+        "r1wPct": -12.9
       },
       {
         "name": "金・貴金属",
-        "region": "カナダ",
-        "r1wPct": -10.7
+        "region": "豪州",
+        "r1wPct": -11.9
       }
     ],
     "rotations": [
+      {
+        "name": "米国 ソフトウェア",
+        "region": "米国",
+        "from": "weakening",
+        "to": "lagging"
+      },
       {
         "name": "米国 銀行",
         "region": "米国",
@@ -65,17 +71,12 @@
         "region": "米国",
         "from": "improving",
         "to": "lagging"
-      },
-      {
-        "name": "米国 素材",
-        "region": "米国",
-        "from": "leading",
-        "to": "weakening"
       }
     ]
   },
   "predicates": [
-    "market.bull",
+    "market.narrow",
+    "market.range",
     "market.vol_high"
   ],
   "degraded": false,
