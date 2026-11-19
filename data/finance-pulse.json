@@ -1,57 +1,69 @@
 {
-  "capturedAt": "2026-11-18",
+  "capturedAt": "2026-11-19",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-18T19:16:08.533Z",
+    "generatedAt": "2026-11-19T19:31:06.522Z",
     "trend": "range",
     "volatility": "elevated",
-    "riskAppetite": "neutral",
+    "riskAppetite": "risk-off",
     "breadth": "narrow-selloff",
     "strongest": [
       {
         "name": "通信サービス",
-        "region": "ブラジル",
-        "r1wPct": 10.4
+        "region": "カナダ",
+        "r1wPct": 6.9
+      },
+      {
+        "name": "一般消費財",
+        "region": "中国",
+        "r1wPct": 6.1
       },
       {
         "name": "ヘルスケア",
         "region": "ブラジル",
-        "r1wPct": 8.5
-      },
-      {
-        "name": "ソフトウェア",
-        "region": "豪州",
-        "r1wPct": 8
+        "r1wPct": 5.9
       }
     ],
     "weakest": [
       {
         "name": "公益",
         "region": "韓国",
-        "r1wPct": -18
+        "r1wPct": -17.6
       },
       {
         "name": "暗号資産",
         "region": "米国",
-        "r1wPct": -12.9
+        "r1wPct": -16.1
       },
       {
-        "name": "金・貴金属",
-        "region": "豪州",
-        "r1wPct": -11.9
+        "name": "素材",
+        "region": "韓国",
+        "r1wPct": -15.3
       }
     ],
     "rotations": [
       {
-        "name": "米国 ソフトウェア",
+        "name": "米国 半導体",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
+      {
+        "name": "米国 エネルギー",
         "region": "米国",
         "from": "weakening",
-        "to": "lagging"
+        "to": "leading"
+      },
+      {
+        "name": "米国 金融",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "米国 銀行",
         "region": "米国",
-        "from": "leading",
+        "from": "improving",
         "to": "weakening"
       },
       {
@@ -59,24 +71,14 @@
         "region": "米国",
         "from": "leading",
         "to": "weakening"
-      },
-      {
-        "name": "米国 バイオテク",
-        "region": "米国",
-        "from": "leading",
-        "to": "lagging"
-      },
-      {
-        "name": "米国 資本財",
-        "region": "米国",
-        "from": "improving",
-        "to": "lagging"
       }
     ]
   },
   "predicates": [
     "market.narrow",
     "market.range",
+    "market.risk_off",
+    "market.rotation_new_leader",
     "market.vol_high"
   ],
   "degraded": false,
