@@ -23,27 +23,32 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 50  # Need enough history to find recent commits
 
       - name: Determine expected date
         id: date
+        env:
+          SECURITY_INPUT_1: ${{ github.event.inputs.expected_date }}
         run: |
-          EXPECTED="${{ github.event.inputs.expected_date }}"
+          EXPECTED="${SECURITY_INPUT_1}"
           if [ -z "$EXPECTED" ]; then
             # Daily post schedule is 11:30 UTC (19:30 MYT)
             # If this workflow ran at 12:00 UTC, the post should be dated today (UTC)
             # Account for UTC date vs potential MYT date crossing
             EXPECTED=$(date -u +'%Y-%m-%d')
           fi
+          [[ "$EXPECTED" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "Invalid date" >&2; exit 1; }
           echo "expected=$EXPECTED" >> "$GITHUB_OUTPUT"
           echo "Checking for post dated: $EXPECTED"
 
       - name: Check if today's post exists in repo
         id: check-post
+        env:
+          SECURITY_INPUT_1: ${{ steps.date.outputs.expected }}
         run: |
-          EXPECTED="${{ steps.date.outputs.expected }}"
+          EXPECTED="${SECURITY_INPUT_1}"
           FOUND=false
           POST_FILE=""
 
@@ -72,8 +77,10 @@ jobs:
 
       - name: Check daily-post workflow ran today
         id: check-workflow
+        env:
+          SECURITY_INPUT_1: ${{ steps.date.outputs.expected }}
         run: |
-          EXPECTED="${{ steps.date.outputs.expected }}"
+          EXPECTED="${SECURITY_INPUT_1}"
 
           # Find the most recent daily-post commit
           LATEST_COMMIT=$(git log --all --oneline --grep="Multi-Agent AI Pipeline" -1 --format="%H %ci")
@@ -85,7 +92,7 @@ jobs:
           echo "Latest auto-post commit: $LATEST_SHA ($LATEST_DATE)"
 
           # Check if the latest auto-post was today
-          TODAY="${{ steps.date.outputs.expected }}"
+          TODAY="${SECURITY_INPUT_1}"
           if [ "$LATEST_DATE" = "$TODAY" ]; then
             echo "today=true" >> "$GITHUB_OUTPUT"
             echo "✅ Daily post workflow committed today"
@@ -96,9 +103,11 @@ jobs:
 
       - name: Check auto-post workflow timing
         id: check-timing
+        env:
+          SECURITY_INPUT_1: ${{ steps.check-workflow.outputs.latest_sha }}
         run: |
           # Find the commit timestamp of the latest auto-post
-          LATEST_SHA="${{ steps.check-workflow.outputs.latest_sha }}"
+          LATEST_SHA="${SECURITY_INPUT_1}"
           if [ -n "$LATEST_SHA" ]; then
             # Get commit timestamp in UTC
             COMMIT_TS=$(git show -s --format=%ci "$LATEST_SHA")
@@ -118,8 +127,10 @@ jobs:
       - name: Verify post content quality
         id: check-quality
         if: steps.check-post.outputs.found == 'true'
+        env:
+          SECURITY_INPUT_1: ${{ steps.check-post.outputs.post_file }}
         run: |
-          POST_FILE="${{ steps.check-post.outputs.post_file }}"
+          POST_FILE="${SECURITY_INPUT_1}"
 
           # Check file size (should be > 500 chars for a real article)
           SIZE=$(wc -c < "$POST_FILE")
@@ -161,21 +172,28 @@ jobs:
 
       - name: Summary report
         if: always()
+        env:
+          SECURITY_INPUT_1: ${{ steps.date.outputs.expected }}
+          SECURITY_INPUT_2: ${{ steps.check-post.outputs.found == 'true' && '✅' || '❌' }}
+          SECURITY_INPUT_3: ${{ steps.check-post.outputs.title || 'N/A' }}
+          SECURITY_INPUT_4: ${{ steps.check-workflow.outputs.latest_date || 'N/A' }}
+          SECURITY_INPUT_5: ${{ steps.check-workflow.outputs.today == 'true' && '✅' || '⚠️' }}
+          SECURITY_INPUT_6: ${{ steps.check-timing.outputs.commit_hour || 'N/A' }}
         run: |
           echo "## 📋 Scheduled Post Verification Report" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Check | Status |" >> "$GITHUB_STEP_SUMMARY"
           echo "|-------|--------|" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Expected Date | \`${{ steps.date.outputs.expected }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Post Found | ${{ steps.check-post.outputs.found == 'true' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Post Title | \`${{ steps.check-post.outputs.title || 'N/A' }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Latest Workflow | \`${{ steps.check-workflow.outputs.latest_date || 'N/A' }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Ran Today | ${{ steps.check-workflow.outputs.today == 'true' && '✅' || '⚠️' }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Commit Time | \`${{ steps.check-timing.outputs.commit_hour || 'N/A' }}\` UTC |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Expected Date | \`${SECURITY_INPUT_1}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Post Found | ${SECURITY_INPUT_2} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Post Title | \`${SECURITY_INPUT_3}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Latest Workflow | \`${SECURITY_INPUT_4}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Ran Today | ${SECURITY_INPUT_5} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit Time | \`${SECURITY_INPUT_6}\` UTC |" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create issue if post is missing
         if: steps.check-post.outputs.found != 'true'
-        uses: dacbd/create-issue-action@main
+        uses: dacbd/create-issue-action@fec641442c0897e734fad173cfe83ae21a2284a3 # main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Scheduled post missing for ${{ steps.date.outputs.expected }}"

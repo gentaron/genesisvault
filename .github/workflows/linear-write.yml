@@ -16,8 +16,8 @@ jobs:
   write:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
 
       - name: Claim the next brief from Linear
         id: claim
@@ -108,11 +108,15 @@ jobs:
       - name: Report success to Linear
         if: steps.pr.outcome == 'success'
         env:
+          SECURITY_INPUT_1: ${{ steps.claim.outputs.issue_id }}
+          SECURITY_INPUT_2: ${{ steps.pr.outputs.url }}
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-        run: bun scripts/linear-sync.mjs report "${{ steps.claim.outputs.issue_id }}" "${{ steps.pr.outputs.url }}"
+        run: bun scripts/linear-sync.mjs report "${SECURITY_INPUT_1}" "${SECURITY_INPUT_2}"
 
       - name: Return the issue on failure
         if: steps.claim.outputs.found == 'true' && failure()
         env:
+          SECURITY_INPUT_1: ${{ steps.claim.outputs.issue_id }}
+          SECURITY_INPUT_2: ${{ github.run_id }}
           LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-        run: bun scripts/linear-sync.mjs fail "${{ steps.claim.outputs.issue_id }}" "Brief gate rejected the draft twice. Run ${{ github.run_id }}"
+        run: bun scripts/linear-sync.mjs fail "${SECURITY_INPUT_1}" "Brief gate rejected the draft twice. Run ${SECURITY_INPUT_2}"
