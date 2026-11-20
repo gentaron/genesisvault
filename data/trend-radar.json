@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-19",
+  "capturedAt": "2026-11-20",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "AI is killing All About Berlin",
-      "url": "https://nicolasbouliane.com/blog/death-by-ai",
-      "score": 801,
-      "date": "2026-11-18"
+      "title": "Fuck Your AI Safeguards",
+      "url": "https://ounapuu.ee/posts/2026/11/19/unsafeguards/",
+      "score": 586,
+      "date": "2026-11-19"
     },
     {
       "source": "Hacker News",
-      "title": "Google's AI answers reducing search traffic by 40%",
-      "url": "https://revscope.co/blog/search-seo-geo-2026/",
-      "score": 708,
-      "date": "2026-11-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI agents ask better questions than KPMG accountants in audit trial",
-      "url": "https://europeanbusinessmagazine.com/ai-agents-better-questions-kpmg/",
-      "score": 478,
-      "date": "2026-11-18"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Harvard researchers find AI coding agents shifted the bottleneck to code review",
-      "url": "https://complexdiscovery.com/harvard-researchers-find-ai-coding-agents-shifted-the-bottleneck-to-code-review/",
-      "score": 322,
-      "date": "2026-11-17"
+      "title": "Frostbite: A new CPU architecture discovered, designed and verified by AI",
+      "url": "https://architectlabs.com/blog/frostbite",
+      "score": 522,
+      "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
       "title": "LLM assisted reverse engineering",
       "url": "https://www.slowchronicle.com/posts/llm-assisted-reverse-engineering",
-      "score": 293,
+      "score": 311,
       "date": "2026-11-18"
     },
     {
       "source": "Hacker News",
-      "title": "Fuck Your AI Safeguards",
-      "url": "https://ounapuu.ee/posts/2026/11/19/unsafeguards/",
-      "score": 211,
+      "title": "Pete Warden on local AI, open models, voice interfaces, the future of hardware",
+      "url": "https://thedataexchange.media/pete-warden-moonshine/",
+      "score": 265,
+      "date": "2026-11-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Global stock markets slump as Anthropic's record IPO fails to stem AI sell-off",
+      "url": "https://www.theguardian.com/business/2026/nov/20/global-stock-markets-slump-anthropic-ipo-ai-sell-off",
+      "score": 167,
+      "date": "2026-11-20"
+    },
+    {
+      "source": "Hacker News",
+      "title": "AI isn't replacing your job. It's turning it into low-paid gig work",
+      "url": "https://restofworld.org/2026/ai-jobs-skills-gig-work/",
+      "score": 142,
       "date": "2026-11-19"
     }
   ],
@@ -48,50 +48,51 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7225.85009765625,
-      "changePct1d": -1.3,
-      "changePct5d": -4.8,
-      "sma20": 7537.4,
+      "close": 7011.990234375,
+      "changePct1d": -2.3,
+      "changePct5d": -7.3,
+      "sma20": 7504.31,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-19"
+      "asOf": "2026-11-20"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 59024.28125,
-      "changePct1d": 0.3,
-      "changePct5d": -3.6,
-      "sma20": 61567.96,
+      "close": 59444.2109375,
+      "changePct1d": 0.7,
+      "changePct5d": -2.3,
+      "sma20": 61309.11,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-18"
+      "asOf": "2026-11-19"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.74400329589844,
-      "changePct1d": 0.2,
-      "changePct5d": 0,
-      "sma20": 158.38,
+      "close": 158.78900146484375,
+      "changePct1d": -0.4,
+      "changePct5d": -0.7,
+      "sma20": 158.47,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-19"
+      "asOf": "2026-11-20"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 62597.03125,
-      "changePct1d": -0.6,
-      "changePct5d": -2.4,
-      "sma20": 71969.96,
+      "close": 58137.26171875,
+      "changePct1d": -6.1,
+      "changePct5d": -11,
+      "sma20": 70970.33,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-19"
+      "asOf": "2026-11-20"
     }
   ],
   "degraded": true,
   "notes": [
+    "Hacker News に該当なし: robotics",
     "InfoCollect KB に該当なし",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",

@@ -1,8 +1,8 @@
 {
-  "capturedAt": "2026-11-19",
+  "capturedAt": "2026-11-20",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-19T19:31:06.522Z",
+    "generatedAt": "2026-11-20T19:01:07.098Z",
     "trend": "range",
     "volatility": "elevated",
     "riskAppetite": "risk-off",
@@ -11,16 +11,16 @@
       {
         "name": "通信サービス",
         "region": "カナダ",
-        "r1wPct": 6.9
+        "r1wPct": 15.5
       },
       {
-        "name": "一般消費財",
+        "name": "生活必需品",
+        "region": "韓国",
+        "r1wPct": 6.5
+      },
+      {
+        "name": "半導体",
         "region": "中国",
-        "r1wPct": 6.1
-      },
-      {
-        "name": "ヘルスケア",
-        "region": "ブラジル",
         "r1wPct": 5.9
       }
     ],
@@ -31,22 +31,34 @@
         "r1wPct": -17.6
       },
       {
-        "name": "暗号資産",
-        "region": "米国",
-        "r1wPct": -16.1
+        "name": "金・貴金属",
+        "region": "豪州",
+        "r1wPct": -15.3
       },
       {
-        "name": "素材",
-        "region": "韓国",
-        "r1wPct": -15.3
+        "name": "市場全体",
+        "region": "台湾",
+        "r1wPct": -13.7
       }
     ],
     "rotations": [
+      {
+        "name": "米国 情報技術",
+        "region": "米国",
+        "from": "lagging",
+        "to": "improving"
+      },
       {
         "name": "米国 半導体",
         "region": "米国",
         "from": "lagging",
         "to": "improving"
+      },
+      {
+        "name": "米国 生活必需品",
+        "region": "米国",
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "米国 エネルギー",
@@ -56,18 +68,6 @@
       },
       {
         "name": "米国 金融",
-        "region": "米国",
-        "from": "leading",
-        "to": "weakening"
-      },
-      {
-        "name": "米国 銀行",
-        "region": "米国",
-        "from": "improving",
-        "to": "weakening"
-      },
-      {
-        "name": "米国 ヘルスケア",
         "region": "米国",
         "from": "leading",
         "to": "weakening"
