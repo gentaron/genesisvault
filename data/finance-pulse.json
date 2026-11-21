@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-11-20",
+  "capturedAt": "2026-11-21",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-20T19:01:07.098Z",
+    "generatedAt": "2026-11-21T18:01:00.482Z",
     "trend": "range",
-    "volatility": "elevated",
+    "volatility": "stress",
     "riskAppetite": "risk-off",
     "breadth": "narrow-selloff",
     "strongest": [
@@ -14,51 +14,39 @@
         "r1wPct": 15.5
       },
       {
-        "name": "生活必需品",
-        "region": "韓国",
-        "r1wPct": 6.5
+        "name": "公益",
+        "region": "中国",
+        "r1wPct": 5.7
       },
       {
-        "name": "半導体",
+        "name": "銀行",
         "region": "中国",
-        "r1wPct": 5.9
+        "r1wPct": 5.3
       }
     ],
     "weakest": [
       {
-        "name": "公益",
-        "region": "韓国",
-        "r1wPct": -17.6
-      },
-      {
-        "name": "金・貴金属",
-        "region": "豪州",
-        "r1wPct": -15.3
-      },
-      {
         "name": "市場全体",
         "region": "台湾",
-        "r1wPct": -13.7
+        "r1wPct": -23.2
+      },
+      {
+        "name": "半導体",
+        "region": "米国",
+        "r1wPct": -17.8
+      },
+      {
+        "name": "暗号資産",
+        "region": "米国",
+        "r1wPct": -16.6
       }
     ],
     "rotations": [
       {
-        "name": "米国 情報技術",
+        "name": "米国 通信サービス",
         "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "米国 半導体",
-        "region": "米国",
-        "from": "lagging",
-        "to": "improving"
-      },
-      {
-        "name": "米国 生活必需品",
-        "region": "米国",
-        "from": "leading",
-        "to": "weakening"
+        "from": "improving",
+        "to": "leading"
       },
       {
         "name": "米国 エネルギー",
@@ -67,10 +55,22 @@
         "to": "leading"
       },
       {
-        "name": "米国 金融",
+        "name": "米国 バイオテク",
         "region": "米国",
-        "from": "leading",
+        "from": "lagging",
         "to": "weakening"
+      },
+      {
+        "name": "金 (ゴールド)",
+        "region": "米国",
+        "from": "improving",
+        "to": "lagging"
+      },
+      {
+        "name": "米国 総合債券",
+        "region": "米国",
+        "from": "lagging",
+        "to": "leading"
       }
     ]
   },
