@@ -1,57 +1,57 @@
 {
-  "capturedAt": "2026-11-20",
+  "capturedAt": "2026-11-21",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Fuck Your AI Safeguards",
-      "url": "https://ounapuu.ee/posts/2026/11/19/unsafeguards/",
-      "score": 586,
-      "date": "2026-11-19"
-    },
     {
       "source": "Hacker News",
       "title": "Frostbite: A new CPU architecture discovered, designed and verified by AI",
       "url": "https://architectlabs.com/blog/frostbite",
-      "score": 522,
+      "score": 627,
       "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
-      "title": "LLM assisted reverse engineering",
-      "url": "https://www.slowchronicle.com/posts/llm-assisted-reverse-engineering",
-      "score": 311,
-      "date": "2026-11-18"
+      "title": "Fuck Your AI Safeguards",
+      "url": "https://ounapuu.ee/posts/2026/11/19/unsafeguards/",
+      "score": 597,
+      "date": "2026-11-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Restricting AI agents in mobile operating systems platforms from capturing data",
+      "url": "https://signal.org/blog/protecting-your-privacy/",
+      "score": 510,
+      "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
       "title": "Pete Warden on local AI, open models, voice interfaces, the future of hardware",
       "url": "https://thedataexchange.media/pete-warden-moonshine/",
-      "score": 265,
+      "score": 269,
       "date": "2026-11-19"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Google workers tell their employer not to punish schools that don't want AI",
+      "url": "https://www.motherjones.com/politics/2026/11/google-alphabet-union-school-ai-protest-gemini-workers-petition/",
+      "score": 264,
+      "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
       "title": "Global stock markets slump as Anthropic's record IPO fails to stem AI sell-off",
       "url": "https://www.theguardian.com/business/2026/nov/20/global-stock-markets-slump-anthropic-ipo-ai-sell-off",
-      "score": 167,
+      "score": 192,
       "date": "2026-11-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "AI isn't replacing your job. It's turning it into low-paid gig work",
-      "url": "https://restofworld.org/2026/ai-jobs-skills-gig-work/",
-      "score": 142,
-      "date": "2026-11-19"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7011.990234375,
-      "changePct1d": -2.3,
-      "changePct5d": -7.3,
-      "sma20": 7504.31,
+      "close": 6910.39013671875,
+      "changePct1d": -3.7,
+      "changePct5d": -8.6,
+      "sma20": 7499.23,
       "aboveSma20": false,
       "direction": "下落",
       "asOf": "2026-11-20"
@@ -70,10 +70,10 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.78900146484375,
-      "changePct1d": -0.4,
-      "changePct5d": -0.7,
-      "sma20": 158.47,
+      "close": 159.70700073242188,
+      "changePct1d": 0.2,
+      "changePct5d": -0.1,
+      "sma20": 158.52,
       "aboveSma20": true,
       "direction": "横ばい",
       "asOf": "2026-11-20"
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 58137.26171875,
-      "changePct1d": -6.1,
-      "changePct5d": -11,
-      "sma20": 70970.33,
+      "close": 58893.80078125,
+      "changePct1d": -4.9,
+      "changePct5d": -9.8,
+      "sma20": 71008.16,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-20"
+      "asOf": "2026-11-21"
     }
   ],
   "degraded": true,
