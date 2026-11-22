@@ -1,8 +1,8 @@
 {
-  "capturedAt": "2026-11-21",
+  "capturedAt": "2026-11-22",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-21T18:01:00.482Z",
+    "generatedAt": "2026-11-22T18:31:00.709Z",
     "trend": "range",
     "volatility": "stress",
     "riskAppetite": "risk-off",
@@ -11,17 +11,17 @@
       {
         "name": "通信サービス",
         "region": "カナダ",
-        "r1wPct": 15.5
+        "r1wPct": 16.6
+      },
+      {
+        "name": "一般消費財",
+        "region": "インド",
+        "r1wPct": 6.1
       },
       {
         "name": "公益",
         "region": "中国",
         "r1wPct": 5.7
-      },
-      {
-        "name": "銀行",
-        "region": "中国",
-        "r1wPct": 5.3
       }
     ],
     "weakest": [
@@ -31,14 +31,14 @@
         "r1wPct": -23.2
       },
       {
-        "name": "半導体",
-        "region": "米国",
-        "r1wPct": -17.8
+        "name": "情報技術",
+        "region": "台湾",
+        "r1wPct": -19
       },
       {
-        "name": "暗号資産",
-        "region": "米国",
-        "r1wPct": -16.6
+        "name": "半導体",
+        "region": "台湾",
+        "r1wPct": -18.7
       }
     ],
     "rotations": [

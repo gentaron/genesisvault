@@ -1,47 +1,47 @@
 {
-  "capturedAt": "2026-11-21",
+  "capturedAt": "2026-11-22",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "Frostbite: A new CPU architecture discovered, designed and verified by AI",
-      "url": "https://architectlabs.com/blog/frostbite",
-      "score": 663,
-      "date": "2026-11-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Restricting AI agents in mobile operating systems platforms from capturing data",
-      "url": "https://signal.org/blog/protecting-your-privacy/",
-      "score": 562,
+      "title": "Inkling 2 Mini",
+      "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+      "score": 1439,
       "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
       "title": "Ask HN: I have been unemployed for 2y. 15 years of experience, US. What to do?",
       "url": "https://news.ycombinator.com/item?id=50583761",
-      "score": 449,
+      "score": 712,
       "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
-      "title": "Nasdaq erases all 2026 gains as AI sell-off dampens Anthropic’s second day",
-      "url": "https://www.theguardian.com/business/2026/nov/20/global-stock-markets-slump-anthropic-ipo-ai-sell-off",
-      "score": 448,
-      "date": "2026-11-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Google workers tell their employer not to punish schools that don't want AI",
-      "url": "https://www.motherjones.com/politics/2026/11/google-alphabet-union-school-ai-protest-gemini-workers-petition/",
-      "score": 278,
-      "date": "2026-11-20"
+      "title": "87% of the Anthropic power will come from gas and 11% from coal in 2028",
+      "url": "https://betterdatacenterproject.com/2026/11/16/how-ai-is-powered-a-breakdown-of-byop-and-grid-power/",
+      "score": 584,
+      "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
       "title": "ClawDOS – An AI coding agent for DOS",
       "url": "http://ricapar.net/ClawDOS/",
-      "score": 137,
+      "score": 167,
       "date": "2026-11-21"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Show HN: I built a game where you are an LLM's subagent",
+      "url": "https://github.com/gulivan/worker755",
+      "score": 158,
+      "date": "2026-11-22"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The Mythology of Conscious AI",
+      "url": "https://www.noemamag.com/the-mythology-of-conscious-ai/",
+      "score": 134,
+      "date": "2026-11-22"
     }
   ],
   "market": [
@@ -81,13 +81,13 @@
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 60010.26953125,
-      "changePct1d": 2.1,
-      "changePct5d": -7.5,
-      "sma20": 70091.51,
+      "close": 60592.6796875,
+      "changePct1d": 0.8,
+      "changePct5d": -6.6,
+      "sma20": 69291.47,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-21"
+      "asOf": "2026-11-22"
     }
   ],
   "degraded": true,
