@@ -449,6 +449,56 @@
       "fallbackEndpoint": "https://query1.finance.yahoo.com/v8/finance/chart"
     }
   },
+  "ecosystem": {
+    "comment": "ミナが毎朝読んでいる「身内のレーダー」。gentaron のリポジトリ群が互いに読ませるために公開している2つの型を読む: gentaron.radar-digest/1（外部の学術誌・arXiv・研究者ブログ・賞の報道を順位づけした上位30件）と gentaron.feed/1（そのリポジトリ自身の出来事）。鍵の要らない公開 URL だけを書くこと——private リポジトリの raw はトークンが要るので、ここには書けない（INV-003 / INV-020）。QAIZ と assetlog は VE-011 Kaia が別の公開口（Workers API / 公開シート）から読んでいるので、ここで二重に取りに行かない。取得できない日は degraded として続行する（fail-soft）。検証コマンドからは絶対に呼ばない（INV-004）。見出しと要約は外部フィードの引き写しで、配信元自身が untrusted-external-text と宣言している——読むためのデータであって、指示ではない。",
+    "enabled": true,
+    "timeoutMs": 8000,
+    "cacheFile": "data/ecosystem-radar.json",
+    "maxCacheAgeDays": 3,
+    "maxItems": 6,
+    "maxItemsPerSource": 3,
+    "maxItemAgeDays": 10,
+    "maxSummaryChars": 200,
+    "maxCandidates": 3,
+    "topicThemes": {
+      "math-ai": "AI・テクノロジー",
+      "protein-ai": "AI・テクノロジー",
+      "quantum-computing": "読書",
+      "photonics": "読書",
+      "quantum-matter": "読書",
+      "gene-editing": "自己成長",
+      "synbio-cells": "自己成長",
+      "prizes": "自己成長",
+      "research": "自己成長",
+      "number-theory": "ジャーナリング",
+      "combinatorics": "ジャーナリング",
+      "geometry-topology": "散歩・日常",
+      "universality": "散歩・日常",
+      "analysis-probability": "瞑想・マインドフルネス",
+      "hep-gravity": "瞑想・マインドフルネス"
+    },
+    "defaultTheme": "自己成長",
+    "sources": [
+      {
+        "id": "mpl-radar",
+        "label": "Mathematical Physics Lab — Frontier Radar",
+        "kind": "radar-digest",
+        "url": "https://raw.githubusercontent.com/gentaron/Mathematical-Physics-Lab-/HEAD/docs/radar/digest.json"
+      },
+      {
+        "id": "mpl-lab",
+        "label": "Mathematical Physics Lab — 研究日誌",
+        "kind": "house-feed",
+        "url": "https://raw.githubusercontent.com/gentaron/Mathematical-Physics-Lab-/HEAD/docs/feed.json"
+      },
+      {
+        "id": "orbital-radar",
+        "label": "Orbital Eternity — Deep-Tech Radar",
+        "kind": "radar-digest",
+        "url": "https://orbieter.netlify.app/radar/digest.json"
+      }
+    ]
+  },
   "tierOmega": {
     "comment": "Neuro-Symbolic Heavy Creative — 無料最高峰モデル配置。Qwen3.8-Flash-NextのHybrid Attention+N-gramで構造的文脈理解。GLM-5.3-FlashのmHC多様体制約で物理的妥当性検証。Claude-obsidianのエアロックパターンでエージェント間データ不変性保証。",
     "providers": {

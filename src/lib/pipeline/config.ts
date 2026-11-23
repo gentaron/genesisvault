@@ -352,6 +352,49 @@ export const FormatConfigSchema = z.object({
   maxChars: z.number().int().positive(),
 });
 
+// ─── Ecosystem radar (身内のレーダー) ───────────────────────────
+
+export const EcosystemSourceSchema = z.object({
+  /** 候補 ID や記録に出る短い識別子。 */
+  id: z.string().min(1),
+  /** 記事の出典として書き手に見せる表示名。 */
+  label: z.string().min(1),
+  /**
+   * 読み方。`radar-digest` = gentaron.radar-digest/1、`house-feed` =
+   * gentaron.feed/1、`rss` = RSS 2.0。
+   */
+  kind: z.enum(['radar-digest', 'house-feed', 'rss']),
+  /**
+   * 取得先。**鍵の要らない公開 URL だけ**を書くこと（INV-003 / INV-020）。
+   * private リポジトリの raw はトークンが要るので、ここには書けない。
+   */
+  url: z.string().url(),
+});
+
+export const EcosystemConfigSchema = z.object({
+  comment: z.string().optional(),
+  /** false にすると収集そのものを行わない（記事生成は通常どおり続く）。 */
+  enabled: z.boolean(),
+  timeoutMs: z.number().int().positive(),
+  cacheFile: z.string().min(1),
+  maxCacheAgeDays: z.number().int().min(0),
+  /** ブリーフに載せる見出しの総数。多すぎると日記が論文紹介になる。 */
+  maxItems: z.number().int().positive(),
+  /** 1つの配信元から取る上限（1社がブリーフを占めないように）。 */
+  maxItemsPerSource: z.number().int().positive(),
+  /** 何日前までの見出しを「今朝のもの」として扱うか。0 で無効。 */
+  maxItemAgeDays: z.number().int().min(0),
+  /** 要約の切り詰め幅（外部テキスト）。 */
+  maxSummaryChars: z.number().int().positive(),
+  /** この情報源から作るテーマ候補の上限。レーダーが選定を占領しないための蓋。 */
+  maxCandidates: z.number().int().min(0),
+  /** 配信元の話題分類 → 日記のテーマ。未知の話題は defaultTheme に寄せる。 */
+  topicThemes: z.record(z.string(), z.string()),
+  /** topicThemes に無い話題のテーマ。THEME_KEYWORDS のキーでなければ候補は落ちる。 */
+  defaultTheme: z.string().min(1),
+  sources: z.array(EcosystemSourceSchema),
+});
+
 export const PipelineConfigSchema = z.object({
   $schema: z.string().optional(),
   version: z.string(),
@@ -375,6 +418,7 @@ export const PipelineConfigSchema = z.object({
   review: ReviewConfigSchema,
   videoBrief: VideoBriefConfigSchema,
   trends: TrendsConfigSchema,
+  ecosystem: EcosystemConfigSchema,
   finance: FinanceConfigSchema,
   selection: SelectionConfigSchema,
   format: FormatConfigSchema,
@@ -392,6 +436,8 @@ export type ReviewConfig = z.infer<typeof ReviewConfigSchema>;
 export type RubricCriterion = z.infer<typeof RubricCriterionSchema>;
 export type VideoBriefConfig = z.infer<typeof VideoBriefConfigSchema>;
 export type TrendsConfig = z.infer<typeof TrendsConfigSchema>;
+export type EcosystemConfig = z.infer<typeof EcosystemConfigSchema>;
+export type EcosystemSourceDef = z.infer<typeof EcosystemSourceSchema>;
 export type FinanceConfig = z.infer<typeof FinanceConfigSchema>;
 export type SelectionConfig = z.infer<typeof SelectionConfigSchema>;
 export type FormatConfig = z.infer<typeof FormatConfigSchema>;
@@ -626,6 +672,7 @@ export function getAgent(agentId: string): AgentDef | undefined {
 
 export const VIDEO_BRIEF_CONFIG: VideoBriefConfig = PIPELINE_CONFIG.videoBrief;
 export const TRENDS_CONFIG: TrendsConfig = PIPELINE_CONFIG.trends;
+export const ECOSYSTEM_CONFIG: EcosystemConfig = PIPELINE_CONFIG.ecosystem;
 export const FINANCE_CONFIG: FinanceConfig = PIPELINE_CONFIG.finance;
 export const SELECTION_CONFIG: SelectionConfig = PIPELINE_CONFIG.selection;
 export const FORMAT_CONFIG: FormatConfig = PIPELINE_CONFIG.format;

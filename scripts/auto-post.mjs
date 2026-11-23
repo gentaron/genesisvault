@@ -73,6 +73,11 @@ import {
   buildTrendBrief,
   saveTrendRadar,
 } from '../src/lib/agents/trends.ts';
+import {
+  runRadarScout,
+  buildRadarBrief,
+  saveRadarSweep,
+} from '../src/lib/ecosystem/radar.ts';
 import { readRecentTelemetry } from '../src/lib/ai/telemetry.ts';
 import {
   runKaia,
@@ -539,6 +544,28 @@ async function main() {
       ? `${trendRadar.capturedAt !== todayISO() ? `${trendRadar.capturedAt} のスナップショットで代用 / ` : ''}技術${trendRadar.tech.length}件 / 相場${trendRadar.market.length}件${trendRadar.notes.length ? `（${trendRadar.notes.join(' / ')}）` : ''}`
       : '取得できず',
   );
+  // ── VE-010 Tessa (Scout): 身内のレーダー ──────────────────────
+  // MPL と Orbital Eternity が公開している digest（鍵不要）を読み、
+  // ミナが「毎朝読んでいる情報源の見出し」として企画/執筆に渡す。
+  // fail-soft: 取れなければレーダー無しで続行する。
+  let radarSweep = null;
+  try {
+    radarSweep = await runRadarScout(ROOT_DIR);
+    if (radarSweep && !DRY_RUN) await saveRadarSweep(ROOT_DIR, radarSweep);
+    if (radarSweep) {
+      logAgent('VE-010', 'Tessa Brandt', 'radar_collected', `items=${radarSweep.items.length}`);
+    }
+  } catch (err) {
+    console.warn(`  ⚠️  Radar scout failed: ${err.message?.substring(0, 120)}`);
+  }
+  stage(
+    'VE-010 Tessa', '身内のレーダー（MPL・Orbital Eternity）',
+    !radarSweep ? 'warn' : radarSweep.degraded || radarSweep.capturedAt !== todayISO() ? 'warn' : 'ok',
+    radarSweep
+      ? `${radarSweep.capturedAt !== todayISO() ? `${radarSweep.capturedAt} のスナップショットで代用 / ` : ''}見出し${radarSweep.items.length}件${radarSweep.notes.length ? `（${radarSweep.notes.join(' / ')}）` : ''}`
+      : '取得できず',
+  );
+
   // ── VE-011 Kaia (Treasurer): QAIZ と assetlog の財務パルス ────────
   // 金額は持たず、変化率と記号の事実だけ。fail-soft（取れなければ無しで書く）。
   let financePulse = null;
@@ -560,7 +587,11 @@ async function main() {
   );
   const financeBrief = buildFinanceBrief(financePulse);
 
-  const trendBrief = [buildTrendBrief(trendRadar), financeBrief ? `【今日のお金の景色】\n${financeBrief}` : '']
+  const trendBrief = [
+    buildTrendBrief(trendRadar),
+    buildRadarBrief(radarSweep),
+    financeBrief ? `【今日のお金の景色】\n${financeBrief}` : '',
+  ]
     .filter(Boolean)
     .join('\n\n');
   if (trendBrief) console.log(`  📡 トレンド・財務ブリーフを執筆陣へ注入します（${trendBrief.length}字）`);
@@ -636,7 +667,13 @@ async function main() {
         publishedTitles = db.titles ?? [];
       } catch { /* 既出見出しの写しが無くても選定は続ける */ }
 
-      const candidates = generateCandidates(financePulse, trendRadar, priorityList, SELECTION_CONFIG.maxCandidates);
+      const candidates = generateCandidates(
+        financePulse,
+        trendRadar,
+        priorityList,
+        SELECTION_CONFIG.maxCandidates,
+        radarSweep,
+      );
       const recentPosts = [...pastArticles]
         .sort((a, b) => b.date.localeCompare(a.date))
         .map(a => ({ date: a.date, title: a.title }));

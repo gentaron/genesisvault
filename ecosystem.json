@@ -9,7 +9,7 @@
   "stack": "Astro · Bun · Vercel",
   "site": "https://genesisvault.vercel.app",
   "produces": ["blog"],
-  "consumes": ["kb", "formats", "market"],
+  "consumes": ["kb", "formats", "market", "radar"],
   "upstream": [
     {
       "repo": "infocollect",
@@ -25,6 +25,16 @@
       "repo": "QAIZ",
       "flows": ["market"],
       "url": "https://github.com/gentaron/QAIZ"
+    },
+    {
+      "repo": "Mathematical-Physics-Lab-",
+      "flows": ["radar"],
+      "url": "https://github.com/gentaron/Mathematical-Physics-Lab-"
+    },
+    {
+      "repo": "orbital-eternity",
+      "flows": ["radar"],
+      "url": "https://github.com/gentaron/orbital-eternity"
     }
   ],
   "downstream": [
