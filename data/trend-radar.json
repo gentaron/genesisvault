@@ -1,46 +1,46 @@
 {
-  "capturedAt": "2026-11-22",
+  "capturedAt": "2026-11-23",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "Inkling 2 Mini",
-      "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
-      "score": 1439,
-      "date": "2026-11-20"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Ask HN: I have been unemployed for 2y. 15 years of experience, US. What to do?",
-      "url": "https://news.ycombinator.com/item?id=50583761",
-      "score": 712,
-      "date": "2026-11-20"
-    },
     {
       "source": "Hacker News",
       "title": "87% of the Anthropic power will come from gas and 11% from coal in 2028",
       "url": "https://betterdatacenterproject.com/2026/11/16/how-ai-is-powered-a-breakdown-of-byop-and-grid-power/",
-      "score": 584,
+      "score": 1024,
       "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
-      "title": "ClawDOS – An AI coding agent for DOS",
-      "url": "http://ricapar.net/ClawDOS/",
-      "score": 167,
-      "date": "2026-11-21"
+      "title": "GLM-5.4: Toward generalized coding with our first loop transformer",
+      "url": "https://z.ai/blog/glm-5.4",
+      "score": 997,
+      "date": "2026-11-23"
+    },
+    {
+      "source": "Hacker News",
+      "title": "A Beginner's Guide to Local AI with Inkling, Qwen, and Unsloth",
+      "url": "https://www.gpupartner.com/blog/beginners-guide-local-ai-inkling-qwen-unsloth",
+      "score": 736,
+      "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
       "title": "Show HN: I built a game where you are an LLM's subagent",
       "url": "https://github.com/gulivan/worker755",
-      "score": 158,
+      "score": 356,
       "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
       "title": "The Mythology of Conscious AI",
       "url": "https://www.noemamag.com/the-mythology-of-conscious-ai/",
-      "score": 134,
+      "score": 180,
+      "date": "2026-11-22"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Europe weakens chemical rules as science links them to 'lifestyle diseases'",
+      "url": "https://www.lemonde.fr/en/opinion/article/2026/11/22/as-science-increasingly-shows-the-role-chemical-substances-play-in-lifestyle-diseases-europe-weakens-its-regulations_6786595_23.html",
+      "score": 173,
       "date": "2026-11-22"
     }
   ],
@@ -48,13 +48,13 @@
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 6910.39013671875,
-      "changePct1d": -3.7,
-      "changePct5d": -8.6,
-      "sma20": 7499.23,
+      "close": 7237.169921875,
+      "changePct1d": 4.7,
+      "changePct5d": -2.4,
+      "sma20": 7477.25,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-20"
+      "asOf": "2026-11-23"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.70700073242188,
-      "changePct1d": 0.2,
-      "changePct5d": -0.1,
-      "sma20": 158.52,
+      "close": 158.96499633789062,
+      "changePct1d": -0.5,
+      "changePct5d": -0.5,
+      "sma20": 158.63,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-20"
+      "asOf": "2026-11-23"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 60592.6796875,
-      "changePct1d": 0.8,
-      "changePct5d": -6.6,
-      "sma20": 69291.47,
+      "close": 61021.80859375,
+      "changePct1d": -0.2,
+      "changePct5d": -3.1,
+      "sma20": 68503.77,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-22"
+      "asOf": "2026-11-23"
     }
   ],
   "degraded": true,
