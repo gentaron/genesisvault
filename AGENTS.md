@@ -509,6 +509,7 @@ VE-010 Tessa（`src/lib/agents/trends.ts`）は、このリポジトリで唯一
 | 同じ言い回しのタイトルを繰り返さない | `title-guard.ts`（INV-023 / LM-022） |
 | 同じ語がタイトルに入りすぎ（「AI」「市場」など） | `findOverusedTerms()`: 直近14日に2本以上で使った語は使わない（LM-024） |
 | スクロールするとタイトルが一緒に降りてくる | sticky は `.site-header` だけ。`tests/layout-sticky.test.ts`（INV-025 / LM-025） |
+| 判断AIを世界最高峰の水準に・最も軽く・最も無料で | 記号審査 + 陪審（Clef + Clef-flash）+ 双対質問、veto は公開を止める（INV-026 / ADR-0023） |
 | サムネ決定機構をしっかり動かす | `thumbnail.ts` + `data/thumbnails.json` + 描き足し（INV-024 / LM-023） |
 
 正典に事実を足すときは、assetlog か note で裏を取り、`source` を書く。金額は書かない。

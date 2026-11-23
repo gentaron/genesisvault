@@ -275,7 +275,8 @@ describe('runJuno', () => {
       result: { answers: { pick: { choice: pickId, probability: 0.9 } } },
     });
     const result = await runJuno('2026-10-10', accepted, rejected, '');
-    expect(fetchMock).toHaveBeenCalledOnce();
+    // 陪審: Clef と Clef-flash を同時に呼ぶ
+    expect(fetchMock).toHaveBeenCalledTimes(2);
     // Workers AI の既定は Clef。Jev 本体と区別して記録する
     expect(result?.method).toBe('clef');
     expect(result?.winner.id).toBe(pickId);

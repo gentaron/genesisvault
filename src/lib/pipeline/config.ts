@@ -318,6 +318,20 @@ export const ClefReviewConfigSchema = z.object({
     /** veto 以外で、いくつまで落ちても合格にするか。 */
     maxSoftFailures: z.number().int().min(0),
   }),
+  /**
+   * veto 項目が落ちたら、mode に関わらず公開しない。題材のすり替え・投資助言・実額・
+   * 正典違反は「1回直してだめなら記録して公開」で済ませてよい種類の不合格ではない。
+   */
+  enforceVeto: z.boolean(),
+  /**
+   * 陪審（PoLL）。Clef と Clef-flash を同時に呼び、veto は最も厳しい票、その他は平均で決める。
+   * 陪審員の確率が maxDisagreement 以上割れた veto 項目は「判断不能」として不合格にする。
+   * dualPolarity は yes/no を正向き・逆向きの2問で聞き、「はい」と答えがちな偏りを打ち消す。
+   */
+  jury: z.object({
+    maxDisagreement: z.number().min(0).max(1),
+    dualPolarity: z.boolean(),
+  }),
   auditLogDir: z.string().min(1),
 });
 

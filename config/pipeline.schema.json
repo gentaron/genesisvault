@@ -973,6 +973,26 @@
             "maxSoftFailures"
           ]
         },
+        "enforceVeto": {
+          "type": "boolean"
+        },
+        "jury": {
+          "type": "object",
+          "properties": {
+            "maxDisagreement": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "dualPolarity": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "maxDisagreement",
+            "dualPolarity"
+          ]
+        },
         "auditLogDir": {
           "type": "string",
           "minLength": 1
@@ -982,6 +1002,8 @@
         "enabled",
         "mode",
         "thresholds",
+        "enforceVeto",
+        "jury",
         "auditLogDir"
       ]
     },

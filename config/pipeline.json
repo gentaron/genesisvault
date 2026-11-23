@@ -557,7 +557,7 @@
     "maxChars": 4800
   },
   "clefReview": {
-    "comment": "Clef 審査。既存の審査役（review.ts）は所見の文章と逐語引用を求めるため、文字列を返さない判断モデル（Jev / Clef）では答えられない。ここでは yes/no の確率と順序レベルだけで問い、合否は閾値で決める（INV-013）。veto（題材のすり替え・投資助言・実額）は加重しない。advisory は1回書き直して、それでも不合格なら記録して公開を続ける。enforce は公開しない。Clef が使えない日は『審査なし』として記録し、公開は止めない。",
+    "comment": "Clef 審査。既存の審査役（review.ts）は所見の文章と逐語引用を求めるため、文字列を返さない判断モデル（Jev / Clef）では答えられない。ここでは yes/no の確率と順序レベルだけで問い、合否は閾値で決める（INV-013）。veto（題材のすり替え・投資助言・実額）は加重しない。advisory は1回書き直して、それでも不合格なら記録して公開を続ける。enforce は公開しない。Clef が使えない日は『審査なし』として記録し、公開は止めない。 v2（ADR-0023）: 判断モデルに聞く前に記号審査（正典・一人称・禁止トピック・タイトル）を必ず通す。陪審は Clef と Clef-flash を同時に呼び、veto は最も厳しい票・票が maxDisagreement 以上割れたら不合格。dualPolarity で yes/no を正逆2問で聞き、はいに寄る偏りを打ち消す。enforceVeto なら veto の不合格は mode に関わらず公開しない。",
     "enabled": true,
     "mode": "advisory",
     "thresholds": {
@@ -565,6 +565,11 @@
       "noul": 0.5,
       "score": 0.5,
       "maxSoftFailures": 1
+    },
+    "enforceVeto": true,
+    "jury": {
+      "maxDisagreement": 0.4,
+      "dualPolarity": true
     },
     "auditLogDir": "docs/gate-runs"
   },

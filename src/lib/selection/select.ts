@@ -19,7 +19,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { z } from 'zod';
 import { generateWithFallback } from '../ai/generate.js';
-import { askJev, type JevQuestion } from '../ai/jev.js';
+import { askJury, type JevQuestion, mergeJury } from '../ai/jev.js';
 import { SELECTION_CONFIG } from '../pipeline/config.js';
 import type { Rejection, ScoredCandidate } from './candidates.js';
 
@@ -183,7 +183,10 @@ export async function runJuno(
   let transport: string | null = null;
 
   if (pool.length > 1) {
-    const jev = await askJev(state, buildQuestions(pool), notes);
+    // 陪審（Clef + Clef-flash を同時に）の分布を平均する。2人の第1候補が割れれば
+    // 確信度が自然に下がり、棄権に倒れる（1人の自信過剰で決めない）。
+    const questions = buildQuestions(pool);
+    const jev = mergeJury(await askJury(state, questions, notes), questions);
     const pick = jev?.answers.pick;
     if (jev && pick?.type === 'choice') {
       transport = `${jev.transport}:${jev.model} ${jev.latencyMs}ms`;

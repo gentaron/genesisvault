@@ -151,6 +151,14 @@ SVG のカバー絵が同じテーマで必ず出る。禁止トピックのテ�
 
 - **守り方**: verify の「全記事にサムネの決定がある」、`tests/thumbnail.test.ts`、`bun run thumbnails`
 
+### INV-026: 判断モデルに聞く前に、ルールで決まることはルールで決める
+
+公開前の審査は「記号審査 → 陪審（Clef + Clef-flash）」の順。記号審査（正典・一人称・禁止トピック・
+タイトルの使い回し）は判断モデルの有無に関係なく必ず走る。陪審の veto は最も厳しい票で決め、
+票が割れたら不合格。yes/no は正逆2問で聞く。veto が落ちた原稿は公開しない（ADR-0023 / LM-026）。
+
+- **守り方**: `tests/clef-jury.test.ts`、`tests/clef-review.test.ts`、`clefReview.enforceVeto`
+
 ### INV-020: 外部トレンドの取り込みは fail-soft で、検証を汚さない
 
 `src/lib/agents/trends.ts`（VE-010）はこのリポジトリで唯一、外へ通信する

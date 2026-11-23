@@ -22,6 +22,11 @@
       "id": "note.no_tenure",
       "statement": "note.com/gensnotes のどの記事にも、投資歴・積立年数を語った記述は無い",
       "source": "data/vault/note（2026-11-12 全件同期・全文検索）"
+    },
+    {
+      "id": "persona.first_person",
+      "statement": "ミナの一人称は「わたし」。29歳・8月16日生まれの女性として書く",
+      "source": "src/lib/agents/shared.ts の PERSONA（オーナー設定）"
     }
   ],
   "forbiddenClaims": [
@@ -46,6 +51,12 @@
       "id": "disclosure.amount",
       "message": "自分の資産の金額を書いている。公開するのは変化率と向きだけ（disclosure=relative）",
       "pattern": "(?:わたしの|私の|自分の)(?:総資産|資産|ポートフォリオ|評価額)[^。！？\\n]{0,10}?[0-9０-９][0-9０-９,，.]*\\s*(?:万円|億円|円|ドル|万ドル|USD)"
+    },
+    {
+      "id": "persona.first_person",
+      "message": "一人称が「わたし」ではない（僕・俺など）。ミナの一人称は「わたし」",
+      "pattern": "(?:僕|俺|ボク|オレ)(?:は|が|の|も|に|を|って|、|。|だけ|ら|たち)",
+      "exclude": "「|『|“|彼|と言|という人|男性|息子|弟|兄|父"
     }
   ]
 }

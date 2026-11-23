@@ -396,9 +396,11 @@ async function auditExistingPost(filePath, dryRun) {
   console.log(`⚖️  Clef Review（事後）: 公開済みの「${title}」を審査しています…`);
   const verdict = await runClefReview(`題材: ${title}（公開済み記事の事後審査）`, title, body);
   if (!verdict.available) {
-    console.log(`   ⏭️  審査なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）`);
-    stage('Clef 審査', '公開済み記事の事後審査', CLEF_REVIEW_CONFIG.enabled ? 'warn' : 'skip', verdict.notes.join(' / ') || '判断モデルが使えない');
-    return;
+    console.log(`   ⏭️  陪審なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）— 記号審査だけ記録`);
+    if (verdict.checks.length === 0) {
+      stage('Clef 審査', '公開済み記事の事後審査', CLEF_REVIEW_CONFIG.enabled ? 'warn' : 'skip', verdict.notes.join(' / ') || '判断モデルが使えない');
+      return;
+    }
   }
   for (const c of verdict.checks) {
     console.log(`   ${c.passed ? '✅' : '❌'} ${c.label}: ${c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
@@ -1000,42 +1002,45 @@ async function main() {
       `テーマ: ${ceoPlan.theme}\nトピック: ${ceoPlan.topic}\n切り口: ${ceoPlan.angle}`,
     ].filter(Boolean).join('\n');
     console.log('⚖️  Clef Review: 判断モデルで原稿を審査しています…');
-    let verdict = await runClefReview(reviewBrief, ceoPlan.title, finalBody);
+    // 記号審査（正典・一人称・禁止トピック・タイトル）+ 陪審（Clef + Clef-flash）+ 双対質問
+    const reviewCtx = { canon, recent: pastArticles, today: todayISO() };
+    let verdict = await runClefReview(reviewBrief, ceoPlan.title, finalBody, reviewCtx);
     clefVerdicts.push(verdict);
     const failedCount = v => v.checks.filter(c => !c.passed).length;
-    if (!verdict.available) {
-      console.log(`   ⏭️  審査なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）`);
-      stage('Clef 審査', '公開前の審査', CLEF_REVIEW_CONFIG.enabled ? 'warn' : 'skip', verdict.notes.join(' / ') || '判断モデルが使えない');
-    } else {
-      for (const c of verdict.checks) {
-        console.log(`   ${c.passed ? '✅' : '❌'} ${c.label}: ${c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
-      }
-      if (!verdict.passed) {
-        console.warn('   ⚠️  Clef 審査で不合格。落ちた項目だけを指摘して書き直します');
-        const rewritten = await runSophia(
-          ceoPlan,
-          seoData,
-          styleSamples,
-          [selectionSection, continuityBrief, vaultBrief].filter(Boolean).join('\n\n'),
-          trendBrief,
-          buildClefFeedback(verdict),
-          format.writer,
-        );
-        if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0 && findCanon(ceoPlan.title, rewritten).length === 0) {
-          const second = await runClefReview(reviewBrief, ceoPlan.title, rewritten);
-          clefVerdicts.push(second);
-          if (second.passed || (second.available && failedCount(second) < failedCount(verdict))) {
-            finalBody = rewritten;
-            verdict = second;
-            console.log(`   ↩️  書き直し版を採用（${second.passed ? '合格' : '不合格項目が減った'}）`);
-          }
+    if (!verdict.available) console.log(`   ⏭️  陪審なし（${verdict.notes.join(' / ') || '判断モデルが使えません'}）— 記号審査だけで判定`);
+    for (const c of verdict.checks) {
+      console.log(`   ${c.passed ? '✅' : '❌'} ${c.source === 'symbolic' ? '[記号] ' : ''}${c.label}: ${c.source === 'symbolic' ? (c.evidence ?? 'OK') : c.value == null ? '—' : `${Math.round(c.value * 100)}%`}`);
+    }
+    if (!verdict.passed) {
+      console.warn('   ⚠️  審査で不合格。落ちた項目だけを指摘して書き直します');
+      const rewritten = await runSophia(
+        ceoPlan,
+        seoData,
+        styleSamples,
+        [selectionSection, continuityBrief, vaultBrief].filter(Boolean).join('\n\n'),
+        trendBrief,
+        buildClefFeedback(verdict),
+        format.writer,
+      );
+      if (rewritten && runQualityGate(rewritten).passed && findRegressions(ceoPlan.title, rewritten).length === 0 && findCanon(ceoPlan.title, rewritten).length === 0) {
+        const second = await runClefReview(reviewBrief, ceoPlan.title, rewritten, reviewCtx);
+        clefVerdicts.push(second);
+        if (second.passed || failedCount(second) < failedCount(verdict)) {
+          finalBody = rewritten;
+          verdict = second;
+          console.log(`   ↩️  書き直し版を採用（${second.passed ? '合格' : '不合格項目が減った'}）`);
         }
       }
-      logAgent('SYSTEM', 'ClefReview', verdict.passed ? 'passed' : 'failed', verdict.checks.filter(c => !c.passed).map(c => c.id).join(','));
-      stage('Clef 審査', '公開前の審査', verdict.passed ? 'ok' : 'fail', `${verdict.model} / ${summarizeChecks(verdict)}${clefVerdicts.length > 1 ? ` / 書き直し${clefVerdicts.length - 1}回` : ''}`);
-      if (!verdict.passed && CLEF_REVIEW_CONFIG.mode === 'enforce') {
-        throw new Error(`Clef review failed: ${verdict.checks.filter(c => !c.passed).map(c => c.id).join(', ')}`);
-      }
+    }
+    logAgent('SYSTEM', 'ClefReview', verdict.passed ? 'passed' : 'failed', verdict.checks.filter(c => !c.passed).map(c => c.id).join(','));
+    stage(
+      'Clef 審査', '公開前の審査（記号 + 陪審）',
+      verdict.passed ? (verdict.available ? 'ok' : 'warn') : 'fail',
+      `${verdict.model ?? '陪審なし・記号のみ'} / ${summarizeChecks(verdict)}${clefVerdicts.length > 1 ? ` / 書き直し${clefVerdicts.length - 1}回` : ''}`,
+    );
+    // veto（正典・題材・投資助言・実額・陪審の割れ）が落ちたままなら公開しない（enforceVeto）
+    if (verdict.blocking) {
+      throw new Error(`Clef review failed: ${verdict.checks.filter(c => !c.passed).map(c => c.id).join(', ')}`);
     }
     console.log('');
 
