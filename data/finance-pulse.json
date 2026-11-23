@@ -1,93 +1,85 @@
 {
-  "capturedAt": "2026-11-12",
-  "portfolio": {
-    "asOf": "2026-11-13",
-    "d1Pct": -0.64,
-    "d7Pct": -0.52,
-    "d30Pct": -0.83,
-    "fromHighPct": -3.76,
-    "atHigh": false,
-    "vol30Pct": 10.2,
-    "streak": -1,
-    "days": 545
-  },
+  "capturedAt": "2026-11-22",
+  "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-12T19:00:09.012Z",
-    "trend": "bull",
-    "volatility": "normal",
-    "riskAppetite": "neutral",
-    "breadth": "mixed",
+    "generatedAt": "2026-11-22T18:31:00.709Z",
+    "trend": "range",
+    "volatility": "stress",
+    "riskAppetite": "risk-off",
+    "breadth": "narrow-selloff",
     "strongest": [
       {
-        "name": "金融",
-        "region": "インド",
-        "r1wPct": 12.2
-      },
-      {
-        "name": "半導体",
-        "region": "米国",
-        "r1wPct": 12.2
+        "name": "通信サービス",
+        "region": "カナダ",
+        "r1wPct": 16.6
       },
       {
         "name": "一般消費財",
         "region": "インド",
-        "r1wPct": 11.7
+        "r1wPct": 6.1
+      },
+      {
+        "name": "公益",
+        "region": "中国",
+        "r1wPct": 5.7
       }
     ],
     "weakest": [
       {
-        "name": "エネルギー",
-        "region": "中国",
-        "r1wPct": -12.5
+        "name": "市場全体",
+        "region": "台湾",
+        "r1wPct": -23.2
       },
       {
-        "name": "一般消費財",
-        "region": "香港",
-        "r1wPct": -9.1
+        "name": "情報技術",
+        "region": "台湾",
+        "r1wPct": -19
       },
       {
-        "name": "生活必需品",
-        "region": "日本",
-        "r1wPct": -8.8
+        "name": "半導体",
+        "region": "台湾",
+        "r1wPct": -18.7
       }
     ],
     "rotations": [
       {
         "name": "米国 通信サービス",
         "region": "米国",
-        "from": "lagging",
-        "to": "improving"
+        "from": "improving",
+        "to": "leading"
       },
       {
-        "name": "米国 銀行",
+        "name": "米国 エネルギー",
         "region": "米国",
-        "from": "leading",
-        "to": "improving"
+        "from": "weakening",
+        "to": "leading"
       },
       {
         "name": "米国 バイオテク",
         "region": "米国",
-        "from": "leading",
+        "from": "lagging",
         "to": "weakening"
-      },
-      {
-        "name": "米国 公益",
-        "region": "米国",
-        "from": "improving",
-        "to": "leading"
       },
       {
         "name": "金 (ゴールド)",
         "region": "米国",
         "from": "improving",
         "to": "lagging"
+      },
+      {
+        "name": "米国 総合債券",
+        "region": "米国",
+        "from": "lagging",
+        "to": "leading"
       }
     ]
   },
   "predicates": [
-    "divergence.market_up_me_down",
-    "market.bull",
-    "market.rotation_new_leader"
+    "market.narrow",
+    "market.range",
+    "market.risk_off",
+    "market.rotation_new_leader",
+    "market.vol_high"
   ],
   "degraded": false,
   "notes": []

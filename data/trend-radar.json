@@ -1,100 +1,99 @@
 {
-  "capturedAt": "2026-11-12",
+  "capturedAt": "2026-11-22",
   "tech": [
     {
       "source": "Hacker News",
-      "title": "My AI agents found an unmapped Maya site?",
-      "url": "https://pietromiotti.com/latest/maya-site",
-      "score": 1023,
-      "date": "2026-11-11"
+      "title": "Inkling 2 Mini",
+      "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+      "score": 1439,
+      "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
-      "title": "AWS emulator",
-      "url": "https://github.com/aws/aws-emulator",
-      "score": 951,
-      "date": "2026-11-11"
+      "title": "Ask HN: I have been unemployed for 2y. 15 years of experience, US. What to do?",
+      "url": "https://news.ycombinator.com/item?id=50583761",
+      "score": 712,
+      "date": "2026-11-20"
     },
     {
       "source": "Hacker News",
-      "title": "United Airlines bans AI agents from booking flights on behalf of travelers",
-      "url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
-      "score": 647,
-      "date": "2026-11-11"
+      "title": "87% of the Anthropic power will come from gas and 11% from coal in 2028",
+      "url": "https://betterdatacenterproject.com/2026/11/16/how-ai-is-powered-a-breakdown-of-byop-and-grid-power/",
+      "score": 584,
+      "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
-      "title": "Apple has new Mac app coming to make running local AI models easy",
-      "url": "https://9to5mac.com/2026/11/10/apple-has-new-mac-app-coming-to-make-running-local-ai-models-easy/",
-      "score": 548,
-      "date": "2026-11-10"
+      "title": "ClawDOS – An AI coding agent for DOS",
+      "url": "http://ricapar.net/ClawDOS/",
+      "score": 167,
+      "date": "2026-11-21"
     },
     {
       "source": "Hacker News",
-      "title": "Retirement Savings Are Fueling the AI Bubble",
-      "url": "https://lpeproject.org/blog/your-retirement-savings-are-fueling-the-ai-bubble/",
-      "score": 165,
-      "date": "2026-11-11"
+      "title": "Show HN: I built a game where you are an LLM's subagent",
+      "url": "https://github.com/gulivan/worker755",
+      "score": 158,
+      "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
-      "title": "AI, activity, and outcomes in software engineering",
-      "url": "https://cabird.com/talks/shipping-faster/",
-      "score": 124,
-      "date": "2026-11-11"
+      "title": "The Mythology of Conscious AI",
+      "url": "https://www.noemamag.com/the-mythology-of-conscious-ai/",
+      "score": 134,
+      "date": "2026-11-22"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7612.2998046875,
-      "changePct1d": -0.1,
-      "changePct5d": 3.5,
-      "sma20": 7619.15,
+      "close": 6910.39013671875,
+      "changePct1d": -3.7,
+      "changePct5d": -8.6,
+      "sma20": 7499.23,
       "aboveSma20": false,
-      "direction": "上昇",
-      "asOf": "2026-11-12"
+      "direction": "下落",
+      "asOf": "2026-11-20"
     },
     {
       "symbol": "^nkx",
       "label": "日経平均",
-      "close": 61248.58984375,
-      "changePct1d": 1.3,
-      "changePct5d": -1.5,
-      "sma20": 62916.88,
+      "close": 56436.6484375,
+      "changePct1d": -5.1,
+      "changePct5d": -7.7,
+      "sma20": 60985.55,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-11"
+      "asOf": "2026-11-20"
     },
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 159.83700561523438,
-      "changePct1d": 0.7,
-      "changePct5d": 0.9,
-      "sma20": 158,
+      "close": 159.70700073242188,
+      "changePct1d": 0.2,
+      "changePct5d": -0.1,
+      "sma20": 158.52,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-12"
+      "asOf": "2026-11-20"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 71674.0703125,
-      "changePct1d": -3.1,
-      "changePct5d": -5.4,
-      "sma20": 77229.07,
+      "close": 60592.6796875,
+      "changePct1d": 0.8,
+      "changePct5d": -6.6,
+      "sma20": 69291.47,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-12"
+      "asOf": "2026-11-22"
     }
   ],
   "degraded": true,
   "notes": [
-    "Hacker News 取得失敗: LLM",
-    "Hacker News 取得失敗: robotics",
-    "InfoCollect KB 取得失敗: manifest",
+    "Hacker News に該当なし: robotics",
+    "InfoCollect KB に該当なし",
     "相場データは Yahoo で代替: S&P500",
     "相場データは Yahoo で代替: 日経平均",
     "相場データは Yahoo で代替: ドル円",

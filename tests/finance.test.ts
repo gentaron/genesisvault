@@ -242,14 +242,6 @@ describe('buildFinanceBrief', () => {
 });
 
 describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
-  const logsBody = `x(${JSON.stringify({
-    table: {
-      rows: [
-        { c: [{ v: 'Date(2026,9,8,12,0,0)' }, { v: 100 }] },
-        { c: [{ v: 'Date(2026,9,9,12,0,0)' }, { v: 103 }] },
-      ],
-    },
-  })})`;
   const overviewBody = JSON.stringify({
     regime: { trend: 'bear', riskAppetite: 'risk-off' },
     sectors: [],
@@ -260,38 +252,29 @@ describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
     vi.unstubAllEnvs();
   });
 
-  it('reads assetlog and QAIZ and derives predicates', async () => {
+  it('reads only QAIZ and derives market predicates', async () => {
     vi.stubEnv('QAIZ_BASE_URL', 'https://qaiz.example.workers.dev/');
-    const fetchMock = vi.fn(
-      async (url: string) =>
-        new Response(String(url).includes('qaiz') ? overviewBody : logsBody, { status: 200 }),
-    );
+    const fetchMock = vi.fn(async (_url: string) => new Response(overviewBody, { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     const pulse = await collectFinancePulse(new Date('2026-10-10T00:00:00Z'));
-    expect(pulse.portfolio?.d1Pct).toBe(3);
+    expect(pulse.portfolio).toBeNull();
     expect(pulse.market?.trend).toBe('bear');
     expect(pulse.predicates).toContain('market.risk_off');
-    expect(pulse.predicates).toContain('portfolio.big_up_day');
-    // 2日ぶんしか無いので1週間の変化率は出ない → 「ずれ」の記号も出ない
-    expect(pulse.predicates).not.toContain('divergence.market_down_me_up');
+    expect(pulse.predicates.every((predicate) => predicate.startsWith('market.'))).toBe(true);
     expect(pulse.degraded).toBe(false);
-    expect(
-      fetchMock.mock.calls.some(
-        ([u]) => String(u) === 'https://qaiz.example.workers.dev/api/overview',
-      ),
-    ).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('https://qaiz.example.workers.dev/api/overview');
   });
 
   it('notes a missing QAIZ_BASE_URL and keeps going', async () => {
     vi.stubEnv('QAIZ_BASE_URL', '');
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => new Response(logsBody, { status: 200 })),
-    );
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
     const pulse = await collectFinancePulse();
     expect(pulse.market).toBeNull();
     expect(pulse.degraded).toBe(true);
     expect(pulse.notes.join()).toContain('QAIZ_BASE_URL');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('falls back to a fresh snapshot, then to null', async () => {
@@ -313,10 +296,10 @@ describe('collectFinancePulse / runKaia (fetch stubbed)', () => {
       notes: [],
     };
     await saveFinancePulse(dir, snap);
-    expect(await loadFinancePulse(dir)).toEqual(snap);
+    expect(await loadFinancePulse(dir)).toEqual({ ...snap, portfolio: null, predicates: [] });
     expect(isPulseFresh(snap, now)).toBe(true);
     expect(isPulseFresh({ ...snap, capturedAt: '2026-09-01' }, now)).toBe(false);
-    expect((await runKaia(dir, now))?.predicates).toEqual(['market.bull']);
+    expect((await runKaia(dir, now))?.predicates).toEqual([]);
   });
 });
 

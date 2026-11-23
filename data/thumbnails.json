@@ -2748,6 +2748,174 @@
         "自己成長": 1,
         "AI・テクノロジー": 6
       }
+    },
+    {
+      "slug": "2026-11-13-post-d0p2ml",
+      "date": "2026-11-13",
+      "theme": "散歩・日常",
+      "sceneId": "park-path",
+      "prompt": "a tree-lined path in a quiet city park in the early morning, long shadows, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 1,
+        "読書": 3,
+        "瞑想・マインドフルネス": 7,
+        "散歩・日常": 12,
+        "自己成長": 11,
+        "AI・テクノロジー": 11
+      }
+    },
+    {
+      "slug": "2026-11-14-post-aau0ej",
+      "date": "2026-11-14",
+      "theme": "投資・資産形成",
+      "sceneId": "desk-chart",
+      "prompt": "a quiet desk with a notebook showing a gentle upward line chart, potted plant, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 16,
+        "ひとり旅": 3,
+        "読書": 3,
+        "瞑想・マインドフルネス": 6,
+        "ジャーナリング": 3,
+        "散歩・日常": 3,
+        "暗号資産": 1,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-11-15-post-rqv203",
+      "date": "2026-11-15",
+      "theme": "ジャーナリング",
+      "sceneId": "night-desk",
+      "prompt": "a desk by a night window with a notebook, a small plant and city lights, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 2,
+        "ひとり旅": 4,
+        "読書": 6,
+        "瞑想・マインドフルネス": 4,
+        "ジャーナリング": 14,
+        "散歩・日常": 4,
+        "暗号資産": 2,
+        "自己成長": 13,
+        "AI・テクノロジー": 8
+      }
+    },
+    {
+      "slug": "2026-11-16-post-kc1ujy",
+      "date": "2026-11-16",
+      "theme": "投資・資産形成",
+      "sceneId": "gold-cash-shelf",
+      "prompt": "a wooden shelf holding a tiny gold bar, folded banknotes of several currencies and a seedling, soft light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 16,
+        "読書": 1,
+        "散歩・日常": 2,
+        "暗号資産": 2,
+        "自己成長": 1,
+        "AI・テクノロジー": 7
+      }
+    },
+    {
+      "slug": "2026-11-17-post-5eqgy9",
+      "date": "2026-11-17",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "forest-light",
+      "prompt": "sunbeams through tall trees in a quiet forest clearing, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 3,
+        "読書": 2,
+        "瞑想・マインドフルネス": 15,
+        "ジャーナリング": 1,
+        "散歩・日常": 2,
+        "暗号資産": 1,
+        "自己成長": 5,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-11-18-post-8k6lcr",
+      "date": "2026-11-18",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "candle-breath",
+      "prompt": "a single candle flame in a dim minimal room, steam rising from a cup, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 6,
+        "読書": 1,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 1,
+        "散歩・日常": 5,
+        "暗号資産": 1,
+        "自己成長": 4,
+        "AI・テクノロジー": 5
+      }
+    },
+    {
+      "slug": "2026-11-19-post-0knb2t",
+      "date": "2026-11-19",
+      "theme": "投資・資産形成",
+      "sceneId": "globe-tiles",
+      "prompt": "a small desk globe beside neatly stacked colored tiles of different heights, morning light, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 12,
+        "読書": 5,
+        "瞑想・マインドフルネス": 3,
+        "ジャーナリング": 5,
+        "散歩・日常": 4,
+        "暗号資産": 1,
+        "自己成長": 11,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-11-20-post-124hbn",
+      "date": "2026-11-20",
+      "theme": "投資・資産形成",
+      "sceneId": "balance-stones",
+      "prompt": "smooth stones balanced in a calm stack on a windowsill, city skyline blurred behind, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 17,
+        "ひとり旅": 2,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 2,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 12,
+        "AI・テクノロジー": 9
+      }
+    },
+    {
+      "slug": "2026-11-21-post-m46j0c",
+      "date": "2026-11-21",
+      "theme": "瞑想・マインドフルネス",
+      "sceneId": "lake-ripples",
+      "prompt": "a calm lake with concentric ripples at dawn, mist over the water, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 10,
+        "ひとり旅": 2,
+        "読書": 3,
+        "瞑想・マインドフルネス": 14,
+        "ジャーナリング": 1,
+        "散歩・日常": 6,
+        "暗号資産": 2,
+        "自己成長": 10,
+        "AI・テクノロジー": 10
+      }
+    },
+    {
+      "slug": "2026-11-22-post-hzaksz",
+      "date": "2026-11-22",
+      "theme": "自己成長",
+      "sceneId": "sprout-steps",
+      "prompt": "a young sprout growing from stone steps, sunlight from above, flat minimal illustration, soft pastel palette, gentle grain texture, generous negative space, editorial blog header, no people, no text, no letters, no logos, no watermark",
+      "scores": {
+        "投資・資産形成": 7,
+        "読書": 1,
+        "瞑想・マインドフルネス": 7,
+        "ジャーナリング": 12,
+        "散歩・日常": 6,
+        "暗号資産": 1,
+        "自己成長": 13,
+        "AI・テクノロジー": 8
+      }
     }
   ]
 }
