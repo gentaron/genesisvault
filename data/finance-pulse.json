@@ -1,10 +1,10 @@
 {
-  "capturedAt": "2026-11-22",
+  "capturedAt": "2026-11-23",
   "portfolio": null,
   "market": {
-    "generatedAt": "2026-11-22T18:31:00.709Z",
+    "generatedAt": "2026-11-23T22:46:08.876Z",
     "trend": "range",
-    "volatility": "stress",
+    "volatility": "elevated",
     "riskAppetite": "risk-off",
     "breadth": "narrow-selloff",
     "strongest": [
@@ -14,45 +14,45 @@
         "r1wPct": 16.6
       },
       {
-        "name": "一般消費財",
-        "region": "インド",
-        "r1wPct": 6.1
+        "name": "通信サービス",
+        "region": "ブラジル",
+        "r1wPct": 4.8
       },
       {
-        "name": "公益",
+        "name": "半導体",
         "region": "中国",
-        "r1wPct": 5.7
+        "r1wPct": 4.7
       }
     ],
     "weakest": [
-      {
-        "name": "市場全体",
-        "region": "台湾",
-        "r1wPct": -23.2
-      },
       {
         "name": "情報技術",
         "region": "台湾",
         "r1wPct": -19
       },
       {
-        "name": "半導体",
-        "region": "台湾",
-        "r1wPct": -18.7
+        "name": "暗号資産",
+        "region": "米国",
+        "r1wPct": -16.6
+      },
+      {
+        "name": "金・貴金属",
+        "region": "カナダ",
+        "r1wPct": -15.7
       }
     ],
     "rotations": [
       {
-        "name": "米国 通信サービス",
+        "name": "米国 半導体",
         "region": "米国",
-        "from": "improving",
-        "to": "leading"
+        "from": "lagging",
+        "to": "improving"
       },
       {
-        "name": "米国 エネルギー",
+        "name": "米国 金融",
         "region": "米国",
-        "from": "weakening",
-        "to": "leading"
+        "from": "leading",
+        "to": "weakening"
       },
       {
         "name": "米国 バイオテク",

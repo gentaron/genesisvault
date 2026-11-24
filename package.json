@@ -15,6 +15,7 @@
     "almanac": "bun scripts/build-almanac.mjs",
     "gate": "bun scripts/brief-gate.mjs",
     "gate:eval": "bun scripts/gate-eval.mjs",
+    "audit:checkers": "bun scripts/checker-audit.mjs",
     "lint:content": "bun scripts/verify.mjs --quick",
     "auto-post": "bun scripts/auto-post.mjs",
     "vault:sync": "bun scripts/sync-note.mjs",
