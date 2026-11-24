@@ -19,6 +19,8 @@ export interface CoverInput {
   slug: string;
   title: string;
   tags?: string[];
+  /** サムネ決定機構（data/thumbnails.json）が決めたテーマ。あればタイトルから推測しない。 */
+  theme?: string;
 }
 
 export interface Palette {
@@ -247,7 +249,8 @@ function escapeXml(s: string): string {
  * 読み上げられず、検索にも乗らない）。代わりに `<title>` で代替テキストを持たせる。
  */
 export function buildCoverSvg(input: CoverInput): string {
-  const theme = detectTheme(input.title, input.tags);
+  const theme =
+    input.theme && input.theme in PALETTES ? input.theme : detectTheme(input.title, input.tags);
   const palette = PALETTES[theme] ?? PALETTES[DEFAULT_THEME];
   const rand = seededRandom(hashString(input.slug));
   const motif = (MOTIFS[theme] ?? MOTIFS[DEFAULT_THEME])(rand, palette);

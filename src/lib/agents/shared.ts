@@ -158,7 +158,7 @@ export const THEMES: ThemeEntry[] = [
   },
   {
     category: '投資・資産形成',
-    titles: ['ETF積立3年目の通知表', '含み益が消えた月曜の朝', '配当金で買ったご褒美'],
+    titles: ['ETFの通知表を開いた朝', '含み益が消えた月曜の朝', '配当金で買ったご褒美'],
     tags: ['投資', 'ETF', '資産形成'],
   },
   {
@@ -232,7 +232,7 @@ export const FALLBACK_BODIES: FallbackBody[] = [
 独身だからこそ、自分のペースで資産を育てていける。この自由を、わたしは大切にしたい。`,
   },
   {
-    title: 'ETF積立3年目の通知表',
+    title: 'ETFの通知表を開いた朝',
     theme: '投資・資産形成',
     body: `## 朝の散歩とETFの共通点
 

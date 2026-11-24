@@ -286,3 +286,117 @@ export async function askJev(
   }
   return null;
 }
+
+// ─── Jury（陪審）────────────────────────────────────────────────
+//
+// 1つの判断モデルに聞くより、系統の違う小さなモデルを数人並べて合議させたほうが、
+// 大きなモデル1つより偏りが小さく、しかも安い（Verga et al. 2024 "Replacing Judges
+// with Juries", PoLL）。ここでは Workers AI 無料枠の Clef と Clef-flash を**同時に**
+// 呼び、全員の答えを返す。どちらも1回数十 Neurons で、1日 10,000 の枠に十分収まる。
+//
+// askJev（上から順に1人だけ）と違って、答えた陪審員を全員返す。合議の仕方
+// （平均か、最も厳しい票か）は呼び出し側が決める — 審査（clef-review）は veto に最小値、
+// 選定（select）は平均を使う。
+
+export async function askJury(
+  state: string,
+  questions: JevQuestion[],
+  notes: string[] = [],
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<JevResult[]> {
+  const endpoints = resolveEndpoints(env);
+  if (endpoints.length === 0) {
+    notes.push(
+      'jury: 判断モデルの鍵が未設定（Clef なら CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN）',
+    );
+    return [];
+  }
+  const settled = await Promise.all(
+    endpoints.map(async (ep) => {
+      const sub: string[] = [];
+      // 1人ずつ askJev と同じ手順で呼ぶ（経路を1本に絞った環境を渡す代わりに、直接叩く）
+      const started = Date.now();
+      try {
+        const res = await fetch(ep.url, {
+          method: 'POST',
+          signal: AbortSignal.timeout(SELECTION_CONFIG.jev.timeoutMs),
+          headers: {
+            ...ep.headers,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(buildRequestBody(ep.model, state, questions)),
+        });
+        if (!res.ok) {
+          const detail = (await res.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 200);
+          sub.push(`jury(${ep.model}): HTTP ${res.status}${detail ? ` ${detail}` : ''}`);
+          return { result: null, sub };
+        }
+        const answers = normalizeAnswers(await res.json(), questions);
+        if (Object.keys(answers).length === 0) {
+          sub.push(`jury(${ep.model}): 型どおりの答えが1つも無かった`);
+          return { result: null, sub };
+        }
+        const result: JevResult = {
+          transport: ep.transport,
+          model: ep.model,
+          answers,
+          latencyMs: Date.now() - started,
+        };
+        return { result, sub };
+      } catch (err) {
+        sub.push(`jury(${ep.model}): ${(err as Error).message?.substring(0, 80)}`);
+        return { result: null, sub };
+      }
+    }),
+  );
+  for (const s of settled) notes.push(...s.sub);
+  return settled.map((s) => s.result).filter((r): r is JevResult => r !== null);
+}
+
+/** 陪審の答えを平均で1つにまとめる（選定用）。答えた陪審員だけで割る。 */
+export function mergeJury(results: JevResult[], questions: JevQuestion[]): JevResult | null {
+  if (results.length === 0) return null;
+  if (results.length === 1) return results[0];
+  const answers: Record<string, JevAnswer> = {};
+  for (const q of questions) {
+    const got = results.map((r) => r.answers[q.name]).filter((a): a is JevAnswer => !!a);
+    if (got.length === 0) continue;
+    if (q.type === 'choice') {
+      const dist: Record<string, number> = {};
+      for (const opt of q.options) {
+        let sum = 0;
+        for (const a of got) {
+          if (a.type !== 'choice') continue;
+          const hasDist = Object.keys(a.distribution).length > 0;
+          sum += hasDist
+            ? (a.distribution[opt] ?? 0)
+            : a.value === opt
+              ? a.probability
+              : q.options.length > 1
+                ? (1 - a.probability) / (q.options.length - 1)
+                : 0;
+        }
+        dist[opt] = Math.round((sum / got.length) * 1000) / 1000;
+      }
+      const [value, probability] = Object.entries(dist).sort((x, y) => y[1] - x[1])[0];
+      answers[q.name] = { type: 'choice', value, probability, distribution: dist };
+    } else if (q.type === 'score') {
+      const vs = got.flatMap((a) => (a.type === 'score' ? [a.value] : []));
+      if (vs.length) answers[q.name] = { type: 'score', value: mean(vs) };
+    } else {
+      const vs = got.flatMap((a) => (a.type === 'noul' ? [a.probability] : []));
+      if (vs.length) answers[q.name] = { type: 'noul', probability: mean(vs) };
+    }
+  }
+  return {
+    transport: results[0].transport,
+    model: results.map((r) => bodyModelName(r.model)).join('+'),
+    answers,
+    latencyMs: Math.max(...results.map((r) => r.latencyMs)),
+  };
+}
+
+function mean(xs: number[]): number {
+  return Math.round((xs.reduce((a, b) => a + b, 0) / xs.length) * 1000) / 1000;
+}

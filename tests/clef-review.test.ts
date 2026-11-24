@@ -80,7 +80,26 @@ describe('runClefReview', () => {
     vi.stubEnv('CLOUDFLARE_API_TOKEN', '');
     const v = await runClefReview('brief', 't', 'body');
     expect(v.available).toBe(false);
-    expect(v.checks).toEqual([]);
+    // 陪審が無くても記号審査は必ず走る（v2）。きれいな原稿なら通る
+    expect(v.checks.every((c) => c.source === 'symbolic')).toBe(true);
+    expect(v.passed).toBe(true);
+    expect(v.blocking).toBe(false);
+  });
+
+  it('記号審査は陪審なしでも「9年目」「僕の」を止めて公開を止める', async () => {
+    vi.stubEnv('CLOUDFLARE_ACCOUNT_ID', '');
+    vi.stubEnv('CLOUDFLARE_API_TOKEN', '');
+    const v = await runClefReview(
+      'brief',
+      '積立9年目の朝',
+      '画面を閉じて5分、静止する僕のルール。',
+    );
+    expect(v.passed).toBe(false);
+    expect(v.blocking).toBe(true);
+    const canon = v.checks.find((c) => c.id === 'canon');
+    expect(canon?.evidence).toContain('積立9年目');
+    expect(canon?.evidence).toContain('僕の');
+    expect(buildClefFeedback(v)).toContain('削除・言い換え');
   });
 
   it('reads Clef answers and builds feedback for failed checks only', async () => {
@@ -109,7 +128,7 @@ describe('runClefReview', () => {
     );
     const v = await runClefReview('brief', 't', 'body');
     expect(v.available).toBe(true);
-    expect(v.model).toBe('workers-ai:@cf/cloudflare/clef');
+    expect(v.model).toBe('workers-ai:clef+clef-flash');
     expect(v.passed).toBe(false);
     const fb = buildClefFeedback(v);
     expect(fb).toContain('その日にしか起きない具体');

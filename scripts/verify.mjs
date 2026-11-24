@@ -131,6 +131,112 @@ try {
   record('記事コーパスのリント', false, err.message);
 }
 
+// ─── 2b. Canon / titles / thumbnails / vault (AGENTS.md §14) ─────
+
+heading('2b. 正典・タイトル・サムネ・Vault（オーナー指示の構造的な守り）');
+
+try {
+  const { loadCanon, detectCanonViolations } = await import('../src/lib/canon/canon.ts');
+  const canon = loadCanon(rootDir);
+  record(
+    '正典（data/canon/canon.json）が有効',
+    true,
+    `事実 ${canon.facts.length} / 禁止 ${canon.forbiddenClaims.length}`,
+  );
+
+  const postsDir = path.join(rootDir, 'src/content/posts');
+  const files = (await readdir(postsDir)).filter((f) => /\.mdx?$/.test(f)).sort();
+  const raws = Object.fromEntries(
+    await Promise.all(files.map(async (f) => [f, await readFile(path.join(postsDir, f), 'utf-8')])),
+  );
+
+  // 公開済みの全記事（タイトル・description・keywords・本文）に正典違反が1件も無い（INV-021）
+  const violations = files.flatMap((f) =>
+    detectCanonViolations(raws[f], canon).map((v) => ({ file: f, ...v })),
+  );
+  record(
+    '公開記事に正典違反が無い（投資歴の作り話・資産構成の誤り・金額の開示）',
+    violations.length === 0,
+    violations.length > 0 ? `${violations.length} 件` : `${files.length} 記事`,
+  );
+  for (const v of violations.slice(0, 10)) {
+    console.log(`     \x1b[31m✗\x1b[0m ${v.file}: [${v.rule}]「${v.quote}」`);
+  }
+
+  // 台帳（導出物）が正典に反する「到達点」を持っていない（LM-021 の再発防止）
+  const ledger = JSON.parse(
+    await readFile(path.join(rootDir, 'data/continuity-ledger.json'), 'utf-8'),
+  );
+  const ledgerHits = detectCanonViolations(
+    [
+      ledger.brief ?? '',
+      ...(ledger.facts ?? []).map((f) => `${f.metric}${f.value}。${f.source}`),
+    ].join('\n'),
+    canon,
+  );
+  record(
+    '継続性台帳が正典に反する事実を強制していない',
+    ledgerHits.length === 0,
+    ledgerHits.map((v) => `「${v.quote}」`).join(' '),
+  );
+
+  // タイトルの使い回し（enforceFrom 以降の記事）
+  const { auditTitleEchoes } = await import('../src/lib/pipeline/title-guard.ts');
+  const { TITLE_GUARD_CONFIG, ART_CONFIG } = await import('../src/lib/pipeline/config.ts');
+  const posts = files.map((f) => ({
+    file: f,
+    date: f.slice(0, 10),
+    title: raws[f].match(/^title:\s*"?(.*?)"?\s*$/m)?.[1]?.replace(/\\"/g, '"') ?? '',
+  }));
+  const echoes = auditTitleEchoes(posts);
+  record(
+    `タイトルの使い回しが無い（${TITLE_GUARD_CONFIG.enforceFrom} 以降・直近${TITLE_GUARD_CONFIG.windowDays}日）`,
+    echoes.length === 0,
+    echoes.length > 0
+      ? echoes
+          .map((e) => `${e.file}:「${[...new Set(e.echoes.map((x) => x.phrase))].join('・')}」`)
+          .join(' / ')
+      : '',
+  );
+
+  // サムネの決定記録: 全記事に決定があり、テーマは現役のものだけ
+  const { SCENE_POOL } = await import('../src/lib/art/thumbnail.ts');
+  const thumbs = JSON.parse(
+    await readFile(path.join(rootDir, ART_CONFIG.thumbnail.recordFile), 'utf-8'),
+  );
+  const decided = new Map((thumbs.entries ?? []).map((e) => [e.slug, e]));
+  const undecided = files.map((f) => f.replace(/\.mdx?$/, '')).filter((slug) => !decided.has(slug));
+  const badTheme = [...decided.values()].filter(
+    (e) => !SCENE_POOL[e.theme]?.some((sc) => sc.id === e.sceneId),
+  );
+  record(
+    '全記事にサムネの決定がある（テーマ・情景が現役）',
+    undecided.length === 0 && badTheme.length === 0,
+    undecided.length || badTheme.length
+      ? `未決定 ${undecided.length}（${undecided.slice(0, 3).join(', ')}）/ 不正 ${badTheme.length} — \`bun run thumbnails\``
+      : `${decided.size} 件`,
+  );
+
+  // Vault: note の写しがコミットされていて、読める
+  const { parseVaultNote } = await import('../src/lib/vault/note.ts');
+  const { VAULT_CONFIG } = await import('../src/lib/pipeline/config.ts');
+  const noteFiles = (await readdir(path.join(rootDir, VAULT_CONFIG.noteDir))).filter((f) =>
+    f.endsWith('.md'),
+  );
+  let broken = 0;
+  for (const f of noteFiles) {
+    if (!parseVaultNote(await readFile(path.join(rootDir, VAULT_CONFIG.noteDir, f), 'utf-8')))
+      broken++;
+  }
+  record(
+    'Vault（note.com/gensnotes の写し）が読める',
+    noteFiles.length > 0 && broken === 0,
+    `${noteFiles.length} ノート${broken ? ` / 壊れ ${broken}` : ''} — 同期は \`bun run vault:sync\`（verify からは呼ばない）`,
+  );
+} catch (err) {
+  record('正典・タイトル・サムネ・Vault のチェック', false, err.message);
+}
+
 // ─── 3. Almanac (memory infrastructure) ─────────────────────────
 
 heading('3. Almanac（記憶インフラ）');

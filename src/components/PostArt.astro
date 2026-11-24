@@ -8,7 +8,7 @@
  * 同じ絵が拡大して移動する（Magic Move）。
  */
 import { buildCoverSvg } from '../lib/art/cover';
-import { findIllustration, transitionName } from '../lib/art/resolve';
+import { findIllustration, findThumbnailTheme, transitionName } from '../lib/art/resolve';
 
 interface Props {
   slug: string;
@@ -19,7 +19,10 @@ interface Props {
 
 const { slug, title, tags = [], variant = 'card' } = Astro.props;
 const image = findIllustration(slug);
-const inlineSvg = !image && variant === 'hero' ? buildCoverSvg({ slug, title, tags }) : '';
+const inlineSvg =
+  !image && variant === 'hero'
+    ? buildCoverSvg({ slug, title, tags, theme: findThumbnailTheme(slug) })
+    : '';
 const src = image ?? `/art/${slug}.svg`;
 const vt = transitionName('art', slug);
 ---

@@ -199,9 +199,16 @@ describe('non-money metrics (あらゆる話題での逆行防止)', () => {
 
   it('mines years of continuity', () => {
     const mined = runResearcher([
-      { title: 't', text: '積立投資を始めて5年目になった。', date: '2026-07-28' },
+      { title: 't', text: 'ブログを書き始めて5年目になった。', date: '2026-07-28' },
     ]);
-    expect(mined.find((f) => f.metric === '積立投資の継続年数')?.valueNum).toBe(5);
+    expect(mined.find((f) => f.metric === 'ブログの継続年数')?.valueNum).toBe(5);
+  });
+
+  it('does not mine investing tenure — that belongs to the canon (LM-021)', () => {
+    const mined = runResearcher([
+      { title: 't', text: '積立投資を始めて9年目になった。', date: '2026-08-20' },
+    ]);
+    expect(mined.find((f) => f.metric === '積立投資の継続年数')).toBeUndefined();
   });
 
   it('scopes yearly metrics by year so January is not a regression', () => {

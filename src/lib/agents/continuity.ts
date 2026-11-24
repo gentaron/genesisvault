@@ -247,7 +247,8 @@ export const CONTINUITY_METRICS: MetricDef[] = [
   streakDays('運動', '筋トレ|ストレッチ|ヨガ|ランニング'),
 
   // 継続（年数）
-  streakYears('積立投資', '積立|つみたて|投資|運用'),
+  // 積立投資の継続年数は台帳で扱わない。投資歴は正典（data/canon/canon.json）が持ち、
+  // 記事から導出すると AI の作り話が「到達点」として強制され続ける（LM-021）。
   streakYears('ブログ', 'ブログ'),
   streakYears('ひとり暮らし', 'ひとり暮らし|一人暮らし|独身'),
   streakYears('瞑想', '瞑想'),

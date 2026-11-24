@@ -40,6 +40,12 @@ jobs:
         continue-on-error: true
         run: bun scripts/sync-ideaz.mjs
 
+      # note.com/gensnotes を data/vault/note に写す（増分・fail-soft）。書き手は ここを検索して
+      # 過去の記述と矛盾しないように書く（RAG）。取れない日は昨日までの写しのまま（INV-022）。
+      - name: Sync Genesis Vault (note.com/gensnotes → data/vault)
+        continue-on-error: true
+        run: bun scripts/sync-note.mjs
+
       # 今日の記事が既にある日（手動実行の後など）も 0 秒で抜けない。二重投稿だけを止め、
       # Tessa・Kaia・台帳・Juno の選定・Clef の事後審査は毎回通す（観測モード）。
       # 全工程の ✅/⚠️/❌/⏭️ と理由は Job Summary に表で出る。
@@ -80,7 +86,7 @@ jobs:
           git add src/content/posts/*.md docs/agent-runs/ data/continuity-ledger.json data/trend-radar.json
           # 財務パルス（変化率のみ）・選定ログ・IDEAZ の型の写しも。ランナーは毎回まっさらなので押さないと消える（LM-013）。
           # 1つでも無いパスがあると git add 全体が失敗するので、在るものだけを1つずつ。
-          for p in data/finance-pulse.json data/published-titles.json docs/selection-runs docs/gate-runs prompts/ideaz public/art; do
+          for p in data/finance-pulse.json data/published-titles.json data/thumbnails.json data/vault docs/selection-runs docs/gate-runs prompts/ideaz public/art; do
             if [ -e "$p" ]; then git add "$p"; fi
           done
           # 見るのはステージ済みの差分だけ。未ステージの変更（bun install が書き換えた

@@ -7,6 +7,7 @@
 import { getCollection } from 'astro:content';
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { buildCoverSvg } from '../../lib/art/cover';
+import { findThumbnailTheme } from '../../lib/art/resolve';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('posts', ({ data }) => data.draft !== true);
@@ -22,6 +23,7 @@ export const GET: APIRoute = ({ params, props }) =>
       slug: String(params.slug),
       title: String(props.title),
       tags: props.tags as string[],
+      theme: findThumbnailTheme(String(params.slug)),
     }),
     { headers: { 'Content-Type': 'image/svg+xml; charset=utf-8' } },
   );
