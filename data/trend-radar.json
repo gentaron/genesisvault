@@ -1,60 +1,60 @@
 {
-  "capturedAt": "2026-11-23",
+  "capturedAt": "2026-11-24",
   "tech": [
-    {
-      "source": "Hacker News",
-      "title": "87% of the Anthropic power will come from gas and 11% from coal in 2028",
-      "url": "https://betterdatacenterproject.com/2026/11/16/how-ai-is-powered-a-breakdown-of-byop-and-grid-power/",
-      "score": 1024,
-      "date": "2026-11-22"
-    },
     {
       "source": "Hacker News",
       "title": "GLM-5.4: Toward generalized coding with our first loop transformer",
       "url": "https://z.ai/blog/glm-5.4",
-      "score": 997,
+      "score": 1161,
       "date": "2026-11-23"
     },
     {
       "source": "Hacker News",
-      "title": "A Beginner's Guide to Local AI with Inkling, Qwen, and Unsloth",
-      "url": "https://www.gpupartner.com/blog/beginners-guide-local-ai-inkling-qwen-unsloth",
-      "score": 736,
+      "title": "LLM agents work for their parent companies, not for you",
+      "url": "https://michaelharley.net/posts/2026/11/01/llm-agents-work-for-their-parent-companies-not-for-you/",
+      "score": 813,
+      "date": "2026-11-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Tidal bans AI-generated music",
+      "url": "https://variety.com/2026/music/news/tidal-bans-ai-generated-music-1236956924/",
+      "score": 306,
+      "date": "2026-11-24"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Progress map for the Lean formalization of Alessandro Masullo's manuscript",
+      "url": "https://claude.ai/artifact/CtQyX8qfYAF822bgHJHHE3",
+      "score": 260,
       "date": "2026-11-22"
     },
     {
       "source": "Hacker News",
-      "title": "Show HN: I built a game where you are an LLM's subagent",
-      "url": "https://github.com/gulivan/worker755",
-      "score": 356,
-      "date": "2026-11-22"
+      "title": "NariQ: BF16-level Qwen3.8-27B in a 10 GB file",
+      "url": "https://huggingface.co/nari-labs/Qwen3.8-27B-NariQ-GGUF",
+      "score": 190,
+      "date": "2026-11-23"
     },
     {
       "source": "Hacker News",
-      "title": "The Mythology of Conscious AI",
-      "url": "https://www.noemamag.com/the-mythology-of-conscious-ai/",
+      "title": "Ask HN: Anthropic is accusing my company of distilling. How can I prove I'm not?",
+      "url": "https://news.ycombinator.com/item?id=50630809",
       "score": 180,
-      "date": "2026-11-22"
-    },
-    {
-      "source": "Hacker News",
-      "title": "Europe weakens chemical rules as science links them to 'lifestyle diseases'",
-      "url": "https://www.lemonde.fr/en/opinion/article/2026/11/22/as-science-increasingly-shows-the-role-chemical-substances-play-in-lifestyle-diseases-europe-weakens-its-regulations_6786595_23.html",
-      "score": 173,
-      "date": "2026-11-22"
+      "date": "2026-11-24"
     }
   ],
   "market": [
     {
       "symbol": "^spx",
       "label": "S&P500",
-      "close": 7237.169921875,
-      "changePct1d": 4.7,
-      "changePct5d": -2.4,
-      "sma20": 7477.25,
+      "close": 7201.08984375,
+      "changePct1d": -0.5,
+      "changePct5d": -1.9,
+      "sma20": 7451.18,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-23"
+      "asOf": "2026-11-24"
     },
     {
       "symbol": "^nkx",
@@ -70,24 +70,24 @@
     {
       "symbol": "usdjpy",
       "label": "ドル円",
-      "close": 158.96499633789062,
-      "changePct1d": -0.5,
-      "changePct5d": -0.5,
-      "sma20": 158.63,
+      "close": 159.22500610351562,
+      "changePct1d": 0.2,
+      "changePct5d": -0.2,
+      "sma20": 158.71,
       "aboveSma20": true,
       "direction": "横ばい",
-      "asOf": "2026-11-23"
+      "asOf": "2026-11-24"
     },
     {
       "symbol": "btcusd",
       "label": "ビットコイン",
-      "close": 61021.80859375,
-      "changePct1d": -0.2,
-      "changePct5d": -3.1,
-      "sma20": 68503.77,
+      "close": 59826.1796875,
+      "changePct1d": -2.3,
+      "changePct5d": -3.4,
+      "sma20": 67484.27,
       "aboveSma20": false,
       "direction": "下落",
-      "asOf": "2026-11-23"
+      "asOf": "2026-11-24"
     }
   ],
   "degraded": true,
